@@ -1,0 +1,48 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "@jetbrains",
+        "@jetbrains/eslint-config/node",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:sonarjs/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "react",
+        "sonarjs",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "linebreak-style": "off",
+        "indent": [
+            "error",
+            4
+        ],
+        "max-len": "off",
+        "no-return-assign": "off",
+        "no-magic-numbers": "warn",
+        "valid-jsdoc": "off",
+        "radix": "off",
+        "no-native-reassign": "off",
+        "multiline-ternary": "off",
+        "no-shadow": "warn",
+        "no-multiple-empty-lines": "error",
+        "no-use-before-define": "off",
+        "react/prop-types": "off",
+        "no-catch-shadow": "off",
+        "no-nested-ternary": "off"
+    }
+}

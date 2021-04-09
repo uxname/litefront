@@ -1,0 +1,20 @@
+overwrite: true
+schema: ${NEXT_PUBLIC_GRAPHQL_API_URL}
+documents: "./graphql/**/*.graphql"
+generates:
+    generated/graphql.tsx:
+        plugins:
+            - "typescript"
+            - "typescript-operations"
+            - "typescript-react-apollo"
+        config:
+            skipTypename: false
+            withHooks: true
+            withHOC: false
+            withComponent: false
+    generated/schema.graphql:
+        plugins:
+            - schema-ast
+        config:
+            includeDirectives: true
+            sort: true

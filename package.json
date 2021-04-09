@@ -1,0 +1,40 @@
+{
+    "name": "lite-front",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start -p 7171",
+        "type-check": "tsc",
+        "lint": "./node_modules/.bin/eslint . --fix --quiet",
+        "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
+        "predev": "npm run gen",
+        "prestart": "npm run gen"
+    },
+    "dependencies": {
+        "@apollo/client": "^3.3.13",
+        "dotenv": "^8.2.0",
+        "graphql": "^15.5.0",
+        "next": "latest",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
+    },
+    "devDependencies": {
+        "@graphql-codegen/cli": "1.21.3",
+        "@graphql-codegen/schema-ast": "^1.18.1",
+        "@graphql-codegen/typescript": "1.21.1",
+        "@graphql-codegen/typescript-operations": "1.17.15",
+        "@graphql-codegen/typescript-react-apollo": "2.2.3",
+        "@jetbrains/eslint-config": "^5.3.1",
+        "@types/node": "^14.14.37",
+        "@types/react": "^17.0.3",
+        "@types/react-dom": "^17.0.3",
+        "@typescript-eslint/eslint-plugin": "^4.20.0",
+        "@typescript-eslint/parser": "^4.20.0",
+        "eslint": "^7.23.0",
+        "eslint-plugin-react": "^7.23.1",
+        "eslint-plugin-sonarjs": "^0.6.0",
+        "typescript": "4.2"
+    },
+    "license": "MIT"
+}
