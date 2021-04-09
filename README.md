@@ -1,3 +1,5 @@
+![](./.github/logo.png)
+
 # Get started
 - `git clone ...`
 - `npm install`
