@@ -8,8 +8,7 @@
         "type-check": "tsc",
         "lint": "./node_modules/.bin/eslint . --fix --quiet",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
-        "predev": "npm run gen",
-        "prestart": "npm run gen"
+        "predev": "npm run gen"
     },
     "dependencies": {
         "@apollo/client": "^3.3.13",
@@ -26,6 +25,7 @@
         "@graphql-codegen/typescript-operations": "1.17.15",
         "@graphql-codegen/typescript-react-apollo": "2.2.3",
         "@jetbrains/eslint-config": "^5.3.1",
+        "@svgr/webpack": "^5.5.0",
         "@types/node": "^14.14.37",
         "@types/react": "^17.0.3",
         "@types/react-dom": "^17.0.3",
