@@ -1,5 +1,7 @@
 ![](./.github/logo.png)
 
+Next.js + GraphQL + Typescript frontend boilerplate.
+
 # Get started
 - `git clone ...`
 - `npm install`
