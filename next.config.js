@@ -1,22 +1,9 @@
-module.exports = {
-    webpack(config) {
-        config.module.rules.push({
-            test: /\.svg$/,
-            issuer: {
-                test: /\.(js|ts)x?$/
-            },
-            use: [{
-                loader: '@svgr/webpack',
-                options: {
-                    svgoConfig: {
-                        plugins: {
-                            removeViewBox: false
-                        }
-                    }
-                }
-            }]
-        });
+/* eslint-disable @typescript-eslint/no-var-requires */
+const withPlugins = require('next-compose-plugins');
+const optimizedImages = require('next-optimized-images');
 
-        return config;
-    }
-};
+module.exports = withPlugins([
+    [optimizedImages, {
+        optimizeImagesInDev: true
+    }]
+], {});
