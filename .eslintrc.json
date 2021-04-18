@@ -29,7 +29,10 @@
         "linebreak-style": "off",
         "indent": [
             "error",
-            4
+            4,
+            {
+                "SwitchCase": 1
+            }
         ],
         "max-len": "off",
         "no-return-assign": "off",
