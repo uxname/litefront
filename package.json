@@ -8,7 +8,8 @@
         "type-check": "tsc",
         "lint": "./node_modules/.bin/eslint . --fix --quiet",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
-        "predev": "npm run gen"
+        "predev": "npm run gen",
+        "ncu": "npx ncu -u"
     },
     "dependencies": {
         "@apollo/client": "^3.3.15",
@@ -27,24 +28,25 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "responsive-loader": "^2.3.0",
-        "svg-sprite-loader": "^6.0.5",
+        "svg-sprite-loader": "^6.0.6",
         "webp-loader": "^0.6.0"
     },
     "devDependencies": {
-        "@graphql-codegen/cli": "1.21.3",
-        "@graphql-codegen/schema-ast": "^1.18.1",
-        "@graphql-codegen/typescript": "1.21.1",
-        "@graphql-codegen/typescript-operations": "1.17.15",
-        "@graphql-codegen/typescript-react-apollo": "2.2.3",
+        "@graphql-codegen/cli": "1.21.4",
+        "@graphql-codegen/schema-ast": "^1.18.2",
+        "@graphql-codegen/typescript": "1.22.0",
+        "@graphql-codegen/typescript-operations": "1.17.16",
+        "@graphql-codegen/typescript-react-apollo": "2.2.4",
         "@jetbrains/eslint-config": "^5.3.1",
-        "@types/node": "^14.14.41",
-        "@types/react": "^17.0.3",
+        "@types/node": "^15.0.1",
+        "@types/react": "^17.0.4",
         "@types/react-dom": "^17.0.3",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "eslint": "^7.24.0",
+        "eslint": "^7.25.0",
         "eslint-plugin-react": "^7.23.2",
-        "eslint-plugin-sonarjs": "^0.6.0",
+        "eslint-plugin-sonarjs": "^0.7.0",
+        "npm-check-updates": "^11.5.7",
         "typescript": "4.2"
     },
     "license": "MIT"
