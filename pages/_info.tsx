@@ -20,7 +20,7 @@ export default function _InfoPage(props: Props): ReactNode {
             }
             <br/>
             {
-                `App ver.:${packageJson.version}`
+                `${packageJson.name} ${packageJson.version}`
             }
             <hr/>
             {
