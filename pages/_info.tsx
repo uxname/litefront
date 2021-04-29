@@ -3,14 +3,12 @@ import util from 'util';
 import {exec as _exec} from 'child_process';
 import packageJson from '../package.json';
 
-const exec: (arg1: string) => Promise<string> = util.promisify(_exec);
-
 type Props = {
-    props: {
-        stdout: string;
-        stderr: string;
-    }
+    stdout?: string;
+    stderr?: string;
 }
+
+const exec: (args: string) => Promise<Props> = util.promisify(_exec);
 
 export default function _InfoPage(props: Props): ReactNode {
     return (
@@ -30,7 +28,7 @@ export default function _InfoPage(props: Props): ReactNode {
     );
 }
 
-export const getServerSideProps: () => Promise<Props> = async () => {
+export const getServerSideProps: () => Promise<{ props: Props }> = async () => {
     try {
         const {stdout, stderr} = await exec('git rev-parse HEAD');
         return {
