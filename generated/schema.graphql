@@ -1,4 +1,7 @@
-schema { query: Root }
+schema {
+  query: Root
+}
+
 """A single film."""
 type Film implements Node {
   characterConnection(after: String, before: String, first: Int, last: Int): FilmCharactersConnection
@@ -25,6 +28,7 @@ type Film implements Node {
   title: String
   vehicleConnection(after: String, before: String, first: Int, last: Int): FilmVehiclesConnection
 }
+
 """A connection to a list of items."""
 type FilmCharactersConnection {
   """
@@ -48,6 +52,7 @@ type FilmCharactersConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type FilmCharactersEdge {
   """A cursor for use in pagination"""
@@ -55,6 +60,7 @@ type FilmCharactersEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """A connection to a list of items."""
 type FilmPlanetsConnection {
   """A list of edges."""
@@ -78,6 +84,7 @@ type FilmPlanetsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type FilmPlanetsEdge {
   """A cursor for use in pagination"""
@@ -85,6 +92,7 @@ type FilmPlanetsEdge {
   """The item at the end of the edge"""
   node: Planet
 }
+
 """A connection to a list of items."""
 type FilmSpeciesConnection {
   """A list of edges."""
@@ -108,6 +116,7 @@ type FilmSpeciesConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type FilmSpeciesEdge {
   """A cursor for use in pagination"""
@@ -115,6 +124,7 @@ type FilmSpeciesEdge {
   """The item at the end of the edge"""
   node: Species
 }
+
 """A connection to a list of items."""
 type FilmStarshipsConnection {
   """A list of edges."""
@@ -138,6 +148,7 @@ type FilmStarshipsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type FilmStarshipsEdge {
   """A cursor for use in pagination"""
@@ -145,6 +156,7 @@ type FilmStarshipsEdge {
   """The item at the end of the edge"""
   node: Starship
 }
+
 """A connection to a list of items."""
 type FilmVehiclesConnection {
   """A list of edges."""
@@ -168,6 +180,7 @@ type FilmVehiclesConnection {
   """
   vehicles: [Vehicle]
 }
+
 """An edge in a connection."""
 type FilmVehiclesEdge {
   """A cursor for use in pagination"""
@@ -175,6 +188,7 @@ type FilmVehiclesEdge {
   """The item at the end of the edge"""
   node: Vehicle
 }
+
 """A connection to a list of items."""
 type FilmsConnection {
   """A list of edges."""
@@ -198,6 +212,7 @@ type FilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type FilmsEdge {
   """A cursor for use in pagination"""
@@ -205,11 +220,13 @@ type FilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """An object with an ID"""
 interface Node {
   """The id of the object."""
   id: ID!
 }
+
 """Information about pagination in a connection."""
 type PageInfo {
   """When paginating forwards, the cursor to continue."""
@@ -221,6 +238,7 @@ type PageInfo {
   """When paginating backwards, the cursor to continue."""
   startCursor: String
 }
+
 """A connection to a list of items."""
 type PeopleConnection {
   """A list of edges."""
@@ -244,6 +262,7 @@ type PeopleConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PeopleEdge {
   """A cursor for use in pagination"""
@@ -251,6 +270,7 @@ type PeopleEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """An individual person or character within the Star Wars universe."""
 type Person implements Node {
   """
@@ -296,6 +316,7 @@ type Person implements Node {
   starshipConnection(after: String, before: String, first: Int, last: Int): PersonStarshipsConnection
   vehicleConnection(after: String, before: String, first: Int, last: Int): PersonVehiclesConnection
 }
+
 """A connection to a list of items."""
 type PersonFilmsConnection {
   """A list of edges."""
@@ -319,6 +340,7 @@ type PersonFilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PersonFilmsEdge {
   """A cursor for use in pagination"""
@@ -326,6 +348,7 @@ type PersonFilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """A connection to a list of items."""
 type PersonStarshipsConnection {
   """A list of edges."""
@@ -349,6 +372,7 @@ type PersonStarshipsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PersonStarshipsEdge {
   """A cursor for use in pagination"""
@@ -356,6 +380,7 @@ type PersonStarshipsEdge {
   """The item at the end of the edge"""
   node: Starship
 }
+
 """A connection to a list of items."""
 type PersonVehiclesConnection {
   """A list of edges."""
@@ -379,6 +404,7 @@ type PersonVehiclesConnection {
   """
   vehicles: [Vehicle]
 }
+
 """An edge in a connection."""
 type PersonVehiclesEdge {
   """A cursor for use in pagination"""
@@ -386,6 +412,7 @@ type PersonVehiclesEdge {
   """The item at the end of the edge"""
   node: Vehicle
 }
+
 """
 A large mass, planet or planetoid in the Star Wars Universe, at the time of
 0 ABY.
@@ -430,6 +457,7 @@ type Planet implements Node {
   """The terrains of this planet."""
   terrains: [String]
 }
+
 """A connection to a list of items."""
 type PlanetFilmsConnection {
   """A list of edges."""
@@ -453,6 +481,7 @@ type PlanetFilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PlanetFilmsEdge {
   """A cursor for use in pagination"""
@@ -460,6 +489,7 @@ type PlanetFilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """A connection to a list of items."""
 type PlanetResidentsConnection {
   """A list of edges."""
@@ -483,6 +513,7 @@ type PlanetResidentsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PlanetResidentsEdge {
   """A cursor for use in pagination"""
@@ -490,6 +521,7 @@ type PlanetResidentsEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """A connection to a list of items."""
 type PlanetsConnection {
   """A list of edges."""
@@ -513,6 +545,7 @@ type PlanetsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type PlanetsEdge {
   """A cursor for use in pagination"""
@@ -520,6 +553,7 @@ type PlanetsEdge {
   """The item at the end of the edge"""
   node: Planet
 }
+
 type Root {
   allFilms(after: String, before: String, first: Int, last: Int): FilmsConnection
   allPeople(after: String, before: String, first: Int, last: Int): PeopleConnection
@@ -539,6 +573,7 @@ type Root {
   starship(id: ID, starshipID: ID): Starship
   vehicle(id: ID, vehicleID: ID): Vehicle
 }
+
 """A type of person or character within the Star Wars Universe."""
 type Species implements Node {
   """The average height of this species in centimeters."""
@@ -579,6 +614,7 @@ type Species implements Node {
   """
   skinColors: [String]
 }
+
 """A connection to a list of items."""
 type SpeciesConnection {
   """A list of edges."""
@@ -602,6 +638,7 @@ type SpeciesConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type SpeciesEdge {
   """A cursor for use in pagination"""
@@ -609,6 +646,7 @@ type SpeciesEdge {
   """The item at the end of the edge"""
   node: Species
 }
+
 """A connection to a list of items."""
 type SpeciesFilmsConnection {
   """A list of edges."""
@@ -632,6 +670,7 @@ type SpeciesFilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type SpeciesFilmsEdge {
   """A cursor for use in pagination"""
@@ -639,6 +678,7 @@ type SpeciesFilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """A connection to a list of items."""
 type SpeciesPeopleConnection {
   """A list of edges."""
@@ -662,6 +702,7 @@ type SpeciesPeopleConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type SpeciesPeopleEdge {
   """A cursor for use in pagination"""
@@ -669,6 +710,7 @@ type SpeciesPeopleEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """A single transport craft that has hyperdrive capability."""
 type Starship implements Node {
   """
@@ -724,6 +766,7 @@ type Starship implements Node {
   """
   starshipClass: String
 }
+
 """A connection to a list of items."""
 type StarshipFilmsConnection {
   """A list of edges."""
@@ -747,6 +790,7 @@ type StarshipFilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type StarshipFilmsEdge {
   """A cursor for use in pagination"""
@@ -754,6 +798,7 @@ type StarshipFilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """A connection to a list of items."""
 type StarshipPilotsConnection {
   """A list of edges."""
@@ -777,6 +822,7 @@ type StarshipPilotsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type StarshipPilotsEdge {
   """A cursor for use in pagination"""
@@ -784,6 +830,7 @@ type StarshipPilotsEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """A connection to a list of items."""
 type StarshipsConnection {
   """A list of edges."""
@@ -807,6 +854,7 @@ type StarshipsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type StarshipsEdge {
   """A cursor for use in pagination"""
@@ -814,6 +862,7 @@ type StarshipsEdge {
   """The item at the end of the edge"""
   node: Starship
 }
+
 """A single transport craft that does not have hyperdrive capability"""
 type Vehicle implements Node {
   """The maximum number of kilograms that this vehicle can transport."""
@@ -856,6 +905,7 @@ type Vehicle implements Node {
   """The class of this vehicle, such as "Wheeled" or "Repulsorcraft"."""
   vehicleClass: String
 }
+
 """A connection to a list of items."""
 type VehicleFilmsConnection {
   """A list of edges."""
@@ -879,6 +929,7 @@ type VehicleFilmsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type VehicleFilmsEdge {
   """A cursor for use in pagination"""
@@ -886,6 +937,7 @@ type VehicleFilmsEdge {
   """The item at the end of the edge"""
   node: Film
 }
+
 """A connection to a list of items."""
 type VehiclePilotsConnection {
   """A list of edges."""
@@ -909,6 +961,7 @@ type VehiclePilotsConnection {
   """
   totalCount: Int
 }
+
 """An edge in a connection."""
 type VehiclePilotsEdge {
   """A cursor for use in pagination"""
@@ -916,6 +969,7 @@ type VehiclePilotsEdge {
   """The item at the end of the edge"""
   node: Person
 }
+
 """A connection to a list of items."""
 type VehiclesConnection {
   """A list of edges."""
@@ -939,6 +993,7 @@ type VehiclesConnection {
   """
   vehicles: [Vehicle]
 }
+
 """An edge in a connection."""
 type VehiclesEdge {
   """A cursor for use in pagination"""
