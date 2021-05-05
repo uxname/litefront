@@ -45,3 +45,5 @@ declare module '*.gif?inline';
 declare module '*.gif?url';
 declare module '*.gif?original';
 declare module '*.gif?trace';
+
+declare module '*.scss';
