@@ -321,3 +321,4 @@ fabric.properties
 
 generated/graphql.tsx
 generated/graphqlSsr.tsx
+/build
