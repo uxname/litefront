@@ -1,8 +1,8 @@
 overwrite: true
 schema: ${NEXT_PUBLIC_GRAPHQL_API_URL}
-documents: "./graphql/**/*.graphql"
+documents: "./src/graphql/**/*.graphql"
 generates:
-    generated/graphql.tsx:
+    src/generated/graphql.tsx:
         plugins:
             - "typescript"
             - "typescript-operations"
@@ -12,7 +12,7 @@ generates:
             withHooks: true
             withHOC: false
             withComponent: false
-    generated/schema.graphql:
+    src/generated/schema.graphql:
         plugins:
             - schema-ast
         config:

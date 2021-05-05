@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import {getApolloClient} from '../utils/ApolloClient';
 import {GetServerSideProps} from 'next';
-import {AllPlanetsDocument, AllPlanetsQuery, AllPlanetsQueryResult, useAllFilmsQuery} from '../../generated/graphql';
+import {AllPlanetsDocument, AllPlanetsQuery, AllPlanetsQueryResult, useAllFilmsQuery} from '../generated/graphql';
 import Logo from '../../public/assets/logo.svg';
 import Cat from '../../public/assets/cat.jpg?trace';
 
