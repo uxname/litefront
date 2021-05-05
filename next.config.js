@@ -6,4 +6,7 @@ module.exports = withPlugins([
     [optimizedImages, {
         optimizeImagesInDev: true
     }]
-], {});
+], {
+    poweredByHeader: false,
+    distDir: 'build'
+});
