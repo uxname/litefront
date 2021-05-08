@@ -1,6 +1,6 @@
 FROM node:14-slim as base
 
-WORKDIR /src
+WORKDIR /app
 COPY package*.json ./
 EXPOSE 7171
 
