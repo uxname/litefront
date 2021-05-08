@@ -46,6 +46,11 @@
         "no-use-before-define": "off",
         "react/prop-types": "off",
         "no-catch-shadow": "off",
-        "no-nested-ternary": "off"
+        "no-nested-ternary": "off",
+        "prefer-template": "error",
+        "prefer-spread": "error",
+        "prefer-arrow-callback": "error",
+        "no-var": "error",
+        "arrow-spacing": "error"
     }
 }
