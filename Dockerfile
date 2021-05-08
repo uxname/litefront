@@ -1,5 +1,4 @@
 FROM node:14-slim as base
-FROM node:14-slim as base
 
 WORKDIR /src
 COPY package*.json ./
