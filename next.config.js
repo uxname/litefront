@@ -8,5 +8,6 @@ module.exports = withPlugins([
     }]
 ], {
     poweredByHeader: false,
-    distDir: 'build'
+    distDir: 'build',
+    webpack5: false
 });

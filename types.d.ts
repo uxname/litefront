@@ -1,4 +1,6 @@
 declare module '*.png';
+declare module '*.png';
+declare module '*.png';
 declare module '*.png?include';
 declare module '*.png?webp';
 declare module '*.png?inline';
