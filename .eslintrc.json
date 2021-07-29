@@ -25,6 +25,11 @@
         "sonarjs",
         "@typescript-eslint"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "linebreak-style": "off",
         "indent": [

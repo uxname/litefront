@@ -7,7 +7,6 @@ import Cat from '../../public/assets/cat.jpg?trace';
 
 export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
     const {data, loading, error} = useAllFilmsQuery({variables: {first: 1}});
-
     return (
         <div>
             <img height={100} width={250} src={Logo}/>
