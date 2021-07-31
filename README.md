@@ -10,6 +10,10 @@ Next.js + GraphQL + Typescript frontend boilerplate.
 - `npm run gen`
 - `npm run dev`
 
+Production build:
+- `npm run build`
+- `npm start`
+
 ## Types generation
 Run `npm run gen` after every GraphQL API Schema changed or after `./graphql/*.graphql` files are modified
 
