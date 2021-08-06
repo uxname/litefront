@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -1307,38 +1308,14 @@ export type AllFilmsQueryVariables = Exact<{
 }>;
 
 
-export type AllFilmsQuery = (
-  { __typename?: 'Root' }
-  & { allFilms?: Maybe<(
-    { __typename?: 'FilmsConnection' }
-    & { edges?: Maybe<Array<Maybe<(
-      { __typename?: 'FilmsEdge' }
-      & { node?: Maybe<(
-        { __typename?: 'Film' }
-        & Pick<Film, 'id' | 'title'>
-      )> }
-    )>>> }
-  )> }
-);
+export type AllFilmsQuery = { __typename?: 'Root', allFilms?: Maybe<{ __typename?: 'FilmsConnection', edges?: Maybe<Array<Maybe<{ __typename?: 'FilmsEdge', node?: Maybe<{ __typename?: 'Film', id: string, title?: Maybe<string> }> }>>> }> };
 
 export type AllPlanetsQueryVariables = Exact<{
   first: Scalars['Int'];
 }>;
 
 
-export type AllPlanetsQuery = (
-  { __typename?: 'Root' }
-  & { allPlanets?: Maybe<(
-    { __typename?: 'PlanetsConnection' }
-    & { edges?: Maybe<Array<Maybe<(
-      { __typename?: 'PlanetsEdge' }
-      & { node?: Maybe<(
-        { __typename?: 'Planet' }
-        & Pick<Planet, 'id' | 'name'>
-      )> }
-    )>>> }
-  )> }
-);
+export type AllPlanetsQuery = { __typename?: 'Root', allPlanets?: Maybe<{ __typename?: 'PlanetsConnection', edges?: Maybe<Array<Maybe<{ __typename?: 'PlanetsEdge', node?: Maybe<{ __typename?: 'Planet', id: string, name?: Maybe<string> }> }>>> }> };
 
 
 export const AllFilmsDocument = gql`
