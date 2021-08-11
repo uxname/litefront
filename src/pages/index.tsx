@@ -16,6 +16,7 @@ export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
             </h1>
             <h3>SSR Request: </h3>
             <br/>
+            {/* eslint-disable-next-line no-magic-numbers */}
             <pre>{JSON.stringify(props.data?.allPlanets?.edges, null, 2)}</pre>
             <hr/>
             <br/>
@@ -23,6 +24,7 @@ export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
                 <h3>Client side query:</h3>
                 {
                     error ? <div>Error</div> : loading ? <div>Loading...</div>
+                        // eslint-disable-next-line no-magic-numbers
                         : <pre>{JSON.stringify(data, null, 2)}</pre>
                 }
             </div>
