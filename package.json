@@ -9,7 +9,6 @@
         "check": "npm run ts:check && npm run lint",
         "lint": "./node_modules/.bin/eslint . --fix",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
-        "predev": "npm run gen",
         "update": "npx ncu -u"
     },
     "dependencies": {
