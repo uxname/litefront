@@ -4,7 +4,7 @@ import {BatchHttpLink} from '@apollo/client/link/batch-http';
 
 const cache = new InMemoryCache();
 
-if (process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_ENABLED === 'true' && typeof window !== 'undefined') {
+if (process.env.NEXT_PUBLIC_PERSIST_CACHE === 'true' && typeof window !== 'undefined') {
     persistCache({
         cache,
         storage: new LocalStorageWrapper(window.localStorage)
