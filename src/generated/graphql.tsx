@@ -559,7 +559,7 @@ export type Planet = Node & {
    */
   rotationPeriod?: Maybe<Scalars['Int']>;
   /**
-   * The percentage of the planet surface that is naturally occuring water or bodies
+   * The percentage of the planet surface that is naturally occurring water or bodies
    * of water.
    */
   surfaceWater?: Maybe<Scalars['Float']>;
