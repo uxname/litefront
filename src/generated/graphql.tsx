@@ -1308,14 +1308,14 @@ export type AllFilmsQueryVariables = Exact<{
 }>;
 
 
-export type AllFilmsQuery = { __typename?: 'Root', allFilms?: Maybe<{ __typename?: 'FilmsConnection', edges?: Maybe<Array<Maybe<{ __typename?: 'FilmsEdge', node?: Maybe<{ __typename?: 'Film', id: string, title?: Maybe<string> }> }>>> }> };
+export type AllFilmsQuery = { __typename?: 'Root', allFilms?: { __typename?: 'FilmsConnection', edges?: Array<{ __typename?: 'FilmsEdge', node?: { __typename?: 'Film', id: string, title?: string | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 export type AllPlanetsQueryVariables = Exact<{
   first: Scalars['Int'];
 }>;
 
 
-export type AllPlanetsQuery = { __typename?: 'Root', allPlanets?: Maybe<{ __typename?: 'PlanetsConnection', edges?: Maybe<Array<Maybe<{ __typename?: 'PlanetsEdge', node?: Maybe<{ __typename?: 'Planet', id: string, name?: Maybe<string> }> }>>> }> };
+export type AllPlanetsQuery = { __typename?: 'Root', allPlanets?: { __typename?: 'PlanetsConnection', edges?: Array<{ __typename?: 'PlanetsEdge', node?: { __typename?: 'Planet', id: string, name?: string | null | undefined } | null | undefined } | null | undefined> | null | undefined } | null | undefined };
 
 
 export const AllFilmsDocument = gql`
