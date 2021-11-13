@@ -28,8 +28,7 @@ export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
                         : <pre>{JSON.stringify(data, null, 2)}</pre>
                 }
             </div>
-            <Image src={Cat.trace} width={450} height={300}/>
-            <Image src={Cat.src} width={450} height={300}/>
+            <Image src={Cat} width={450} height={300}/>
         </div>
     );
 }
