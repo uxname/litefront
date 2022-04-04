@@ -1,13 +1,17 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import {getApolloClient} from '../utils/ApolloClient';
 import {GetServerSideProps} from 'next';
-import {AllPlanetsDocument, AllPlanetsQuery, AllPlanetsQueryResult, useAllFilmsQuery} from '../generated/graphql';
 import Logo from '../../public/assets/logo.svg';
 import Cat from '../../public/assets/cat.jpg?trace';
 import Image from 'next/image';
+import {DebugDocument, DebugQuery, DebugQueryResult, useEchoMutation} from '../generated/graphql';
 
-export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
-    const {data, loading, error} = useAllFilmsQuery({variables: {first: 1}});
+export default function IndexPage(props: DebugQueryResult): ReactNode {
+    const [echo, {data, loading, error}] = useEchoMutation({variables: {text: 'Hello World'}});
+    useEffect(() => {
+        echo().then(console.log);
+    }, []);
+
     return (
         <div>
             <Image height={100} width={250} src={Logo}/>
@@ -17,7 +21,7 @@ export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
             <h3>SSR Request: </h3>
             <br/>
             {/* eslint-disable-next-line no-magic-numbers */}
-            <pre>{JSON.stringify(props.data?.allPlanets?.edges, null, 2)}</pre>
+            <pre>{JSON.stringify(props.data?.debug, null, 2)}</pre>
             <hr/>
             <br/>
             <div>
@@ -34,8 +38,8 @@ export default function IndexPage(props: AllPlanetsQueryResult): ReactNode {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const echoRes = await getApolloClient.query<AllPlanetsQuery>({
-        query: AllPlanetsDocument,
+    const echoRes = await getApolloClient.query<DebugQuery>({
+        query: DebugDocument,
         variables: {
             first: 4
         }

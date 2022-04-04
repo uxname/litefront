@@ -1,21 +1,7 @@
-query AllFilms($first: Int!) {
-    allFilms(first: $first) {
-        edges {
-            node {
-                id
-                title
-            }
-        }
-    }
+query Debug {
+    debug
 }
 
-query AllPlanets($first: Int!) {
-    allPlanets(first: $first) {
-        edges {
-            node {
-                id
-                name
-            }
-        }
-    }
+mutation Echo($text: String!) {
+    echo(text: $text)
 }
