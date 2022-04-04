@@ -11,7 +11,7 @@ const apolloServer = new ApolloServer({
     mocks: false,
     mockEntireSchema: false,
     // eslint-disable-next-line new-cap
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
+    plugins: process.env.NODE_ENV !== 'production' ? [ApolloServerPluginLandingPageGraphQLPlayground()] : []
 });
 
 const startServer = apolloServer.start();
