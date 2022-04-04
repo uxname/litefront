@@ -1,4 +1,7 @@
 {
   "name": "Untitled GraphQL Schema",
-  "schemaPath": "src/graphql/schema.graphql"
+  "schemaPath": "src/graphql/schema.graphql",
+  "excludes": [
+    "src/pages/api/schema"
+  ]
 }
