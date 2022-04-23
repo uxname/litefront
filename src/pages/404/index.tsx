@@ -1,7 +1,7 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import styles from './index.module.scss';
 
-const Page404: ReactNode = () => <div className={styles.html}>
+const Page404 = () => <div className={styles.html}>
     <div className={styles.body}>
         <div className={styles.milk404}>
             <svg viewBox="0 0 700 600">
