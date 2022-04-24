@@ -4,8 +4,8 @@
     "license": "MIT",
     "scripts": {
         "dev": "next",
-        "build": "next build",
-        "start": "next start -p 7171",
+        "build": "NODE_ENV=production next build",
+        "start": "NODE_ENV=production next start -p 7171",
         "ts:check": "tsc --noEmit",
         "check": "npm run ts:check && npm run lint",
         "lint": "./node_modules/.bin/eslint . --fix",
