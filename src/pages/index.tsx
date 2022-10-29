@@ -14,7 +14,7 @@ export default function IndexPage(props: DebugQueryResult): ReactNode {
 
     return (
         <div>
-            <Image height={100} width={250} src={Logo}/>
+            <Image alt={'logo'} height={100} width={250} src={Logo}/>
             <h1>API URL:
                 <a href={process.env.NEXT_PUBLIC_GRAPHQL_API_URL}>{process.env.NEXT_PUBLIC_GRAPHQL_API_URL}</a>
             </h1>
@@ -32,7 +32,7 @@ export default function IndexPage(props: DebugQueryResult): ReactNode {
                         : <pre>{JSON.stringify(data, null, 2)}</pre>
                 }
             </div>
-            <Image src={Cat} width={450} height={300}/>
+            <Image alt={'cat'} src={Cat} width={450} height={300}/>
         </div>
     );
 }
