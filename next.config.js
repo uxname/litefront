@@ -10,11 +10,12 @@ const sentryWebpackPluginOptions = {
     //   urlPrefix, include, ignore
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options.
+    authToken: process.env.SENTRY_AUTH_TOKEN,
     validate: true
 };
 
 module.exports = withPlugins([
-    (nextConfig) => withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+    nextConfig => process.env.SENTRY_ENABLED === 'true' ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig
 ], {
     poweredByHeader: false,
     distDir: 'build',
