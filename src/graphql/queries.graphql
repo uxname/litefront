@@ -1,7 +1,10 @@
-query Debug {
-    debug
-}
-
-mutation Echo($text: String!) {
-    echo(text: $text)
+query AllFilms($take: Int!) {
+    allFilms(first: $take) {
+        totalCount
+        edges {
+            node {
+                title
+            }
+        }
+    }
 }
