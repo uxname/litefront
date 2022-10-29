@@ -1,4 +1,5 @@
 FROM node:16-slim as base
+RUN apt-get update && apt-get install ca-certificates -y
 
 WORKDIR /app
 COPY package*.json ./
