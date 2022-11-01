@@ -11,7 +11,9 @@ const sentryWebpackPluginOptions = {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options.
     authToken: process.env.SENTRY_AUTH_TOKEN,
-    validate: true
+    validate: true,
+    org: process.env.NEXT_PUBLIC_SENTRY_ORG,
+    project: process.env.NEXT_PUBLIC_SENTRY_PROJECT
 };
 
 module.exports = withPlugins([
