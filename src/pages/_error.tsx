@@ -16,9 +16,9 @@
  *  - https://reactjs.org/docs/error-boundaries.html
  */
 import React from 'react';
-import * as Sentry from '@sentry/nextjs';
-import NextErrorComponent from 'next/error';
 import {NextPageContext} from 'next';
+import NextErrorComponent from 'next/error';
+import * as Sentry from '@sentry/nextjs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomErrorComponent = (props: any) => {

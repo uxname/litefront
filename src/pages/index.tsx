@@ -1,12 +1,14 @@
 import React, {ReactNode} from 'react';
-import {getApolloClient} from '../utils/ApolloClient';
 import {GetServerSideProps} from 'next';
-import Logo from '../../public/assets/logo.svg';
-import Cat from '../../public/assets/cat.jpg?trace';
 import Image from 'next/image';
-import {AllFilmsDocument, AllFilmsQuery, AllFilmsQueryResult, useAllFilmsQuery} from '../generated/graphql';
 
-export default function IndexPage(props: AllFilmsQueryResult): ReactNode {
+import Cat from '../../public/assets/cat.jpg?trace';
+import {Meta} from '../components/Meta';
+import {AllFilmsDocument, AllFilmsQuery, AllFilmsQueryVariables, useAllFilmsQuery} from '../generated/graphql';
+import {IIndexPage} from '../interfaces/IndexPage';
+import {getApolloClient} from '../utils/ApolloClient';
+
+export default function IndexPage({data: allFilmsData, image}: IIndexPage): ReactNode {
     const {data, loading, error} = useAllFilmsQuery({variables: {take: 1}});
 
     async function throwTestError() {
@@ -16,7 +18,8 @@ export default function IndexPage(props: AllFilmsQueryResult): ReactNode {
 
     return (
         <div>
-            <Image alt={'logo'} height={100} width={250} src={Logo}/>
+            <Meta image={image}/>
+            <Image alt={'logo'} height={100} width={250} src={image} loader={() => image} priority unoptimized/>
             <br/>
             <button
                 type="button"
@@ -32,7 +35,7 @@ export default function IndexPage(props: AllFilmsQueryResult): ReactNode {
             <h3>SSR Request: </h3>
             <br/>
             {/* eslint-disable-next-line no-magic-numbers */}
-            <pre>{JSON.stringify(props.data?.allFilms, null, 2)}</pre>
+            <pre>{JSON.stringify(allFilmsData.data?.allFilms, null, 2)}</pre>
             <hr/>
             <br/>
             <div>
@@ -49,13 +52,18 @@ export default function IndexPage(props: AllFilmsQueryResult): ReactNode {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const echoRes = await getApolloClient.query<AllFilmsQuery>({
+    const ogImage = 'http://localhost:3000/api/logo?titleFirst=Lite&titleSecond=Front';
+    const echoRes = await getApolloClient.query<AllFilmsQuery, AllFilmsQueryVariables>({
         query: AllFilmsDocument,
         variables: {
             take: 2
         }
     });
     return {
-        props: echoRes
+        props: {
+            data: echoRes,
+            image: ogImage
+        }
     };
 };
+

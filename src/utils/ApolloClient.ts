@@ -1,6 +1,6 @@
 import {ApolloClient, InMemoryCache} from '@apollo/client';
-import {LocalStorageWrapper, persistCache} from 'apollo3-cache-persist';
 import {BatchHttpLink} from '@apollo/client/link/batch-http';
+import {LocalStorageWrapper, persistCache} from 'apollo3-cache-persist';
 
 const cache = new InMemoryCache();
 
