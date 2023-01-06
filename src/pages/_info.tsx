@@ -1,4 +1,5 @@
 import React, {ReactNode} from 'react';
+
 import packageJson from '../../package.json';
 
 export default function _InfoPage(): ReactNode {
