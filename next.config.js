@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const withPlugins = require('next-compose-plugins');
 const {withSentryConfig} = require('@sentry/nextjs');
 
 const sentryWebpackPluginOptions = {
@@ -16,10 +15,12 @@ const sentryWebpackPluginOptions = {
     project: process.env.NEXT_PUBLIC_SENTRY_PROJECT
 };
 
-module.exports = withPlugins([
-    nextConfig => process.env.SENTRY_ENABLED === 'true' ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig
-], {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     poweredByHeader: false,
     distDir: 'build',
     productionBrowserSourceMaps: true
-});
+};
+
+module.exports =
+    process.env.SENTRY_ENABLED === 'true' ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig;

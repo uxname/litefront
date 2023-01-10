@@ -24,7 +24,9 @@
     "plugins": [
         "react",
         "sonarjs",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "eslint-plugin-import",
+        "simple-import-sort"
     ],
     "settings": {
         "react": {
@@ -32,6 +34,22 @@
         }
     },
     "rules": {
+        "simple-import-sort/imports": ["error", {
+            "groups": [
+                // Packages `react` related packages come first.
+                ["^react","^next", "^@?\\w"],
+                // Internal packages.
+                ["^(@|components)(/.*|$)"],
+                // Side effect imports.
+                ["^\\u0000"],
+                // Parent imports. Put `..` last.
+                ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+                // Other relative imports. Put same-folder imports and `.` last.
+                ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+                // Style imports.
+                ["^.+\\.?(styles)$"]
+            ]
+        }],
         "linebreak-style": "off",
         "indent": [
             "error",
@@ -57,6 +75,7 @@
         "prefer-spread": "error",
         "prefer-arrow-callback": "error",
         "no-var": "error",
-        "arrow-spacing": "error"
+        "arrow-spacing": "error",
+        "complexity": ["error", { "max": 15 }]
     }
 }
