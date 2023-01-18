@@ -10,10 +10,12 @@
         "check": "npm run ts:check && npm run lint",
         "lint": "./node_modules/.bin/eslint . --fix",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
-        "update": "npx ncu -u"
+        "update": "npx ncu -u",
+        "analyze": "cross-env ANALYZE=true next build"
     },
     "dependencies": {
         "@apollo/client": "^3.7.1",
+        "@next/bundle-analyzer": "^13.1.1",
         "@sentry/nextjs": "^7.17.3",
         "@vercel/og": "^0.0.20",
         "apollo3-cache-persist": "^0.14.1",
@@ -38,6 +40,7 @@
         "@types/react-dom": "^18.0.8",
         "@typescript-eslint/eslint-plugin": "^5.42.0",
         "@typescript-eslint/parser": "^5.42.0",
+        "cross-env": "^7.0.3",
         "eslint": "8.22.0",
         "eslint-config-next": "^13.0.1",
         "eslint-plugin-react": "^7.31.10",

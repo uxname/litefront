@@ -15,6 +15,11 @@ const sentryWebpackPluginOptions = {
     project: process.env.NEXT_PUBLIC_SENTRY_PROJECT
 };
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true'
+});
+
+// @ts-check
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     poweredByHeader: false,
@@ -22,5 +27,7 @@ const nextConfig = {
     productionBrowserSourceMaps: true
 };
 
-module.exports =
+const outNextSentryConfig =
     process.env.SENTRY_ENABLED === 'true' ? withSentryConfig(nextConfig, sentryWebpackPluginOptions) : nextConfig;
+
+module.exports = withBundleAnalyzer(outNextSentryConfig);
