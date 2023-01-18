@@ -6,7 +6,7 @@ interface ILogoStyles {
     textSecond: React.CSSProperties
 }
 
-const logoStyles: ILogoStyles = {
+export const logoStyles: ILogoStyles = {
     wrapper: {
         background: 'white',
         width: '600px',
@@ -26,5 +26,3 @@ const logoStyles: ILogoStyles = {
         fontFamily: 'San Francisco'
     }
 };
-
-export default logoStyles;

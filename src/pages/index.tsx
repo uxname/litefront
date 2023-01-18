@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Cat from '../../public/assets/cat.jpg?trace';
 import {Meta} from '../components/Meta';
 import {AllFilmsDocument, AllFilmsQuery, AllFilmsQueryVariables, useAllFilmsQuery} from '../generated/graphql';
-import {IIndexPage} from '../interfaces/IndexPage';
+import {IIndexPageProps} from '../interfaces/index-page';
 import {getApolloClient} from '../utils/ApolloClient';
 
-export default function IndexPage({data: allFilmsData, image}: IIndexPage): ReactNode {
+export default function IndexPage({data: ssrData, imageUrl}: IIndexPageProps): ReactNode {
     const {data, loading, error} = useAllFilmsQuery({variables: {take: 1}});
 
     async function throwTestError() {
@@ -18,8 +18,8 @@ export default function IndexPage({data: allFilmsData, image}: IIndexPage): Reac
 
     return (
         <div>
-            <Meta image={image}/>
-            <Image alt={'logo'} height={100} width={250} src={image} loader={() => image} priority unoptimized/>
+            <Meta image={imageUrl}/>
+            <Image alt={'logo'} height={100} width={250} src={imageUrl} loader={() => imageUrl} priority unoptimized/>
             <br/>
             <button
                 type="button"
@@ -35,7 +35,7 @@ export default function IndexPage({data: allFilmsData, image}: IIndexPage): Reac
             <h3>SSR Request: </h3>
             <br/>
             {/* eslint-disable-next-line no-magic-numbers */}
-            <pre>{JSON.stringify(allFilmsData.data?.allFilms, null, 2)}</pre>
+            <pre>{JSON.stringify(ssrData?.allFilms, null, 2)}</pre>
             <hr/>
             <br/>
             <div>
@@ -52,18 +52,20 @@ export default function IndexPage({data: allFilmsData, image}: IIndexPage): Reac
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const ogImage = 'http://localhost:3000/api/logo?titleFirst=Lite&titleSecond=Front';
+    const ogImage = '//localhost:3000/api/logo?titleFirst=OG_&titleSecond=image';
     const echoRes = await getApolloClient.query<AllFilmsQuery, AllFilmsQueryVariables>({
         query: AllFilmsDocument,
         variables: {
             take: 2
         }
     });
+
+    const result: IIndexPageProps = {
+        data: echoRes.data,
+        imageUrl: ogImage
+    };
     return {
-        props: {
-            data: echoRes,
-            image: ogImage
-        }
+        props: result
     };
 };
 
