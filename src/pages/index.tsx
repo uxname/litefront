@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import Cat from '../../public/assets/cat.jpg?trace';
 import {Meta} from '../components/meta';
+import {Button} from '../components/ui/button';
 import {AllFilmsDocument, AllFilmsQuery, AllFilmsQueryVariables, useAllFilmsQuery} from '../generated/graphql';
 import {IIndexPageProps} from '../interfaces/index-page';
 import {getApolloClient} from '../utils/ApolloClient';
@@ -21,14 +22,13 @@ export default function IndexPage({data: ssrData, imageUrl}: IIndexPageProps): R
             <Meta image={imageUrl}/>
             <Image alt={'logo'} height={100} width={250} src={imageUrl} loader={() => imageUrl} priority unoptimized/>
             <br/>
-            <button
-                type="button"
+            <Button
                 onClick={async () => {
                     await throwTestError();
                 }}
             >
                 Throw error
-            </button>
+            </Button>
             <h1>API URL:
                 <a href={process.env.NEXT_PUBLIC_GRAPHQL_API_URL}>{process.env.NEXT_PUBLIC_GRAPHQL_API_URL}</a>
             </h1>
