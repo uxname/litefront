@@ -3,7 +3,7 @@ import {GetServerSideProps} from 'next';
 import Image from 'next/image';
 
 import Cat from '../../public/assets/cat.jpg?trace';
-import {Meta} from '../components/Meta';
+import {Meta} from '../components/meta';
 import {AllFilmsDocument, AllFilmsQuery, AllFilmsQueryVariables, useAllFilmsQuery} from '../generated/graphql';
 import {IIndexPageProps} from '../interfaces/index-page';
 import {getApolloClient} from '../utils/ApolloClient';
@@ -52,7 +52,8 @@ export default function IndexPage({data: ssrData, imageUrl}: IIndexPageProps): R
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const ogImage = '//localhost:3000/api/logo?titleFirst=OG_&titleSecond=image';
+    const port = process.env.NODE_ENV === 'production' ? '7171' : '3000';
+    const ogImage = `//localhost:${port}/api/logo?titleFirst=OG_&titleSecond=image`;
     const echoRes = await getApolloClient.query<AllFilmsQuery, AllFilmsQueryVariables>({
         query: AllFilmsDocument,
         variables: {

@@ -3,7 +3,6 @@ RUN apt-get update && apt-get install ca-certificates -y
 
 WORKDIR /app
 COPY package*.json ./
-EXPOSE 7171
 
 FROM base as production
 
