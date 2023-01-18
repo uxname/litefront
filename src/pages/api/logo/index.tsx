@@ -6,7 +6,7 @@ import {logoStyles} from './logo.styles';
 
 // Should be exported for OG image
 export const config = {
-    runtime: 'edge'
+    runtime: 'experimental-edge'
 };
 
 const font = (fetch(new URL('../../../../public/fonts/sf.ttf', import.meta.url)).then(res => res.arrayBuffer()));
