@@ -1,4 +1,4 @@
-import React, {ReactElement, ReactNode} from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import styled from 'styled-components';
 
 const ButtonBase = styled.button`
@@ -14,10 +14,12 @@ const ButtonBase = styled.button`
   }
 `;
 
-export function Button({children, onClick}: {children: ReactNode; onClick?: () => void}): ReactElement {
-    return (
-        <ButtonBase onClick={onClick}>
-            {children}
-        </ButtonBase>
-    );
+export function Button({
+  children,
+  onClick,
+}: {
+  children: ReactNode;
+  onClick?: () => void;
+}): ReactElement {
+  return <ButtonBase onClick={onClick}>{children}</ButtonBase>;
 }

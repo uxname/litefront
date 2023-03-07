@@ -1,6 +1,6 @@
-import {AllFilmsQuery} from '../../generated/graphql';
+import { AllFilmsQuery } from '../../generated/graphql';
 
 export interface IIndexPageProps {
-    data: AllFilmsQuery,
-    imageUrl: string
+  data: AllFilmsQuery;
+  imageUrl: string;
 }

@@ -11,7 +11,8 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:sonarjs/recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@next/next/recommended"
+        "plugin:@next/next/recommended",
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -51,13 +52,6 @@
             ]
         }],
         "linebreak-style": "off",
-        "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
         "max-len": "off",
         "no-return-assign": "off",
         "no-magic-numbers": "warn",

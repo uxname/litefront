@@ -2,7 +2,6 @@
 
 - [ ] Move port to .env for production start
 - [ ] Add styled components themes
-- [ ] Add prettier (via ESLint plugin)
 - [ ] Beatify home page
 - [ ] Migrate 404 page to styled components
 - [ ] Implement "npx litefront-cli new" or something like that to create a new project
