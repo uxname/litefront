@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] Move port to .env for production start
 - [ ] Add styled components themes
 - [ ] Add prettier (via ESLint plugin)
 - [ ] Beatify home page
