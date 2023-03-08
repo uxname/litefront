@@ -7,6 +7,7 @@ interface IProperties {
   image?: string;
   url?: string;
 }
+
 const defaults = {
   title: 'LiteFront',
   description: 'LiteFront App',

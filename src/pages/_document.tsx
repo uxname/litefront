@@ -9,16 +9,6 @@ import Document, {
 import { ServerStyleSheet } from 'styled-components';
 
 export default class AppDocument extends Document {
-  render = () => (
-    <Html lang="en">
-      <Head />
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
-
   static async getInitialProps(context: DocumentContext) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = context.renderPage;
@@ -43,4 +33,14 @@ export default class AppDocument extends Document {
       sheet.seal();
     }
   }
+
+  render = () => (
+    <Html lang="en">
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }

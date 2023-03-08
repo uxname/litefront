@@ -8,7 +8,6 @@
 - [ ] Improve Apollo client to automatically error handling and show a nice error component
 - [ ] Add a nice 404 page
 - [ ] Implement image compression on build
-- [ ] Add path aliases to tsconfig.json (like @components, @pages, etc)
 - [ ] Add i18n support
 - [ ] Add a nice logger
 - [ ] Migrate to NextJS Turbopack (after it's released)

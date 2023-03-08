@@ -2,18 +2,19 @@ import React, { ReactNode } from 'react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { ApolloError } from '@apollo/client';
+import { Meta } from '@components/meta';
+import { Button } from '@components/ui/button';
 
-import Cat from '../../public/assets/cat.jpg?trace';
-import { Meta } from '../components/meta';
-import { Button } from '../components/ui/button';
 import {
   AllFilmsDocument,
   AllFilmsQuery,
   AllFilmsQueryVariables,
   useAllFilmsQuery,
-} from '../generated/graphql';
-import { IIndexPageProperties } from '../interfaces/index-page';
-import { getApolloClient } from '../utils/apollo-client';
+} from '@/generated/graphql';
+import { IIndexPageProperties } from '@/interfaces/index-page';
+import { getApolloClient } from '@/utils/apollo-client';
+
+import Cat from '../../public/assets/cat.jpg?trace';
 
 function renderClientQueryComponent(
   error: ApolloError | undefined,
