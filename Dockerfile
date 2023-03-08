@@ -1,12 +1,8 @@
-FROM node:16-slim as base
-RUN apt-get update && apt-get install ca-certificates -y
-
+FROM node:18-alpine3.17
+RUN apk add ca-certificates
 WORKDIR /app
 COPY package*.json ./
-
-FROM base as production
-
-RUN npm i
+RUN npm i --legacy-peer-deps
 COPY . ./
 RUN npm run build
 CMD ["npm", "start"]

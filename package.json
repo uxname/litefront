@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next",
         "build": "cross-env NODE_ENV=production next build",
-        "start": "cross-env NODE_ENV=production next start -p 7171",
+        "start": "cross-env NODE_ENV=production npx env-cmd --silent next start",
         "ts:check": "tsc --noEmit",
         "check": "npm run ts:check && npm run lint",
         "lint": "./node_modules/.bin/eslint .",
@@ -21,6 +21,7 @@
         "@vercel/og": "^0.0.27",
         "apollo3-cache-persist": "^0.14.1",
         "dotenv": "^16.0.3",
+        "env-cmd": "^10.1.0",
         "graphql": "^16.6.0",
         "next": "13.1.2",
         "next-compose-plugins": "^2.2.1",
@@ -45,14 +46,14 @@
         "@typescript-eslint/parser": "^5.48.2",
         "cross-env": "^7.0.3",
         "eslint": "8.32.0",
+        "eslint-config-next": "^13.1.2",
         "eslint-config-prettier": "^8.7.0",
         "eslint-plugin-prettier": "^4.2.1",
-        "prettier": "^2.8.4",
-        "eslint-config-next": "^13.1.2",
         "eslint-plugin-react": "^7.32.1",
         "eslint-plugin-simple-import-sort": "^9.0.0",
         "eslint-plugin-sonarjs": "^0.18.0",
         "npm-check-updates": "^16.6.2",
+        "prettier": "^2.8.4",
         "typescript": "4.9"
     }
 }

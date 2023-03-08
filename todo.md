@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Move port to .env for production start
 - [ ] Add styled components themes
 - [ ] Beatify home page
 - [ ] Migrate 404 page to styled components

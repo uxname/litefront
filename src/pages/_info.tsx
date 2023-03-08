@@ -1,13 +1,12 @@
 import React, { ReactNode } from 'react';
 
-import packageJson from '../../package.json';
+import appInfo from '../../app-info.json';
 
 export default function _InfoPage(): ReactNode {
   return (
     <div>
-      {`${packageJson.name} ${packageJson.version}`}
+      {`${appInfo.name} ${appInfo.version}`}
       <hr />
-      {`Date: ${new Date().toISOString()}`}
     </div>
   );
 }
