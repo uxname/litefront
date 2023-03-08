@@ -44,7 +44,7 @@ export default function IndexPage({
   const { data, loading, error } = useAllFilmsQuery({ variables: { take: 1 } });
 
   async function throwTestError() {
-    console.log('Throwing test error');
+    log.warn('Throwing test error');
     throw new Error('Test error');
   }
 
