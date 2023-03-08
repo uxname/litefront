@@ -13,6 +13,7 @@ import {
 } from '@/generated/graphql';
 import { IIndexPageProperties } from '@/interfaces/index-page';
 import { getApolloClient } from '@/utils/apollo-client';
+import { log } from '@/utils/log';
 
 import Cat from '../../public/assets/cat.jpg?trace';
 
@@ -46,6 +47,12 @@ export default function IndexPage({
     console.log('Throwing test error');
     throw new Error('Test error');
   }
+
+  log.trace('Hello world trace');
+  log.debug('Hello world debug');
+  log.info('Hello world info');
+  log.warn('Hello world warn');
+  log.error('Hello world error');
 
   return (
     <div>

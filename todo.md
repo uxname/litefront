@@ -9,7 +9,6 @@
 - [ ] Add a nice 404 page
 - [ ] Implement image compression on build
 - [ ] Add i18n support
-- [ ] Add a nice logger
 - [ ] Migrate to NextJS Turbopack (after it's released)
 
 # Research
