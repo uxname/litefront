@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-var-requires,unicorn/prefer-module */
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const sentryWebpackPluginOptions = {

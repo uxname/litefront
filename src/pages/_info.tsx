@@ -1,9 +1,10 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-magic-numbers */
 import React, { ReactNode } from 'react';
 
 import appInfo from '../../app-info.json';
 
-export default function InfoPage(props: { uptime: number }): ReactNode {
+export default function InfoPage(properties: { uptime: number }): ReactNode {
   const formatDate = (date: number): string => {
     const seconds = Math.floor(date % 60);
     const minutes = Math.floor((date / 60) % 60);
@@ -17,7 +18,7 @@ export default function InfoPage(props: { uptime: number }): ReactNode {
     <div>
       {`${appInfo.name} ${appInfo.version}`}
       <hr />
-      <p>Uptime: {formatDate(props.uptime)}</p>
+      <p>Uptime: {formatDate(properties.uptime)}</p>
     </div>
   );
 }

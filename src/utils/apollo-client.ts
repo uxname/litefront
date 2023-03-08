@@ -11,8 +11,6 @@ if (
   persistCache({
     cache,
     storage: new LocalStorageWrapper(window.localStorage),
-  }).then(() => {
-    // Continue setting up Apollo Client as usual.
   });
 }
 
@@ -22,10 +20,10 @@ export const getApolloClient = new ApolloClient({
     typeof window !== 'undefined'
       ? new BatchHttpLink({
           uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
-          batchMax: parseInt(
+          batchMax: Number.parseInt(
             process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_BATCH_MAX || '7',
           ), // No more than 7 operations per batch
-          batchInterval: parseInt(
+          batchInterval: Number.parseInt(
             process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_BATCH_INTERVAL ||
               '20',
           ), // Wait no more than 20ms after first batched operation

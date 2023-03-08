@@ -1,7 +1,7 @@
 import React from 'react';
 import NextHead from 'next/head';
 
-interface IProps {
+interface IProperties {
   title?: string;
   description?: string;
   image?: string;
@@ -14,33 +14,33 @@ const defaults = {
   url: 'http://localhost:3000',
 };
 
-export const Meta = (props: IProps) => (
+export const Meta = (properties: IProperties) => (
   <NextHead>
-    <title>{props.title || defaults.title}</title>
+    <title>{properties.title || defaults.title}</title>
     <meta
       name="description"
       key={'desc'}
-      content={props.description || defaults.description}
+      content={properties.description || defaults.description}
     />
 
     {/*<!-- Google / Search Engine Tags -->*/}
-    <meta itemProp="name" content={props.title || defaults.title} />
+    <meta itemProp="name" content={properties.title || defaults.title} />
     <meta
       itemProp="description"
-      content={props.description || defaults.description}
+      content={properties.description || defaults.description}
     />
-    <meta itemProp="image" content={props.image || defaults.image} />
+    <meta itemProp="image" content={properties.image || defaults.image} />
 
     {/*<!-- Facebook Meta Tags -->*/}
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content={'LiteFront'} />
-    <meta property="og:title" content={props.title || defaults.title} />
+    <meta property="og:title" content={properties.title || defaults.title} />
     <meta
       property="og:description"
-      content={props.description || defaults.description}
+      content={properties.description || defaults.description}
     />
-    <meta property="og:image" content={props.image || defaults.image} />
-    <meta property="og:url" content={props.url || defaults.url} />
+    <meta property="og:image" content={properties.image || defaults.image} />
+    <meta property="og:url" content={properties.url || defaults.url} />
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="467" />
     <meta property="og:image:height" content="263" />
@@ -48,20 +48,20 @@ export const Meta = (props: IProps) => (
     <meta
       name="twitter:title"
       key={'ttitle'}
-      content={props.title || defaults.title}
+      content={properties.title || defaults.title}
     />
     <meta
       name="twitter:description"
       key={'tdesc'}
-      content={props.description || defaults.description}
+      content={properties.description || defaults.description}
     />
     <meta
       name="twitter:image"
       key={'timg'}
-      content={props.image || defaults.image}
+      content={properties.image || defaults.image}
     />
     <meta name="twitter:card" key={'tcard'} content="summary_large_image" />
-    <meta name="twitter:site" content={props.url || defaults.url} />
-    <meta name="twitter:creator" content={props.url || defaults.url} />
+    <meta name="twitter:site" content={properties.url || defaults.url} />
+    <meta name="twitter:creator" content={properties.url || defaults.url} />
   </NextHead>
 );

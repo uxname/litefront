@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
+import { ApolloError } from '@apollo/client';
 
 import Cat from '../../public/assets/cat.jpg?trace';
 import { Meta } from '../components/meta';
@@ -11,13 +12,33 @@ import {
   AllFilmsQueryVariables,
   useAllFilmsQuery,
 } from '../generated/graphql';
-import { IIndexPageProps } from '../interfaces/index-page';
-import { getApolloClient } from '../utils/ApolloClient';
+import { IIndexPageProperties } from '../interfaces/index-page';
+import { getApolloClient } from '../utils/apollo-client';
+
+function renderClientQueryComponent(
+  error: ApolloError | undefined,
+  loading: boolean,
+  data: AllFilmsQuery | undefined,
+) {
+  if (error) {
+    return <div>Error</div>;
+  }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  return (
+    <div>
+      <h3>Client side query:</h3>
+      {/* eslint-disable-next-line no-magic-numbers */}
+      <pre>{JSON.stringify(data, undefined, 2)}</pre>
+    </div>
+  );
+}
 
 export default function IndexPage({
   data: ssrData,
   imageUrl,
-}: IIndexPageProps): ReactNode {
+}: IIndexPageProperties): ReactNode {
   const { data, loading, error } = useAllFilmsQuery({ variables: { take: 1 } });
 
   async function throwTestError() {
@@ -54,20 +75,10 @@ export default function IndexPage({
       <h3>SSR Request: </h3>
       <br />
       {/* eslint-disable-next-line no-magic-numbers */}
-      <pre>{JSON.stringify(ssrData?.allFilms, null, 2)}</pre>
+      <pre>{JSON.stringify(ssrData?.allFilms, undefined, 2)}</pre>
       <hr />
       <br />
-      <div>
-        <h3>Client side query:</h3>
-        {error ? (
-          <div>Error</div>
-        ) : loading ? (
-          <div>Loading...</div>
-        ) : (
-          // eslint-disable-next-line no-magic-numbers
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        )}
-      </div>
+      {renderClientQueryComponent(error, loading, data)}
       <Image alt={'cat'} src={Cat} width={450} height={300} />
     </div>
   );
@@ -76,7 +87,7 @@ export default function IndexPage({
 export const getServerSideProps: GetServerSideProps = async () => {
   const port = process.env.NODE_ENV === 'production' ? '7171' : '3000';
   const ogImage = `//localhost:${port}/api/logo?titleFirst=OG_&titleSecond=image`;
-  const echoRes = await getApolloClient.query<
+  const echoResult = await getApolloClient.query<
     AllFilmsQuery,
     AllFilmsQueryVariables
   >({
@@ -86,8 +97,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   });
 
-  const result: IIndexPageProps = {
-    data: echoRes.data,
+  const result: IIndexPageProperties = {
+    data: echoResult.data,
     imageUrl: ogImage,
   };
   return {

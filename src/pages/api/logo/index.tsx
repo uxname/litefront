@@ -11,12 +11,13 @@ export const config = {
 
 const font = fetch(
   new URL('../../../../public/fonts/sf.ttf', import.meta.url),
-).then((res) => res.arrayBuffer());
+  // eslint-disable-next-line unicorn/prefer-top-level-await
+).then((response) => response.arrayBuffer());
 
-export default async function handler(req: NextRequest) {
+export default async function handler(request: NextRequest) {
   try {
     const fontData = await font; // todo replace by await
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
 
     const hasTitleFirst = searchParams.has('titleFirst');
     const titleFirst = hasTitleFirst
@@ -49,12 +50,12 @@ export default async function handler(req: NextRequest) {
       },
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (e: any) {
-    console.error(`${e.message}`);
+  } catch (error: any) {
+    console.error(`${error.message}`);
     return new Response(
       JSON.stringify({
         message: 'Render error',
-        error: e.message,
+        error: error.message,
       }),
       {
         status: 500,

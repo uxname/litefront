@@ -6,7 +6,6 @@
 - [ ] Implement "npx litefront-cli new" or something like that to create a new project
 - [ ] Make directory structure better
 - [ ] Improve Apollo client to automatically error handling and show a nice error component
-- [ ] Copy ESLint config from LiteEnd
 - [ ] Add a nice 404 page
 - [ ] Implement image compression on build
 - [ ] Add path aliases to tsconfig.json (like @components, @pages, etc)

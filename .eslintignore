@@ -321,3 +321,4 @@ fabric.properties
 
 src/generated
 /build
+next-env.d.ts

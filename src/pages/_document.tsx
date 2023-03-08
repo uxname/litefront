@@ -19,22 +19,22 @@ export default class AppDocument extends Document {
     </Html>
   );
 
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getInitialProps(context: DocumentContext) {
     const sheet = new ServerStyleSheet();
-    const originalRenderPage = ctx.renderPage;
+    const originalRenderPage = context.renderPage;
     try {
-      ctx.renderPage = () =>
+      context.renderPage = () =>
         originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            sheet.collectStyles(<App {...props} />),
+          enhanceApp: (App) => (properties) =>
+            sheet.collectStyles(<App {...properties} />),
         });
 
-      const initialProps = await Document.getInitialProps(ctx);
+      const initialProperties = await Document.getInitialProps(context);
       return {
-        ...initialProps,
+        ...initialProperties,
         styles: [
           <>
-            {initialProps.styles}
+            {initialProperties.styles}
             {sheet.getStyleElement()}
           </>,
         ],

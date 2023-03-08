@@ -12,7 +12,11 @@
         "plugin:sonarjs/recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@next/next/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:security/recommended",
+        "plugin:eslint-comments/recommended",
+        "plugin:promise/recommended",
+        "plugin:unicorn/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -23,9 +27,14 @@
     },
     "parser": "@typescript-eslint/parser",
     "plugins": [
-        "react",
+        "@typescript-eslint/eslint-plugin",
         "sonarjs",
-        "@typescript-eslint",
+        "unicorn",
+        "comments",
+        "promise",
+        "security",
+        "no-secrets",
+        "react",
         "eslint-plugin-import",
         "simple-import-sort"
     ],
@@ -70,6 +79,7 @@
         "prefer-arrow-callback": "error",
         "no-var": "error",
         "arrow-spacing": "error",
-        "complexity": ["error", { "max": 15 }]
+        "complexity": ["error", { "max": 15 }],
+        "unicorn/consistent-function-scoping": "off"
     }
 }
