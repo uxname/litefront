@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ApolloError } from '@apollo/client';
 import { Meta } from '@components/meta';
 import { Button } from '@components/ui/button';
+import Cat from '@public/assets/cat.jpg';
 
 import {
   AllFilmsDocument,
@@ -14,8 +15,6 @@ import {
 import { IIndexPageProperties } from '@/interfaces/index-page';
 import { getApolloClient } from '@/utils/apollo-client';
 import { log } from '@/utils/log';
-
-import Cat from '../../public/assets/cat.jpg?trace';
 
 function renderClientQueryComponent(
   error: ApolloError | undefined,
