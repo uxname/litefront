@@ -11,7 +11,7 @@
         "lint:fix": "./node_modules/.bin/eslint . --fix",
         "check": "npm run ts:check && npm run lint",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
-        "update": "npx ncu -u",
+        "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i --legacy-peer-deps",
         "analyze": "cross-env ANALYZE=true next build"
     },
     "dependencies": {
