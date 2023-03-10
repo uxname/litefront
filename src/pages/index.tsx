@@ -72,7 +72,7 @@ export default function IndexPage({
           await throwTestError();
         }}
       >
-        Throw error
+        Themed button. Throw error
       </Button>
       <h1>
         API URL:

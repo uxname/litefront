@@ -1,8 +1,11 @@
 import React, { ReactElement, ReactNode } from 'react';
 import styled from 'styled-components';
 
+import { IThemeRoot } from '@/interfaces/i-theme';
+
 const ButtonBase = styled.button`
-  background: #fff;
+  background: ${(properties: IThemeRoot) =>
+    properties.theme.buttonBackgroundColor};
   border: 1px solid #000;
   border-radius: 4px;
   box-shadow: #bebebe 0 0 10px 4px;

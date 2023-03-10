@@ -3,13 +3,13 @@
     "version": "1.0.0",
     "license": "MIT",
     "scripts": {
-        "dev": "next",
         "build": "cross-env NODE_ENV=production next build",
-        "start": "cross-env NODE_ENV=production npx env-cmd --silent next start",
+        "start:dev": "next",
+        "start:prod": "cross-env NODE_ENV=production npx env-cmd --silent next start",
         "ts:check": "tsc --noEmit",
-        "check": "npm run ts:check && npm run lint",
         "lint": "./node_modules/.bin/eslint .",
         "lint:fix": "./node_modules/.bin/eslint . --fix",
+        "check": "npm run ts:check && npm run lint",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
         "update": "npx ncu -u",
         "analyze": "cross-env ANALYZE=true next build"
