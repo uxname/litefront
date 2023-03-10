@@ -6,7 +6,6 @@
 - [ ] Make directory structure better
 - [ ] Improve Apollo client to automatically error handling and show a nice error component
 - [ ] Add a nice 404 page
-- [ ] Implement image compression on build
 - [ ] Add i18n support
 - [ ] Migrate to NextJS Turbopack (after it's released)
 
