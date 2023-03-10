@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Add styled components themes
 - [ ] Beatify home page
 - [ ] Migrate 404 page to styled components
 - [ ] Implement "npx litefront-cli new" or something like that to create a new project
