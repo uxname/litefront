@@ -5,4 +5,4 @@ COPY package*.json ./
 RUN npm i --legacy-peer-deps
 COPY . ./
 RUN npm run build
-CMD ["npm", "start:prod"]
+CMD ["npm", "run", "start:prod"]
