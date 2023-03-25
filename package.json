@@ -17,8 +17,8 @@
     "dependencies": {
         "@apollo/client": "^3.7.10",
         "@next/bundle-analyzer": "^13.2.4",
-        "@sentry/nextjs": "^7.42.0",
-        "@vercel/og": "^0.4.0",
+        "@sentry/nextjs": "^7.45.0",
+        "@vercel/og": "^0.4.1",
         "apollo3-cache-persist": "^0.14.1",
         "dotenv": "^16.0.3",
         "env-cmd": "^10.1.0",
@@ -27,8 +27,8 @@
         "next-compose-plugins": "^2.2.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "sharp": "^0.31.3",
-        "styled-components": "^5.3.8"
+        "sharp": "^0.32.0",
+        "styled-components": "^5.3.9"
     },
     "devDependencies": {
         "@graphql-codegen/add": "^4.0.1",
@@ -38,16 +38,16 @@
         "@graphql-codegen/typescript-operations": "3.0.2",
         "@graphql-codegen/typescript-react-apollo": "3.3.7",
         "@jetbrains/eslint-config": "^5.4.1",
-        "@types/node": "^18.15.0",
-        "@types/react": "^18.0.28",
+        "@types/node": "^18.15.9",
+        "@types/react": "^18.0.29",
         "@types/react-dom": "^18.0.11",
         "@types/styled-components": "^5.1.26",
-        "@typescript-eslint/eslint-plugin": "^5.54.1",
-        "@typescript-eslint/parser": "^5.54.1",
+        "@typescript-eslint/eslint-plugin": "^5.56.0",
+        "@typescript-eslint/parser": "^5.56.0",
         "cross-env": "^7.0.3",
-        "eslint": "8.35.0",
+        "eslint": "8.36.0",
         "eslint-config-next": "^13.2.4",
-        "eslint-config-prettier": "^8.7.0",
+        "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-comments": "^1.0.0",
         "eslint-plugin-eslint-comments": "^3.2.0",
         "eslint-plugin-no-secrets": "^0.8.9",
@@ -56,11 +56,11 @@
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-security": "^1.7.1",
         "eslint-plugin-simple-import-sort": "^10.0.0",
-        "eslint-plugin-sonarjs": "^0.18.0",
+        "eslint-plugin-sonarjs": "^0.19.0",
         "eslint-plugin-unicorn": "^46.0.0",
-        "npm-check-updates": "^16.7.12",
-        "prettier": "^2.8.4",
+        "npm-check-updates": "^16.8.0",
+        "prettier": "^2.8.7",
         "ts-node": "^10.9.1",
-        "typescript": "4.9"
+        "typescript": "5.0"
     }
 }
