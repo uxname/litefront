@@ -18,6 +18,11 @@
         "plugin:promise/recommended",
         "plugin:unicorn/recommended"
     ],
+    "ignorePatterns": [
+        "src/generated",
+        "/build",
+        "next-env.d.ts"
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
