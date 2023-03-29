@@ -1,10 +1,10 @@
 query AllFilms($take: Int!) {
-    allFilms(first: $take) {
-        totalCount
-        edges {
-            node {
-                title
-            }
-        }
+  allFilms(first: $take) {
+    totalCount
+    edges {
+      node {
+        title
+      }
     }
+  }
 }
