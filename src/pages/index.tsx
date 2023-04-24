@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { ApolloError } from '@apollo/client';
 import { Meta } from '@components/meta';
-import { Button } from '@components/ui/button';
+import { MyButton } from '@components/ui/button';
 import Cat from '@public/assets/cat.jpg';
 
 import {
@@ -66,13 +66,13 @@ export default function IndexPage({
         unoptimized
       />
       <br />
-      <Button
+      <MyButton
         onClick={async () => {
           await throwTestError();
         }}
       >
         Themed button. Throw error
-      </Button>
+      </MyButton>
       <h1>
         API URL:
         <a href={process.env.NEXT_PUBLIC_GRAPHQL_API_URL}>

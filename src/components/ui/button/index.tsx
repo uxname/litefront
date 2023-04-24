@@ -1,28 +1,25 @@
 import React, { ReactElement, ReactNode } from 'react';
+import { Button } from '@mui/material';
 import styled from 'styled-components';
 
 import { IThemeRoot } from '@/interfaces/i-theme';
 
-const ButtonBase = styled.button`
-  background: ${(properties: IThemeRoot) =>
-    properties.theme.buttonBackgroundColor};
-  border: 1px solid #000;
-  border-radius: 4px;
-  box-shadow: #bebebe 0 0 10px 4px;
+const ButtonBase = styled(Button)`
   margin: 0 0 0 10px;
-  padding: 10px 20px;
-
-  :hover {
-    background: #bebebe;
-  }
+  padding: ${(properties: IThemeRoot) => properties.theme.buttonsPaddings}px
+    ${(properties: IThemeRoot) => properties.theme.buttonsPaddings}px;
 `;
 
-export function Button({
+export function MyButton({
   children,
   onClick,
 }: {
   children: ReactNode;
   onClick?: () => void;
 }): ReactElement {
-  return <ButtonBase onClick={onClick}>{children}</ButtonBase>;
+  return (
+    <ButtonBase variant={'contained'} onClick={onClick}>
+      {children}
+    </ButtonBase>
+  );
 }

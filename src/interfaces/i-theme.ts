@@ -1,6 +1,6 @@
 // eslint-disable-next-line unicorn/prevent-abbreviations
 export interface ITheme {
-  buttonBackgroundColor: string;
+  buttonsPaddings: number;
 }
 
 export interface IThemeRoot {
