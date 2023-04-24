@@ -1,6 +1,8 @@
 import React from 'react';
 import NextHead from 'next/head';
 
+import appInfo from '../../../app-info.json';
+
 interface IProperties {
   title?: string;
   description?: string;
@@ -9,9 +11,9 @@ interface IProperties {
 }
 
 const defaults = {
-  title: 'LiteFront',
-  description: 'LiteFront App',
-  image: 'http://localhost:3000/api/logo?titleFirst=Lite&titleSecond=Front',
+  title: `${appInfo.name} ${appInfo.version}`,
+  description: appInfo.name,
+  image: `http://localhost:3000/api/logo?titleFirst=${appInfo.name}&titleSecond=${appInfo.version}`,
   url: 'http://localhost:3000',
 };
 
