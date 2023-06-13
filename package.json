@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "license": "MIT",
     "scripts": {
+        "postinstall": "npm run prepare",
         "build": "cross-env NODE_ENV=production next build",
         "start:dev": "next",
         "start:prod": "cross-env NODE_ENV=production npx env-cmd --silent next start",
@@ -12,7 +13,8 @@
         "check": "npm run ts:check && npm run lint",
         "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
         "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i --legacy-peer-deps",
-        "analyze": "cross-env ANALYZE=true next build"
+        "analyze": "cross-env ANALYZE=true next build",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@apollo/client": "^3.7.15",
@@ -64,6 +66,7 @@
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-sonarjs": "^0.19.0",
         "eslint-plugin-unicorn": "^47.0.0",
+        "husky": "^8.0.3",
         "npm-check-updates": "^16.10.12",
         "prettier": "^2.8.8",
         "ts-node": "^10.9.1",
