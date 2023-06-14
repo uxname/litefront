@@ -4,7 +4,9 @@ import Image from 'next/image';
 import { ApolloError } from '@apollo/client';
 import { Meta } from '@components/meta';
 import { MyButton } from '@components/ui/button';
+import { Card } from '@mui/material';
 import Cat from '@public/assets/cat.jpg';
+import styled from 'styled-components';
 
 import {
   AllFilmsDocument,
@@ -13,6 +15,7 @@ import {
   useAllFilmsQuery,
 } from '@/generated/graphql';
 import { IIndexPageProperties } from '@/interfaces/index-page';
+import { useClickStore } from '@/store/click.store';
 import { getApolloClient } from '@/utils/apollo-client';
 import { log } from '@/utils/log';
 
@@ -32,6 +35,27 @@ function renderClientQueryComponent(
       <h3>Client side query:</h3>
       {/* eslint-disable-next-line no-magic-numbers */}
       <pre>{JSON.stringify(data, undefined, 2)}</pre>
+    </div>
+  );
+}
+
+function RenderState(): React.JSX.Element {
+  const { count, increase, reset } = useClickStore();
+  const MyCard = styled(Card)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+  `;
+
+  return (
+    <div>
+      <MyCard>
+        <h3>Render state component:</h3>
+        <div>Count: {count}</div>
+        <MyButton onClick={increase}>Increase</MyButton>
+        <MyButton onClick={reset}>Reset</MyButton>
+      </MyCard>
     </div>
   );
 }
@@ -73,6 +97,8 @@ export default function IndexPage({
       >
         Themed button. Throw error
       </MyButton>
+
+      <RenderState />
       <h1>
         API URL:
         <a href={process.env.NEXT_PUBLIC_GRAPHQL_API_URL}>
