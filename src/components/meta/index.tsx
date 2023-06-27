@@ -3,21 +3,21 @@ import NextHead from 'next/head';
 
 import appInfo from '../../../app-info.json';
 
-interface IProperties {
+type PropertiesType = {
   title?: string;
   description?: string;
   image?: string;
   url?: string;
-}
+};
 
-const defaults = {
+const defaults: PropertiesType = {
   title: `${appInfo.name} ${appInfo.version}`,
   description: appInfo.name,
   image: `http://localhost:3000/api/logo?titleFirst=${appInfo.name}&titleSecond=${appInfo.version}`,
   url: 'http://localhost:3000',
 };
 
-export const Meta = (properties: IProperties) => (
+export const Meta = (properties: PropertiesType) => (
   <NextHead>
     <title>{properties.title || defaults.title}</title>
     <meta

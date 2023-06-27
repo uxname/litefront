@@ -1,9 +1,6 @@
 import { createTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles/createTheme';
 
-import { ITheme } from '@/interfaces/i-theme';
-
-export const themeMui: Theme = createTheme({
+export const themeMui = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -15,6 +12,6 @@ export const themeMui: Theme = createTheme({
   },
 });
 
-export const themeStyled: ITheme = {
+export const themeStyled = {
   buttonsPaddings: 10,
-};
+} as const;
