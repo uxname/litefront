@@ -14,7 +14,7 @@ import {
   AllFilmsQueryVariables,
   useAllFilmsQuery,
 } from '@/generated/graphql';
-import { IIndexPageProperties } from '@/interfaces/index-page';
+import { IndexPagePropertiesType } from '@/interfaces/index-page';
 import { useClickStore } from '@/store/click.store';
 import { getApolloClient } from '@/utils/apollo-client';
 import { log } from '@/utils/log';
@@ -63,7 +63,7 @@ function RenderState(): React.JSX.Element {
 export default function IndexPage({
   data: ssrData,
   imageUrl,
-}: IIndexPageProperties): ReactNode {
+}: IndexPagePropertiesType): ReactNode {
   const { data, loading, error } = useAllFilmsQuery({ variables: { take: 1 } });
 
   async function throwTestError() {
@@ -130,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   });
 
-  const result: IIndexPageProperties = {
+  const result: IndexPagePropertiesType = {
     data: echoResult.data,
     imageUrl: ogImage,
   };

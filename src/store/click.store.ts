@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-interface IClickState {
+type IClickState = {
   count: number;
   increase: () => void;
   reset: () => void;
-}
+};
 
 export const useClickStore = create<IClickState>((set) => ({
   count: 0,
