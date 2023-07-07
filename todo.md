@@ -7,7 +7,7 @@
 - [ ] Make directory structure better
 - [ ] Improve Apollo client to automatically error handling and show a nice error component
 - [ ] Add a nice 404 page
-- [ ] Add i18n support
+- [ ] Add i18n support (react-i18next)
 - [ ] Migrate to NextJS Turbopack (after it's released)
 
 # Research
