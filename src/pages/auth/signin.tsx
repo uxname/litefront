@@ -27,15 +27,9 @@ const SignUpWrapper = styled.div`
 
 const LinkBottomWrapper = styled.div`
   display: flex;
-  width: 100%;
   justify-content: space-between;
+  width: 100%;
 `;
-
-type FormData = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -54,13 +48,20 @@ const validationSchema = Yup.object().shape({
     .required('Confirm Password is required'),
 });
 
+type FormData = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 export default function SignUp() {
-  const { register, handleSubmit, formState } = useForm<FormData>({
+  const { register, handleSubmit, formState, getValues } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
 
-  const handleFormSubmit = (data: FormData) => {
+  const onSubmit = (data: FormData) => {
     console.log(data);
+    console.log('Clicked', getValues(), formState, formState.errors);
   };
 
   return (
@@ -69,7 +70,7 @@ export default function SignUp() {
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography variant="h5">Sign up</Typography>
+        <Typography variant="h5">Sign in</Typography>
         <TextField
           id="email"
           label="Email"
@@ -92,33 +93,20 @@ export default function SignUp() {
           {...register('password')}
           error={Boolean(formState.errors.password)}
           helperText={formState.errors.password?.message}
-          autoComplete="new-password"
-          sx={{ width: '20em' }}
-        />
-
-        <TextField
-          id="confirmPassword"
-          label="Confirm password"
-          variant="outlined"
-          type="password"
-          required
-          {...register('confirmPassword')}
-          error={Boolean(formState.errors.confirmPassword)}
-          helperText={formState.errors.confirmPassword?.message}
-          autoComplete="new-password"
+          autoComplete="current-password"
           sx={{ width: '20em' }}
         />
 
         <Button
           variant="contained"
           sx={{ width: '20em' }}
-          onClick={handleSubmit(handleFormSubmit)}
+          onClick={handleSubmit(onSubmit)}
         >
-          Sign Up
+          Sign In
         </Button>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
-          <Link href={'/auth/signin'}>Sign in</Link>
+          <Link href="/auth/signup">Sign up</Link>
         </LinkBottomWrapper>
       </SignUpWrapper>
     </PageWrapper>
