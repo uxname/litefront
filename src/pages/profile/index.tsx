@@ -1,6 +1,9 @@
 import React from 'react';
 import { Avatar, Button, TextField, Typography } from '@mui/material';
+import Link from '@mui/material/Link';
 import styled from 'styled-components';
+
+import { AuthStorageService } from '@/services/auth-storage.service';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -29,30 +32,41 @@ const ProfileInfo = styled.div`
 `;
 
 export default function Profile() {
-  // Replace these with actual user data
-  const user = {
-    email: 'example@example.com',
-    id: '123456',
-  };
+  const account = AuthStorageService.getAccount();
+
+  function handleLogout() {
+    AuthStorageService.clear();
+  }
 
   return (
     <PageWrapper>
-      <ProfileWrapper>
-        <Avatar />
-        <Typography variant="h5">{user.email}</Typography>
-        <ProfileInfo>
-          <TextField
-            label="ID"
-            variant="outlined"
-            value={user.id}
-            disabled
+      {account ? (
+        <ProfileWrapper>
+          <Avatar />
+          <Typography variant="h5">{account.email}</Typography>
+          <ProfileInfo>
+            <TextField
+              label="ID"
+              variant="outlined"
+              value={account.id}
+              disabled
+              sx={{ width: '100%' }}
+            />
+          </ProfileInfo>
+          <Button
+            variant="contained"
             sx={{ width: '100%' }}
-          />
-        </ProfileInfo>
-        <Button variant="contained" sx={{ width: '100%' }}>
-          Logout
-        </Button>
-      </ProfileWrapper>
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </ProfileWrapper>
+      ) : (
+        <div style={{ textAlign: 'center' }}>
+          <h1>Not logged in</h1>
+          <Link href="/auth/register">Register</Link>
+        </div>
+      )}
     </PageWrapper>
   );
 }

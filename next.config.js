@@ -26,6 +26,9 @@ const nextConfig = {
   poweredByHeader: false,
   distDir: 'build',
   productionBrowserSourceMaps: true,
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 const outNextSentryConfig =

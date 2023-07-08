@@ -10,6 +10,10 @@ import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 import * as Yup from 'yup';
 
+import { useRegisterMutation } from '@/generated/graphql';
+import { AuthStorageService } from '@/services/auth-storage.service';
+import { log } from '@/services/log';
+
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -54,13 +58,36 @@ const validationSchema = Yup.object().shape({
     .required('Confirm Password is required'),
 });
 
-export default function SignUp() {
-  const { register, handleSubmit, formState } = useForm<FormData>({
+export default function Register() {
+  const {
+    register: registerField,
+    handleSubmit,
+    formState,
+  } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
 
-  const handleFormSubmit = (data: FormData) => {
-    console.log(data);
+  const [register] = useRegisterMutation();
+
+  const handleFormSubmit = async (data: FormData) => {
+    // check if formState.errors contains any errors
+    if (Object.keys(formState.errors).length > 0) {
+      log.debug('Error', formState.errors);
+      return;
+    }
+    log.debug('Registering user', data);
+    const authResponse = await register({
+      variables: {
+        email: data.email,
+        password: data.password,
+      },
+    });
+    log.debug('Registered user', authResponse);
+
+    AuthStorageService.setToken(authResponse.data?.register?.token);
+    AuthStorageService.setAccount(authResponse.data?.register?.account);
+
+    window.location.href = '/profile';
   };
 
   return (
@@ -79,7 +106,7 @@ export default function SignUp() {
           required
           error={Boolean(formState.errors.email)}
           helperText={formState.errors.email?.message}
-          {...register('email')}
+          {...registerField('email')}
           sx={{ width: '20em' }}
         />
 
@@ -89,7 +116,7 @@ export default function SignUp() {
           variant="outlined"
           type="password"
           required
-          {...register('password')}
+          {...registerField('password')}
           error={Boolean(formState.errors.password)}
           helperText={formState.errors.password?.message}
           autoComplete="new-password"
@@ -102,7 +129,7 @@ export default function SignUp() {
           variant="outlined"
           type="password"
           required
-          {...register('confirmPassword')}
+          {...registerField('confirmPassword')}
           error={Boolean(formState.errors.confirmPassword)}
           helperText={formState.errors.confirmPassword?.message}
           autoComplete="new-password"
@@ -118,7 +145,7 @@ export default function SignUp() {
         </Button>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
-          <Link href={'/auth/signin'}>Sign in</Link>
+          <Link href={'/auth/login'}>Login</Link>
         </LinkBottomWrapper>
       </SignUpWrapper>
     </PageWrapper>

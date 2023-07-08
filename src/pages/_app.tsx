@@ -5,8 +5,8 @@ import { StyledEngineProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as StyledComponentProvider } from 'styled-components';
 
+import { getApolloClient } from '@/services/apollo-client.service';
 import { themeMui, themeStyled } from '@/theme';
-import { getApolloClient } from '@/utils/apollo-client';
 
 import { ThemeProvider as MaterialUiProvider } from '@mui/material/styles';
 

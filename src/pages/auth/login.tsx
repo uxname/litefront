@@ -106,7 +106,7 @@ export default function SignUp() {
         </Button>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
-          <Link href="/auth/signup">Sign up</Link>
+          <Link href="/auth/register">Register</Link>
         </LinkBottomWrapper>
       </SignUpWrapper>
     </PageWrapper>
