@@ -68,9 +68,13 @@ export default function Profile() {
       </ProfileWrapper>
     </PageWrapper>
   ) : (
-    <div style={{ textAlign: 'center' }}>
-      <h1>Not logged in</h1>
-      <Link href="/auth/register">Register</Link>
-    </div>
+    <PageWrapper>
+      <ProfileWrapper>
+        <h1>Not logged in</h1>
+        <Link href="/auth/register">Register</Link>
+        <br />
+        <Link href="/auth/login">Login</Link>
+      </ProfileWrapper>
+    </PageWrapper>
   );
 }

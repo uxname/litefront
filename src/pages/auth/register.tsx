@@ -75,7 +75,7 @@ export default function Register() {
       log.debug('Error', formState.errors);
       return;
     }
-    log.debug('Registering user', data);
+    log.debug('Registering user', data.email);
     const authResponse = await register({
       variables: {
         email: data.email,
@@ -106,8 +106,8 @@ export default function Register() {
           required
           error={Boolean(formState.errors.email)}
           helperText={formState.errors.email?.message}
-          {...registerField('email')}
           sx={{ width: '20em' }}
+          {...registerField('email')}
         />
 
         <TextField
@@ -116,11 +116,11 @@ export default function Register() {
           variant="outlined"
           type="password"
           required
-          {...registerField('password')}
           error={Boolean(formState.errors.password)}
           helperText={formState.errors.password?.message}
           autoComplete="new-password"
           sx={{ width: '20em' }}
+          {...registerField('password')}
         />
 
         <TextField
@@ -129,11 +129,11 @@ export default function Register() {
           variant="outlined"
           type="password"
           required
-          {...registerField('confirmPassword')}
           error={Boolean(formState.errors.confirmPassword)}
           helperText={formState.errors.confirmPassword?.message}
           autoComplete="new-password"
           sx={{ width: '20em' }}
+          {...registerField('confirmPassword')}
         />
 
         <Button

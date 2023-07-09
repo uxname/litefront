@@ -10,6 +10,10 @@ import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 import * as Yup from 'yup';
 
+import { useLoginMutation } from '@/generated/graphql';
+import { AuthStorageService } from '@/services/auth-storage.service';
+import { log } from '@/services/log';
+
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -43,25 +47,38 @@ const validationSchema = Yup.object().shape({
       `Password should be at least ${MIN_PASSWORD_LENGTH} characters`,
     )
     .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-    .required('Confirm Password is required'),
 });
 
 type FormData = {
   email: string;
   password: string;
-  confirmPassword: string;
 };
 
 export default function SignUp() {
-  const { register, handleSubmit, formState, getValues } = useForm<FormData>({
+  const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    console.log('Clicked', getValues(), formState, formState.errors);
+  const [login] = useLoginMutation();
+
+  const handleFormSubmit = async (data: FormData) => {
+    if (Object.keys(formState.errors).length > 0) {
+      log.debug('Error', formState.errors);
+      return;
+    }
+    log.debug('Login user', data.email);
+    const authResponse = await login({
+      variables: {
+        email: data.email,
+        password: data.password,
+      },
+    });
+    log.debug('Logged in user', authResponse);
+
+    AuthStorageService.setToken(authResponse.data?.login?.token);
+    AuthStorageService.setAccount(authResponse.data?.login?.account);
+
+    window.location.href = '/profile';
   };
 
   return (
@@ -70,7 +87,7 @@ export default function SignUp() {
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography variant="h5">Sign in</Typography>
+        <Typography variant="h5">Login</Typography>
         <TextField
           id="email"
           label="Email"
@@ -80,8 +97,8 @@ export default function SignUp() {
           required
           error={Boolean(formState.errors.email)}
           helperText={formState.errors.email?.message}
-          {...register('email')}
           sx={{ width: '20em' }}
+          {...register('email')}
         />
 
         <TextField
@@ -90,19 +107,19 @@ export default function SignUp() {
           variant="outlined"
           type="password"
           required
-          {...register('password')}
           error={Boolean(formState.errors.password)}
           helperText={formState.errors.password?.message}
           autoComplete="current-password"
           sx={{ width: '20em' }}
+          {...register('password')}
         />
 
         <Button
           variant="contained"
           sx={{ width: '20em' }}
-          onClick={handleSubmit(onSubmit)}
+          onClick={handleSubmit(handleFormSubmit)}
         >
-          Sign In
+          Login
         </Button>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
