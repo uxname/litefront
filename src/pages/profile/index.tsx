@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, TextField, Typography } from '@mui/material';
 import Link from '@mui/material/Link';
 import styled from 'styled-components';
 
+import { Account } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 
 const PageWrapper = styled.div`
@@ -32,41 +33,44 @@ const ProfileInfo = styled.div`
 `;
 
 export default function Profile() {
-  const account = AuthStorageService.getAccount();
+  const [account, setAccount] = useState<Account | undefined>();
+
+  useEffect(() => {
+    setAccount(AuthStorageService.getAccount());
+  }, []);
 
   function handleLogout() {
     AuthStorageService.clear();
+    window.location.reload();
   }
 
-  return (
+  return account ? (
     <PageWrapper>
-      {account ? (
-        <ProfileWrapper>
-          <Avatar />
-          <Typography variant="h5">{account.email}</Typography>
-          <ProfileInfo>
-            <TextField
-              label="ID"
-              variant="outlined"
-              value={account.id}
-              disabled
-              sx={{ width: '100%' }}
-            />
-          </ProfileInfo>
-          <Button
-            variant="contained"
+      <ProfileWrapper>
+        <Avatar />
+        <Typography variant="h5">{account.email}</Typography>
+        <ProfileInfo>
+          <TextField
+            label="ID"
+            variant="outlined"
+            value={account.id}
+            disabled
             sx={{ width: '100%' }}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </ProfileWrapper>
-      ) : (
-        <div style={{ textAlign: 'center' }}>
-          <h1>Not logged in</h1>
-          <Link href="/auth/register">Register</Link>
-        </div>
-      )}
+          />
+        </ProfileInfo>
+        <Button
+          variant="contained"
+          sx={{ width: '100%' }}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </ProfileWrapper>
     </PageWrapper>
+  ) : (
+    <div style={{ textAlign: 'center' }}>
+      <h1>Not logged in</h1>
+      <Link href="/auth/register">Register</Link>
+    </div>
   );
 }
