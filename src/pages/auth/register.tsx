@@ -1,8 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -73,9 +71,6 @@ export default function Register() {
     <PageWrapper>
       <ImageWrapper />
       <RightPanelWrapper>
-        <Avatar>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography variant="h5">Registration</Typography>
         <TextFieldWrapper
           id="email"
