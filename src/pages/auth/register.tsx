@@ -72,7 +72,7 @@ export default function Register() {
   return (
     <PageWrapper>
       <ImageWrapper />
-      <RegisterWrapper>
+      <RightPanelWrapper>
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
@@ -116,48 +116,49 @@ export default function Register() {
           {...registerField('confirmPassword')}
         />
 
-        <ButtonRegister
+        <ButtonWrapper
           variant="contained"
           sx={{ width: '20em' }}
           onClick={handleSubmit(handleFormSubmit)}
         >
           Register
-        </ButtonRegister>
+        </ButtonWrapper>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
           <Link href={'/auth/login'}>Login</Link>
         </LinkBottomWrapper>
-      </RegisterWrapper>
+      </RightPanelWrapper>
     </PageWrapper>
   );
 }
 
 const PageWrapper = styled.div`
   display: flex;
-  height: 100vh;
+  height: 90vh;
 `;
 
 const ImageWrapper = styled.div`
   flex: 1;
-  background-image: url(/assets/auth/login-bg.svg);
-  background-size: cover;
+  background-image: url(/assets/auth/register-bg.svg);
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   @media screen and (max-width: 768px) {
     display: none;
   }
 `;
 
-const RegisterWrapper = styled.div`
+const RightPanelWrapper = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  max-width: 30em;
+  max-width: 40em;
   @media screen and (max-width: 768px) {
     max-width: 100em;
   }
-  padding: 0 3rem;
+  padding: 0 10%;
   gap: 1rem;
 `;
 
@@ -171,6 +172,6 @@ const TextFieldWrapper = styled(TextField)`
   width: 100%;
 `;
 
-const ButtonRegister = styled(Button)`
+const ButtonWrapper = styled(Button)`
   width: 100%;
 `;

@@ -14,27 +14,6 @@ import { useLoginMutation } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 import { log } from '@/services/log';
 
-const PageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SignUpWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 100vh;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const LinkBottomWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-`;
-
 const MIN_PASSWORD_LENGTH = 6;
 
 const validationSchema = Yup.object().shape({
@@ -83,12 +62,13 @@ export default function SignUp() {
 
   return (
     <PageWrapper>
-      <SignUpWrapper>
+      <ImageWrapper />
+      <RightPanelWrapper>
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
         <Typography variant="h5">Login</Typography>
-        <TextField
+        <TextFieldWrapper
           id="email"
           label="Email"
           variant="outlined"
@@ -101,7 +81,7 @@ export default function SignUp() {
           {...register('email')}
         />
 
-        <TextField
+        <TextFieldWrapper
           id="password"
           label="Password"
           variant="outlined"
@@ -114,18 +94,62 @@ export default function SignUp() {
           {...register('password')}
         />
 
-        <Button
+        <ButtonWrapper
           variant="contained"
           sx={{ width: '20em' }}
           onClick={handleSubmit(handleFormSubmit)}
         >
           Login
-        </Button>
+        </ButtonWrapper>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
           <Link href="/auth/register">Register</Link>
         </LinkBottomWrapper>
-      </SignUpWrapper>
+      </RightPanelWrapper>
     </PageWrapper>
   );
 }
+
+const PageWrapper = styled.div`
+  display: flex;
+  height: 100vh;
+`;
+
+const ImageWrapper = styled.div`
+  flex: 1;
+  background-image: url(/assets/auth/login-bg.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const RightPanelWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 40em;
+  @media screen and (max-width: 768px) {
+    max-width: 100em;
+  }
+  padding: 0 10%;
+  gap: 1rem;
+`;
+
+const LinkBottomWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const TextFieldWrapper = styled(TextField)`
+  width: 100%;
+`;
+
+const ButtonWrapper = styled(Button)`
+  width: 100%;
+`;
