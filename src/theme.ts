@@ -4,10 +4,10 @@ export const themeMui = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#ff9e80',
+      main: '#2962FF',
     },
     secondary: {
-      main: '#f50057',
+      main: '#F42A8B',
     },
   },
 });
