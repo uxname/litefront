@@ -92,6 +92,7 @@ export default function SignUp() {
         <ButtonWrapper
           variant="contained"
           sx={{ width: '20em' }}
+          disableElevation
           onClick={handleSubmit(handleFormSubmit)}
         >
           Login

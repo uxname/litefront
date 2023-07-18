@@ -114,6 +114,7 @@ export default function Register() {
         <ButtonWrapper
           variant="contained"
           sx={{ width: '20em' }}
+          disableElevation
           onClick={handleSubmit(handleFormSubmit)}
         >
           Register
