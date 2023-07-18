@@ -14,27 +14,6 @@ import { useRegisterMutation } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 import { log } from '@/services/log';
 
-const PageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SignUpWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 100vh;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const LinkBottomWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-`;
-
 type FormData = {
   email: string;
   password: string;
@@ -92,12 +71,13 @@ export default function Register() {
 
   return (
     <PageWrapper>
-      <SignUpWrapper>
+      <ImageWrapper />
+      <RegisterWrapper>
         <Avatar>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography variant="h5">Sign up</Typography>
-        <TextField
+        <Typography variant="h5">Registration</Typography>
+        <TextFieldWrapper
           id="email"
           label="Email"
           variant="outlined"
@@ -110,7 +90,7 @@ export default function Register() {
           {...registerField('email')}
         />
 
-        <TextField
+        <TextFieldWrapper
           id="password"
           label="Password"
           variant="outlined"
@@ -123,7 +103,7 @@ export default function Register() {
           {...registerField('password')}
         />
 
-        <TextField
+        <TextFieldWrapper
           id="confirmPassword"
           label="Confirm password"
           variant="outlined"
@@ -136,18 +116,61 @@ export default function Register() {
           {...registerField('confirmPassword')}
         />
 
-        <Button
+        <ButtonRegister
           variant="contained"
           sx={{ width: '20em' }}
           onClick={handleSubmit(handleFormSubmit)}
         >
-          Sign Up
-        </Button>
+          Register
+        </ButtonRegister>
         <LinkBottomWrapper>
           <Link href="#">Forgot password?</Link>
           <Link href={'/auth/login'}>Login</Link>
         </LinkBottomWrapper>
-      </SignUpWrapper>
+      </RegisterWrapper>
     </PageWrapper>
   );
 }
+
+const PageWrapper = styled.div`
+  display: flex;
+  height: 100vh;
+`;
+
+const ImageWrapper = styled.div`
+  flex: 1;
+  background-image: url(/assets/auth/login-bg.svg);
+  background-size: cover;
+  background-position: center;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const RegisterWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 30em;
+  @media screen and (max-width: 768px) {
+    max-width: 100em;
+  }
+  padding: 0 3rem;
+  gap: 1rem;
+`;
+
+const LinkBottomWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const TextFieldWrapper = styled(TextField)`
+  width: 100%;
+`;
+
+const ButtonRegister = styled(Button)`
+  width: 100%;
+`;
