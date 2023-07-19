@@ -72,7 +72,7 @@ export default function SignUp() {
         <BoxWrapper>
           <div>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Login Error
+              Error
             </Typography>
             <IconButton
               aria-label="close"
@@ -128,8 +128,8 @@ export default function SignUp() {
           onClick={handleSubmit(async (data) => {
             try {
               await handleFormSubmit(data);
-            } catch (_error) {
-              log.error('Login error', _error);
+            } catch (error_) {
+              log.error('Login error', error_);
             }
           })}
         >
