@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton, Modal } from '@mui/material';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -36,7 +38,7 @@ export default function SignUp() {
     resolver: yupResolver(validationSchema),
   });
 
-  const [login] = useLoginMutation();
+  const [login, { error, reset }] = useLoginMutation();
 
   const handleFormSubmit = async (data: FormData) => {
     if (Object.keys(formState.errors).length > 0) {
@@ -61,6 +63,36 @@ export default function SignUp() {
   return (
     <PageWrapper>
       <ImageWrapper />
+      <Modal
+        open={Boolean(error)}
+        onClose={reset}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <BoxWrapper>
+          <div>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Login Error
+            </Typography>
+            <IconButton
+              aria-label="close"
+              onClick={reset}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                // eslint-disable-next-line no-magic-numbers
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {error?.message}
+          </Typography>
+        </BoxWrapper>
+      </Modal>
       <RightPanelWrapper>
         <Typography variant="h5">Login</Typography>
         <TextFieldWrapper
@@ -93,7 +125,13 @@ export default function SignUp() {
           variant="contained"
           sx={{ width: '20em' }}
           disableElevation
-          onClick={handleSubmit(handleFormSubmit)}
+          onClick={handleSubmit(async (data) => {
+            try {
+              await handleFormSubmit(data);
+            } catch (_error) {
+              log.error('Login error', _error);
+            }
+          })}
         >
           Login
         </ButtonWrapper>
@@ -148,4 +186,19 @@ const TextFieldWrapper = styled(TextField)`
 
 const ButtonWrapper = styled(Button)`
   width: 100%;
+`;
+
+const BoxWrapper = styled(Box)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  outline: none;
+  width: 30em;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
 `;
