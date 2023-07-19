@@ -6,32 +6,6 @@ import styled from 'styled-components';
 import { Account } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 
-const PageWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
-
-const ProfileWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-`;
-
-const ProfileInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  width: 300px;
-`;
-
 export default function Profile() {
   const [account, setAccount] = useState<Account | undefined>();
 
@@ -78,3 +52,29 @@ export default function Profile() {
     </PageWrapper>
   );
 }
+
+const PageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const ProfileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+`;
+
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 300px;
+`;
