@@ -1,6 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-var-requires,unicorn/prefer-module */
 const { withSentryConfig } = require('@sentry/nextjs');
+const { i18n } = require('./next-i18next.config');
 
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -29,6 +30,7 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  i18n,
 };
 
 const outNextSentryConfig =

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Avatar, Button, TextField, Typography } from '@mui/material';
 import Link from '@mui/material/Link';
 import styled from 'styled-components';
@@ -7,6 +10,8 @@ import { Account } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 
 export default function Profile() {
+  const { t } = useTranslation(['profile']);
+
   const [account, setAccount] = useState<Account | undefined>();
 
   useEffect(() => {
@@ -37,14 +42,14 @@ export default function Profile() {
           sx={{ width: '100%' }}
           onClick={handleLogout}
         >
-          Logout
+          {t('logout')}
         </Button>
       </ProfileWrapper>
     </PageWrapper>
   ) : (
     <PageWrapper>
       <ProfileWrapper>
-        <h1>Not logged in</h1>
+        <h1>{t('profile:a')}</h1>
         <Link href="/auth/register">Register</Link>
         <br />
         <Link href="/auth/login">Login</Link>
@@ -52,6 +57,14 @@ export default function Profile() {
     </PageWrapper>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? 'en', ['profile'])),
+    },
+  };
+};
 
 const PageWrapper = styled.div`
   display: flex;

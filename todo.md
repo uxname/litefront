@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] Replace env: NEXT_PUBLIC_GRAPHQL_API_URL=http://localhost:4000/graphql
 - [ ] Replace all console.log by logger library
 - [ ] Add delimiters to package.json scripts, like: "___________ DATABASE ___________": ""
 - [ ] Beatify home page
