@@ -1,5 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Modal } from '@mui/material';
@@ -38,6 +41,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Register() {
+  const { t } = useTranslation(['common', 'auth']);
+
   const {
     register: registerField,
     handleSubmit,
@@ -81,7 +86,7 @@ export default function Register() {
         <BoxWrapper>
           <div>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Error
+              {t('common:error')}
             </Typography>
             <IconButton
               aria-label="close"
@@ -103,10 +108,10 @@ export default function Register() {
         </BoxWrapper>
       </Modal>
       <RightPanelWrapper>
-        <Typography variant="h5">Registration</Typography>
+        <Typography variant="h5">{t('auth:register.page_title')}</Typography>
         <TextFieldWrapper
           id="email"
-          label="Email"
+          label={t('common:email')}
           variant="outlined"
           type="email"
           autoComplete="email"
@@ -119,7 +124,7 @@ export default function Register() {
 
         <TextFieldWrapper
           id="password"
-          label="Password"
+          label={t('common:password')}
           variant="outlined"
           type="password"
           required
@@ -132,7 +137,7 @@ export default function Register() {
 
         <TextFieldWrapper
           id="confirmPassword"
-          label="Confirm password"
+          label={t('auth:register.confirm_password')}
           variant="outlined"
           type="password"
           required
@@ -155,16 +160,24 @@ export default function Register() {
             }
           })}
         >
-          Register
+          {t('auth:register.register')}
         </ButtonWrapper>
         <LinkBottomWrapper>
-          <Link href="#">Forgot password?</Link>
-          <Link href={'/auth/login'}>Login</Link>
+          <Link href="#">{t('auth:register.forgot_password')}</Link>
+          <Link href={'/auth/login'}>{t('common:login')}</Link>
         </LinkBottomWrapper>
       </RightPanelWrapper>
     </PageWrapper>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? 'en', ['common', 'auth'])),
+    },
+  };
+};
 
 const PageWrapper = styled.div`
   display: flex;

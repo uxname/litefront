@@ -10,7 +10,7 @@ import { Account } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
 
 export default function Profile() {
-  const { t } = useTranslation(['profile']);
+  const { t } = useTranslation(['common', 'profile']);
 
   const [account, setAccount] = useState<Account | undefined>();
 
@@ -42,17 +42,17 @@ export default function Profile() {
           sx={{ width: '100%' }}
           onClick={handleLogout}
         >
-          {t('logout')}
+          {t('common:logout')}
         </Button>
       </ProfileWrapper>
     </PageWrapper>
   ) : (
     <PageWrapper>
       <ProfileWrapper>
-        <h1>{t('profile:a')}</h1>
-        <Link href="/auth/register">Register</Link>
+        <h1>{t('profile:page_title')}</h1>
+        <Link href="/auth/register">{t('register')}</Link>
         <br />
-        <Link href="/auth/login">Login</Link>
+        <Link href="/auth/login">{t('common:login')}</Link>
       </ProfileWrapper>
     </PageWrapper>
   );
@@ -61,7 +61,7 @@ export default function Profile() {
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale ?? 'en', ['profile'])),
+      ...(await serverSideTranslations(locale ?? 'en', ['common', 'profile'])),
     },
   };
 };

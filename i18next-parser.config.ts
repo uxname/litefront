@@ -5,7 +5,7 @@ export default {
   createOldCatalogs: false,
   // Save the \_old files
 
-  defaultNamespace: 'translation',
+  defaultNamespace: 'common',
   // Default namespace used in your i18next config
 
   defaultValue: '',

@@ -1,5 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Modal } from '@mui/material';
@@ -33,7 +36,9 @@ type FormData = {
   password: string;
 };
 
-export default function SignUp() {
+export default function Login() {
+  const { t } = useTranslation(['common', 'auth']);
+
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
@@ -72,7 +77,7 @@ export default function SignUp() {
         <BoxWrapper>
           <div>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Error
+              {t('common:error')}
             </Typography>
             <IconButton
               aria-label="close"
@@ -94,10 +99,10 @@ export default function SignUp() {
         </BoxWrapper>
       </Modal>
       <RightPanelWrapper>
-        <Typography variant="h5">Login</Typography>
+        <Typography variant="h5">{t('common:login')}</Typography>
         <TextFieldWrapper
           id="email"
-          label="Email"
+          label={t('common:email')}
           variant="outlined"
           type="email"
           autoComplete="email"
@@ -110,7 +115,7 @@ export default function SignUp() {
 
         <TextFieldWrapper
           id="password"
-          label="Password"
+          label={t('common:password')}
           variant="outlined"
           type="password"
           required
@@ -133,16 +138,24 @@ export default function SignUp() {
             }
           })}
         >
-          Login
+          {t('common:login')}
         </ButtonWrapper>
         <LinkBottomWrapper>
-          <Link href="#">Forgot password?</Link>
-          <Link href="/auth/register">Register</Link>
+          <Link href="#">{t('auth:login.forgot_password')}</Link>
+          <Link href="/auth/register">{t('common:register')}</Link>
         </LinkBottomWrapper>
       </RightPanelWrapper>
     </PageWrapper>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? 'en', ['common', 'auth'])),
+    },
+  };
+};
 
 const PageWrapper = styled.div`
   display: flex;
