@@ -8,6 +8,8 @@ import Document, {
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
+import i18nextConfig from '../../next-i18next.config';
+
 export default class AppDocument extends Document {
   static async getInitialProps(context: DocumentContext) {
     const sheet = new ServerStyleSheet();
@@ -34,13 +36,18 @@ export default class AppDocument extends Document {
     }
   }
 
-  render = () => (
-    <Html lang="en">
-      <Head />
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
+  render = () => {
+    const currentLocale =
+      this.props.__NEXT_DATA__.locale ?? i18nextConfig.i18n.defaultLocale;
+
+    return (
+      <Html lang={currentLocale}>
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  };
 }

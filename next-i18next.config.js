@@ -5,9 +5,10 @@
 const i18n = {
   debug: process.env.NODE_ENV === 'development',
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'ru'],
+    defaultLocale: 'default',
+    locales: ['default', 'en', 'ru'],
   },
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
   loadPath: '/locales/{{lng}}/{{ns}}.json',
   addPath: '/locales/{{lng}}/{{ns}}.missing.json',
   serializeConfig: false,

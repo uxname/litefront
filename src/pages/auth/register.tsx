@@ -1,13 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Modal } from '@mui/material';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
@@ -15,6 +16,7 @@ import * as Yup from 'yup';
 
 import { useRegisterMutation } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
+import localeDetectorService from '@/services/locale-detector.service';
 import { log } from '@/services/log';
 
 type FormData = {
@@ -42,6 +44,8 @@ const validationSchema = Yup.object().shape({
 
 export default function Register() {
   const { t } = useTranslation(['common', 'auth']);
+  const locale = localeDetectorService.detect();
+  const router = useRouter();
 
   const {
     register: registerField,
@@ -71,7 +75,7 @@ export default function Register() {
     AuthStorageService.setToken(authResponse.data?.register?.token);
     AuthStorageService.setAccount(authResponse.data?.register?.account);
 
-    window.location.href = '/profile';
+    await router.push('/profile', undefined, { locale });
   };
 
   return (
@@ -164,7 +168,9 @@ export default function Register() {
         </ButtonWrapper>
         <LinkBottomWrapper>
           <Link href="#">{t('auth:register.forgot_password')}</Link>
-          <Link href={'/auth/login'}>{t('common:login')}</Link>
+          <Link href={'/auth/login'} locale={locale}>
+            {t('common:login')}
+          </Link>
         </LinkBottomWrapper>
       </RightPanelWrapper>
     </PageWrapper>

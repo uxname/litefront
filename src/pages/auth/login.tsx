@@ -1,13 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Modal } from '@mui/material';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
@@ -15,6 +16,7 @@ import * as Yup from 'yup';
 
 import { useLoginMutation } from '@/generated/graphql';
 import { AuthStorageService } from '@/services/auth-storage.service';
+import localeDetectorService from '@/services/locale-detector.service';
 import { log } from '@/services/log';
 
 const MIN_PASSWORD_LENGTH = 6;
@@ -38,7 +40,8 @@ type FormData = {
 
 export default function Login() {
   const { t } = useTranslation(['common', 'auth']);
-
+  const locale = localeDetectorService.detect();
+  const router = useRouter();
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(validationSchema),
   });
@@ -62,7 +65,7 @@ export default function Login() {
     AuthStorageService.setToken(authResponse.data?.login?.token);
     AuthStorageService.setAccount(authResponse.data?.login?.account);
 
-    window.location.href = '/profile';
+    await router.push('/profile', undefined, { locale });
   };
 
   return (
@@ -142,7 +145,9 @@ export default function Login() {
         </ButtonWrapper>
         <LinkBottomWrapper>
           <Link href="#">{t('auth:login.forgot_password')}</Link>
-          <Link href="/auth/register">{t('common:register')}</Link>
+          <Link href="/auth/register" locale={locale}>
+            {t('common:register')}
+          </Link>
         </LinkBottomWrapper>
       </RightPanelWrapper>
     </PageWrapper>
