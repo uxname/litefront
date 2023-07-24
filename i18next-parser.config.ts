@@ -1,5 +1,5 @@
 export default {
-  // contextSeparator: "_",
+  contextSeparator: '_',
   // Key separator used in your translation keys
 
   createOldCatalogs: false,
@@ -8,7 +8,7 @@ export default {
   defaultNamespace: 'common',
   // Default namespace used in your i18next config
 
-  defaultValue: '',
+  defaultValue: 'not translated',
   // Default value to give to keys with no value
   // You may also specify a function accepting the locale, namespace, key, and value as arguments
 
