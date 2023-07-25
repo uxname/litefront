@@ -322,3 +322,6 @@ fabric.properties
 src/generated
 /build
 next-env.d.ts
+next.config.js
+sentry.client.config.js
+sentry.server.config.js

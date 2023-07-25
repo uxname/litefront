@@ -1,91 +1,119 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "@jetbrains",
+    "@jetbrains/eslint-config/node",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:prettier/recommended",
+    "plugin:security/recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:promise/recommended",
+    "plugin:unicorn/recommended"
+  ],
+  "ignorePatterns": [
+    "src/generated",
+    "/build",
+    "next-env.d.ts"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends": [
-        "eslint:recommended",
-        "@jetbrains",
-        "@jetbrains/eslint-config/node",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:sonarjs/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@next/next/recommended",
-        "plugin:prettier/recommended",
-        "plugin:security/recommended",
-        "plugin:eslint-comments/recommended",
-        "plugin:promise/recommended",
-        "plugin:unicorn/recommended"
-    ],
-    "ignorePatterns": [
-        "src/generated",
-        "/build",
-        "next-env.d.ts"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2020,
-        "sourceType": "module"
-    },
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint/eslint-plugin",
-        "sonarjs",
-        "unicorn",
-        "comments",
-        "promise",
-        "security",
-        "no-secrets",
-        "react",
-        "eslint-plugin-import",
-        "simple-import-sort"
-    ],
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
-    "rules": {
-        "simple-import-sort/imports": ["error", {
-            "groups": [
-                // Packages `react` related packages come first.
-                ["^react","^next", "^@?\\w"],
-                // Internal packages.
-                ["^(@|components)(/.*|$)"],
-                // Side effect imports.
-                ["^\\u0000"],
-                // Parent imports. Put `..` last.
-                ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-                // Other relative imports. Put same-folder imports and `.` last.
-                ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-                // Style imports.
-                ["^.+\\.?(styles)$"]
-            ]
-        }],
-        "linebreak-style": "off",
-        "max-len": "off",
-        "no-return-assign": "off",
-        "no-magic-numbers": "warn",
-        "valid-jsdoc": "off",
-        "radix": "off",
-        "no-native-reassign": "off",
-        "multiline-ternary": "off",
-        "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error",
-        "no-multiple-empty-lines": "error",
-        "no-use-before-define": "off",
-        "react/prop-types": "off",
-        "no-catch-shadow": "off",
-        "no-nested-ternary": "off",
-        "prefer-template": "error",
-        "prefer-spread": "error",
-        "prefer-arrow-callback": "error",
-        "no-var": "error",
-        "arrow-spacing": "error",
-        "complexity": ["error", { "max": 15 }],
-        "unicorn/consistent-function-scoping": "off"
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "sonarjs",
+    "unicorn",
+    "comments",
+    "promise",
+    "security",
+    "no-secrets",
+    "react",
+    "eslint-plugin-import",
+    "simple-import-sort"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "rules": {
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          // Packages `react` related packages come first.
+          [
+            "^react",
+            "^next",
+            "^@?\\w"
+          ],
+          // Internal packages.
+          [
+            "^(@|components)(/.*|$)"
+          ],
+          // Side effect imports.
+          [
+            "^\\u0000"
+          ],
+          // Parent imports. Put `..` last.
+          [
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$"
+          ],
+          // Other relative imports. Put same-folder imports and `.` last.
+          [
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$"
+          ],
+          // Style imports.
+          [
+            "^.+\\.?(styles)$"
+          ]
+        ]
+      }
+    ],
+    "linebreak-style": "off",
+    "max-len": "off",
+    "no-return-assign": "off",
+    "no-magic-numbers": "warn",
+    "valid-jsdoc": "off",
+    "radix": "off",
+    "no-native-reassign": "off",
+    "multiline-ternary": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "no-multiple-empty-lines": "error",
+    "no-use-before-define": "off",
+    "react/prop-types": "off",
+    "no-catch-shadow": "off",
+    "no-nested-ternary": "off",
+    "prefer-template": "error",
+    "prefer-spread": "error",
+    "prefer-arrow-callback": "error",
+    "no-var": "error",
+    "arrow-spacing": "error",
+    "complexity": [
+      "error",
+      {
+        "max": 15
+      }
+    ],
+    "unicorn/consistent-function-scoping": "off"
+  }
 }
