@@ -1,5 +1,7 @@
 # TODO
 
+- [ ] Fix apollo cache
+- [ ] Implement show commit info in /_info page
 - [ ] Beatify home page
 - [ ] Migrate 404 page to styled components
 - [ ] Make directory structure better
