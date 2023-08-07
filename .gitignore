@@ -115,7 +115,7 @@ fabric.properties
 
 ### Node template
 # Logs
-logs
+/logs
 *.log
 lerna-debug.log*
 
