@@ -20,11 +20,13 @@ type LogObject = {
 export class LogService {
   private readonly maxChannels: number;
   private readonly maxLogsPerChannel: number;
+  private readonly maxLogSize: number;
   private readonly channels: Map<string, LogObject[]>;
 
-  constructor(maxChannels: number, maxLogsPerChannel: number) {
+  constructor(maxChannels: number, maxLogsPerChannel: number, maxLogSize: number) {
     this.maxChannels = maxChannels;
     this.maxLogsPerChannel = maxLogsPerChannel;
+    this.maxLogSize = maxLogSize;
     this.channels = new Map();
   }
 
@@ -39,6 +41,10 @@ export class LogService {
       this.channels.size >= this.maxChannels
     ) {
       this.removeOldestChannel();
+    }
+
+    if (message.length > this.maxLogSize) {
+      message = message.substring(0, this.maxLogSize);
     }
 
     const logs = this.channels.get(channelName) || [];
@@ -102,8 +108,9 @@ type ResponseData = { status: 'OK' | 'ERR'; message: string };
 
 const MAX_CHANNELS = 1000;
 const MAX_LOGS_PER_CHANNEL = 1000;
+const MAX_LOG_SIZE = 5000;
 
-export const logService = new LogService(MAX_CHANNELS, MAX_LOGS_PER_CHANNEL);
+export const logService = new LogService(MAX_CHANNELS, MAX_LOGS_PER_CHANNEL, MAX_LOG_SIZE);
 
 export default function handler(
   request: NextApiRequest,
