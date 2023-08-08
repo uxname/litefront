@@ -13,7 +13,6 @@ type LogObject = {
   id: string;
   createdAt: Date;
   level: LogLevel;
-  tag: string;
   message: string;
 };
 
@@ -33,7 +32,6 @@ export class LogService {
   createLog(
     channelName: string,
     level: LogLevel,
-    tag: string,
     message: string,
   ) {
     if (
@@ -52,7 +50,6 @@ export class LogService {
       id: uuidv4(),
       createdAt: new Date(),
       level,
-      tag,
       message,
     };
 
@@ -66,15 +63,14 @@ export class LogService {
 
   getLogs(
     channelName: string,
-    tag?: string,
+    level?: LogLevel,
     limit?: number,
   ): LogObject[] | undefined {
-    console.log('getLogs', channelName, tag, limit);
     let logs = this.channels.get(channelName);
 
     if (logs) {
-      if (tag) {
-        logs = logs.filter((log) => log.tag === tag);
+      if (level) {
+        logs = logs.filter((log) => log.level === level);
       }
 
       if (limit && logs.length > limit) {
@@ -104,7 +100,7 @@ export class LogService {
   }
 }
 
-type ResponseData = { status: 'OK' | 'ERR'; message: string };
+type ResponseData = { status: 'OK' | 'ERROR'; message: string };
 
 const MAX_CHANNELS = 1000;
 const MAX_LOGS_PER_CHANNEL = 1000;
@@ -118,23 +114,23 @@ export default function handler(
 ) {
   if(request.method !== 'POST'){
     response.status(405).json({
-      status: 'ERR',
+      status: 'ERROR',
       message: 'Only POST requests are allowed',
     });
     return;
   }
 
-  const { channel, level, tag, message } = request.body;
+  const { channel, level, message } = request.body;
 
-  if (!channel || !level || !tag || !message) {
+  if (!channel || !Number.isInteger(level) || !message) {
     response.status(400).json({
-      status: 'ERR',
+      status: 'ERROR',
       message: 'Missing required parameters',
     });
     return;
   }
 
-  logService.createLog(channel, level, tag, message);
+  logService.createLog(channel, level,  message);
 
   response.status(200).json({
     status: 'OK',

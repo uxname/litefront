@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 export enum LogLevel {
   TRACE,
   DEBUG,
@@ -9,6 +10,68 @@ export enum LogLevel {
 type Colors = {
   [key in LogLevel]: string;
 };
+
+const jsonCircular = (object: unknown) => {
+  const cache = new Set();
+
+  return JSON.stringify(object, (_, value) => {
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        stack: value.stack
+          ? value.stack.split('\n').slice(0, 3).join('\n')
+          : undefined,
+      };
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        return undefined;
+      }
+      cache.add(value);
+    }
+
+    return value ?? undefined;
+  });
+};
+
+function sendLog(level: LogLevel, message: string, ...arguments_: unknown[]) {
+  const url = `${process.env.NEXT_PUBLIC_SELF_URL_PATH}/api/logs/add`;
+  const body = {
+    channel: getBrowserId(),
+    level,
+    message: jsonCircular({
+      message,
+      arguments_,
+    }),
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  }).catch((error) => {
+    console.error('Send logs error:', error);
+  });
+}
+
+function getBrowserId(): string | undefined {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+  const currentBrowserId = localStorage.getItem('browser-id');
+  if (currentBrowserId) {
+    return currentBrowserId;
+  } else {
+    const newBrowserId = uuidv4();
+    localStorage.setItem('browser-id', newBrowserId);
+    return newBrowserId;
+  }
+}
 
 export class log {
   private static level: LogLevel = LogLevel.TRACE;
@@ -64,5 +127,13 @@ export class log {
     // eslint-disable-next-line security/detect-object-injection
     const prefix = `[${LogLevel[level]}]`;
     console.log(`%c ${prefix} ${message}`, `color: ${color}`, ...arguments_);
+
+    if (process.env.NEXT_PUBLIC_SELF_URL_PATH) {
+      sendLog(level, message, ...arguments_);
+    }
   }
+}
+
+if (typeof window !== 'undefined') {
+  log.info('Browser ID:', getBrowserId());
 }
