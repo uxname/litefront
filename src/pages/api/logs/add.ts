@@ -42,7 +42,7 @@ export class LogService {
     }
 
     if (message.length > this.maxLogSize) {
-      message = message.substring(0, this.maxLogSize);
+      throw new Error(`Message too long, max size is ${this.maxLogSize}, got ${message.length}`);
     }
 
     const logs = this.channels.get(channelName) || [];
@@ -104,7 +104,7 @@ type ResponseData = { status: 'OK' | 'ERROR'; message: string };
 
 const MAX_CHANNELS = 1000;
 const MAX_LOGS_PER_CHANNEL = 1000;
-const MAX_LOG_SIZE = 5000;
+const MAX_LOG_SIZE = 50000;
 
 export const logService = new LogService(MAX_CHANNELS, MAX_LOGS_PER_CHANNEL, MAX_LOG_SIZE);
 
@@ -130,10 +130,17 @@ export default function handler(
     return;
   }
 
-  logService.createLog(channel, level,  message);
+  try {
+    logService.createLog(channel, level,  message);
 
-  response.status(200).json({
-    status: 'OK',
-    message: 'Log created',
-  });
+    response.status(200).json({
+      status: 'OK',
+      message: 'Log created',
+    });
+  } catch (error) {
+    response.status(500).json({
+      status: 'ERROR',
+      message: (error as Error).message,
+    });
+  }
 }
