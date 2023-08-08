@@ -59,7 +59,7 @@ function sendLog(level: LogLevel, message: string, ...arguments_: unknown[]) {
   });
 }
 
-function getBrowserId(): string | undefined {
+export function getBrowserId(): string | undefined {
   if (typeof window === 'undefined') {
     return undefined;
   }

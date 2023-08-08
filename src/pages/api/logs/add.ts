@@ -9,7 +9,7 @@ export enum LogLevel {
   ERROR,
 }
 
-type LogObject = {
+export type LogObject = {
   id: string;
   createdAt: Date;
   level: LogLevel;

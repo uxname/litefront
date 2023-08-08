@@ -1,6 +1,9 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-magic-numbers */
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+import { getBrowserId } from '@/services/log';
 
 import appInfo from '../../app-info.json';
 
@@ -14,14 +17,41 @@ export default function InfoPage(properties: { uptime: number }): ReactNode {
     return `${days}d ${hours}h ${minutes}m ${seconds}s`;
   };
 
+  const [browserId, setBrowserId] = useState<string | undefined>();
+
+  useEffect(() => {
+    setBrowserId(getBrowserId());
+  }, []);
+
   return (
-    <div>
-      {`${appInfo.name} ${appInfo.version}`}
+    <Page>
+      <InfoItem>Browser ID:</InfoItem>
+      <Header>{browserId}</Header>
       <hr />
-      <p>Uptime: {formatDate(properties.uptime)}</p>
-    </div>
+      <InfoItem>{`${appInfo.name} (v ${appInfo.version})`}</InfoItem>
+      <InfoItem>Uptime: {formatDate(properties.uptime)}</InfoItem>
+    </Page>
   );
 }
+
+const Page = styled.div`
+  background-color: white;
+  color: black;
+  padding-left: 16px;
+  padding-right: 16px;
+`;
+
+const Header = styled.div`
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 0;
+`;
+
+const InfoItem = styled.p`
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #888888;
+`;
 
 export async function getServerSideProps() {
   const uptime = process.uptime();
