@@ -98,6 +98,10 @@ export class LogService {
       this.channels.delete(oldestChannelName);
     }
   }
+
+  public getChannels(): string[] {
+    return [...this.channels.keys()];
+  }
 }
 
 type ResponseData = { status: 'OK' | 'ERROR'; message: string };
