@@ -4,6 +4,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { getBrowserId } from '@/services/log';
+import { useSettingsStore } from '@/store/settings.store';
 
 import appInfo from '../../app-info.json';
 
@@ -18,10 +19,15 @@ export default function InfoPage(properties: { uptime: number }): ReactNode {
   };
 
   const [browserId, setBrowserId] = useState<string | undefined>();
+  const { debugMode, setDebugMode } = useSettingsStore();
 
   useEffect(() => {
     setBrowserId(getBrowserId());
   }, []);
+
+  const toggleDebugMode = () => {
+    setDebugMode(!debugMode);
+  };
 
   return (
     <Page>
@@ -30,6 +36,11 @@ export default function InfoPage(properties: { uptime: number }): ReactNode {
       <hr />
       <InfoItem>{`${appInfo.name} (v ${appInfo.version})`}</InfoItem>
       <InfoItem>Uptime: {formatDate(properties.uptime)}</InfoItem>
+      <hr />
+      <ToggleContainer>
+        <ToggleLabel>Debug Mode:</ToggleLabel>
+        <ToggleSwitch checked={debugMode} onChange={toggleDebugMode} />
+      </ToggleContainer>
     </Page>
   );
 }
@@ -57,3 +68,47 @@ export async function getServerSideProps() {
   const uptime = process.uptime();
   return { props: { uptime } };
 }
+
+const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const ToggleLabel = styled.p`
+  margin: 0;
+  margin-right: 8px;
+  color: #888888;
+`;
+
+const ToggleSwitch = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 10px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+
+  &:checked {
+    background-color: #3cba54;
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+    transform: translateX(0);
+  }
+
+  &:checked:before {
+    transform: translateX(20px);
+  }
+`;
