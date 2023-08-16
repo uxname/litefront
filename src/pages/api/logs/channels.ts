@@ -16,9 +16,9 @@ export default function handler(
 }
 
 function channelsToHtml(channels: string[]): string {
-  const selfUrl = process.env.NEXT_PUBLIC_SELF_URL_PATH as string;
+  const selfUrlBase = process.env.NEXT_PUBLIC_SELF_URL_BASE as string;
   return channels.map(channel => {
-    const url = `${selfUrl}/api/logs?channel=${channel}`;
+    const url = `${selfUrlBase}/api/logs?channel=${channel}`;
     return `
       <a href="${url}" id="${channel}" style="padding: 0;">
         <strong>${channel}</strong>

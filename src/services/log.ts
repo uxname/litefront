@@ -20,7 +20,8 @@ const jsonCircular = (object: unknown) => {
         name: value.name,
         message: value.message,
         stack: value.stack
-          ? value.stack.split('\n').slice(0, 3).join('\n')
+          ? // eslint-disable-next-line no-magic-numbers
+            value.stack.split('\n').slice(0, 3).join('\n')
           : undefined,
       };
     }
@@ -38,7 +39,8 @@ const jsonCircular = (object: unknown) => {
 };
 
 function sendLog(level: LogLevel, message: string, ...arguments_: unknown[]) {
-  const url = `${process.env.NEXT_PUBLIC_SELF_URL_PATH}/api/logs/add`;
+  const selfUrlBase = process.env.NEXT_PUBLIC_SELF_URL_BASE as string;
+  const url = `${selfUrlBase}/api/logs/add`;
   const body = {
     channel: getBrowserId(),
     level,
@@ -128,7 +130,7 @@ export class log {
     const prefix = `[${LogLevel[level]}]`;
     console.log(`%c ${prefix} ${message}`, `color: ${color}`, ...arguments_);
 
-    if (process.env.NEXT_PUBLIC_SELF_URL_PATH) {
+    if (process.env.NEXT_PUBLIC_SELF_URL_BASE) {
       sendLog(level, message, ...arguments_);
     }
   }
