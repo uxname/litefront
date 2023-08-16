@@ -16,11 +16,13 @@ export default function handler(
 }
 
 function channelsToHtml(channels: string[]): string {
+  const selfUrl = process.env.NEXT_PUBLIC_SELF_URL_PATH as string;
   return channels.map(channel => {
+    const url = `${selfUrl}/api/logs?channel=${channel}`;
     return `
-      <div id="${channel}" style="padding: 0;">
+      <a href="${url}" id="${channel}" style="padding: 0;">
         <strong>${channel}</strong>
-     </div>
+     </a>
     `;
   }).join('\n');
 }
