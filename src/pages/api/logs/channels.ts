@@ -22,8 +22,8 @@ function channelsToHtml(channels: string[]): string {
     return `
       <a href="${url}" id="${channel}" style="padding: 0;">
         <strong>${channel}</strong>
-     </a>
-     <br>
+      </a>
+      <hr>
     `;
   }).join('\n');
 }
