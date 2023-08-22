@@ -5,6 +5,7 @@ import { Card } from '@mui/material';
 import Cat from '@public/assets/cat.jpg';
 import styled from 'styled-components';
 
+import { useDebugQuery } from '@/generated/graphql';
 import { log } from '@/services/log';
 import { useClickStore } from '@/store/click.store';
 
@@ -41,8 +42,11 @@ export default function IndexPage(): ReactNode {
   log.warn('Hello world warn');
   log.error('Hello world error');
 
+  const { data } = useDebugQuery();
+
   return (
     <div>
+      <pre>{JSON.stringify(data, undefined, 2)}</pre>
       <MyButton
         onClick={async () => {
           await throwTestError();

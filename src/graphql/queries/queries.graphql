@@ -18,3 +18,7 @@ mutation Login($email: String!, $password: String!) {
     }
   }
 }
+
+query Debug {
+  debug
+}

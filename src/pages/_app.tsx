@@ -7,7 +7,7 @@ import { StyledEngineProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider as StyledComponentProvider } from 'styled-components';
 
-import { getApolloClient } from '@/services/apollo-client.service';
+import { useApolloClient } from '@/services/apollo-client.service';
 import { log } from '@/services/log';
 import { useSettingsStore } from '@/store/settings.store';
 import { themeMui, themeStyled } from '@/theme';
@@ -17,6 +17,9 @@ import nextI18NextConfig from '../../next-i18next.config';
 import { ThemeProvider as MaterialUiProvider } from '@mui/material/styles';
 
 function MyApp({ Component, pageProps }: AppProps): ReactNode {
+  const { debugMode } = useSettingsStore();
+  const apolloClient = useApolloClient();
+
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       log.error('Unhandled error', event.error);
@@ -35,14 +38,16 @@ function MyApp({ Component, pageProps }: AppProps): ReactNode {
     };
   }, []);
 
-  const { debugMode } = useSettingsStore();
+  if (!apolloClient) {
+    return <div>ApolloClient is not initialized</div>;
+  }
 
   return (
     <StyledComponentProvider theme={themeStyled}>
       <MaterialUiProvider theme={themeMui}>
         <CssBaseline />
         <StyledEngineProvider injectFirst>
-          <ApolloProvider client={getApolloClient}>
+          <ApolloProvider client={apolloClient}>
             <Component {...pageProps} />
           </ApolloProvider>
         </StyledEngineProvider>

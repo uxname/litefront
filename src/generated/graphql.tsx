@@ -176,6 +176,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', token: string, account: { __typename?: 'Account', id: number, email: string } } };
 
+export type DebugQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DebugQuery = { __typename?: 'Query', debug: any };
+
 
 export const RegisterDocument = gql`
     mutation Register($email: String!, $password: String!) {
@@ -253,3 +258,35 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const DebugDocument = gql`
+    query Debug {
+  debug
+}
+    `;
+
+/**
+ * __useDebugQuery__
+ *
+ * To run a query within a React component, call `useDebugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDebugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDebugQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDebugQuery(baseOptions?: Apollo.QueryHookOptions<DebugQuery, DebugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DebugQuery, DebugQueryVariables>(DebugDocument, options);
+      }
+export function useDebugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DebugQuery, DebugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DebugQuery, DebugQueryVariables>(DebugDocument, options);
+        }
+export type DebugQueryHookResult = ReturnType<typeof useDebugQuery>;
+export type DebugLazyQueryHookResult = ReturnType<typeof useDebugLazyQuery>;
+export type DebugQueryResult = Apollo.QueryResult<DebugQuery, DebugQueryVariables>;
