@@ -8,9 +8,10 @@ import {
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist';
 
+type ApolloClientType = ApolloClient<NormalizedCacheObject>;
 export function getApolloClient(
   cache?: ApolloCache<NormalizedCacheObject>,
-): ApolloClient<NormalizedCacheObject> {
+): ApolloClientType {
   return new ApolloClient({
     link:
       process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_ENABLED === 'true' &&
@@ -47,7 +48,7 @@ export function getApolloClient(
   });
 }
 
-export function useApolloClient() {
+export function useApolloClient(): ApolloClientType {
   const [client, setClient] = useState(getApolloClient());
   useEffect(() => {
     (async () => {

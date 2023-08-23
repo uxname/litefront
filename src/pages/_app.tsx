@@ -16,19 +16,19 @@ import nextI18NextConfig from '../../next-i18next.config';
 
 import { ThemeProvider as MaterialUiProvider } from '@mui/material/styles';
 
+const handleError = (event: ErrorEvent) => {
+  log.error('Unhandled error', event.error);
+};
+
+const handlePromiseRejection = (event: PromiseRejectionEvent) => {
+  log.error('Unhandled promise rejection', event.reason);
+};
+
 function MyApp({ Component, pageProps }: AppProps): ReactNode {
   const { debugMode } = useSettingsStore();
   const apolloClient = useApolloClient();
 
   useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      log.error('Unhandled error', event.error);
-    };
-
-    const handlePromiseRejection = (event: PromiseRejectionEvent) => {
-      log.error('Unhandled promise rejection', event.reason);
-    };
-
     window.addEventListener('error', handleError);
     window.addEventListener('unhandledrejection', handlePromiseRejection);
 

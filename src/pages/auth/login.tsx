@@ -15,9 +15,9 @@ import styled from 'styled-components';
 import * as Yup from 'yup';
 
 import { useLoginMutation } from '@/generated/graphql';
-import { AuthStorageService } from '@/services/auth-storage.service';
 import localeDetectorService from '@/services/locale-detector.service';
 import { log } from '@/services/log';
+import { useAuthStore } from '@/store/auth.store';
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -47,6 +47,7 @@ export default function Login() {
   });
 
   const [login, { error, reset }] = useLoginMutation();
+  const { setToken, setAccount } = useAuthStore();
 
   const handleFormSubmit = async (data: FormData) => {
     if (Object.keys(formState.errors).length > 0) {
@@ -62,8 +63,8 @@ export default function Login() {
     });
     log.debug('Logged in user', authResponse);
 
-    AuthStorageService.setToken(authResponse.data?.login?.token);
-    AuthStorageService.setAccount(authResponse.data?.login?.account);
+    setToken(authResponse.data?.login?.token);
+    setAccount(authResponse.data?.login?.account);
 
     await router.push('/profile', undefined, { locale });
   };

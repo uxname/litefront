@@ -15,9 +15,9 @@ import styled from 'styled-components';
 import * as Yup from 'yup';
 
 import { useRegisterMutation } from '@/generated/graphql';
-import { AuthStorageService } from '@/services/auth-storage.service';
 import localeDetectorService from '@/services/locale-detector.service';
 import { log } from '@/services/log';
+import { useAuthStore } from '@/store/auth.store';
 
 type FormData = {
   email: string;
@@ -46,6 +46,7 @@ export default function Register() {
   const { t } = useTranslation(['common', 'auth']);
   const locale = localeDetectorService.detect();
   const router = useRouter();
+  const { setToken, setAccount } = useAuthStore();
 
   const {
     register: registerField,
@@ -72,8 +73,8 @@ export default function Register() {
     });
     log.debug('Registered user', authResponse);
 
-    AuthStorageService.setToken(authResponse.data?.register?.token);
-    AuthStorageService.setAccount(authResponse.data?.register?.account);
+    setToken(authResponse.data?.register?.token);
+    setAccount(authResponse.data?.register?.account);
 
     await router.push('/profile', undefined, { locale });
   };
