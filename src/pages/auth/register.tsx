@@ -112,7 +112,15 @@ export default function Register() {
           </Typography>
         </BoxWrapper>
       </Modal>
-      <RightPanelWrapper>
+      <RightPanelWrapper
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await handleFormSubmit(data);
+          } catch (submitError) {
+            log.error('Registration error:', submitError);
+          }
+        })}
+      >
         <Typography variant="h5">{t('auth:register.page_title')}</Typography>
         <TextFieldWrapper
           id="email"
@@ -157,13 +165,7 @@ export default function Register() {
           variant="contained"
           sx={{ width: '20em' }}
           disableElevation
-          onClick={handleSubmit(async (data) => {
-            try {
-              await handleFormSubmit(data);
-            } catch (error_) {
-              log.error('Registration error:', error_);
-            }
-          })}
+          type="submit"
         >
           {t('auth:register.register')}
         </ButtonWrapper>
@@ -202,7 +204,7 @@ const ImageWrapper = styled.div`
   }
 `;
 
-const RightPanelWrapper = styled.div`
+const RightPanelWrapper = styled.form`
   flex: 1;
   display: flex;
   justify-content: center;

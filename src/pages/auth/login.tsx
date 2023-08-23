@@ -102,7 +102,15 @@ export default function Login() {
           </Typography>
         </BoxWrapper>
       </Modal>
-      <RightPanelWrapper>
+      <RightPanelWrapper
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await handleFormSubmit(data);
+          } catch (submitError) {
+            log.error('Login error', submitError);
+          }
+        })}
+      >
         <Typography variant="h5">{t('common:login')}</Typography>
         <TextFieldWrapper
           id="email"
@@ -134,13 +142,7 @@ export default function Login() {
           variant="contained"
           sx={{ width: '20em' }}
           disableElevation
-          onClick={handleSubmit(async (data) => {
-            try {
-              await handleFormSubmit(data);
-            } catch (error_) {
-              log.error('Login error', error_);
-            }
-          })}
+          type="submit"
         >
           {t('common:login')}
         </ButtonWrapper>
@@ -179,7 +181,7 @@ const ImageWrapper = styled.div`
   }
 `;
 
-const RightPanelWrapper = styled.div`
+const RightPanelWrapper = styled.form`
   flex: 1;
   display: flex;
   justify-content: center;
