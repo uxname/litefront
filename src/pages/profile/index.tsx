@@ -18,7 +18,6 @@ export default function Profile() {
 
   function handleLogout() {
     clear();
-    window.location.reload();
   }
 
   return account ? (
