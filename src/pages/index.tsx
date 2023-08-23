@@ -46,6 +46,7 @@ export default function IndexPage(): ReactNode {
 
   return (
     <div>
+      {/* eslint-disable-next-line no-magic-numbers */}
       <pre>{JSON.stringify(data, undefined, 2)}</pre>
       <MyButton
         onClick={async () => {
