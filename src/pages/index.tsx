@@ -31,7 +31,7 @@ function RenderState(): React.JSX.Element {
 }
 
 export default function IndexPage(): ReactNode {
-  async function throwTestError() {
+  async function throwTestError(): Promise<void> {
     log.warn('Throwing test error');
     throw new Error('Test error');
   }
@@ -49,7 +49,7 @@ export default function IndexPage(): ReactNode {
       {/* eslint-disable-next-line no-magic-numbers */}
       <pre>{JSON.stringify(data, undefined, 2)}</pre>
       <MyButton
-        onClick={async () => {
+        onClick={async (): Promise<void> => {
           await throwTestError();
         }}
       >
@@ -69,7 +69,7 @@ export default function IndexPage(): ReactNode {
       <Image
         src={'/api/logo?titleFirst=OG_&titleSecond=image'}
         alt={'logo'}
-        loader={() => '/api/logo?titleFirst=OG_&titleSecond=image'}
+        loader={(): string => '/api/logo?titleFirst=OG_&titleSecond=image'}
         width={250}
         height={100}
       />

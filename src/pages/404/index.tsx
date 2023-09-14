@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
-const getRandomBackgroundImage = () => {
+const getRandomBackgroundImage = (): string => {
   const images = ['https://source.unsplash.com/random/1280x720?night'];
   const randomIndex = Math.floor(Math.random() * images.length);
   // eslint-disable-next-line security/detect-object-injection
   return images[randomIndex];
 };
 
-const SpotlightComponent = () => {
+const SpotlightComponent = (): ReactElement => {
   const router = useRouter();
   const [radius, setRadius] = useState<number>(0);
 
@@ -48,7 +48,7 @@ const SpotlightComponent = () => {
 
   useEffect(() => {
     document.addEventListener('mousemove', onMouseMove);
-    return () => {
+    return (): void => {
       document.removeEventListener('mousemove', onMouseMove);
     };
   }, [onMouseMove]);
@@ -60,7 +60,7 @@ const SpotlightComponent = () => {
         <SpotlightDescription>
           Hmm, the page you were looking for doesn’t seem to exist anymore
         </SpotlightDescription>
-        <ButtonErrorLink onClick={() => router.push('/')}>
+        <ButtonErrorLink onClick={(): Promise<boolean> => router.push('/')}>
           Back to main page
         </ButtonErrorLink>
       </ContentWrap>
@@ -103,7 +103,7 @@ const Spotlight = styled.div<{ radius: number }>`
   height: 100%;
   width: 100%;
   background-image: radial-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
-  ${({ radius }) => `
+  ${({ radius }): string => `
     background-image: radial-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ${radius}px);
   `}
 `;

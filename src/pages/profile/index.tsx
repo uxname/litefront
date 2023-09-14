@@ -10,13 +10,13 @@ import styled from 'styled-components';
 import localeDetectorService from '@/services/locale-detector.service';
 import { useAuthStore } from '@/store/auth.store';
 
-export default function Profile() {
+export default function Profile(): React.ReactElement {
   const { t } = useTranslation(['common', 'profile']);
   const locale = localeDetectorService.detect();
 
   const { account, clear } = useAuthStore();
 
-  function handleLogout() {
+  function handleLogout(): void {
     clear();
   }
 

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { AppProps } from 'next/app';
 import Script from 'next/script';
 import { appWithTranslation } from 'next-i18next';
@@ -12,15 +12,17 @@ import { log } from '@/services/log';
 import { useSettingsStore } from '@/store/settings.store';
 import { themeMui, themeStyled } from '@/theme';
 
+import '../styles/global.css';
+
 import nextI18NextConfig from '../../next-i18next.config';
 
 import { ThemeProvider as MaterialUiProvider } from '@mui/material/styles';
 
-const handleError = (event: ErrorEvent) => {
+const handleError = (event: ErrorEvent): void => {
   log.error('Unhandled error', event.error);
 };
 
-const handlePromiseRejection = (event: PromiseRejectionEvent) => {
+const handlePromiseRejection = (event: PromiseRejectionEvent): void => {
   log.error('Unhandled promise rejection', event.reason);
 };
 
@@ -55,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps): ReactNode {
       {debugMode && (
         <Script
           src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"
-          onLoad={() => {
+          onLoad={(): void => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             // eslint-disable-next-line no-new

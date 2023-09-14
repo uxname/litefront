@@ -11,7 +11,7 @@ type Colors = {
   [key in LogLevel]: string;
 };
 
-const jsonCircular = (object: unknown) => {
+const jsonCircular = (object: unknown): unknown => {
   const cache = new Set();
 
   return JSON.stringify(object, (_, value) => {
@@ -38,7 +38,11 @@ const jsonCircular = (object: unknown) => {
   });
 };
 
-function sendLog(level: LogLevel, message: string, ...arguments_: unknown[]) {
+function sendLog(
+  level: LogLevel,
+  message: string,
+  ...arguments_: unknown[]
+): void {
   const selfUrlBase = process.env.NEXT_PUBLIC_SELF_URL_BASE as string;
   const url = `${selfUrlBase}/api/logs/add`;
   const body = {
@@ -86,27 +90,27 @@ export class log {
     [LogLevel.ERROR]: 'red',
   };
 
-  static setLevel(level: LogLevel) {
+  static setLevel(level: LogLevel): void {
     this.level = level;
   }
 
-  static trace(message: string, ...arguments_: unknown[]) {
+  static trace(message: string, ...arguments_: unknown[]): void {
     this.log(LogLevel.TRACE, message, ...arguments_);
   }
 
-  static debug(message: string, ...arguments_: unknown[]) {
+  static debug(message: string, ...arguments_: unknown[]): void {
     this.log(LogLevel.DEBUG, message, ...arguments_);
   }
 
-  static info(message: string, ...arguments_: unknown[]) {
+  static info(message: string, ...arguments_: unknown[]): void {
     this.log(LogLevel.INFO, message, ...arguments_);
   }
 
-  static warn(message: string, ...arguments_: unknown[]) {
+  static warn(message: string, ...arguments_: unknown[]): void {
     this.log(LogLevel.WARN, message, ...arguments_);
   }
 
-  static error(message: string, ...arguments_: unknown[]) {
+  static error(message: string, ...arguments_: unknown[]): void {
     this.log(LogLevel.ERROR, message, ...arguments_);
   }
 
@@ -114,7 +118,7 @@ export class log {
     level: LogLevel,
     message: string,
     ...arguments_: unknown[]
-  ) {
+  ): void {
     if (level < this.level) {
       return;
     }

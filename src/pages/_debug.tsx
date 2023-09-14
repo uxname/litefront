@@ -1,6 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-magic-numbers */
-import React, { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { getBrowserId } from '@/services/log';
@@ -25,7 +25,7 @@ export default function InfoPage(properties: { uptime: number }): ReactNode {
     setBrowserId(getBrowserId());
   }, []);
 
-  const toggleDebugMode = () => {
+  const toggleDebugMode = (): void => {
     setDebugMode(!debugMode);
   };
 
@@ -64,7 +64,9 @@ const InfoItem = styled.p`
   color: #888888;
 `;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(): Promise<{
+  props: { uptime: number };
+}> {
   const uptime = process.uptime();
   return { props: { uptime } };
 }

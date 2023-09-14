@@ -4,19 +4,27 @@
     "es2021": true
   },
   "extends": [
-    "eslint:recommended",
     "@jetbrains",
     "@jetbrains/eslint-config/node",
+
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:sonarjs/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:react/jsx-runtime",
+
     "plugin:@next/next/recommended",
-    "plugin:prettier/recommended",
+
+    "plugin:sonarjs/recommended",
     "plugin:security/recommended",
+
     "plugin:eslint-comments/recommended",
     "plugin:promise/recommended",
-    "plugin:unicorn/recommended"
+
+    "plugin:unicorn/recommended",
+    "plugin:prettier/recommended",
+
+    "eslint:recommended",
+
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended"
   ],
   "ignorePatterns": [
     "src/generated",
@@ -33,7 +41,6 @@
   },
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint/eslint-plugin",
     "sonarjs",
     "unicorn",
     "comments",
@@ -42,7 +49,8 @@
     "no-secrets",
     "react",
     "eslint-plugin-import",
-    "simple-import-sort"
+    "simple-import-sort",
+    "@typescript-eslint/eslint-plugin"
   ],
   "settings": {
     "react": {
@@ -112,6 +120,7 @@
         "max": 15
       }
     ],
-    "unicorn/consistent-function-scoping": "off"
+    "unicorn/consistent-function-scoping": "off",
+    "@typescript-eslint/explicit-function-return-type": "error"
   }
 }

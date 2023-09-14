@@ -1,6 +1,7 @@
 import React from 'react';
 import Document, {
   DocumentContext,
+  DocumentInitialProps,
   Head,
   Html,
   Main,
@@ -11,11 +12,15 @@ import { ServerStyleSheet } from 'styled-components';
 import i18nextConfig from '../../next-i18next.config';
 
 export default class AppDocument extends Document {
-  static async getInitialProps(context: DocumentContext) {
+  static async getInitialProps(
+    context: DocumentContext,
+  ): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = context.renderPage;
     try {
-      context.renderPage = () =>
+      context.renderPage = ():
+        | DocumentInitialProps
+        | Promise<DocumentInitialProps> =>
         originalRenderPage({
           enhanceApp: (App) => (properties) =>
             sheet.collectStyles(<App {...properties} />),
@@ -36,7 +41,7 @@ export default class AppDocument extends Document {
     }
   }
 
-  render = () => {
+  render = (): React.ReactElement => {
     const currentLocale =
       this.props.__NEXT_DATA__.locale ?? i18nextConfig.i18n.defaultLocale;
 

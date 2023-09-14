@@ -42,7 +42,7 @@ const validationSchema = Yup.object().shape({
     .required('Confirm Password is required'),
 });
 
-export default function Register() {
+export default function Register(): React.ReactElement {
   const { t } = useTranslation(['common', 'auth']);
   const locale = localeDetectorService.detect();
   const router = useRouter();
@@ -58,7 +58,7 @@ export default function Register() {
 
   const [register, { error, reset }] = useRegisterMutation();
 
-  const handleFormSubmit = async (data: FormData) => {
+  const handleFormSubmit = async (data: FormData): Promise<void> => {
     // check if formState.errors contains any errors
     if (Object.keys(formState.errors).length > 0) {
       log.debug('Error', formState.errors);
@@ -101,7 +101,7 @@ export default function Register() {
                 right: 8,
                 top: 8,
                 // eslint-disable-next-line no-magic-numbers
-                color: (theme) => theme.palette.grey[500],
+                color: (theme): string => theme.palette.grey[500],
               }}
             >
               <CloseIcon />

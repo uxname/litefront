@@ -51,7 +51,7 @@ export function getApolloClient(
 export function useApolloClient(): ApolloClientType {
   const [client, setClient] = useState(getApolloClient());
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       if (process.env.NEXT_PUBLIC_PERSIST_CACHE === 'true') {
         await persistCache({
           cache: client.cache,

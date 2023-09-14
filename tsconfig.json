@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "allowJs": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
@@ -35,7 +37,7 @@
         ],
         "@public/*": [
             "public/*"
-        ],
+        ]
     }
   },
   "exclude": [

@@ -1,4 +1,3 @@
-import React from 'react';
 import { NextRequest } from 'next/server';
 import { ImageResponse } from '@vercel/og';
 
@@ -14,7 +13,9 @@ const font = fetch(
   // eslint-disable-next-line unicorn/prefer-top-level-await
 ).then((response) => response.arrayBuffer());
 
-export default async function handler(request: NextRequest) {
+export default async function handler(
+  request: NextRequest,
+): Promise<ImageResponse> {
   try {
     const fontData = await font; // todo replace by await
     const { searchParams } = new URL(request.url);

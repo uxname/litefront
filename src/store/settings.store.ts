@@ -10,7 +10,7 @@ export const useSettingsStore = create(
   persist<ISettingsState>(
     (set) => ({
       debugMode: false,
-      setDebugMode: (debugMode: boolean) => set({ debugMode }),
+      setDebugMode: (debugMode: boolean): void => set({ debugMode }),
     }),
     {
       name: 'settings-storage',

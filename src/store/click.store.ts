@@ -8,6 +8,6 @@ type IClickState = {
 
 export const useClickStore = create<IClickState>((set) => ({
   count: 0,
-  increase: () => set((state) => ({ count: state.count + 1 })),
-  reset: () => set({ count: 0 }),
+  increase: (): void => set((state) => ({ count: state.count + 1 })),
+  reset: (): void => set({ count: 0 }),
 }));

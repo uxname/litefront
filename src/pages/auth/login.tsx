@@ -38,7 +38,7 @@ type FormData = {
   password: string;
 };
 
-export default function Login() {
+export default function Login(): React.ReactElement {
   const { t } = useTranslation(['common', 'auth']);
   const locale = localeDetectorService.detect();
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function Login() {
   const [login, { error, reset }] = useLoginMutation();
   const { setToken, setAccount } = useAuthStore();
 
-  const handleFormSubmit = async (data: FormData) => {
+  const handleFormSubmit = async (data: FormData): Promise<void> => {
     if (Object.keys(formState.errors).length > 0) {
       log.debug('Error', formState.errors);
       return;
@@ -91,7 +91,7 @@ export default function Login() {
                 right: 8,
                 top: 8,
                 // eslint-disable-next-line no-magic-numbers
-                color: (theme) => theme.palette.grey[500],
+                color: (theme): string => theme.palette.grey[500],
               }}
             >
               <CloseIcon />

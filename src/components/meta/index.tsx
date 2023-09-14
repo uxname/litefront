@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import NextHead from 'next/head';
 
 import appInfo from '../../../app-info.json';
@@ -17,7 +17,7 @@ const defaults: PropertiesType = {
   url: 'http://localhost:3000',
 };
 
-export const Meta = (properties: PropertiesType) => (
+export const Meta = (properties: PropertiesType): ReactElement => (
   <NextHead>
     <title>{properties.title || defaults.title}</title>
     <meta
