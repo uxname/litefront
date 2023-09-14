@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import localeDetectorService from '@/services/locale-detector.service';
 import { useAuthStore } from '@/store/auth.store';
 
-export default function Profile(): React.ReactElement {
+export default function Profile(): ReactElement {
   const { t } = useTranslation(['common', 'profile']);
   const locale = localeDetectorService.detect();
 

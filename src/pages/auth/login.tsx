@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -38,7 +38,7 @@ type FormData = {
   password: string;
 };
 
-export default function Login(): React.ReactElement {
+export default function Login(): ReactElement {
   const { t } = useTranslation(['common', 'auth']);
   const locale = localeDetectorService.detect();
   const router = useRouter();

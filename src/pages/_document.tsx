@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -41,7 +41,7 @@ export default class AppDocument extends Document {
     }
   }
 
-  render = (): React.ReactElement => {
+  render = (): ReactElement => {
     const currentLocale =
       this.props.__NEXT_DATA__.locale ?? i18nextConfig.i18n.defaultLocale;
 

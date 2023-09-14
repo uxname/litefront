@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ const validationSchema = Yup.object().shape({
     .required('Confirm Password is required'),
 });
 
-export default function Register(): React.ReactElement {
+export default function Register(): ReactElement {
   const { t } = useTranslation(['common', 'auth']);
   const locale = localeDetectorService.detect();
   const router = useRouter();
