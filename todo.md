@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] Check and update Sentry integration
 - [ ] Delete app-info.json
 - [ ] Beatify home page
 - [ ] Migrate 404 page to styled components
