@@ -654,6 +654,11 @@ export type DebugQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type DebugQuery = { __typename?: 'Query', debug: any };
 
+export type WhoAmIQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WhoAmIQuery = { __typename?: 'Query', whoami: { __typename?: 'Account', id: number, email: string, profile?: { __typename?: 'Profile', id: number, avatarUrl?: string | null, name?: string | null, status: AccountStatus } | null } };
+
 
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
@@ -763,3 +768,44 @@ export function useDebugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Debu
 export type DebugQueryHookResult = ReturnType<typeof useDebugQuery>;
 export type DebugLazyQueryHookResult = ReturnType<typeof useDebugLazyQuery>;
 export type DebugQueryResult = Apollo.QueryResult<DebugQuery, DebugQueryVariables>;
+export const WhoAmIDocument = gql`
+    query WhoAmI {
+  whoami {
+    id
+    email
+    profile {
+      id
+      avatarUrl
+      name
+      status
+    }
+  }
+}
+    `;
+
+/**
+ * __useWhoAmIQuery__
+ *
+ * To run a query within a React component, call `useWhoAmIQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWhoAmIQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWhoAmIQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useWhoAmIQuery(baseOptions?: Apollo.QueryHookOptions<WhoAmIQuery, WhoAmIQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<WhoAmIQuery, WhoAmIQueryVariables>(WhoAmIDocument, options);
+      }
+export function useWhoAmILazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WhoAmIQuery, WhoAmIQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<WhoAmIQuery, WhoAmIQueryVariables>(WhoAmIDocument, options);
+        }
+export type WhoAmIQueryHookResult = ReturnType<typeof useWhoAmIQuery>;
+export type WhoAmILazyQueryHookResult = ReturnType<typeof useWhoAmILazyQuery>;
+export type WhoAmIQueryResult = Apollo.QueryResult<WhoAmIQuery, WhoAmIQueryVariables>;

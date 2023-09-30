@@ -8,10 +8,18 @@ import {
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist';
 
+import { useAuthStore } from '@/store/auth.store';
+
 type ApolloClientType = ApolloClient<NormalizedCacheObject>;
-export function getApolloClient(
-  cache?: ApolloCache<NormalizedCacheObject>,
-): ApolloClientType {
+interface ApolloClientParameters {
+  cache?: ApolloCache<NormalizedCacheObject>;
+  authorizationHeader?: string;
+}
+
+export function getApolloClient({
+  cache,
+  authorizationHeader,
+}: ApolloClientParameters): ApolloClientType {
   return new ApolloClient({
     link:
       process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_ENABLED === 'true' &&
@@ -27,6 +35,11 @@ export function getApolloClient(
             ), // Wait no more than 20ms after first batched operation
           })
         : undefined,
+    ...(authorizationHeader && {
+      headers: {
+        authorization: authorizationHeader,
+      },
+    }),
     uri:
       process.env.NEXT_PUBLIC_MERGED_GRAPHQL_REQUESTS_ENABLED === 'true' &&
       typeof window !== 'undefined'
@@ -49,7 +62,12 @@ export function getApolloClient(
 }
 
 export function useApolloClient(): ApolloClientType {
-  const [client, setClient] = useState(getApolloClient());
+  const authStore = useAuthStore();
+  const [client, setClient] = useState(
+    getApolloClient({
+      authorizationHeader: authStore.token,
+    }),
+  );
   useEffect(() => {
     (async (): Promise<void> => {
       if (process.env.NEXT_PUBLIC_PERSIST_CACHE === 'true') {
@@ -59,7 +77,12 @@ export function useApolloClient(): ApolloClientType {
         });
       }
 
-      setClient(getApolloClient(client.cache));
+      setClient(
+        getApolloClient({
+          cache: client.cache,
+          authorizationHeader: authStore.token,
+        }),
+      );
     })();
   }, []);
   return client;

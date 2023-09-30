@@ -1,0 +1,12 @@
+query WhoAmI {
+  whoami {
+    id
+    email
+    profile {
+      id
+      avatarUrl
+      name
+      status
+    }
+  }
+}

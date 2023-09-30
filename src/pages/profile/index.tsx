@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -7,6 +7,7 @@ import ClientOnly from '@components/client-only.component';
 import { Avatar, Button, TextField, Typography } from '@mui/material';
 import styled from 'styled-components';
 
+import { useWhoAmILazyQuery } from '@/generated/graphql';
 import localeDetectorService from '@/services/locale-detector.service';
 import { useAuthStore } from '@/store/auth.store';
 
@@ -15,22 +16,76 @@ export default function Profile(): ReactElement {
   const locale = localeDetectorService.detect();
 
   const { account, clear } = useAuthStore();
+  const [load, { data, error }] = useWhoAmILazyQuery();
 
-  function handleLogout(): void {
+  useEffect(() => {
+    (async (): Promise<void> => {
+      if (account) {
+        await load();
+      }
+    })();
+  }, [account]);
+
+  async function handleLogout(): Promise<void> {
     clear();
   }
 
-  return account ? (
+  if (error) {
+    return (
+      <PageWrapper>
+        <ProfileWrapper>
+          <ProfileInfo>
+            <h1>Errors</h1>
+            {error.graphQLErrors.map((gqlError, index) => (
+              <TextField
+                key={index}
+                variant="outlined"
+                value={gqlError.message}
+                disabled
+                sx={{ width: '100%' }}
+              />
+            ))}
+          </ProfileInfo>
+          <Button
+            variant="contained"
+            sx={{ width: '100%' }}
+            onClick={handleLogout}
+          >
+            {t('common:logout')}
+          </Button>
+        </ProfileWrapper>
+      </PageWrapper>
+    );
+  }
+
+  if (!data?.whoami.profile || !account) {
+    return (
+      <PageWrapper>
+        <ProfileWrapper>
+          <h1>{t('profile:page_title')}</h1>
+          <Link href="/auth/register" locale={locale}>
+            {t('register')}
+          </Link>
+          <br />
+          <Link href="/auth/login" locale={locale}>
+            {t('common:login')}
+          </Link>
+        </ProfileWrapper>
+      </PageWrapper>
+    );
+  }
+
+  return (
     <ClientOnly>
       <PageWrapper>
         <ProfileWrapper>
           <Avatar />
-          <Typography variant="h5">{account.email}</Typography>
+          <Typography variant="h5">{data?.whoami.email}</Typography>
           <ProfileInfo>
             <TextField
               label="ID"
               variant="outlined"
-              value={account.id}
+              value={data.whoami.profile.id}
               disabled
               sx={{ width: '100%' }}
             />
@@ -42,21 +97,6 @@ export default function Profile(): ReactElement {
           >
             {t('common:logout')}
           </Button>
-        </ProfileWrapper>
-      </PageWrapper>
-    </ClientOnly>
-  ) : (
-    <ClientOnly>
-      <PageWrapper>
-        <ProfileWrapper>
-          <h1>{t('profile:page_title')}</h1>
-          <Link href="/auth/register" locale={locale}>
-            {t('register')}
-          </Link>
-          <br />
-          <Link href="/auth/login" locale={locale}>
-            {t('common:login')}
-          </Link>
         </ProfileWrapper>
       </PageWrapper>
     </ClientOnly>
