@@ -23,13 +23,12 @@ export type Scalars = {
 export type Account = {
   __typename?: 'Account';
   _count: AccountCount;
-  avatarUrl?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  roles?: Maybe<Array<AccountRole>>;
+  profile?: Maybe<Profile>;
+  profileId?: Maybe<Scalars['Int']['output']>;
   sessions?: Maybe<Array<AccountSession>>;
-  status: AccountStatus;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -38,10 +37,54 @@ export type AccountCount = {
   sessions: Scalars['Int']['output'];
 };
 
-export enum AccountRole {
-  Admin = 'ADMIN',
-  User = 'USER'
-}
+export type AccountCreateManyProfileInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  passwordHash: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AccountCreateManyProfileInputEnvelope = {
+  data: Array<AccountCreateManyProfileInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type AccountCreateOrConnectWithoutProfileInput = {
+  create: AccountCreateWithoutProfileInput;
+  where: AccountWhereUniqueInput;
+};
+
+export type AccountCreateWithoutProfileInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['String']['input'];
+  passwordHash: Scalars['String']['input'];
+  sessions?: InputMaybe<AccountSessionCreateNestedManyWithoutAccountInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AccountListRelationFilter = {
+  every?: InputMaybe<AccountWhereInput>;
+  none?: InputMaybe<AccountWhereInput>;
+  some?: InputMaybe<AccountWhereInput>;
+};
+
+export type AccountRelationFilter = {
+  is?: InputMaybe<AccountWhereInput>;
+  isNot?: InputMaybe<AccountWhereInput>;
+};
+
+export type AccountScalarWhereInput = {
+  AND?: InputMaybe<Array<AccountScalarWhereInput>>;
+  NOT?: InputMaybe<Array<AccountScalarWhereInput>>;
+  OR?: InputMaybe<Array<AccountScalarWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IntFilter>;
+  passwordHash?: InputMaybe<StringFilter>;
+  profileId?: InputMaybe<IntNullableFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
 
 export type AccountSession = {
   __typename?: 'AccountSession';
@@ -55,11 +98,223 @@ export type AccountSession = {
   userAgent?: Maybe<Scalars['String']['output']>;
 };
 
+export type AccountSessionCreateManyAccountInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  expiresAt: Scalars['DateTime']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  ipAddr: Scalars['String']['input'];
+  token: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userAgent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccountSessionCreateManyAccountInputEnvelope = {
+  data: Array<AccountSessionCreateManyAccountInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type AccountSessionCreateNestedManyWithoutAccountInput = {
+  connect?: InputMaybe<Array<AccountSessionWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<AccountSessionCreateOrConnectWithoutAccountInput>>;
+  create?: InputMaybe<Array<AccountSessionCreateWithoutAccountInput>>;
+  createMany?: InputMaybe<AccountSessionCreateManyAccountInputEnvelope>;
+};
+
+export type AccountSessionCreateOrConnectWithoutAccountInput = {
+  create: AccountSessionCreateWithoutAccountInput;
+  where: AccountSessionWhereUniqueInput;
+};
+
+export type AccountSessionCreateWithoutAccountInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  expiresAt: Scalars['DateTime']['input'];
+  ipAddr: Scalars['String']['input'];
+  token: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userAgent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccountSessionListRelationFilter = {
+  every?: InputMaybe<AccountSessionWhereInput>;
+  none?: InputMaybe<AccountSessionWhereInput>;
+  some?: InputMaybe<AccountSessionWhereInput>;
+};
+
+export type AccountSessionScalarWhereInput = {
+  AND?: InputMaybe<Array<AccountSessionScalarWhereInput>>;
+  NOT?: InputMaybe<Array<AccountSessionScalarWhereInput>>;
+  OR?: InputMaybe<Array<AccountSessionScalarWhereInput>>;
+  accountId?: InputMaybe<IntFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  expiresAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IntFilter>;
+  ipAddr?: InputMaybe<StringFilter>;
+  token?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  userAgent?: InputMaybe<StringNullableFilter>;
+};
+
+export type AccountSessionUpdateManyMutationInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
+  ipAddr?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userAgent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccountSessionUpdateManyWithWhereWithoutAccountInput = {
+  data: AccountSessionUpdateManyMutationInput;
+  where: AccountSessionScalarWhereInput;
+};
+
+export type AccountSessionUpdateManyWithoutAccountNestedInput = {
+  connect?: InputMaybe<Array<AccountSessionWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<AccountSessionCreateOrConnectWithoutAccountInput>>;
+  create?: InputMaybe<Array<AccountSessionCreateWithoutAccountInput>>;
+  createMany?: InputMaybe<AccountSessionCreateManyAccountInputEnvelope>;
+  delete?: InputMaybe<Array<AccountSessionWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<AccountSessionScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<AccountSessionWhereUniqueInput>>;
+  set?: InputMaybe<Array<AccountSessionWhereUniqueInput>>;
+  update?: InputMaybe<Array<AccountSessionUpdateWithWhereUniqueWithoutAccountInput>>;
+  updateMany?: InputMaybe<Array<AccountSessionUpdateManyWithWhereWithoutAccountInput>>;
+  upsert?: InputMaybe<Array<AccountSessionUpsertWithWhereUniqueWithoutAccountInput>>;
+};
+
+export type AccountSessionUpdateWithWhereUniqueWithoutAccountInput = {
+  data: AccountSessionUpdateWithoutAccountInput;
+  where: AccountSessionWhereUniqueInput;
+};
+
+export type AccountSessionUpdateWithoutAccountInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
+  ipAddr?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userAgent?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccountSessionUpsertWithWhereUniqueWithoutAccountInput = {
+  create: AccountSessionCreateWithoutAccountInput;
+  update: AccountSessionUpdateWithoutAccountInput;
+  where: AccountSessionWhereUniqueInput;
+};
+
+export type AccountSessionWhereInput = {
+  AND?: InputMaybe<Array<AccountSessionWhereInput>>;
+  NOT?: InputMaybe<Array<AccountSessionWhereInput>>;
+  OR?: InputMaybe<Array<AccountSessionWhereInput>>;
+  account?: InputMaybe<AccountRelationFilter>;
+  accountId?: InputMaybe<IntFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  expiresAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IntFilter>;
+  ipAddr?: InputMaybe<StringFilter>;
+  token?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  userAgent?: InputMaybe<StringNullableFilter>;
+};
+
+export type AccountSessionWhereUniqueInput = {
+  AND?: InputMaybe<Array<AccountSessionWhereInput>>;
+  NOT?: InputMaybe<Array<AccountSessionWhereInput>>;
+  OR?: InputMaybe<Array<AccountSessionWhereInput>>;
+  account?: InputMaybe<AccountRelationFilter>;
+  accountId?: InputMaybe<IntFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  expiresAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  ipAddr?: InputMaybe<StringFilter>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  userAgent?: InputMaybe<StringNullableFilter>;
+};
+
 export enum AccountStatus {
   Active = 'ACTIVE',
   Deleted = 'DELETED',
   Inactive = 'INACTIVE'
 }
+
+export type AccountUpdateManyMutationInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  passwordHash?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AccountUpdateManyWithWhereWithoutProfileInput = {
+  data: AccountUpdateManyMutationInput;
+  where: AccountScalarWhereInput;
+};
+
+export type AccountUpdateManyWithoutProfileNestedInput = {
+  connect?: InputMaybe<Array<AccountWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<AccountCreateOrConnectWithoutProfileInput>>;
+  create?: InputMaybe<Array<AccountCreateWithoutProfileInput>>;
+  createMany?: InputMaybe<AccountCreateManyProfileInputEnvelope>;
+  delete?: InputMaybe<Array<AccountWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<AccountScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<AccountWhereUniqueInput>>;
+  set?: InputMaybe<Array<AccountWhereUniqueInput>>;
+  update?: InputMaybe<Array<AccountUpdateWithWhereUniqueWithoutProfileInput>>;
+  updateMany?: InputMaybe<Array<AccountUpdateManyWithWhereWithoutProfileInput>>;
+  upsert?: InputMaybe<Array<AccountUpsertWithWhereUniqueWithoutProfileInput>>;
+};
+
+export type AccountUpdateWithWhereUniqueWithoutProfileInput = {
+  data: AccountUpdateWithoutProfileInput;
+  where: AccountWhereUniqueInput;
+};
+
+export type AccountUpdateWithoutProfileInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  passwordHash?: InputMaybe<Scalars['String']['input']>;
+  sessions?: InputMaybe<AccountSessionUpdateManyWithoutAccountNestedInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AccountUpsertWithWhereUniqueWithoutProfileInput = {
+  create: AccountCreateWithoutProfileInput;
+  update: AccountUpdateWithoutProfileInput;
+  where: AccountWhereUniqueInput;
+};
+
+export type AccountWhereInput = {
+  AND?: InputMaybe<Array<AccountWhereInput>>;
+  NOT?: InputMaybe<Array<AccountWhereInput>>;
+  OR?: InputMaybe<Array<AccountWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<StringFilter>;
+  id?: InputMaybe<IntFilter>;
+  passwordHash?: InputMaybe<StringFilter>;
+  profile?: InputMaybe<ProfileNullableRelationFilter>;
+  profileId?: InputMaybe<IntNullableFilter>;
+  sessions?: InputMaybe<AccountSessionListRelationFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type AccountWhereUniqueInput = {
+  AND?: InputMaybe<Array<AccountWhereInput>>;
+  NOT?: InputMaybe<Array<AccountWhereInput>>;
+  OR?: InputMaybe<Array<AccountWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  passwordHash?: InputMaybe<StringFilter>;
+  profile?: InputMaybe<ProfileNullableRelationFilter>;
+  profileId?: InputMaybe<IntNullableFilter>;
+  sessions?: InputMaybe<AccountSessionListRelationFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+};
+
+export type ActivateAccountInput = {
+  code: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+};
 
 export type AuthResponse = {
   __typename?: 'AuthResponse';
@@ -67,10 +322,67 @@ export type AuthResponse = {
   token: Scalars['String']['output'];
 };
 
+export type DateTimeFilter = {
+  equals?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+};
+
+export type EmailPasswordInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type EnumAccountStatusFilter = {
+  equals?: InputMaybe<AccountStatus>;
+  in?: InputMaybe<Array<AccountStatus>>;
+  not?: InputMaybe<NestedEnumAccountStatusFilter>;
+  notIn?: InputMaybe<Array<AccountStatus>>;
+};
+
+export type EnumProfileRoleNullableListFilter = {
+  equals?: InputMaybe<Array<ProfileRole>>;
+  has?: InputMaybe<ProfileRole>;
+  hasEvery?: InputMaybe<Array<ProfileRole>>;
+  hasSome?: InputMaybe<Array<ProfileRole>>;
+  isEmpty?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type GenerateEmailCodeInput = {
+  email: Scalars['String']['input'];
+};
+
 export type GenerateEmailCodeResponse = {
   __typename?: 'GenerateEmailCodeResponse';
   expiresAt: Scalars['DateTime']['output'];
   result: Scalars['Boolean']['output'];
+};
+
+export type IntFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type IntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type Mutation = {
@@ -84,13 +396,12 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   register: AuthResponse;
   resetPassword: Account;
-  updateAccount: Account;
+  updateProfile: Profile;
 };
 
 
 export type MutationActivateAccountArgs = {
-  code: Scalars['String']['input'];
-  email: Scalars['String']['input'];
+  data: ActivateAccountInput;
 };
 
 
@@ -106,13 +417,12 @@ export type MutationEchoArgs = {
 
 
 export type MutationGenerateEmailCodeArgs = {
-  email: Scalars['String']['input'];
+  data: GenerateEmailCodeInput;
 };
 
 
 export type MutationLoginArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  data: EmailPasswordInput;
 };
 
 
@@ -127,20 +437,140 @@ export type MutationLogoutArgs = {
 
 
 export type MutationRegisterArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  data: EmailPasswordInput;
 };
 
 
 export type MutationResetPasswordArgs = {
-  email: Scalars['String']['input'];
-  emailCode: Scalars['String']['input'];
-  newPassword: Scalars['String']['input'];
+  data: ResetPasswordInput;
 };
 
 
-export type MutationUpdateAccountArgs = {
-  input: UpdateAccountInput;
+export type MutationUpdateProfileArgs = {
+  input: ProfileUpdateInput;
+};
+
+export type NestedDateTimeFilter = {
+  equals?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+};
+
+export type NestedEnumAccountStatusFilter = {
+  equals?: InputMaybe<AccountStatus>;
+  in?: InputMaybe<Array<AccountStatus>>;
+  not?: InputMaybe<NestedEnumAccountStatusFilter>;
+  notIn?: InputMaybe<Array<AccountStatus>>;
+};
+
+export type NestedIntFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type NestedIntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type NestedStringFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NestedStringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  not?: InputMaybe<NestedStringNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Profile = {
+  __typename?: 'Profile';
+  _count: ProfileCount;
+  accounts?: Maybe<Array<Account>>;
+  avatarUrl?: Maybe<Scalars['String']['output']>;
+  bio?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  roles?: Maybe<Array<ProfileRole>>;
+  status: AccountStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ProfileCount = {
+  __typename?: 'ProfileCount';
+  accounts: Scalars['Int']['output'];
+};
+
+export type ProfileNullableRelationFilter = {
+  is?: InputMaybe<ProfileWhereInput>;
+  isNot?: InputMaybe<ProfileWhereInput>;
+};
+
+export enum ProfileRole {
+  Admin = 'ADMIN',
+  User = 'USER'
+}
+
+export type ProfileUpdateInput = {
+  accounts?: InputMaybe<AccountUpdateManyWithoutProfileNestedInput>;
+  avatarUrl?: InputMaybe<Scalars['String']['input']>;
+  bio?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  roles?: InputMaybe<Array<ProfileRole>>;
+  status?: InputMaybe<AccountStatus>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type ProfileWhereInput = {
+  AND?: InputMaybe<Array<ProfileWhereInput>>;
+  NOT?: InputMaybe<Array<ProfileWhereInput>>;
+  OR?: InputMaybe<Array<ProfileWhereInput>>;
+  accounts?: InputMaybe<AccountListRelationFilter>;
+  avatarUrl?: InputMaybe<StringNullableFilter>;
+  bio?: InputMaybe<StringNullableFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<IntFilter>;
+  name?: InputMaybe<StringNullableFilter>;
+  roles?: InputMaybe<EnumProfileRoleNullableListFilter>;
+  status?: InputMaybe<EnumAccountStatusFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
 export type Query = {
@@ -148,6 +578,7 @@ export type Query = {
   currentSession: AccountSession;
   debug: Scalars['JSON']['output'];
   echo: Scalars['String']['output'];
+  testTranslation: Scalars['String']['output'];
   whoami: Account;
 };
 
@@ -156,8 +587,50 @@ export type QueryEchoArgs = {
   text: Scalars['String']['input'];
 };
 
-export type UpdateAccountInput = {
-  avatarUrl: Scalars['String']['input'];
+
+export type QueryTestTranslationArgs = {
+  username: Scalars['String']['input'];
+};
+
+export enum QueryMode {
+  Default = 'default',
+  Insensitive = 'insensitive'
+}
+
+export type ResetPasswordInput = {
+  email: Scalars['String']['input'];
+  emailCode: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+};
+
+export type StringFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  mode?: InputMaybe<QueryMode>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type StringNullableFilter = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  gt?: InputMaybe<Scalars['String']['input']>;
+  gte?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  lt?: InputMaybe<Scalars['String']['input']>;
+  lte?: InputMaybe<Scalars['String']['input']>;
+  mode?: InputMaybe<QueryMode>;
+  not?: InputMaybe<NestedStringNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type LoginMutationVariables = Exact<{
@@ -184,7 +657,7 @@ export type DebugQuery = { __typename?: 'Query', debug: any };
 
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
+  login(data: {email: $email, password: $password}) {
     token
     account {
       id
@@ -222,7 +695,7 @@ export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = gql`
     mutation Register($email: String!, $password: String!) {
-  register(email: $email, password: $password) {
+  register(data: {email: $email, password: $password}) {
     token
     account {
       id

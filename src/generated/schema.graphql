@@ -5,13 +5,12 @@ schema {
 
 type Account {
   _count: AccountCount!
-  avatarUrl: String
   createdAt: DateTime!
   email: String!
   id: Int!
-  roles: [AccountRole!]
+  profile: Profile
+  profileId: Int
   sessions: [AccountSession!]
-  status: AccountStatus!
   updatedAt: DateTime!
 }
 
@@ -19,9 +18,53 @@ type AccountCount {
   sessions: Int!
 }
 
-enum AccountRole {
-  ADMIN
-  USER
+input AccountCreateManyProfileInput {
+  createdAt: DateTime
+  email: String!
+  id: Int
+  passwordHash: String!
+  updatedAt: DateTime
+}
+
+input AccountCreateManyProfileInputEnvelope {
+  data: [AccountCreateManyProfileInput!]!
+  skipDuplicates: Boolean
+}
+
+input AccountCreateOrConnectWithoutProfileInput {
+  create: AccountCreateWithoutProfileInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountCreateWithoutProfileInput {
+  createdAt: DateTime
+  email: String!
+  passwordHash: String!
+  sessions: AccountSessionCreateNestedManyWithoutAccountInput
+  updatedAt: DateTime
+}
+
+input AccountListRelationFilter {
+  every: AccountWhereInput
+  none: AccountWhereInput
+  some: AccountWhereInput
+}
+
+input AccountRelationFilter {
+  is: AccountWhereInput
+  isNot: AccountWhereInput
+}
+
+input AccountScalarWhereInput {
+  AND: [AccountScalarWhereInput!]
+  NOT: [AccountScalarWhereInput!]
+  OR: [AccountScalarWhereInput!]
+  createdAt: DateTimeFilter
+  email: StringFilter
+  id: IntFilter
+  passwordHash: StringFilter
+  profileId: IntNullableFilter
+  updatedAt: DateTimeFilter
 }
 
 type AccountSession {
@@ -35,10 +78,222 @@ type AccountSession {
   userAgent: String
 }
 
+input AccountSessionCreateManyAccountInput {
+  createdAt: DateTime
+  expiresAt: DateTime!
+  id: Int
+  ipAddr: String!
+  token: String!
+  updatedAt: DateTime
+  userAgent: String
+}
+
+input AccountSessionCreateManyAccountInputEnvelope {
+  data: [AccountSessionCreateManyAccountInput!]!
+  skipDuplicates: Boolean
+}
+
+input AccountSessionCreateNestedManyWithoutAccountInput {
+  connect: [AccountSessionWhereUniqueInput!]
+  connectOrCreate: [AccountSessionCreateOrConnectWithoutAccountInput!]
+  create: [AccountSessionCreateWithoutAccountInput!]
+  createMany: AccountSessionCreateManyAccountInputEnvelope
+}
+
+input AccountSessionCreateOrConnectWithoutAccountInput {
+  create: AccountSessionCreateWithoutAccountInput!
+  where: AccountSessionWhereUniqueInput!
+}
+
+input AccountSessionCreateWithoutAccountInput {
+  createdAt: DateTime
+  expiresAt: DateTime!
+  ipAddr: String!
+  token: String!
+  updatedAt: DateTime
+  userAgent: String
+}
+
+input AccountSessionListRelationFilter {
+  every: AccountSessionWhereInput
+  none: AccountSessionWhereInput
+  some: AccountSessionWhereInput
+}
+
+input AccountSessionScalarWhereInput {
+  AND: [AccountSessionScalarWhereInput!]
+  NOT: [AccountSessionScalarWhereInput!]
+  OR: [AccountSessionScalarWhereInput!]
+  accountId: IntFilter
+  createdAt: DateTimeFilter
+  expiresAt: DateTimeFilter
+  id: IntFilter
+  ipAddr: StringFilter
+  token: StringFilter
+  updatedAt: DateTimeFilter
+  userAgent: StringNullableFilter
+}
+
+input AccountSessionUpdateManyMutationInput {
+  createdAt: DateTime
+  expiresAt: DateTime
+  ipAddr: String
+  token: String
+  updatedAt: DateTime
+  userAgent: String
+}
+
+input AccountSessionUpdateManyWithWhereWithoutAccountInput {
+  data: AccountSessionUpdateManyMutationInput!
+  where: AccountSessionScalarWhereInput!
+}
+
+input AccountSessionUpdateManyWithoutAccountNestedInput {
+  connect: [AccountSessionWhereUniqueInput!]
+  connectOrCreate: [AccountSessionCreateOrConnectWithoutAccountInput!]
+  create: [AccountSessionCreateWithoutAccountInput!]
+  createMany: AccountSessionCreateManyAccountInputEnvelope
+  delete: [AccountSessionWhereUniqueInput!]
+  deleteMany: [AccountSessionScalarWhereInput!]
+  disconnect: [AccountSessionWhereUniqueInput!]
+  set: [AccountSessionWhereUniqueInput!]
+  update: [AccountSessionUpdateWithWhereUniqueWithoutAccountInput!]
+  updateMany: [AccountSessionUpdateManyWithWhereWithoutAccountInput!]
+  upsert: [AccountSessionUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input AccountSessionUpdateWithWhereUniqueWithoutAccountInput {
+  data: AccountSessionUpdateWithoutAccountInput!
+  where: AccountSessionWhereUniqueInput!
+}
+
+input AccountSessionUpdateWithoutAccountInput {
+  createdAt: DateTime
+  expiresAt: DateTime
+  ipAddr: String
+  token: String
+  updatedAt: DateTime
+  userAgent: String
+}
+
+input AccountSessionUpsertWithWhereUniqueWithoutAccountInput {
+  create: AccountSessionCreateWithoutAccountInput!
+  update: AccountSessionUpdateWithoutAccountInput!
+  where: AccountSessionWhereUniqueInput!
+}
+
+input AccountSessionWhereInput {
+  AND: [AccountSessionWhereInput!]
+  NOT: [AccountSessionWhereInput!]
+  OR: [AccountSessionWhereInput!]
+  account: AccountRelationFilter
+  accountId: IntFilter
+  createdAt: DateTimeFilter
+  expiresAt: DateTimeFilter
+  id: IntFilter
+  ipAddr: StringFilter
+  token: StringFilter
+  updatedAt: DateTimeFilter
+  userAgent: StringNullableFilter
+}
+
+input AccountSessionWhereUniqueInput {
+  AND: [AccountSessionWhereInput!]
+  NOT: [AccountSessionWhereInput!]
+  OR: [AccountSessionWhereInput!]
+  account: AccountRelationFilter
+  accountId: IntFilter
+  createdAt: DateTimeFilter
+  expiresAt: DateTimeFilter
+  id: Int
+  ipAddr: StringFilter
+  token: String
+  updatedAt: DateTimeFilter
+  userAgent: StringNullableFilter
+}
+
 enum AccountStatus {
   ACTIVE
   DELETED
   INACTIVE
+}
+
+input AccountUpdateManyMutationInput {
+  createdAt: DateTime
+  email: String
+  passwordHash: String
+  updatedAt: DateTime
+}
+
+input AccountUpdateManyWithWhereWithoutProfileInput {
+  data: AccountUpdateManyMutationInput!
+  where: AccountScalarWhereInput!
+}
+
+input AccountUpdateManyWithoutProfileNestedInput {
+  connect: [AccountWhereUniqueInput!]
+  connectOrCreate: [AccountCreateOrConnectWithoutProfileInput!]
+  create: [AccountCreateWithoutProfileInput!]
+  createMany: AccountCreateManyProfileInputEnvelope
+  delete: [AccountWhereUniqueInput!]
+  deleteMany: [AccountScalarWhereInput!]
+  disconnect: [AccountWhereUniqueInput!]
+  set: [AccountWhereUniqueInput!]
+  update: [AccountUpdateWithWhereUniqueWithoutProfileInput!]
+  updateMany: [AccountUpdateManyWithWhereWithoutProfileInput!]
+  upsert: [AccountUpsertWithWhereUniqueWithoutProfileInput!]
+}
+
+input AccountUpdateWithWhereUniqueWithoutProfileInput {
+  data: AccountUpdateWithoutProfileInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountUpdateWithoutProfileInput {
+  createdAt: DateTime
+  email: String
+  passwordHash: String
+  sessions: AccountSessionUpdateManyWithoutAccountNestedInput
+  updatedAt: DateTime
+}
+
+input AccountUpsertWithWhereUniqueWithoutProfileInput {
+  create: AccountCreateWithoutProfileInput!
+  update: AccountUpdateWithoutProfileInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountWhereInput {
+  AND: [AccountWhereInput!]
+  NOT: [AccountWhereInput!]
+  OR: [AccountWhereInput!]
+  createdAt: DateTimeFilter
+  email: StringFilter
+  id: IntFilter
+  passwordHash: StringFilter
+  profile: ProfileNullableRelationFilter
+  profileId: IntNullableFilter
+  sessions: AccountSessionListRelationFilter
+  updatedAt: DateTimeFilter
+}
+
+input AccountWhereUniqueInput {
+  AND: [AccountWhereInput!]
+  NOT: [AccountWhereInput!]
+  OR: [AccountWhereInput!]
+  createdAt: DateTimeFilter
+  email: String
+  id: Int
+  passwordHash: StringFilter
+  profile: ProfileNullableRelationFilter
+  profileId: IntNullableFilter
+  sessions: AccountSessionListRelationFilter
+  updatedAt: DateTimeFilter
+}
+
+input ActivateAccountInput {
+  code: String!
+  email: String!
 }
 
 type AuthResponse {
@@ -51,9 +306,66 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input EmailPasswordInput {
+  email: String!
+  password: String!
+}
+
+input EnumAccountStatusFilter {
+  equals: AccountStatus
+  in: [AccountStatus!]
+  not: NestedEnumAccountStatusFilter
+  notIn: [AccountStatus!]
+}
+
+input EnumProfileRoleNullableListFilter {
+  equals: [ProfileRole!]
+  has: ProfileRole
+  hasEvery: [ProfileRole!]
+  hasSome: [ProfileRole!]
+  isEmpty: Boolean
+}
+
+input GenerateEmailCodeInput {
+  email: String!
+}
+
 type GenerateEmailCodeResponse {
   expiresAt: DateTime!
   result: Boolean!
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
 }
 
 """
@@ -62,25 +374,184 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Mutation {
-  activateAccount(code: String!, email: String!): Account!
+  activateAccount(data: ActivateAccountInput!): Account!
   changePassword(newPassword: String!, password: String!): Account!
   echo(text: String!): String!
-  generateEmailCode(email: String!): GenerateEmailCodeResponse!
-  login(email: String!, password: String!): AuthResponse!
+  generateEmailCode(data: GenerateEmailCodeInput!): GenerateEmailCodeResponse!
+  login(data: EmailPasswordInput!): AuthResponse!
   loginAs(email: String!): AuthResponse!
   logout(sessionIds: [Float!]!): Boolean!
-  register(email: String!, password: String!): AuthResponse!
-  resetPassword(email: String!, emailCode: String!, newPassword: String!): Account!
-  updateAccount(input: UpdateAccountInput!): Account!
+  register(data: EmailPasswordInput!): AuthResponse!
+  resetPassword(data: ResetPasswordInput!): Account!
+  updateProfile(input: ProfileUpdateInput!): Profile!
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedEnumAccountStatusFilter {
+  equals: AccountStatus
+  in: [AccountStatus!]
+  not: NestedEnumAccountStatusFilter
+  notIn: [AccountStatus!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+type Profile {
+  _count: ProfileCount!
+  accounts: [Account!]
+  avatarUrl: String
+  bio: String
+  createdAt: DateTime!
+  id: Int!
+  name: String
+  roles: [ProfileRole!]
+  status: AccountStatus!
+  updatedAt: DateTime!
+}
+
+type ProfileCount {
+  accounts: Int!
+}
+
+input ProfileNullableRelationFilter {
+  is: ProfileWhereInput
+  isNot: ProfileWhereInput
+}
+
+enum ProfileRole {
+  ADMIN
+  USER
+}
+
+input ProfileUpdateInput {
+  accounts: AccountUpdateManyWithoutProfileNestedInput
+  avatarUrl: String
+  bio: String
+  createdAt: DateTime
+  name: String
+  roles: [ProfileRole!]
+  status: AccountStatus
+  updatedAt: DateTime
+}
+
+input ProfileWhereInput {
+  AND: [ProfileWhereInput!]
+  NOT: [ProfileWhereInput!]
+  OR: [ProfileWhereInput!]
+  accounts: AccountListRelationFilter
+  avatarUrl: StringNullableFilter
+  bio: StringNullableFilter
+  createdAt: DateTimeFilter
+  id: IntFilter
+  name: StringNullableFilter
+  roles: EnumProfileRoleNullableListFilter
+  status: EnumAccountStatusFilter
+  updatedAt: DateTimeFilter
 }
 
 type Query {
   currentSession: AccountSession!
   debug: JSON!
   echo(text: String!): String!
+  testTranslation(username: String!): String!
   whoami: Account!
 }
 
-input UpdateAccountInput {
-  avatarUrl: String!
+enum QueryMode {
+  default
+  insensitive
+}
+
+input ResetPasswordInput {
+  email: String!
+  emailCode: String!
+  newPassword: String!
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  startsWith: String
 }
