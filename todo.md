@@ -1,5 +1,6 @@
 # TODO
 
+- [ ] Migrate to Ant Design
 - [ ] Check and update Sentry integration
 - [ ] Delete app-info.json
 - [ ] Beatify home page
