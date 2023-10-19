@@ -2,6 +2,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires,unicorn/prefer-module */
 const { withSentryConfig } = require('@sentry/nextjs');
 const { i18n } = require('./next-i18next.config');
+const withPWA = require('next-pwa')({
+  dest: 'public',
+});
 
 const sentryWebpackPluginOptions = {
   // Additional config options for the Sentry Webpack plugin. Keep in mind that
@@ -38,4 +41,4 @@ const outNextSentryConfig =
     ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
     : nextConfig;
 
-module.exports = withBundleAnalyzer(outNextSentryConfig);
+module.exports = withPWA(withBundleAnalyzer(outNextSentryConfig));
