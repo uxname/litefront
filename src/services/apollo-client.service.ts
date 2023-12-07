@@ -84,6 +84,6 @@ export function useApolloClient(): ApolloClientType {
         }),
       );
     })();
-  }, []);
+  }, [authStore.token]);
   return client;
 }
