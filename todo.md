@@ -1,0 +1,52 @@
+# Required
+
+- [x] TSConfig
+- [x] ESLint
+- [x] Prettier
+- [x] React dev tools
+- [x] .stylelintignore
+- [x] .editorconfig
+- [x] .npmrc
+- [x] .prettierrc
+- [x] .eslintrc.json
+- [x] Stylelint
+- [x] Readme
+- [x] Update script
+- [x] .gitignore
+- [x] .dockerignore
+- [x] .eslintignore
+- [x] Docker
+- [x] Redesign logo
+- [x] /\_debug page
+- [x] Husky
+- [x] Lint-staged
+- [x] Compression in server
+- [x] Image optimization on build
+- [x] .env_example/.env
+- [ ] Home page
+- [ ] GraphQL fetch example
+  - [ ] CSR
+  - [ ] SSR
+- [ ] Auth pages
+- [ ] Zustand dev tools
+- [ ] Sentry
+- [ ] I18N
+- [ ] GraphQL Codegen
+- [ ] npm scripts grouping
+- [ ] .graphqlconfig
+  - [ ] script for forcing sync .env_example and .env
+- [ ] CSS framework
+- [ ] Playwright tests
+- [ ] Unit tests (vitest)
+- [ ] PWA
+- [ ] Zustand
+- [ ] Folder structure (Project Arch)
+- [ ] Theming
+- [ ] Error handling to UI
+- [ ] Logger
+- [ ] Replace all "Vike" in comments and strings to project name
+
+# Optional
+
+- [ ] Socket.io support
+- [ ] Analytics
