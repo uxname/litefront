@@ -1,12 +1,12 @@
 {
-  "name": "vitty",
+  "name": "vitefront",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
     "start:dev": "vite",
-    "start:preview": "vite preview",
+    "start:prod": "vite preview",
     "gen": "graphql-codegen --require dotenv/config --config codegen.yml",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -20,22 +20,24 @@
     "postinstall": "npm run prepare"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@apollo/client": "^3.8.10",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/schema-ast": "^4.0.0",
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-operations": "4.0.1",
-    "@graphql-codegen/typescript-react-apollo": "4.1.0"
+    "@graphql-codegen/typescript-react-apollo": "4.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite-plugin-pwa": "^0.17.5"
   },
   "devDependencies": {
+    "@jetbrains/eslint-config": "^5.4.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
     "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "^5.2.2",
-    "vite": "^5.0.8",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-comments": "^1.0.0",
@@ -51,9 +53,6 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-unicorn": "^50.0.1",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
-    "@jetbrains/eslint-config": "^5.4.1",
     "husky": "^9.0.6",
     "lint-staged": "^15.2.0",
     "sass": "^1.70.0",
@@ -61,6 +60,8 @@
     "stylelint": "^16.2.0",
     "stylelint-config-standard": "^36.0.0",
     "svgo": "^3.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
     "vite-plugin-image-optimizer": "^1.1.7"
   }
 }

@@ -23,6 +23,7 @@
 - [x] Compression in server
 - [x] Image optimization on build
 - [x] .env_example/.env
+- [ ] Commitlint
 - [ ] Home page
 - [ ] GraphQL fetch example
   - [ ] CSR
