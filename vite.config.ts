@@ -14,6 +14,7 @@ export default (): UserConfig => {
     server: {
       port: Number(process.env.PORT),
       strictPort: true,
+      host: "0.0.0.0",
     },
     preview: {
       port: Number(process.env.PORT),

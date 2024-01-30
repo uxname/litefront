@@ -25,6 +25,7 @@
 - [x] .env_example/.env
 - [ ] Commitlint
 - [ ] Home page
+- [ ] Migrate production launch from Vite to Nginx or something else
 - [ ] GraphQL fetch example
   - [ ] CSR
   - [ ] SSR
