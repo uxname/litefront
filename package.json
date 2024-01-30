@@ -27,6 +27,7 @@
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-operations": "4.0.1",
     "@graphql-codegen/typescript-react-apollo": "4.1.0",
+    "prettier": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite-plugin-pwa": "^0.17.5"
@@ -63,5 +64,10 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-image-optimizer": "^1.1.7"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": "npm run lint:fix",
+    "*.{css,scss}": "npm run lint:style:fix",
+    "*.{json,md,html,xml,yml,yaml,mdx}": "prettier --write"
   }
 }

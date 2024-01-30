@@ -3,4 +3,5 @@ dist/
 .idea
 .vscode
 .env
-generated/
+src/generated/
+src/vite-env.d.ts
