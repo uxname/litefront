@@ -3,8 +3,30 @@ import { JSX, useState } from "react";
 import "./App.scss";
 
 import reactLogo from "./assets/react.svg";
+import { useGetAllFilmsQuery } from "./generated/graphql.tsx";
 
 import viteLogo from "/vite.svg";
+
+function Films(): JSX.Element {
+  const { loading, data, error } = useGetAllFilmsQuery();
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!data) return <p>No data!</p>;
+
+  return (
+    <div>
+      <h2>Star Wars Films</h2>
+      {data.allFilms?.films?.map((film) => (
+        <div key={film?.id}>
+          <span>
+            <b>{film?.title}</b> (Episode №: {film?.episodeID})
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function App(): JSX.Element {
   const [count, setCount] = useState(0);
@@ -33,6 +55,7 @@ function App(): JSX.Element {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <Films />
     </>
   );
 }
