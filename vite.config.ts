@@ -1,5 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable new-cap */
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
 import { UserConfig } from "vite";
@@ -24,6 +25,7 @@ export default (): UserConfig => {
       react(),
       VitePWA({ registerType: "autoUpdate" }),
       ViteImageOptimizer(),
+      TanStackRouterVite(),
     ],
     build: {
       sourcemap: true,

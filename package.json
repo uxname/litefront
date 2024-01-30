@@ -27,6 +27,7 @@
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-operations": "4.0.1",
     "@graphql-codegen/typescript-react-apollo": "4.1.0",
+    "@tanstack/router-devtools": "^1.15.3",
     "dotenv": "^16.4.1",
     "graphql": "^16.8.1",
     "npm-check-updates": "^16.14.14",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@jetbrains/eslint-config": "^5.4.1",
+    "@tanstack/router-vite-plugin": "^1.14.1",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.19.1",

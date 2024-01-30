@@ -1,6 +1,6 @@
 module.exports = {
   reportUnusedDisableDirectives: true,
-  ignorePatterns: ['dist/*', 'src/generated/*', 'src/vite-env.d.ts'],
+  ignorePatterns: ['dist/*', 'src/generated/*', 'src/vite-env.d.ts','src/routeTree.gen.ts'],
   env: { browser: true, es2021: true, node: true },
   parserOptions: {
     ecmaFeatures: { jsx: true },

@@ -6,15 +6,23 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import "./index.scss";
 
-import App from "./App.tsx";
+import { routeTree } from "./routeTree.gen.ts";
+const router = createRouter({ routeTree });
 
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
     <ApolloProvider client={makeApolloClient()}>
-      <App />
+      <RouterProvider router={router} />
     </ApolloProvider>
   </React.StrictMode>,
 );
