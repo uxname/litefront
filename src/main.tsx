@@ -10,7 +10,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import "./index.scss";
 
-import { routeTree } from "./routeTree.gen.ts";
+import { routeTree } from "./generated/routeTree.gen.ts";
 const router = createRouter({ routeTree });
 
 // Register the router instance for type safety

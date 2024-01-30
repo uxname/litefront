@@ -25,7 +25,9 @@ export default (): UserConfig => {
       react(),
       VitePWA({ registerType: "autoUpdate" }),
       ViteImageOptimizer(),
-      TanStackRouterVite(),
+      TanStackRouterVite({
+        generatedRouteTree: "./src/generated/routeTree.gen.ts",
+      }),
     ],
     build: {
       sourcemap: true,
