@@ -10,3 +10,4 @@ ReactDOM.createRoot(document.querySelector("#root")!).render(
     <App />
   </React.StrictMode>,
 );
+const q = 1_231_232_131;
