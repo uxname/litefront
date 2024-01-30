@@ -1,13 +1,14 @@
 import { JSX } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
+import { Counter } from "../components/counter.tsx";
 import { useGetAllFilmsQuery } from "../generated/graphql.tsx";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
-function Films(): JSX.Element {
+function Index(): JSX.Element {
   const { loading, data, error } = useGetAllFilmsQuery();
 
   if (loading) return <p>Loading...</p>;
@@ -16,6 +17,8 @@ function Films(): JSX.Element {
 
   return (
     <div>
+      <Counter />
+      <hr />
       <h2>Star Wars Films</h2>
       {data.allFilms?.films?.map((film) => (
         <div key={film?.id}>
@@ -24,15 +27,6 @@ function Films(): JSX.Element {
           </span>
         </div>
       ))}
-    </div>
-  );
-}
-
-function Index(): JSX.Element {
-  return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-      <Films />
     </div>
   );
 }

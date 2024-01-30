@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  gap: 1em;
+
+  /* border only between children */
+  > * + * {
+    border-left: 1px solid #ccc;
+    padding-left: 1em;
+  }
+}

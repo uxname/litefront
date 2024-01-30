@@ -10,42 +10,48 @@
 - [x] .prettierrc
 - [x] .eslintrc.json
 - [x] Stylelint
-- [x] Readme
-- [x] Update script
 - [x] .gitignore
 - [x] .dockerignore
 - [x] .eslintignore
-- [x] Docker
 - [x] Husky
 - [x] Lint-staged
+
+- [x] Readme
+- [x] Update script
+- [ ] script for forcing sync .env_example and .env
+- [ ] npm scripts grouping
+
+- [x] Docker
 - [x] Compression in server
 - [x] Image optimization on build
-- [x] .env_example/.env
-  - [ ] script for forcing sync .env_example and .env
-- [ ] Router
-- [ ] /\_debug page
-- [ ] Commitlint
-- [ ] Redesign logo
-- [ ] Home page
 - [ ] Migrate production launch from Vite to Nginx or something else
-- [ ] GraphQL fetch example
-  - [ ] CSR
-  - [ ] SSR
-- [ ] Auth pages
-- [ ] Zustand
-- [ ] Zustand dev tools
-- [ ] Sentry
-- [ ] I18N
-- [ ] GraphQL Codegen
-- [ ] npm scripts grouping
-- [ ] .graphqlconfig
-- [ ] CSS framework
 - [ ] Playwright tests
 - [ ] Unit tests (vitest)
 - [ ] PWA
+
+- [ ] Router
+- [ ] /\_debug page
 - [ ] Folder structure (Project Arch)
+
+- [ ] Redesign logo
+- [ ] Home page
 - [ ] Theming
 - [ ] Error handling to UI
+
+- [x] Sentry
+- [ ] Commitlint
+
+- [ ] GraphQL fetch example
+  - [ ] CSR
+  - [ ] SSR
+- [ ] GraphQL Codegen
+
+- [ ] I18N
+
+- [ ] Zustand
+- [ ] Zustand dev tools
+- [ ] .env_example/.env
+- [ ] CSS framework
 - [ ] Logger
 - [ ] Replace all "Vike" in comments and strings to project name
 
