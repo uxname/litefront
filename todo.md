@@ -16,32 +16,33 @@
 - [x] .dockerignore
 - [x] .eslintignore
 - [x] Docker
-- [x] Redesign logo
-- [x] /\_debug page
 - [x] Husky
 - [x] Lint-staged
 - [x] Compression in server
 - [x] Image optimization on build
 - [x] .env_example/.env
+  - [ ] script for forcing sync .env_example and .env
+- [ ] Router
+- [ ] /\_debug page
 - [ ] Commitlint
+- [ ] Redesign logo
 - [ ] Home page
 - [ ] Migrate production launch from Vite to Nginx or something else
 - [ ] GraphQL fetch example
   - [ ] CSR
   - [ ] SSR
 - [ ] Auth pages
+- [ ] Zustand
 - [ ] Zustand dev tools
 - [ ] Sentry
 - [ ] I18N
 - [ ] GraphQL Codegen
 - [ ] npm scripts grouping
 - [ ] .graphqlconfig
-  - [ ] script for forcing sync .env_example and .env
 - [ ] CSS framework
 - [ ] Playwright tests
 - [ ] Unit tests (vitest)
 - [ ] PWA
-- [ ] Zustand
 - [ ] Folder structure (Project Arch)
 - [ ] Theming
 - [ ] Error handling to UI
