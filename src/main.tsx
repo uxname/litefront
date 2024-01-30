@@ -11,6 +11,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import "./index.scss";
 
 import { routeTree } from "./generated/routeTree.gen.ts";
+
 const router = createRouter({ routeTree });
 
 // Register the router instance for type safety
@@ -19,6 +20,7 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
     <ApolloProvider client={makeApolloClient()}>

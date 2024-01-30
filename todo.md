@@ -29,7 +29,7 @@
 - [ ] Unit tests (vitest)
 - [ ] PWA
 
-- [ ] Router
+- [x] Router
 - [ ] /\_debug page
 - [ ] Folder structure (Project Arch)
 
