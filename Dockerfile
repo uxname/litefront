@@ -7,7 +7,10 @@ COPY . ./
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine3.17
-WORKDIR /app
-COPY --from=build /app ./
-CMD ["npm", "run", "start:prod"]
+FROM caddy:alpine
+WORKDIR /usr/share/caddy
+COPY --from=build /app/dist /usr/share/caddy/html
+
+COPY Caddyfile /etc/caddy/Caddyfile
+
+EXPOSE 80
