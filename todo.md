@@ -48,7 +48,7 @@
 
 - [ ] I18N
 
-- [ ] Zustand
+- [x] Zustand
 - [ ] Zustand dev tools
 - [ ] .env_example/.env
 - [ ] CSS framework
