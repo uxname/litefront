@@ -19,7 +19,7 @@
 - [x] Readme
 - [x] Update script
 - [ ] script for forcing sync .env_example and .env
-- [ ] npm scripts grouping
+- [x] npm scripts grouping
 
 - [x] Docker
 - [x] Compression in server
