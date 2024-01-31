@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import { vitePluginVersionMark } from "vite-plugin-version-mark";
 
 // https://vitejs.dev/config/
 export default (): UserConfig => {
@@ -25,6 +26,11 @@ export default (): UserConfig => {
       ViteImageOptimizer(),
       TanStackRouterVite({
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
+      }),
+      vitePluginVersionMark({
+        ifGitSHA: true,
+        ifLog: true,
+        ifGlobal: true,
       }),
     ],
     build: {
