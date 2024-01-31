@@ -24,7 +24,7 @@
 - [x] Docker
 - [x] Compression in server
 - [x] Image optimization on build
-- [ ] Migrate production launch from Vite to Nginx or something else
+- [x] Migrate production launch from Vite to Nginx or something else
 - [ ] Playwright tests
 - [ ] Unit tests (vitest)
 - [ ] PWA
