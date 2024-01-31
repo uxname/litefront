@@ -27,7 +27,6 @@
 - [x] Migrate production launch from Vite to Nginx or something else
 - [ ] Playwright tests
 - [ ] Unit tests (vitest)
-- [ ] PWA
 
 - [x] Router
 - [ ] /\_debug page
@@ -44,7 +43,7 @@
 - [ ] GraphQL fetch example
   - [ ] CSR
   - [ ] SSR
-- [ ] GraphQL Codegen
+- [x] GraphQL Codegen
 
 - [ ] I18N
 

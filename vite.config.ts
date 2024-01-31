@@ -5,7 +5,6 @@ import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default (): UserConfig => {
@@ -23,7 +22,6 @@ export default (): UserConfig => {
     },
     plugins: [
       react(),
-      VitePWA({ registerType: "autoUpdate" }),
       ViteImageOptimizer(),
       TanStackRouterVite({
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
