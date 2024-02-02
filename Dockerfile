@@ -1,5 +1,6 @@
 # Build stage
 FROM node:20-alpine3.17 AS build
+RUN apk add git
 WORKDIR /app
 COPY package*.json ./
 RUN npm i --legacy-peer-deps
