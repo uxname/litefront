@@ -76,7 +76,7 @@
     "vite-plugin-version-mark": "^0.0.10"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": "npm run lint:fix",
+    "*.{ts,tsx,js,jsx}": "npm run check",
     "*.{css,scss}": "npm run lint:style:fix",
     "*.{json,md,html,xml,yml,yaml,mdx}": "prettier --write"
   }
