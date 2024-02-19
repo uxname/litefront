@@ -18,7 +18,7 @@
 
 - [x] Readme
 - [x] Update script
-- [ ] script for forcing sync .env_example and .env
+- [x] script for forcing sync .env_example and .env
 - [x] npm scripts grouping
 
 - [x] Docker

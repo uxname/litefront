@@ -6,7 +6,7 @@
 
 - `npx degit uxname/litefront my-app`
 - `npm install`
-- `cp .env_example .env`
+- `cp .env.example .env`
 - Edit `.env`
 - `npm run gen`
 - `npm run dev`

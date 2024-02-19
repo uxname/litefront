@@ -7,6 +7,8 @@ import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 
+import { viteDotenvChecker } from "./src/common/vite-dotenv-checker.plugin";
+
 // https://vitejs.dev/config/
 export default (): UserConfig => {
   configDotenv();
@@ -32,6 +34,7 @@ export default (): UserConfig => {
         ifLog: true,
         ifGlobal: true,
       }),
+      viteDotenvChecker(),
     ],
     build: {
       sourcemap: true,
