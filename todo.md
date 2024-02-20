@@ -25,7 +25,7 @@
 - [x] Compression in server
 - [x] Image optimization on build
 - [x] Migrate production launch from Vite to Nginx or something else
-- [ ] Playwright tests
+- [x] Playwright tests
 - [ ] Unit tests (vitest)
 
 - [x] Router

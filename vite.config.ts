@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable new-cap */
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
@@ -38,6 +40,11 @@ export default (): UserConfig => {
     ],
     build: {
       sourcemap: true,
+    },
+    test: {
+      exclude: ["tests/e2e", "node_modules", "dist"],
+      testTimeout: 30_000,
+      hookTimeout: 30_000,
     },
   };
 };
