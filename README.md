@@ -19,7 +19,3 @@
 ## Types generation
 
 Run `npm run gen` after every GraphQL API Schema changed or after `./graphql/*.graphql` files are modified
-
-# Other info
-
-Build info page available at `/_debug`: http://localhost:3000/\_debug
