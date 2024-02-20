@@ -26,7 +26,7 @@
 - [x] Image optimization on build
 - [x] Migrate production launch from Vite to Nginx or something else
 - [x] Playwright tests
-- [ ] Unit tests (vitest)
+- [x] Unit tests (vitest)
 
 - [x] Router
 - [x] /\_debug page
@@ -48,8 +48,8 @@
 - [ ] I18N
 
 - [x] Zustand
-- [ ] Zustand dev tools
-- [ ] .env_example/.env
+- [x] Zustand dev tools
+- [x] .env_example/.env
 - [ ] CSS framework
 - [ ] Logger
 - [ ] Replace all "Vike" in comments and strings to project name
