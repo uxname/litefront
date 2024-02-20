@@ -29,7 +29,7 @@
 - [ ] Unit tests (vitest)
 
 - [x] Router
-- [ ] /\_debug page
+- [x] /\_debug page
 - [ ] Folder structure (Project Arch)
 
 - [ ] Redesign logo
