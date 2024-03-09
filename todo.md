@@ -15,6 +15,7 @@
 - [x] .eslintignore
 - [x] Husky
 - [x] Lint-staged
+- [ ] https://github.com/alienfast/vite-plugin-i18next-loader
 
 - [x] Readme
 - [x] Update script
