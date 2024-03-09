@@ -53,7 +53,6 @@
 - [x] .env_example/.env
 - [ ] CSS framework
 - [ ] Logger
-- [ ] Replace all "Vike" in comments and strings to project name
 
 # Optional
 
