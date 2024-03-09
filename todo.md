@@ -38,7 +38,7 @@
 - [ ] Theming
 - [ ] Error handling to UI
 
-- [x] Sentry
+- [ ] Sentry
 - [ ] Commitlint
 
 - [ ] GraphQL fetch example
