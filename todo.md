@@ -46,7 +46,7 @@
   - [ ] SSR
 - [x] GraphQL Codegen
 
-- [ ] I18N
+- [x] I18N
 
 - [x] Zustand
 - [x] Zustand dev tools
