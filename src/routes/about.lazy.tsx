@@ -1,4 +1,5 @@
 import { JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/about")({
@@ -6,5 +7,6 @@ export const Route = createLazyFileRoute("/about")({
 });
 
 function About(): JSX.Element {
-  return <div className="p-2">Hello from About!</div>;
+  const { t } = useTranslation(["about"]);
+  return <div className="p-2">{t("about:text")}</div>;
 }

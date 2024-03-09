@@ -9,6 +9,7 @@ import {
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import "./index.scss";
+import "./common/i18next.ts";
 
 import { routeTree } from "./generated/routeTree.gen.ts";
 

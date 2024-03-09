@@ -41,10 +41,14 @@
     "@tanstack/router-devtools": "^1.16.6",
     "dotenv": "^16.4.4",
     "graphql": "^16.8.1",
+    "i18next": "^23.9.0",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-http-backend": "^2.5.0",
     "npm-check-updates": "^16.14.15",
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^14.0.5",
     "zustand": "^4.5.1"
   },
   "devDependencies": {
