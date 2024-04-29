@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import * as fs from "node:fs";
-import * as path from "node:path";
+import path from "node:path";
 import { Plugin } from "vite";
 
 export const viteDotenvChecker = (): Plugin => ({

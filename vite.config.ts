@@ -12,7 +12,7 @@ import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import { viteDotenvChecker } from "./src/common/vite-dotenv-checker.plugin";
 
 // https://vitejs.dev/config/
-export default (): UserConfig => {
+const vite = (): UserConfig => {
   configDotenv();
 
   return {
@@ -48,3 +48,4 @@ export default (): UserConfig => {
     },
   };
 };
+export default vite;

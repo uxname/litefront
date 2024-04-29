@@ -1,6 +1,8 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
+import logo from "../../.github/logo.svg";
+
 import styles from "./__root.module.scss";
 
 export const Route = createRootRoute({
@@ -10,6 +12,7 @@ export const Route = createRootRoute({
     return (
       <>
         <div className={styles.header}>
+          <img src={logo} alt="logo" className={styles.logo} />
           <Link to="/" className="[&.active]:font-bold">
             Home
           </Link>{" "}
