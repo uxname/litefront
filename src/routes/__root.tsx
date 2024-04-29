@@ -11,8 +11,8 @@ export const Route = createRootRoute({
 
     return (
       <>
+        <img src={logo} alt="logo" className={styles.logo} />
         <div className={styles.header}>
-          <img src={logo} alt="logo" className={styles.logo} />
           <Link to="/" className="[&.active]:font-bold">
             Home
           </Link>{" "}
