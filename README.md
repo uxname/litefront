@@ -4,12 +4,20 @@
 
 # Get started
 
+**One-liner:**
+
+- `npx degit uxname/litefront my-app && cd my-app && git init && git add . && git commit -m "Initial commit" && npm install && cp .env.example .env && npm run gen && npm run start:dev`
+
+**Step by step:**
+
 - `npx degit uxname/litefront my-app`
+- `cd my-app`
+- `git init && git add . && git commit -m "Initial commit"`
 - `npm install`
 - `cp .env.example .env`
 - Edit `.env`
 - `npm run gen`
-- `npm run dev`
+- `npm run start:dev`
 
 **Production build:**
 
