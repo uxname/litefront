@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   app:
-    build: .
+    build:
+      context: .
+      network: host
     restart: unless-stopped
     env_file:
       - .env
