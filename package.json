@@ -32,12 +32,6 @@
     "postinstall": "npm run prepare"
   },
   "dependencies": {
-    "@graphql-codegen/add": "^5.0.3",
-    "@graphql-codegen/cli": "5.0.2",
-    "@graphql-codegen/schema-ast": "^4.1.0",
-    "@graphql-codegen/typescript": "4.0.9",
-    "@graphql-codegen/typescript-operations": "4.2.3",
-    "@graphql-codegen/typescript-urql": "^4.0.0",
     "@tanstack/react-router": "^1.46.3",
     "@tanstack/router-devtools": "^1.46.3",
     "dotenv": "^16.4.5",
@@ -45,8 +39,6 @@
     "i18next": "^23.12.2",
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.5.2",
-    "npm-check-updates": "^17.0.1",
-    "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.0",
@@ -54,6 +46,14 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "prettier": "^3.3.3",
+    "npm-check-updates": "^17.0.1",
+    "@graphql-codegen/add": "^5.0.3",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@graphql-codegen/typescript": "4.0.9",
+    "@graphql-codegen/typescript-operations": "4.2.3",
+    "@graphql-codegen/typescript-urql": "^4.0.0",
     "@jetbrains/eslint-config": "^5.4.2",
     "@playwright/test": "^1.45.3",
     "@tanstack/router-vite-plugin": "^1.45.13",
