@@ -1,3 +1,9 @@
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
@@ -11,19 +17,28 @@ export const Route = createRootRoute({
 
     return (
       <>
-        <img src={logo} alt="logo" className={styles.logo} />
-        <div className={styles.header}>
-          <Link to="/" className="[&.active]:font-bold">
-            Home
-          </Link>{" "}
-          <Link to="/about" className="[&.active]:font-bold">
-            About
-          </Link>
-        </div>
-        <hr />
-        <Outlet />
-        {isDevelopment && <TanStackRouterDevtools />}
+        <ApolloProvider client={makeApolloClient()}>
+          <img src={logo} alt="logo" className={styles.logo} />
+          <div className={styles.header}>
+            <Link to="/" className="[&.active]:font-bold">
+              Home
+            </Link>{" "}
+            <Link to="/about" className="[&.active]:font-bold">
+              About
+            </Link>
+          </div>
+          <hr />
+          <Outlet />
+          {isDevelopment && <TanStackRouterDevtools />}
+        </ApolloProvider>
       </>
     );
   },
 });
+
+function makeApolloClient(): ApolloClient<NormalizedCacheObject> {
+  return new ApolloClient({
+    uri: import.meta.env.VITE_GRAPHQL_API_URL,
+    cache: new InMemoryCache(),
+  });
+}

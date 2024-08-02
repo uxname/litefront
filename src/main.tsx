@@ -1,11 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from "@apollo/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import "./index.scss";
@@ -24,15 +18,6 @@ declare module "@tanstack/react-router" {
 
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
-    <ApolloProvider client={makeApolloClient()}>
-      <RouterProvider router={router} />
-    </ApolloProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>,
 );
-
-function makeApolloClient(): ApolloClient<NormalizedCacheObject> {
-  return new ApolloClient({
-    uri: import.meta.env.VITE_GRAPHQL_API_URL,
-    cache: new InMemoryCache(),
-  });
-}
