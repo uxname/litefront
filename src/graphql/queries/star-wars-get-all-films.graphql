@@ -1,5 +1,5 @@
-query GetAllFilms {
-  allFilms {
+query GetAllFilms($first: Int) {
+  allFilms(first: $first) {
     films {
       id
       title

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import gql from 'graphql-tag';
+import * as Urql from 'urql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -8,7 +8,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-const defaultOptions = {} as const;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -1306,15 +1306,17 @@ export type VehiclesEdge = {
   node?: Maybe<Vehicle>;
 };
 
-export type GetAllFilmsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllFilmsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
 export type GetAllFilmsQuery = { __typename?: 'Root', allFilms?: { __typename?: 'FilmsConnection', films?: Array<{ __typename?: 'Film', id: string, title?: string | null, episodeID?: number | null } | null> | null } | null };
 
 
 export const GetAllFilmsDocument = gql`
-    query GetAllFilms {
-  allFilms {
+    query GetAllFilms($first: Int) {
+  allFilms(first: $first) {
     films {
       id
       title
@@ -1324,34 +1326,6 @@ export const GetAllFilmsDocument = gql`
 }
     `;
 
-/**
- * __useGetAllFilmsQuery__
- *
- * To run a query within a React component, call `useGetAllFilmsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllFilmsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllFilmsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllFilmsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllFilmsQuery, GetAllFilmsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllFilmsQuery, GetAllFilmsQueryVariables>(GetAllFilmsDocument, options);
-      }
-export function useGetAllFilmsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllFilmsQuery, GetAllFilmsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllFilmsQuery, GetAllFilmsQueryVariables>(GetAllFilmsDocument, options);
-        }
-export function useGetAllFilmsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllFilmsQuery, GetAllFilmsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllFilmsQuery, GetAllFilmsQueryVariables>(GetAllFilmsDocument, options);
-        }
-export type GetAllFilmsQueryHookResult = ReturnType<typeof useGetAllFilmsQuery>;
-export type GetAllFilmsLazyQueryHookResult = ReturnType<typeof useGetAllFilmsLazyQuery>;
-export type GetAllFilmsSuspenseQueryHookResult = ReturnType<typeof useGetAllFilmsSuspenseQuery>;
-export type GetAllFilmsQueryResult = Apollo.QueryResult<GetAllFilmsQuery, GetAllFilmsQueryVariables>;
+export function useGetAllFilmsQuery(options?: Omit<Urql.UseQueryArgs<GetAllFilmsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetAllFilmsQuery, GetAllFilmsQueryVariables>({ query: GetAllFilmsDocument, ...options });
+};

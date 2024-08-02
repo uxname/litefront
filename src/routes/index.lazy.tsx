@@ -9,9 +9,14 @@ export const Route = createLazyFileRoute("/")({
 });
 
 function Index(): JSX.Element {
-  const { loading, data, error } = useGetAllFilmsQuery();
+  const [result] = useGetAllFilmsQuery({
+    variables: {
+      first: 5,
+    },
+  });
+  const { data, fetching, error } = result;
 
-  if (loading) return <p>Loading...</p>;
+  if (fetching) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   if (!data) return <p>No data!</p>;
 

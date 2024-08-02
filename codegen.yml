@@ -6,7 +6,7 @@ generates:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-react-apollo"
+      - "typescript-urql"
       - add:
           content:
             - "/* eslint-disable */"
