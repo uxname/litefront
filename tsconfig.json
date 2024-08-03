@@ -21,6 +21,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/common/vite-dotenv-checker.plugin.ts"],
+  "exclude": ["src/tools/vite-dotenv-checker.plugin.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

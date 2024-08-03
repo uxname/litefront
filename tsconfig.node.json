@@ -6,5 +6,5 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts", "src/common/vite-dotenv-checker.plugin.ts"]
+  "include": ["vite.config.ts", "src/tools/vite-dotenv-checker.plugin.ts"]
 }

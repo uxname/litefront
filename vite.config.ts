@@ -9,7 +9,7 @@ import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 
-import { viteDotenvChecker } from "./src/common/vite-dotenv-checker.plugin";
+import { viteDotenvChecker } from "./src/tools/vite-dotenv-checker.plugin";
 
 // https://vitejs.dev/config/
 const vite = (): UserConfig => {
