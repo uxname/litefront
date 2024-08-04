@@ -30,6 +30,7 @@ const vite = (): UserConfig => {
       ViteImageOptimizer(),
       TanStackRouterVite({
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
+        routesDirectory: "./src/pages",
       }),
       vitePluginVersionMark({
         ifGitSHA: true,
