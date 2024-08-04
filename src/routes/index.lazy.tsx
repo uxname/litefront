@@ -2,7 +2,7 @@ import { JSX } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { useGetAllFilmsQuery } from "../generated/graphql.tsx";
-import { Counter } from "../shared/components/counter.tsx";
+import { Counter } from "../shared/counter/ui";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,

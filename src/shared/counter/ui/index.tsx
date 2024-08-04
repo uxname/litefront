@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { useCounterStore } from "../../stores/counter.store.ts";
+import { useCounterStore } from "../lib/counter.store.ts";
 
 export const Counter: FC = () => {
   const { counter, increase } = useCounterStore();
