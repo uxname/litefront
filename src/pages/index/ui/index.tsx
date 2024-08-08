@@ -1,14 +1,10 @@
-import { JSX } from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import type { FC } from "react";
 
-import { useGetAllFilmsQuery } from "../generated/graphql.tsx";
-import { Counter } from "../shared/counter/ui";
+import { useGetAllFilmsQuery } from "../../../generated/graphql.tsx";
+import { Counter } from "../../../shared/counter/ui";
+import { Header } from "../../../shared/header";
 
-export const Route = createLazyFileRoute("/")({
-  component: Index,
-});
-
-function Index(): JSX.Element {
+export const IndexPage: FC = () => {
   const [result] = useGetAllFilmsQuery({
     variables: {
       first: 5,
@@ -22,6 +18,7 @@ function Index(): JSX.Element {
 
   return (
     <div>
+      <Header />
       <Counter />
       <hr />
       <h2>Star Wars Films</h2>
@@ -34,4 +31,4 @@ function Index(): JSX.Element {
       ))}
     </div>
   );
-}
+};

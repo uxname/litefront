@@ -12,11 +12,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from './../pages/__root'
+import { Route as rootRoute } from './../routes/__root'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const RegisterIndexLazyImport = createFileRoute('/register/')()
 const AboutIndexLazyImport = createFileRoute('/about/')()
 
 // Create/Update Routes
@@ -24,12 +25,21 @@ const AboutIndexLazyImport = createFileRoute('/about/')()
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./../pages/index.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./../routes/index.lazy').then((d) => d.Route))
+
+const RegisterIndexLazyRoute = RegisterIndexLazyImport.update({
+  path: '/register/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./../routes/register/index.lazy').then((d) => d.Route),
+)
 
 const AboutIndexLazyRoute = AboutIndexLazyImport.update({
   path: '/about/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./../pages/about/index.lazy').then((d) => d.Route))
+} as any).lazy(() =>
+  import('./../routes/about/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -49,6 +59,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -57,6 +74,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   AboutIndexLazyRoute,
+  RegisterIndexLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -68,7 +86,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about/"
+        "/about/",
+        "/register/"
       ]
     },
     "/": {
@@ -76,6 +95,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about/": {
       "filePath": "about/index.lazy.tsx"
+    },
+    "/register/": {
+      "filePath": "register/index.lazy.tsx"
     }
   }
 }

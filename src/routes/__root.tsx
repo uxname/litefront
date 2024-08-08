@@ -1,10 +1,6 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { cacheExchange, Client, fetchExchange, Provider } from "urql";
-
-import logo from "../../.github/logo.svg";
-
-import styles from "./__root.module.scss";
 
 export const Route = createRootRoute({
   component: () => {
@@ -13,16 +9,6 @@ export const Route = createRootRoute({
     return (
       <>
         <Provider value={makeGraphQLClient()}>
-          <img src={logo} alt="logo" className={styles.logo} />
-          <div className={styles.header}>
-            <Link to="/" className="[&.active]:font-bold">
-              Home
-            </Link>{" "}
-            <Link to="/about" className="[&.active]:font-bold">
-              About
-            </Link>
-          </div>
-          <hr />
           <Outlet />
           {isDevelopment && <TanStackRouterDevtools />}
         </Provider>
