@@ -23,6 +23,17 @@ export const RegisterPage: FC = () => {
         <button className={styles.button} onClick={handleRegister}>
           Register
         </button>
+        <button
+          className={styles.button}
+          onClick={async () => {
+            authStore.clear();
+            await navigate({ to: "/" });
+          }}
+        >
+          (DEBUG) LOGOUT
+          <br />
+          Current access token: {authStore.accessToken}
+        </button>
       </div>
     </>
   );
