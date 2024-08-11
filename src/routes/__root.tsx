@@ -1,8 +1,7 @@
+import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { cacheExchange, Client, fetchExchange, Provider } from "urql";
-
-import { useAuthStore } from "../shared/auth-store/lib/auth.store.ts";
 
 export const Route = createRootRoute({
   component: () => {

@@ -46,8 +46,6 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "prettier": "^3.3.3",
-    "npm-check-updates": "^17.0.1",
     "@graphql-codegen/add": "^5.0.3",
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/schema-ast": "^4.1.0",
@@ -81,6 +79,8 @@
     "husky": "^9.1.4",
     "i18next-parser": "^9.0.1",
     "lint-staged": "^15.2.7",
+    "npm-check-updates": "^17.0.1",
+    "prettier": "^3.3.3",
     "sass": "^1.77.8",
     "sharp": "^0.33.4",
     "stylelint": "^16.8.1",
@@ -90,6 +90,7 @@
     "vite": "^5.3.5",
     "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-version-mark": "^0.1.0",
+    "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   },
   "lint-staged": {
