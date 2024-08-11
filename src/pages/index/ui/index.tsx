@@ -1,8 +1,7 @@
 import type { FC } from "react";
-
-import { useGetAllFilmsQuery } from "../../../generated/graphql.tsx";
-import { Counter } from "../../../shared/counter/ui";
-import { Header } from "../../../shared/header";
+import { useGetAllFilmsQuery } from "@generated/graphql.tsx";
+import { Counter } from "@shared/counter/ui";
+import { Header } from "@shared/header";
 
 export const IndexPage: FC = () => {
   const [result] = useGetAllFilmsQuery({

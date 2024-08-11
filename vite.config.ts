@@ -8,6 +8,7 @@ import { configDotenv } from "dotenv";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
@@ -26,6 +27,7 @@ const vite = (): UserConfig => {
       strictPort: true,
     },
     plugins: [
+      tsconfigPaths(),
       react(),
       ViteImageOptimizer(),
       TanStackRouterVite({
