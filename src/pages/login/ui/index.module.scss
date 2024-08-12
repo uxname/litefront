@@ -1,9 +1,203 @@
-.container {
+
+.login-form-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 65%;
   gap: 1em;
+  background: white;
 }
+
+.login-signup-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 35%;
+  gap: 1em;
+  background: url("public/greenbg.jpg") center no-repeat;
+  background-size: cover;
+  color: white;
+}
+
+.login-form-title {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: black;
+}
+
+.line {
+  width: 50%;
+  background: gray;
+  height: 2px;
+  opacity: 0.5;
+  border: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.login-form-input {
+  border: none;
+  border-radius: 18px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #e2f3e4;
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 50%;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.eye-icon {
+  width: 26px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.login-form-input:focus {
+  outline: none;
+}
+
+.login-form-button {
+  background: #3c909d;
+  width: 30%;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+}
+
+.login-form-button:hover {
+  background: white;
+  color: black;
+  transition: 0.5s;
+}
+
+.login-signup-title {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.login-signup-description {
+  font-size: 1.5em;
+  line-height: 1.1;
+  color: white;
+  padding: 0;
+}
+
+.login-signup-button {
+  background: white;
+  width: 40%;
+  border-radius: 20px;
+  padding: 15px 20px;
+  color: black;
+}
+
+.login-signup-button:hover {
+  background: #3c909d;
+  color: white;
+  transition: 0.5s;
+}
+
+.hidden-signup {
+  display: none;
+}
+
+@media  (width <= 900px) {
+  .login-form-title {
+    font-size: 2.5em;
+  }
+
+  .login-signup-title {
+    font-size: 2.5em;
+  }
+}
+
+@media (width <= 726px) {
+  .login-signup-wrapper {
+    display: none;
+  }
+
+  .login-form-wrapper {
+    width: 100%;
+  }
+
+  .hidden-signup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    gap: 1em;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    background: url("public/greenbg.jpg") center no-repeat;
+    background-size: cover;
+    color: white;
+  }
+}
+
+@media (width <= 500px) {
+  .login-form-title {
+    font-size: 2em;
+  }
+
+  .login-signup-title {
+    font-size: 2em;
+  }
+
+  .login-form-button {
+    width: 40%;
+  }
+
+  .login-signup-button {
+    width: 50%;
+  }
+}
+
+@media (width <= 367px) {
+  .login-form-title {
+    font-size: 1.5em;
+  }
+
+  .login-signup-title {
+    font-size: 1.5em;
+  }
+
+  .login-form-button {
+    width: 50%;
+  }
+
+  .login-signup-button {
+    width: 60%;
+  }
+}
+
+
