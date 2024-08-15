@@ -48,6 +48,12 @@ const vite = (): UserConfig => {
       testTimeout: 30_000,
       hookTimeout: 30_000,
     },
+    css: {
+      modules: {
+        // Enable CSS Modules for all .scss files
+        localsConvention: "camelCaseOnly",
+      },
+    },
   };
 };
 export default vite;
