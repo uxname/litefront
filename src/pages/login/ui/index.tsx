@@ -1,8 +1,11 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper";
 import { useNavigate } from "@tanstack/react-router";
+import * as yup from "yup";
 
 import styles from "./index.module.scss";
 
@@ -11,6 +14,30 @@ export const LoginPage: FC = () => {
   const { t } = useTranslation(["login"]);
   const authStore = useAuthStore();
   const navigate = useNavigate();
+
+  const MIN_PASSWORD_LENGTH = 6;
+  const schema = useMemo(
+    () =>
+      yup.object().shape({
+        email: yup
+          .string()
+          .email(t("login:invalidEmail"))
+          .required(t("login:requiredEmail")),
+        password: yup
+          .string()
+          .min(MIN_PASSWORD_LENGTH, t("login:passwordMinLength"))
+          .required(t("login:requiredPassword")),
+      }),
+    [t],
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((previous) => !previous);
@@ -27,20 +54,32 @@ export const LoginPage: FC = () => {
       <div className={styles.loginFormWrapper}>
         <h1 className={styles.loginFormTitle}>{t("login:title")}</h1>
         <div className={styles.line} />
-        <div className={styles.loginForm}>
+        <form className={styles.loginForm} onSubmit={handleSubmit(handleLogin)}>
           <div className={styles.inputWrapper}>
             <input
               type="text"
               className={styles.loginFormInput}
               placeholder="Email"
+              {...register("email")}
             />
+            {errors.email && (
+              <p className={styles.error}>
+                {errors.email.message && t(errors.email.message)}
+              </p>
+            )}
           </div>
           <div className={styles.inputWrapper}>
             <input
               type={showPassword ? "text" : "password"}
               className={styles.loginFormInput}
               placeholder={t("login:password")}
+              {...register("password")}
             />
+            {errors.password && (
+              <p className={styles.error}>
+                {errors.password.message && t(errors.password.message)}
+              </p>
+            )}
             <span
               className={styles.passwordToggleIcon}
               onClick={togglePasswordVisibility}
@@ -52,16 +91,15 @@ export const LoginPage: FC = () => {
               )}
             </span>
           </div>
-          <button onClick={handleLogin} className={styles.loginFormButton}>
+          <button type="submit" className={styles.loginFormButton}>
             {t("login:login")}
           </button>
-
-          <div className={styles.hiddenSignup}>
-            <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
-            <button className={styles.loginSignupButton}>
-              {t("login:signUp")}
-            </button>
-          </div>
+        </form>
+        <div className={styles.hiddenSignup}>
+          <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
+          <button className={styles.loginSignupButton}>
+            {t("login:signUp")}
+          </button>
         </div>
       </div>
       <div className={styles.loginSignupWrapper}>
