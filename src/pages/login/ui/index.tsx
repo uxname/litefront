@@ -2,12 +2,13 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getValidationSchema } from "@pages/login/ui/validation-schema.ts";
 import hideIcon from "@public/hide.svg";
 import viewIcon from "@public/view.svg";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper";
 import { Link, useNavigate } from "@tanstack/react-router";
+
+import { getValidationSchema } from "../model/validation-schema";
 
 import styles from "./index.module.scss";
 
