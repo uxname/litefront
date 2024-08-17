@@ -1,20 +1,23 @@
 import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PageWrapper } from "@shared/page-wrapper ";
 
 import styles from "./index.module.scss";
 
 export const LoginPage: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation(["login"]);
 
   const togglePasswordVisibility = (): void => {
     setShowPassword(!showPassword);
   };
+
   return (
     <PageWrapper>
       <div className={styles.loginFormWrapper}>
-        <h1 className={styles.loginFormTitle}>Login to Your Account</h1>
+        <h1 className={styles.loginFormTitle}>{t("login:title")}</h1>
         <div className={styles.line} />
-        <form action="" className={styles.loginForm}>
+        <div className={styles.loginForm}>
           <div className={styles.inputWrapper}>
             <input
               type="text"
@@ -26,7 +29,7 @@ export const LoginPage: FC = () => {
             <input
               type={showPassword ? "text" : "password"}
               className={styles.loginFormInput}
-              placeholder="Password"
+              placeholder={t("login:password")}
             />
             <span
               className={styles.passwordToggleIcon}
@@ -39,19 +42,21 @@ export const LoginPage: FC = () => {
               )}
             </span>
           </div>
-          <button className={styles.loginFormButton}>Login</button>
+          <button className={styles.loginFormButton}>{t("login:login")}</button>
 
           <div className={styles.hiddenSignup}>
-            <h2 className={styles.loginSignupTitle}>New Here ? </h2>
-            <span className={styles.loginSignupDescription}>Sign up !</span>
-            <button className={styles.loginSignupButton}>Sign Up</button>
+            <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
+            <button className={styles.loginSignupButton}>
+              {t("login:signUp")}
+            </button>
           </div>
-        </form>
+        </div>
       </div>
       <div className={styles.loginSignupWrapper}>
-        <h2 className={styles.loginSignupTitle}>New Here ? </h2>
-        <span className={styles.loginSignupDescription}>Sign up !</span>
-        <button className={styles.loginSignupButton}>Sign Up</button>
+        <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
+        <button className={styles.loginSignupButton}>
+          {t("login:signUp")}
+        </button>
       </div>
     </PageWrapper>
   );
