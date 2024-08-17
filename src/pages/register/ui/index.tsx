@@ -1,6 +1,6 @@
 import { FC, useCallback } from "react";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import styles from "./index.module.scss";
 
@@ -33,6 +33,9 @@ export const RegisterPage: FC = () => {
           <br />
           Current access token: {authStore.accessToken}
         </button>
+        <Link to="/login" preload={"intent"}>
+          Login
+        </Link>
       </div>
     </>
   );

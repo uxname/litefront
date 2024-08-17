@@ -7,7 +7,7 @@ import hideIcon from "@public/hide.svg";
 import viewIcon from "@public/view.svg";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import styles from "./index.module.scss";
 
@@ -85,16 +85,20 @@ export const LoginPage: FC = () => {
         </form>
         <div className={styles.hiddenSignup}>
           <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
-          <button className={styles.loginSignupButton}>
+          <Link to="/register" className={styles.loginSignupButton}>
             {t("login:signUp")}
-          </button>
+          </Link>
         </div>
       </div>
       <div className={styles.loginSignupWrapper}>
         <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
-        <button className={styles.loginSignupButton}>
+        <Link
+          to="/register"
+          className={styles.loginSignupButton}
+          preload={"intent"}
+        >
           {t("login:signUp")}
-        </button>
+        </Link>
       </div>
     </PageWrapper>
   );
