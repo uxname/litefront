@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,8 +35,14 @@ export const LoginPage: FC = () => {
   const handleLogin = useCallback(async () => {
     authStore.setAccessToken("fake-access-token");
     console.log("Logged in!");
-    await navigate({ to: "/" });
+    await navigate({ to: "/", replace: true });
   }, [authStore, navigate]);
+
+  useEffect(() => {
+    if (authStore.accessToken) {
+      navigate({ to: "/", replace: true });
+    }
+  }, [authStore.accessToken, navigate]);
 
   return (
     <PageWrapper>
