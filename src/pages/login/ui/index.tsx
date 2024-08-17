@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { PageWrapper } from "@shared/page-wrapper ";
+import { PageWrapper } from "@shared/page-wrapper";
 import { useNavigate } from "@tanstack/react-router";
 
 import styles from "./index.module.scss";
