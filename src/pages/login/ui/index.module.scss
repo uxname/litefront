@@ -60,11 +60,12 @@
 .input-wrapper {
   position: relative;
   width: 50%;
+  display: flex;
 }
 
 .password-toggle-icon {
   position: absolute;
-  right: 10px;
+  right: 50px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -123,13 +124,23 @@
   display: none;
 }
 
-@media  (width <= 900px) {
+@media (width <= 1105px) {
   .login-form-title {
-    font-size: 2.5em;
+    font-size: 2.8em;
   }
 
   .login-signup-title {
     font-size: 2.5em;
+  }
+}
+
+@media  (width <= 900px) {
+  .login-form-title {
+    font-size: 2.2em;
+  }
+
+  .login-signup-title {
+    font-size: 2em;
   }
 }
 
@@ -140,6 +151,10 @@
 
   .login-form-wrapper {
     width: 100%;
+  }
+
+  .input-wrapper{
+    width: 85%;
   }
 
   .hidden-signup {
@@ -160,7 +175,7 @@
 
 @media (width <= 500px) {
   .login-form-title {
-    font-size: 2em;
+    font-size: 1.9em;
   }
 
   .login-signup-title {
@@ -173,6 +188,28 @@
 
   .login-signup-button {
     width: 50%;
+  }
+
+  .login-form-input {
+    width: 100%;
+  }
+}
+
+@media (width <= 400px) {
+  .login-form-title {
+    font-size: 1.8em;
+  }
+
+  .login-signup-title {
+    font-size: 1.8em;
+  }
+
+  .login-form-button {
+    width: 45%;
+  }
+
+  .login-signup-button {
+    width: 55%;
   }
 }
 
