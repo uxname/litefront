@@ -15,7 +15,7 @@
 
 .login-signup-wrapper {
   width: 35%;
-  background: url("public/auth-page-bg.svg") center no-repeat;
+  background: url("/auth-page-bg.svg") center no-repeat;
   background-size: cover;
   color: white;
 }
@@ -154,7 +154,7 @@
   .hidden-signup {
     display: flex;
     padding: 20px 0;
-    background: url("public/auth-page-bg.svg") center no-repeat;
+    background: url("/auth-page-bg.svg") center no-repeat;
     background-size: cover;
     color: white;
   }
