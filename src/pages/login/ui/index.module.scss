@@ -18,7 +18,7 @@
   height: 100%;
   width: 35%;
   gap: 1em;
-  background: url("public/greenbg.jpg") center no-repeat;
+  background: url("public/auth-page-bg.svg") center no-repeat;
   background-size: cover;
   color: white;
 }
@@ -102,22 +102,22 @@
 .login-signup-title {
   font-size: 3.2em;
   line-height: 1.1;
-  color: white;
+  color: black;
   padding: 0;
   margin: 0;
 }
 
 .login-signup-button {
-  background: white;
+  background: #3c909d;
   width: 40%;
   border-radius: 20px;
   padding: 15px 20px;
-  color: black;
+  color: white;
 }
 
 .login-signup-button:hover {
-  background: #3c909d;
-  color: white;
+  background: white;
+  color: black;
   transition: 0.5s;
 }
 
@@ -168,7 +168,7 @@
     gap: 1em;
     padding-bottom: 20px;
     padding-top: 20px;
-    background: url("public/greenbg.jpg") center no-repeat;
+    background: url("public/auth-page-bg.svg") center no-repeat;
     background-size: cover;
     color: white;
   }

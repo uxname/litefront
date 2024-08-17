@@ -2,6 +2,8 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
+import hideIcon from "@public/hide.png";
+import viewIcon from "@public/view.png";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper";
 import { useNavigate } from "@tanstack/react-router";
@@ -18,7 +20,7 @@ export const LoginPage: FC = () => {
   const MIN_PASSWORD_LENGTH = 6;
   const schema = useMemo(
     () =>
-      yup.object().shape({
+      yup.object({
         email: yup
           .string()
           .email(t("login:invalidEmail"))
@@ -62,10 +64,8 @@ export const LoginPage: FC = () => {
               placeholder="Email"
               {...register("email")}
             />
-            {errors.email && (
-              <p className={styles.error}>
-                {errors.email.message && t(errors.email.message)}
-              </p>
+            {errors.email?.message && (
+              <p className={styles.error}>{t(errors.email.message)}</p>
             )}
           </div>
           <div className={styles.inputWrapper}>
@@ -75,21 +75,23 @@ export const LoginPage: FC = () => {
               placeholder={t("login:password")}
               {...register("password")}
             />
-            {errors.password && (
-              <p className={styles.error}>
-                {errors.password.message && t(errors.password.message)}
-              </p>
-            )}
             <span
               className={styles.passwordToggleIcon}
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? (
-                <img src="/public/hide.png" alt="" className={styles.eyeIcon} />
-              ) : (
-                <img src="/public/view.png" alt="" className={styles.eyeIcon} />
-              )}
+              <img
+                src={showPassword ? hideIcon : viewIcon}
+                alt={
+                  showPassword
+                    ? t("login:hidePassword")
+                    : t("login:showPassword")
+                }
+                className={styles.eyeIcon}
+              />
             </span>
+            {errors.password?.message && (
+              <p className={styles.error}>{t(errors.password.message)}</p>
+            )}
           </div>
           <button type="submit" className={styles.loginFormButton}>
             {t("login:login")}
