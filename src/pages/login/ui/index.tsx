@@ -1,16 +1,26 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper ";
+import { useNavigate } from "@tanstack/react-router";
 
 import styles from "./index.module.scss";
 
 export const LoginPage: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation(["login"]);
+  const authStore = useAuthStore();
+  const navigate = useNavigate();
 
-  const togglePasswordVisibility = (): void => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((previous) => !previous);
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    authStore.setAccessToken("fake-access-token");
+    console.log("Logged in!");
+    await navigate({ to: "/" });
+  }, [authStore, navigate]);
 
   return (
     <PageWrapper>
@@ -42,7 +52,9 @@ export const LoginPage: FC = () => {
               )}
             </span>
           </div>
-          <button className={styles.loginFormButton}>{t("login:login")}</button>
+          <button onClick={handleLogin} className={styles.loginFormButton}>
+            {t("login:login")}
+          </button>
 
           <div className={styles.hiddenSignup}>
             <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
