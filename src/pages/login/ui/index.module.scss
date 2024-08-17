@@ -1,29 +1,27 @@
-
-.login-form-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 65%;
-  gap: 1em;
-  background: white;
-}
-
+.login-form-wrapper,
 .login-signup-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 35%;
   gap: 1em;
+}
+
+.login-form-wrapper {
+  width: 65%;
+  background: white;
+}
+
+.login-signup-wrapper {
+  width: 35%;
   background: url("public/auth-page-bg.svg") center no-repeat;
   background-size: cover;
   color: white;
 }
 
-.login-form-title {
+.login-form-title,
+.login-signup-title {
   font-size: 3.2em;
   line-height: 1.1;
   color: black;
@@ -64,20 +62,22 @@
   flex-direction: column;
 }
 
-.password-toggle-icon {
+.password-toggle-icon,
+.eye-icon {
   position: absolute;
+  cursor: pointer;
+}
+
+.password-toggle-icon {
   right: 50px;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
 }
 
 .eye-icon {
   width: 20px;
   padding: 5px;
-  position: absolute;
   transform: translateY(-50%);
-  cursor: pointer;
   opacity: 0.5;
 }
 
@@ -85,45 +85,33 @@
   outline: none;
 }
 
-.login-form-button {
-  background: #3c909d;
-  width: 30%;
-  border-radius: 20px;
-  padding: 10px 20px;
-  color: white;
-}
-
-.login-form-button:hover {
-  background: white;
-  color: black;
-  transition: 0.5s;
-}
-
-.login-signup-title {
-  font-size: 3.2em;
-  line-height: 1.1;
-  color: black;
-  padding: 0;
-  margin: 0;
-}
-
+.login-form-button,
 .login-signup-button {
   background: #3c909d;
-  width: 40%;
   border-radius: 20px;
-  padding: 15px 20px;
   color: white;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  font-size: 1.2em;
-  border: 1px solid #3c909d;
+  transition: 0.5s;
 }
 
+.login-form-button {
+  width: 30%;
+  padding: 10px 20px;
+}
+
+.login-form-button:hover,
 .login-signup-button:hover {
   background: white;
   color: black;
-  transition: 0.5s;
+}
+
+.login-signup-button {
+  width: 40%;
+  padding: 15px 20px;
+  font-size: 1.2em;
+  border: 1px solid #3c909d;
 }
 
 .hidden-signup {
@@ -140,7 +128,7 @@
   }
 }
 
-@media  (width <= 900px) {
+@media (width <= 900px) {
   .login-form-title {
     font-size: 2.2em;
   }
@@ -159,20 +147,13 @@
     width: 100%;
   }
 
-  .input-wrapper{
+  .input-wrapper {
     width: 85%;
   }
 
   .hidden-signup {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    gap: 1em;
-    padding-bottom: 20px;
-    padding-top: 20px;
+    padding: 20px 0;
     background: url("public/auth-page-bg.svg") center no-repeat;
     background-size: cover;
     color: white;
@@ -220,10 +201,7 @@
 }
 
 @media (width <= 367px) {
-  .login-form-title {
-    font-size: 1.5em;
-  }
-
+  .login-form-title,
   .login-signup-title {
     font-size: 1.5em;
   }
@@ -236,5 +214,3 @@
     width: 60%;
   }
 }
-
-
