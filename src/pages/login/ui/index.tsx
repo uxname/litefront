@@ -2,12 +2,12 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getValidationSchema } from "@pages/login/ui/validation-schema.ts";
 import hideIcon from "@public/hide.svg";
 import viewIcon from "@public/view.svg";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { PageWrapper } from "@shared/page-wrapper";
 import { useNavigate } from "@tanstack/react-router";
-import * as yup from "yup";
 
 import styles from "./index.module.scss";
 
@@ -17,21 +17,7 @@ export const LoginPage: FC = () => {
   const authStore = useAuthStore();
   const navigate = useNavigate();
 
-  const MIN_PASSWORD_LENGTH = 6;
-  const schema = useMemo(
-    () =>
-      yup.object({
-        email: yup
-          .string()
-          .email(t("login:invalidEmail"))
-          .required(t("login:requiredEmail")),
-        password: yup
-          .string()
-          .min(MIN_PASSWORD_LENGTH, t("login:passwordMinLength"))
-          .required(t("login:requiredPassword")),
-      }),
-    [t],
-  );
+  const schema = useMemo(() => getValidationSchema(t), [t]);
 
   const {
     register,
