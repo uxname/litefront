@@ -33,7 +33,7 @@ export const RegisterPage: FC = () => {
           <br />
           Current access token: {authStore.accessToken}
         </button>
-        <Link to="/login" preload={"intent"}>
+        <Link to="/login" preload={"viewport"}>
           Login
         </Link>
       </div>

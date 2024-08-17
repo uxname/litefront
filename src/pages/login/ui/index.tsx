@@ -95,7 +95,7 @@ export const LoginPage: FC = () => {
         <Link
           to="/register"
           className={styles.loginSignupButton}
-          preload={"intent"}
+          preload={"viewport"}
         >
           {t("login:signUp")}
         </Link>
