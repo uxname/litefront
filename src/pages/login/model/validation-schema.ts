@@ -1,14 +1,14 @@
 import { TFunction } from "i18next";
 import * as yup from "yup";
 
-interface LoginFormValues {
+export interface ILoginFormValues {
   email: string;
   password: string;
 }
 
 export const getValidationSchema = (
   t: TFunction,
-): yup.ObjectSchema<LoginFormValues> => {
+): yup.ObjectSchema<ILoginFormValues> => {
   const MIN_PASSWORD_LENGTH = 6;
   return yup.object({
     email: yup

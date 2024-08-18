@@ -1,19 +1,19 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FC, useCallback, useEffect, useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
-import hideIcon from "@public/media/auth/hide.svg";
-import viewIcon from "@public/media/auth/view.svg";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { PageWrapper } from "@shared/page-wrapper";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { Button, Form, Input } from "antd";
 
-import { getValidationSchema } from "../model/validation-schema";
+import {
+  getValidationSchema,
+  ILoginFormValues,
+} from "../model/validation-schema";
 
 import styles from "./index.module.scss";
 
 export const LoginPage: FC = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation(["login"]);
   const authStore = useAuthStore();
   const navigate = useNavigate();
@@ -21,22 +21,21 @@ export const LoginPage: FC = () => {
   const schema = useMemo(() => getValidationSchema(t), [t]);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((previous) => !previous);
-  }, []);
-
-  const handleLogin = useCallback(async () => {
-    authStore.setAccessToken("fake-access-token");
-    console.log("Logged in!");
-    await navigate({ to: "/", replace: true });
-  }, [authStore, navigate]);
+  const handleLogin = useCallback(
+    async (data: ILoginFormValues) => {
+      authStore.setAccessToken("fake-access-token");
+      console.log("Logged in!", data);
+      await navigate({ to: "/", replace: true });
+    },
+    [authStore, navigate],
+  );
 
   useEffect(() => {
     if (authStore.accessToken) {
@@ -45,68 +44,58 @@ export const LoginPage: FC = () => {
   }, [authStore.accessToken, navigate]);
 
   return (
-    <PageWrapper>
-      <div className={styles.loginFormWrapper}>
-        <h1 className={styles.loginFormTitle}>{t("login:title")}</h1>
-        <div className={styles.line} />
-        <form className={styles.loginForm} onSubmit={handleSubmit(handleLogin)}>
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              className={styles.loginFormInput}
-              placeholder="Email"
-              {...register("email")}
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <h1 className={styles.formTitle}>{t("login:title")}</h1>
+        <form className={styles.authForm} onSubmit={handleSubmit(handleLogin)}>
+          <Form.Item
+            validateStatus={errors.email ? "error" : ""}
+            help={errors.email?.message ? t(errors.email.message) : undefined}
+          >
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input {...field} type="text" placeholder={t("login:email")} />
+              )}
             />
-            {errors.email?.message && (
-              <p className={styles.error}>{t(errors.email.message)}</p>
-            )}
-          </div>
-          <div className={styles.inputWrapper}>
-            <input
-              type={showPassword ? "text" : "password"}
-              className={styles.loginFormInput}
-              placeholder={t("login:password")}
-              {...register("password")}
+          </Form.Item>
+
+          <Form.Item
+            validateStatus={errors.password ? "error" : ""}
+            help={
+              errors.password?.message ? t(errors.password.message) : undefined
+            }
+          >
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <Input.Password {...field} placeholder={t("login:password")} />
+              )}
             />
-            <span
-              className={styles.passwordToggleIcon}
-              onClick={togglePasswordVisibility}
-            >
-              <img
-                src={showPassword ? hideIcon : viewIcon}
-                alt={
-                  showPassword
-                    ? t("login:hidePassword")
-                    : t("login:showPassword")
-                }
-                className={styles.eyeIcon}
-              />
-            </span>
-            {errors.password?.message && (
-              <p className={styles.error}>{t(errors.password.message)}</p>
-            )}
-          </div>
-          <button type="submit" className={styles.loginFormButton}>
+          </Form.Item>
+
+          <Button
+            disabled={Object.keys(errors).length > 0}
+            htmlType="submit"
+            onClick={() => handleLogin}
+            type="primary"
+          >
             {t("login:login")}
-          </button>
+          </Button>
         </form>
-        <div className={styles.hiddenSignup}>
-          <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
-          <Link to="/register" className={styles.loginSignupButton}>
-            {t("login:signUp")}
-          </Link>
-        </div>
       </div>
-      <div className={styles.loginSignupWrapper}>
-        <h2 className={styles.loginSignupTitle}>{t("login:newHere")}</h2>
+      <div className={styles.sidebar}>
+        <h2 className={styles.sidebarTitle}>{t("login:newHere")}</h2>
         <Link
           to="/register"
           className={styles.loginSignupButton}
           preload={"viewport"}
         >
-          {t("login:signUp")}
+          <Button type="primary">{t("login:signUp")}</Button>
         </Link>
       </div>
-    </PageWrapper>
+    </div>
   );
 };

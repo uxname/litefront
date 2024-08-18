@@ -35,6 +35,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-router": "^1.47.1",
     "@tanstack/router-devtools": "^1.47.1",
+    "antd": "^5.20.1",
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "i18next": "^23.12.2",

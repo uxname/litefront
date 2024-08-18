@@ -1,5 +1,5 @@
 {
-  "hidePassword": "Скрыть пароль",
+  "email": "Email",
   "invalidEmail": "Неверный email",
   "login": "Войти",
   "newHere": "Нет аккаунта?",
@@ -7,7 +7,6 @@
   "passwordMinLength": "Пароль слишком короткий",
   "requiredEmail": "Email не указан",
   "requiredPassword": "Пароль не указан",
-  "showPassword": "Показать пароль",
   "signUp": "Регистрация",
   "title": "Зайдите в свой аккаунт"
 }
