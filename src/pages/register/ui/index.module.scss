@@ -30,11 +30,19 @@
 .sidebar-title {
   font-size: 2.5em;
   text-align: center;
+
+  @media (width <= 768px) {
+    font-size: 1.5em;
+  }
 }
 
 .form-title {
   font-size: 2.5em;
   text-align: center;
+
+  @media (width <= 768px) {
+    font-size: 2em;
+  }
 }
 
 .auth-form {
