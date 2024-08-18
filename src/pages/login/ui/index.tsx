@@ -56,7 +56,12 @@ export const LoginPage: FC = () => {
               name="email"
               control={control}
               render={({ field }) => (
-                <Input {...field} type="text" placeholder={t("login:email")} />
+                <Input
+                  size={"large"}
+                  {...field}
+                  type="text"
+                  placeholder={t("login:email")}
+                />
               )}
             />
           </Form.Item>
@@ -71,7 +76,11 @@ export const LoginPage: FC = () => {
               name="password"
               control={control}
               render={({ field }) => (
-                <Input.Password {...field} placeholder={t("login:password")} />
+                <Input.Password
+                  size={"large"}
+                  {...field}
+                  placeholder={t("login:password")}
+                />
               )}
             />
           </Form.Item>
