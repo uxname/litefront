@@ -29,9 +29,9 @@
 
 .line {
   width: 50%;
-  background: gray;
-  height: 2px;
-  opacity: 0.5;
+  background: black;
+  height: 1px;
+  opacity: 0.15;
   border: 20px;
 }
 
@@ -45,14 +45,24 @@
 }
 
 .login-form-input {
-  border: none;
-  border-radius: 18px;
+  border: 1px solid rgb(0 0 0 / 15%);
+  border-radius: 90px;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
   background-color: #e2f3e4;
   width: 100%;
+
+  &::placeholder {
+    color: black;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    outline: none;
+    border: 2px solid #3c909d;
+    transition: 0.2s;
+  }
 }
 
 .input-wrapper {
@@ -81,14 +91,10 @@
   opacity: 0.5;
 }
 
-.login-form-input:focus {
-  outline: none;
-}
-
 .login-form-button,
 .login-signup-button {
   background: #3c909d;
-  border-radius: 20px;
+  border-radius: 90px;
   color: white;
   cursor: pointer;
   text-align: center;
