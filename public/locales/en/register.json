@@ -1,0 +1,15 @@
+{
+  "alreadyRegistered": "Already registered?",
+  "email": "Email",
+  "invalidEmail": "Invalid email",
+  "login": "Login",
+  "password": "Password",
+  "passwordConfirmation": "Password confirmation",
+  "passwordMinLength": "Password not long enough",
+  "passwordsMustMatch": "Passwords must match",
+  "register": "Register",
+  "requiredEmail": "Email is required",
+  "requiredPassword": "Password is required",
+  "requiredPasswordConfirmation": "Password confirmation is required",
+  "title": "Register Your Account"
+}

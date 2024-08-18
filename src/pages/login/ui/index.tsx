@@ -97,11 +97,7 @@ export const LoginPage: FC = () => {
       </div>
       <div className={styles.sidebar}>
         <h2 className={styles.sidebarTitle}>{t("login:newHere")}</h2>
-        <Link
-          to="/register"
-          className={styles.loginSignupButton}
-          preload={"viewport"}
-        >
+        <Link to="/register" preload={"viewport"}>
           <Button type="primary">{t("login:signUp")}</Button>
         </Link>
       </div>

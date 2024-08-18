@@ -1,0 +1,15 @@
+{
+  "alreadyRegistered": "Уже зарегистрированы?",
+  "email": "Электронная почта",
+  "invalidEmail": "Недействительный адрес электронной почты",
+  "login": "Войти",
+  "password": "Пароль",
+  "passwordConfirmation": "Подтверждение пароля",
+  "passwordMinLength": "Пароль слишком короткий",
+  "passwordsMustMatch": "Пароли должны совпадать",
+  "register": "Зарегистрироваться",
+  "requiredEmail": "Требуется указать электронную почту",
+  "requiredPassword": "Требуется указать пароль",
+  "requiredPasswordConfirmation": "Требуется подтверждение пароля",
+  "title": "Регистрация"
+}

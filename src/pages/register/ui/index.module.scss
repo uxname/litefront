@@ -1,17 +1,47 @@
 .container {
   display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: row;
+
+  @media (width <= 768px) {
+    flex-direction: column;
+  }
+}
+
+.content {
+  flex: 6;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  gap: 1em;
 }
 
-.button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 0.25em;
-  cursor: pointer;
+.sidebar {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url("/media/auth/auth-page-bg.svg");
+  background-size: cover;
+}
+
+.sidebar-title {
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.submit {
+  margin-top: 1em;
 }
