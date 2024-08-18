@@ -1,0 +1,13 @@
+{
+  "hidePassword": "Hide password",
+  "invalidEmail": "Invalid email",
+  "login": "Login",
+  "newHere": "New here?",
+  "password": "Password",
+  "passwordMinLength": "Password not long enough",
+  "requiredEmail": "Email is required",
+  "requiredPassword": "Password is required",
+  "showPassword": "Show password",
+  "signUp": "Sign Up",
+  "title": "Login to Your Account"
+}

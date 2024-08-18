@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine3.17 AS build
+FROM node:22-alpine3.19 AS build
 RUN apk add git
 WORKDIR /app
 COPY package*.json ./

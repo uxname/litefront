@@ -1,0 +1,222 @@
+.login-form-wrapper,
+.login-signup-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 1em;
+}
+
+.login-form-wrapper {
+  width: 65%;
+  background: white;
+}
+
+.login-signup-wrapper {
+  width: 35%;
+  background: url("/media/auth/auth-page-bg.svg") center no-repeat;
+  background-size: cover;
+  color: white;
+}
+
+.login-form-title,
+.login-signup-title {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: black;
+}
+
+.line {
+  width: 50%;
+  background: black;
+  height: 1px;
+  opacity: 0.15;
+  border: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.login-form-input {
+  border: 1px solid rgb(0 0 0 / 15%);
+  border-radius: 90px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-family: inherit;
+  background-color: #e2f3e4;
+  width: 100%;
+
+  &::placeholder {
+    color: black;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    outline: none;
+    border: 2px solid #3c909d;
+    transition: 0.2s;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.password-toggle-icon,
+.eye-icon {
+  position: absolute;
+  cursor: pointer;
+}
+
+.password-toggle-icon {
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.eye-icon {
+  width: 20px;
+  padding: 5px;
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+
+.login-form-button,
+.login-signup-button {
+  background: #3c909d;
+  border-radius: 90px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+.login-form-button {
+  width: 30%;
+  padding: 10px 20px;
+}
+
+.login-form-button:hover,
+.login-signup-button:hover {
+  background: white;
+  color: black;
+}
+
+.login-signup-button {
+  width: 40%;
+  padding: 15px 20px;
+  font-size: 1.2em;
+  border: 1px solid #3c909d;
+}
+
+.hidden-signup {
+  display: none;
+}
+
+@media (width <= 1105px) {
+  .login-form-title {
+    font-size: 2.8em;
+  }
+
+  .login-signup-title {
+    font-size: 2.5em;
+  }
+}
+
+@media (width <= 900px) {
+  .login-form-title {
+    font-size: 2.2em;
+  }
+
+  .login-signup-title {
+    font-size: 2em;
+  }
+}
+
+@media (width <= 726px) {
+  .login-signup-wrapper {
+    display: none;
+  }
+
+  .login-form-wrapper {
+    width: 100%;
+  }
+
+  .input-wrapper {
+    width: 85%;
+  }
+
+  .hidden-signup {
+    display: flex;
+    padding: 20px 0;
+    background: url("/media/auth/auth-page-bg.svg") center no-repeat;
+    background-size: cover;
+    color: white;
+  }
+}
+
+@media (width <= 500px) {
+  .login-form-title {
+    font-size: 1.9em;
+  }
+
+  .login-signup-title {
+    font-size: 2em;
+  }
+
+  .login-form-button {
+    width: 40%;
+  }
+
+  .login-signup-button {
+    width: 50%;
+  }
+
+  .login-form-input {
+    width: 100%;
+  }
+}
+
+@media (width <= 400px) {
+  .login-form-title {
+    font-size: 1.8em;
+  }
+
+  .login-signup-title {
+    font-size: 1.8em;
+  }
+
+  .login-form-button {
+    width: 45%;
+  }
+
+  .login-signup-button {
+    width: 55%;
+  }
+}
+
+@media (width <= 367px) {
+  .login-form-title,
+  .login-signup-title {
+    font-size: 1.5em;
+  }
+
+  .login-form-button {
+    width: 50%;
+  }
+
+  .login-signup-button {
+    width: 60%;
+  }
+}
