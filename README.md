@@ -1,6 +1,7 @@
 ![](./.github/logo.png)
 
-[Vite](https://vitejs.dev) + GraphQL + Typescript frontend boilerplate.
+[Vite](https://vitejs.dev) + GraphQL + Typescript frontend boilerplate. Feature-Sliced Design is used as project's
+architecture methodology.
 
 # Get started
 
