@@ -3,7 +3,7 @@ import { Story, StoryDefault } from "@ladle/react";
 import { Counter as CounterComponent, ICounterProperties } from "./index.tsx";
 
 export default {
-  title: "Counter/Variants",
+  title: "Counter",
 } satisfies StoryDefault;
 
 export const Default: Story = () => <CounterComponent />;
