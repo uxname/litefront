@@ -1,10 +1,14 @@
-import { Story } from "@ladle/react";
+import { Story, StoryDefault } from "@ladle/react";
 
 import { Counter as CounterComponent, ICounterProperties } from "./index.tsx";
 
-export const Counter: Story<ICounterProperties> = ({ title }) => (
+export default {
+  title: "Counter/Variants",
+} satisfies StoryDefault;
+
+export const Default: Story = () => <CounterComponent />;
+
+export const Configurable: Story<ICounterProperties> = ({ title }) => (
   <CounterComponent title={title} />
 );
-Counter.args = {
-  title: "Counter",
-};
+Configurable.args = { title: "Counter custom title" };
