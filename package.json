@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "____________________BUILD AND RUN______________________________________": "",
-    "build": "npm run check && tsc && vite build",
+    "build": "npm run check && vite build",
     "start:dev": "vite",
     "start:prod": "vite preview",
     "____________________TESTING___________________________________________": "",
