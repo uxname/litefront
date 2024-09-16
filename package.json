@@ -105,8 +105,8 @@
     "vitest": "^2.1.1"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": "npm run check",
-    "*.{css,scss}": "npm run lint:style:fix",
+    "*.{ts,tsx,js,jsx}": "npm run ts:check && npm run lint",
+    "*.{css,scss}": "npm run lint:style",
     "*.{json,md,html,xml,yml,yaml,mdx}": "prettier --write"
   }
 }
