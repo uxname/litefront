@@ -42,6 +42,19 @@ const vite = (): UserConfig => {
     ],
     build: {
       sourcemap: true,
+      rollupOptions: {
+        // hacky for hiding warning on ant design building: https://github.com/vitejs/vite/issues/15012#issuecomment-1815854072
+        onLog(level, log, handler): void {
+          if (
+            log.message.includes("node_modules/antd/") &&
+            log.message.includes(
+              "Error when using sourcemap for reporting an error: Can't resolve original location of error.",
+            )
+          )
+            return;
+          handler(level, log);
+        },
+      },
     },
     test: {
       exclude: ["tests/e2e", "node_modules", "dist"],
