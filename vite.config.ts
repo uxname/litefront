@@ -13,7 +13,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
 // https://vitejs.dev/config/
-const vite = (): UserConfig => {
+const viteConfig = (): UserConfig => {
   configDotenv();
 
   return {
@@ -69,4 +69,4 @@ const vite = (): UserConfig => {
     },
   };
 };
-export default vite;
+export default viteConfig;
