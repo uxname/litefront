@@ -1,6 +1,5 @@
 /// <reference types="vitest" />
 
-// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable new-cap */
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
