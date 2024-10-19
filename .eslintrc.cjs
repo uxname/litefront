@@ -36,7 +36,7 @@ module.exports = {
     "plugin:@typescript-eslint/eslint-recommended",
     "@jetbrains",
     "@jetbrains/eslint-config/node",
-    "plugin:sonarjs/recommended",
+    "plugin:sonarjs/recommended-legacy",
     "plugin:security/recommended-legacy",
     "plugin:eslint-comments/recommended",
     "plugin:promise/recommended",

@@ -24,11 +24,13 @@ const AboutIndexLazyImport = createFileRoute('/about/')()
 // Create/Update Routes
 
 const IndexLazyRoute = IndexLazyImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./../routes/index.lazy').then((d) => d.Route))
 
 const RegisterIndexLazyRoute = RegisterIndexLazyImport.update({
+  id: '/register/',
   path: '/register/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -36,6 +38,7 @@ const RegisterIndexLazyRoute = RegisterIndexLazyImport.update({
 )
 
 const LoginIndexLazyRoute = LoginIndexLazyImport.update({
+  id: '/login/',
   path: '/login/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
@@ -43,6 +46,7 @@ const LoginIndexLazyRoute = LoginIndexLazyImport.update({
 )
 
 const AboutIndexLazyRoute = AboutIndexLazyImport.update({
+  id: '/about/',
   path: '/about/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>

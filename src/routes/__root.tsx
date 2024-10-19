@@ -10,12 +10,10 @@ export const Route = createRootRoute({
     const accessToken = useAuthStore((state) => state.accessToken);
 
     return (
-      <>
-        <Provider value={makeGraphQLClient(accessToken)}>
-          <Outlet />
-          {isDevelopment && <TanStackRouterDevtools />}
-        </Provider>
-      </>
+      <Provider value={makeGraphQLClient(accessToken)}>
+        <Outlet />
+        {isDevelopment && <TanStackRouterDevtools />}
+      </Provider>
     );
   },
 });

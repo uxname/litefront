@@ -17,18 +17,16 @@ export const IndexPage: FC = () => {
       <Counter />
       <hr />
       <h2>Star Wars Films</h2>
-      <>
-        {fetching && <>Loading...</>}
-        {error && <>Error: {error.message}</>}
-        {!data && <>No data!</>}
-        {data?.allFilms?.films?.map((film) => (
-          <div key={film?.id}>
-            <span>
-              <b>{film?.title}</b> (Episode №: {film?.episodeID})
-            </span>
-          </div>
-        ))}
-      </>
+      {fetching && <>Loading...</>}
+      {error && <>Error: {error.message}</>}
+      {!data && <>No data!</>}
+      {data?.allFilms?.films?.map((film) => (
+        <div key={film?.id}>
+          <span>
+            <b>{film?.title}</b> (Episode №: {film?.episodeID})
+          </span>
+        </div>
+      ))}
     </div>
   );
 };
