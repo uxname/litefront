@@ -114,5 +114,6 @@ module.exports = {
     "unicorn/empty-brace-spaces": "error",
     "unicorn/no-unreadable-array-destructuring": "error",
     "eslint-comments/disable-enable-pair": "off",
+    "sonarjs/todo-tag": "off",
   },
 };
