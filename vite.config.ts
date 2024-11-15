@@ -65,6 +65,11 @@ const viteConfig = (): UserConfig => {
         // Enable CSS Modules for all .scss files
         localsConvention: "camelCaseOnly",
       },
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler",
+        },
+      },
     },
   };
 };
