@@ -1,29 +1,25 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { cacheExchange, Client, fetchExchange, Provider } from "urql";
 
-export const Route = createRootRoute({
-  component: () => {
-    const isDevelopment = import.meta.env.MODE === "development";
-    // eslint-disable-next-line react-hooks/rules-of-hooks,sonarjs/rules-of-hooks
-    const accessToken = useAuthStore((state) => state.accessToken);
+const RootComponent: React.FC = () => {
+  const isDevelopment = import.meta.env.MODE === "development";
+  const accessToken = useAuthStore((state) => state.accessToken);
 
-    // eslint-disable-next-line sonarjs/rules-of-hooks,react-hooks/rules-of-hooks
-    const graphqlClient = useMemo(
-      () => makeGraphQLClient(accessToken),
-      [accessToken],
-    );
+  const graphqlClient = useMemo(
+    () => makeGraphQLClient(accessToken),
+    [accessToken],
+  );
 
-    return (
-      <Provider value={graphqlClient}>
-        <Outlet />
-        {isDevelopment && <TanStackRouterDevtools />}
-      </Provider>
-    );
-  },
-});
+  return (
+    <Provider value={graphqlClient}>
+      <Outlet />
+      {isDevelopment && <TanStackRouterDevtools />}
+    </Provider>
+  );
+};
 
 function makeGraphQLClient(accessToken: string | undefined): Client {
   return new Client({
@@ -39,3 +35,7 @@ function makeGraphQLClient(accessToken: string | undefined): Client {
     requestPolicy: "cache-and-network",
   });
 }
+
+export const Route = createRootRoute({
+  component: RootComponent,
+});
