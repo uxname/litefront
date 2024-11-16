@@ -112,7 +112,6 @@ export const RegisterPage: FC = () => {
           <Button
             disabled={Object.keys(errors).length > 0}
             htmlType="submit"
-            onClick={() => handleRegister}
             type="primary"
           >
             {t("register:register")}

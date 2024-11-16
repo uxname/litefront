@@ -1,9 +1,9 @@
 # Build stage
 FROM node:lts-alpine AS build
-RUN apk add git
+RUN apk add --no-cache git
 WORKDIR /app
 COPY package*.json ./
-RUN npm i --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 COPY . ./
 RUN npm run build
 

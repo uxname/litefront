@@ -3,8 +3,10 @@
   height: 100vh;
   width: 100vw;
   flex-direction: row;
+}
 
-  @media (width <= 768px) {
+@media (width <= 768px) {
+  .container {
     flex-direction: column;
   }
 }

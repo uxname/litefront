@@ -30,16 +30,16 @@
   background-color: #007bff;
   text-decoration: none;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
 
-  &:hover {
-    background-color: white;
-    color: #007bff;
-    border: 1px solid #007bff;
-  }
+.link:hover {
+  background-color: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
 
-  &:active {
-    background-color: #0056b3;
-    color: white;
-  }
+.link:active {
+  background-color: #0056b3;
+  color: white;
 }

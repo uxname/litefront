@@ -57,7 +57,7 @@ export const LoginPage: FC = () => {
               control={control}
               render={({ field }) => (
                 <Input
-                  size={"large"}
+                  size="large"
                   {...field}
                   type="text"
                   placeholder={t("login:email")}
@@ -77,7 +77,7 @@ export const LoginPage: FC = () => {
               control={control}
               render={({ field }) => (
                 <Input.Password
-                  size={"large"}
+                  size="large"
                   {...field}
                   placeholder={t("login:password")}
                 />
@@ -88,16 +88,16 @@ export const LoginPage: FC = () => {
           <Button
             disabled={Object.keys(errors).length > 0}
             htmlType="submit"
-            onClick={() => handleLogin}
             type="primary"
           >
             {t("login:login")}
           </Button>
         </form>
       </div>
+
       <div className={styles.sidebar}>
         <h2 className={styles.sidebarTitle}>{t("login:newHere")}</h2>
-        <Link to="/register" preload={"viewport"}>
+        <Link to="/register" preload="viewport">
           <Button type="primary">{t("login:signUp")}</Button>
         </Link>
       </div>
