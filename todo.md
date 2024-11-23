@@ -1,5 +1,6 @@
 # Required
 
+- [x] Migrate from Yup to Zod
 - [x] TSConfig
 - [x] ESLint
 - [x] Prettier
