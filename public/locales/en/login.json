@@ -1,5 +1,6 @@
 {
   "email": "Email",
+  "goHome": "Back to Home",
   "invalidEmail": "Invalid email",
   "login": "Login",
   "newHere": "New here?",

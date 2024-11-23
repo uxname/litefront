@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -46,6 +47,10 @@ export const RegisterPage: FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        <Link preload="intent" to="/" className={styles.backButton}>
+          <AiOutlineArrowLeft />
+          {t("register:goHome")}
+        </Link>
         <h1 className={styles.formTitle}>{t("register:title")}</h1>
         <form
           className={styles.authForm}
