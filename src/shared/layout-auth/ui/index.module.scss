@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: row;
+}
+
+@media (width <= 768px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+.content {
+  flex: 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @media (width <= 768px) {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+.sidebar {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url("/media/auth/auth-page-bg.svg");
+  background-size: cover;
+
+  @media (width <= 768px) {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+.back-button {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  height: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  padding: 0.2em 1.5em;
+}

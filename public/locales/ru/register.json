@@ -1,16 +1,19 @@
 {
-  "alreadyRegistered": "Уже зарегистрированы?",
-  "email": "Электронная почта",
-  "goHome": "Вернуться на главную",
+  "form": {
+    "email": "Email",
+    "password": "Пароль",
+    "passwordConfirmation": "Подтверждение пароля",
+    "register": "Зарегистрироваться",
+    "title": "Создайте ваш аккаунт"
+  },
   "invalidEmail": "Недействительный адрес электронной почты",
-  "login": "Войти",
-  "password": "Пароль",
-  "passwordConfirmation": "Подтверждение пароля",
   "passwordMinLength": "Пароль слишком короткий",
   "passwordsMustMatch": "Пароли должны совпадать",
-  "register": "Зарегистрироваться",
   "requiredEmail": "Требуется указать электронную почту",
   "requiredPassword": "Требуется указать пароль",
   "requiredPasswordConfirmation": "Требуется подтверждение пароля",
-  "title": "Регистрация"
+  "sidebar": {
+    "alreadyRegistered": "Уже есть аккаунт?",
+    "login": "Войти"
+  }
 }

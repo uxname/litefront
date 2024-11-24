@@ -1,13 +1,16 @@
 {
-  "email": "Email",
-  "goHome": "Back to Home",
+  "form": {
+    "email": "Email",
+    "login": "Login",
+    "password": "Password",
+    "title": "Login to Your Account"
+  },
   "invalidEmail": "Invalid email",
-  "login": "Login",
-  "newHere": "New here?",
-  "password": "Password",
   "passwordMinLength": "Password not long enough",
   "requiredEmail": "Email is required",
   "requiredPassword": "Password is required",
-  "signUp": "Sign Up",
-  "title": "Login to Your Account"
+  "sidebar": {
+    "newHere": "New here?",
+    "signUp": "Sign Up"
+  }
 }

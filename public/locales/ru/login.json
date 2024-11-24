@@ -1,13 +1,16 @@
 {
-  "email": "Email",
-  "goHome": "Вернуться на главную",
+  "form": {
+    "email": "Email",
+    "login": "Войти",
+    "password": "Пароль",
+    "title": "Войдите в свой аккаунт"
+  },
   "invalidEmail": "Неверный email",
-  "login": "Войти",
-  "newHere": "Нет аккаунта?",
-  "password": "Пароль",
   "passwordMinLength": "Пароль слишком короткий",
   "requiredEmail": "Email не указан",
   "requiredPassword": "Пароль не указан",
-  "signUp": "Регистрация",
-  "title": "Зайдите в свой аккаунт"
+  "sidebar": {
+    "newHere": "Вы здесь впервые?",
+    "signUp": "Зарегистрироваться"
+  }
 }
