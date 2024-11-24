@@ -4,12 +4,11 @@ import { Counter } from "@shared/counter/ui";
 import { Header } from "@shared/header";
 
 export const IndexPage: FC = () => {
-  const [result] = useGetAllFilmsQuery({
+  const [{ data, fetching, error }] = useGetAllFilmsQuery({
     variables: {
       first: 5,
     },
   });
-  const { data, fetching, error } = result;
 
   return (
     <div>
