@@ -33,9 +33,9 @@ const viteConfig = (): UserConfig => {
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
       }),
       vitePluginVersionMark({
-        ifGitSHA: true,
         ifLog: true,
         ifGlobal: true,
+        command: 'git log -1 --pretty=format:"%H %s"',
       }),
       viteDotenvChecker(),
     ],
