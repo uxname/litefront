@@ -15,14 +15,16 @@ import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 const viteConfig = (): UserConfig => {
   configDotenv();
 
+  const port = Number(process.env.PORT);
+
   return {
     server: {
-      port: Number(process.env.PORT),
+      port,
       strictPort: true,
       host: "0.0.0.0",
     },
     preview: {
-      port: Number(process.env.PORT),
+      port,
       strictPort: true,
     },
     plugins: [
@@ -49,8 +51,9 @@ const viteConfig = (): UserConfig => {
             log.message.includes(
               "Error when using sourcemap for reporting an error: Can't resolve original location of error.",
             )
-          )
+          ) {
             return;
+          }
           handler(level, log);
         },
       },
@@ -73,4 +76,5 @@ const viteConfig = (): UserConfig => {
     },
   };
 };
+
 export default viteConfig;
