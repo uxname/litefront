@@ -24,7 +24,7 @@
     "test:e2e:record": "npx playwright codegen",
     "extract-translations": "npx i18next 'src/**/*.{tsx,ts}' -c i18next-parser.config.ts",
     "____________________LINTING AND FORMATTING_____________________________": "",
-    "lint": "eslint .",
+    "lint": "npx eslint '**/*.{js,ts,jsx,tsx,cjs,cts,mjs,mts}'",
     "lint:fix": "npm run lint -- --fix",
     "lint:style": "stylelint \"**/*.{css,scss}\"",
     "lint:style:fix": "npm run lint:style -- --fix",
