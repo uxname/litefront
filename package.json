@@ -51,6 +51,7 @@
     "react-hook-form": "^7.54.1",
     "react-i18next": "^15.2.0",
     "react-icons": "^5.4.0",
+    "stylelint-scss": "^6.10.0",
     "urql": "^4.2.1",
     "yup": "^1.5.0",
     "zustand": "^5.0.2"
