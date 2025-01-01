@@ -1,9 +1,13 @@
-query GetAllFilms($first: Int) {
-  allFilms(first: $first) {
-    films {
-      id
-      title
-      episodeID
+query GetCountry($code: ID!) {
+  country(code: $code) {
+    name
+    native
+    capital
+    emoji
+    currency
+    languages {
+      code
+      name
     }
   }
 }

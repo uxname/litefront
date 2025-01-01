@@ -1,12 +1,13 @@
 import type { FC } from "react";
-import { useGetAllFilmsQuery } from "@generated/graphql.tsx";
+import { useGetCountryQuery } from "@generated/graphql.tsx";
 import { Counter } from "@shared/counter/ui";
 import { Header } from "@shared/header";
+import { Descriptions } from "antd";
 
 export const IndexPage: FC = () => {
-  const [{ data, fetching, error }] = useGetAllFilmsQuery({
+  const [{ data, fetching, error }] = useGetCountryQuery({
     variables: {
-      first: 5,
+      code: "BR",
     },
   });
 
@@ -15,17 +16,40 @@ export const IndexPage: FC = () => {
       <Header />
       <Counter />
       <hr />
-      <h2>Star Wars Films</h2>
       {fetching && <>Loading...</>}
       {error && <>Error: {error.message}</>}
       {!data && <>No data!</>}
-      {data?.allFilms?.films?.map((film) => (
-        <div key={film?.id}>
-          <span>
-            <b>{film?.title}</b> (Episode №: {film?.episodeID})
-          </span>
+      {data?.country && (
+        <div style={{ width: "30vw" }}>
+          <Descriptions
+            title="Country (graphql response)"
+            column={1}
+            size={"small"}
+            colon={true}
+          >
+            <Descriptions.Item label={"Name"}>
+              {data.country.name}
+            </Descriptions.Item>
+            <Descriptions.Item label={"Native"}>
+              {data.country.native}
+            </Descriptions.Item>
+            <Descriptions.Item label={"Capital"}>
+              {data.country.capital}
+            </Descriptions.Item>
+            <Descriptions.Item label={"Emoji"}>
+              {data.country.emoji}
+            </Descriptions.Item>
+            <Descriptions.Item label={"Currency"}>
+              {data.country.currency}
+            </Descriptions.Item>
+            <Descriptions.Item label={"Languages"}>
+              {data.country.languages
+                .map((language) => language.name)
+                .join(", ")}
+            </Descriptions.Item>
+          </Descriptions>
         </div>
-      ))}
+      )}
     </div>
   );
 };
