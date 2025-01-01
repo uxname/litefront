@@ -2,7 +2,6 @@ services:
   app:
     build:
       context: .
-      network: host
     restart: unless-stopped
     env_file:
       - .env
