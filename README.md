@@ -1,5 +1,9 @@
 ![](./.github/logo.png)
 
+[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+![License](https://img.shields.io/badge/License-MIT-brightgreen)
+![Stars](https://img.shields.io/github/stars/uxname/litefront)
+
 A [Vite](https://vitejs.dev) + [GraphQL](https://graphql.org) + Typescript frontend boilerplate
 using [Feature-Sliced Design](https://feature-sliced.design) as project architecture methodology.
 
