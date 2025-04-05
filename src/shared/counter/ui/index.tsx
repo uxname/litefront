@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { useCounterStore } from "@shared/counter/lib/counter.store.ts";
+import { FC } from "react";
 
 export interface ICounterProperties {
   title?: string;

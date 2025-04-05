@@ -1,6 +1,6 @@
-import { FC, useCallback } from "react";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { Link } from "@tanstack/react-router";
+import { FC, useCallback } from "react";
 
 import logo from "../../../../.github/logo.svg";
 

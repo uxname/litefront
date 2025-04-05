@@ -1,8 +1,8 @@
-import type { FC } from "react";
 import { useGetCountryQuery } from "@generated/graphql.tsx";
 import { Counter } from "@shared/counter/ui";
 import { Header } from "@shared/header";
 import { Descriptions } from "antd";
+import type { FC } from "react";
 
 export const IndexPage: FC = () => {
   const [{ data, fetching, error }] = useGetCountryQuery({
@@ -16,9 +16,9 @@ export const IndexPage: FC = () => {
       <Header />
       <Counter />
       <hr />
-      {fetching && <>Loading...</>}
+      {fetching && "Loading..."}
       {error && <>Error: {error.message}</>}
-      {!data && <>No data!</>}
+      {!data && "No data!"}
       {data?.country && (
         <div style={{ width: "30vw" }}>
           <Descriptions

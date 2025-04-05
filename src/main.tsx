@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import React from "react";
+import ReactDOM from "react-dom/client";
 
 import "./index.scss";
 import "./app/i18next.ts";

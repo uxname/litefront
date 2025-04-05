@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { useTranslation } from "react-i18next";
 import { Link } from "@tanstack/react-router";
 import { Button } from "antd";
+import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "./index.module.scss";
 

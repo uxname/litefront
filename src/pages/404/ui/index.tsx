@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
 
 import styles from "./index.module.scss";
 

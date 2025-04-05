@@ -1,6 +1,6 @@
-import * as dotenv from "dotenv";
 import * as fs from "node:fs";
 import path from "node:path";
+import * as dotenv from "dotenv";
 import { Plugin } from "vite";
 
 // Vite plugin to check consistency between .env and .env.example files

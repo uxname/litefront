@@ -1,14 +1,14 @@
-import { FC, useCallback } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { Button, Form, Input } from "antd";
+import { FC, useCallback } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import {
-  getValidationSchema,
   ILoginFormValues,
+  getValidationSchema,
 } from "../model/validation-schema";
 
 import styles from "./index.module.scss";
