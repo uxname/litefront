@@ -31,9 +31,10 @@
     "ts:check": "tsc --noEmit",
     "check": "npx run-p lint:style ts:check lint",
     "____________________OTHER______________________________________________": "",
-    "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i --legacy-peer-deps && npm audit fix && npm run check",
+    "postinstall": "npm run prepare",
     "prepare": "npx lefthook install",
-    "postinstall": "npm run prepare"
+    "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i --legacy-peer-deps && npm audit fix && npm run check",
+    "postupdate": "npm run lint:fix && npm run check"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
