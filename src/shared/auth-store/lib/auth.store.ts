@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 import { IAuthStore } from "./types.ts";
 

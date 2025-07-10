@@ -1,8 +1,8 @@
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import React, { useMemo } from "react";
-import { Client, Provider, cacheExchange, fetchExchange } from "urql";
+import { Client, cacheExchange, fetchExchange, Provider } from "urql";
 
 const RootComponent: React.FC = () => {
   const isDevelopment = import.meta.env.MODE === "development";

@@ -7,8 +7,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
-  IRegisterFormValues,
   getValidationSchema,
+  IRegisterFormValues,
 } from "../model/validation-schema";
 
 import styles from "./index.module.scss";
