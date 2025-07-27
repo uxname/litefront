@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 
-/* eslint-disable new-cap */
+import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
@@ -8,7 +8,6 @@ import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import tsconfigPaths from "vite-tsconfig-paths";
-
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
 // https://vitejs.dev/config/
@@ -28,6 +27,7 @@ const viteConfig = (): UserConfig => {
       strictPort: true,
     },
     plugins: [
+      tailwindcss(),
       tsconfigPaths(),
       react(),
       ViteImageOptimizer(),
@@ -67,11 +67,6 @@ const viteConfig = (): UserConfig => {
       modules: {
         // Enable CSS Modules for all .scss files
         localsConvention: "camelCaseOnly",
-      },
-      preprocessorOptions: {
-        scss: {
-          api: "modern-compiler",
-        },
       },
     },
   };

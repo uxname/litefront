@@ -12,7 +12,7 @@ export const IndexPage: FC = () => {
   });
 
   return (
-    <div>
+    <div className={"pl-16 pr-16 pt-8 pb-8 rounded-2xl shadow-xl"}>
       <Header />
       <Counter />
       <hr />

@@ -1,3 +1,8 @@
+/* This file should be CSS, not SCSS, because SCSS is not supported by Tailwind. */
+
+/* https://github.com/tailwindlabs/tailwindcss/issues/17724 */
+@import "tailwindcss";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
