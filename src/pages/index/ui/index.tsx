@@ -1,7 +1,6 @@
 import { useGetCountryQuery } from "@generated/graphql.tsx";
 import { Counter } from "@shared/counter/ui";
 import { Header } from "@shared/header";
-import { Descriptions } from "antd";
 import type { FC } from "react";
 
 export const IndexPage: FC = () => {
@@ -12,42 +11,50 @@ export const IndexPage: FC = () => {
   });
 
   return (
-    <div className={"pl-16 pr-16 pt-8 pb-8 rounded-2xl shadow-xl"}>
+    <div className="pl-16 pr-16 pt-8 pb-8 rounded-2xl shadow-xl">
       <Header />
       <Counter />
-      <hr />
-      {fetching && "Loading..."}
-      {error && <>Error: {error.message}</>}
-      {!data && "No data!"}
+      <hr className="my-6" />
+      {fetching && <div className="text-center">Loading...</div>}
+      {error && (
+        <div className="text-center text-error">Error: {error.message}</div>
+      )}
+      {!data && <div className="text-center">No data!</div>}
       {data?.country && (
-        <div style={{ width: "30vw" }}>
-          <Descriptions
-            title="Country (graphql response)"
-            column={1}
-            size={"small"}
-            colon={true}
-          >
-            <Descriptions.Item label={"Name"}>
-              {data.country.name}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Native"}>
-              {data.country.native}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Capital"}>
-              {data.country.capital}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Emoji"}>
-              {data.country.emoji}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Currency"}>
-              {data.country.currency}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Languages"}>
-              {data.country.languages
-                .map((language) => language.name)
-                .join(", ")}
-            </Descriptions.Item>
-          </Descriptions>
+        <div className="w-full max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Country (graphql response)
+          </h2>
+          <div className="stats stats-vertical shadow w-full">
+            <div className="stat">
+              <div className="stat-title">Name</div>
+              <div className="stat-value text-lg">{data.country.name}</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Native</div>
+              <div className="stat-value text-lg">{data.country.native}</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Capital</div>
+              <div className="stat-value text-lg">{data.country.capital}</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Emoji</div>
+              <div className="stat-value text-2xl">{data.country.emoji}</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Currency</div>
+              <div className="stat-value text-lg">{data.country.currency}</div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Languages</div>
+              <div className="stat-value text-lg">
+                {data.country.languages
+                  .map((language) => language.name)
+                  .join(", ")}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

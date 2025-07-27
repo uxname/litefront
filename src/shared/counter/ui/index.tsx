@@ -12,7 +12,9 @@ export const Counter: FC<ICounterProperties> = ({ title = "Counter" }) => {
       <h3>
         {title}: {counter}
       </h3>
-      <button onClick={increase}>Increase</button>
+      <button className={"btn btn-outline btn-primary"} onClick={increase}>
+        Increase
+      </button>
     </div>
   );
 };

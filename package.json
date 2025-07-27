@@ -71,6 +71,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "daisyui": "^5.0.47",
     "i18next-parser": "^9.3.0",
     "lefthook": "^1.12.1",
     "npm-check-updates": "^18.0.1",

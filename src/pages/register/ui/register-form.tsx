@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { useNavigate } from "@tanstack/react-router";
-import { Button, Form, Input } from "antd";
 import { FC, useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,8 +9,6 @@ import {
   getValidationSchema,
   IRegisterFormValues,
 } from "../model/validation-schema";
-
-import styles from "./index.module.scss";
 
 export const RegisterForm: FC = () => {
   const { t } = useTranslation(["register"]);
@@ -37,72 +34,92 @@ export const RegisterForm: FC = () => {
   );
 
   return (
-    <form className={styles.authForm} onSubmit={handleSubmit(handleRegister)}>
-      <h1 className={styles.formTitle}>{t("register:form.title")}</h1>
+    <form
+      className="flex flex-col gap-4 w-full max-w-md mx-auto p-6 bg-base-100 rounded-lg shadow-lg"
+      onSubmit={handleSubmit(handleRegister)}
+    >
+      <h1 className="text-3xl font-bold text-center mb-6">
+        {t("register:form.title")}
+      </h1>
 
-      <Form.Item
-        validateStatus={errors.email ? "error" : ""}
-        help={errors.email?.message ? t(errors.email.message) : undefined}
-      >
+      <div className="form-control w-full">
         <Controller
           name="email"
           control={control}
           render={({ field }) => (
-            <Input
-              size="large"
-              {...field}
-              type="text"
-              placeholder={t("register:form.email")}
-            />
+            <>
+              <input
+                {...field}
+                id="email"
+                type="email"
+                placeholder={t("register:form.email")}
+                className={`input input-bordered w-full ${errors.email ? "input-error" : ""}`}
+              />
+              {errors.email && (
+                <label htmlFor="email" className="label">
+                  <span className="label-text-alt text-error">
+                    {t(errors.email.message as string)}
+                  </span>
+                </label>
+              )}
+            </>
           )}
         />
-      </Form.Item>
+      </div>
 
-      <Form.Item
-        validateStatus={errors.password ? "error" : ""}
-        help={errors.password?.message ? t(errors.password.message) : undefined}
-      >
+      <div className="form-control w-full">
         <Controller
           name="password"
           control={control}
           render={({ field }) => (
-            <Input.Password
-              size="large"
-              {...field}
-              placeholder={t("register:form.password")}
-            />
+            <>
+              <input
+                {...field}
+                id="password"
+                type="password"
+                placeholder={t("register:form.password")}
+                className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
+              />
+              {errors.password && (
+                <label htmlFor="password" className="label">
+                  <span className="label-text-alt text-error">
+                    {t(errors.password.message as string)}
+                  </span>
+                </label>
+              )}
+            </>
           )}
         />
-      </Form.Item>
+      </div>
 
-      <Form.Item
-        validateStatus={errors.passwordConfirmation ? "error" : ""}
-        help={
-          errors.passwordConfirmation?.message
-            ? t(errors.passwordConfirmation.message)
-            : undefined
-        }
-      >
+      <div className="form-control w-full">
         <Controller
           name="passwordConfirmation"
           control={control}
           render={({ field }) => (
-            <Input.Password
-              size="large"
-              {...field}
-              placeholder={t("register:form.passwordConfirmation")}
-            />
+            <>
+              <input
+                {...field}
+                id="passwordConfirmation"
+                type="password"
+                placeholder={t("register:form.passwordConfirmation")}
+                className={`input input-bordered w-full ${errors.passwordConfirmation ? "input-error" : ""}`}
+              />
+              {errors.passwordConfirmation && (
+                <label htmlFor="passwordConfirmation" className="label">
+                  <span className="label-text-alt text-error">
+                    {t(errors.passwordConfirmation.message as string)}
+                  </span>
+                </label>
+              )}
+            </>
           )}
         />
-      </Form.Item>
+      </div>
 
-      <Button
-        disabled={Object.keys(errors).length > 0}
-        htmlType="submit"
-        type="primary"
-      >
+      <button type="submit" className="btn btn-primary w-full mt-4">
         {t("register:form.register")}
-      </Button>
+      </button>
     </form>
   );
 };

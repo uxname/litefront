@@ -4,8 +4,6 @@ import { FC, useCallback } from "react";
 
 import logo from "../../../../.github/logo.svg";
 
-import styles from "./index.module.scss";
-
 export const Header: FC = () => {
   const authStore = useAuthStore();
   const handleLogout = useCallback(async () => {
@@ -14,33 +12,55 @@ export const Header: FC = () => {
       authStore.clear();
     }
   }, [authStore]);
+
   return (
-    <>
-      <img src={logo} alt="logo" className={styles.logo} />
-      <div className={styles.header}>
-        <Link to="/" preload={"intent"} className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/about" preload={"intent"} className="[&.active]:font-bold">
-          About
-        </Link>
-        <Link to="/login" preload={"intent"} className="[&.active]:font-bold">
-          Login
-        </Link>
-        <Link
-          to="/register"
-          preload={"intent"}
-          className="[&.active]:font-bold"
-        >
-          Register
-        </Link>
-        {authStore.accessToken && (
-          <button className={styles.button} onClick={handleLogout}>
-            Logout
-          </button>
-        )}
+    <div className="container mx-auto px-4 py-4">
+      <div className="flex flex-col items-center md:flex-row md:justify-between gap-4">
+        <img src={logo} alt="logo" className="h-12 w-auto" />
+        <nav className="flex flex-wrap justify-center gap-4">
+          <Link
+            to="/"
+            preload="intent"
+            className="btn btn-ghost [&.active]:btn-active"
+          >
+            Home
+          </Link>
+          <Link
+            to="/about"
+            preload="intent"
+            className="btn btn-ghost [&.active]:btn-active"
+          >
+            About
+          </Link>
+          {!authStore.accessToken && (
+            <>
+              <Link
+                to="/login"
+                preload="intent"
+                className="btn btn-ghost [&.active]:btn-active"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                preload="intent"
+                className="btn btn-ghost [&.active]:btn-active"
+              >
+                Register
+              </Link>
+            </>
+          )}
+          {authStore.accessToken && (
+            <button
+              onClick={handleLogout}
+              className="btn btn-ghost text-error hover:bg-error/10 hover:text-error"
+            >
+              Logout
+            </button>
+          )}
+        </nav>
       </div>
-      <hr />
-    </>
+      <div className="divider my-2"></div>
+    </div>
   );
 };
