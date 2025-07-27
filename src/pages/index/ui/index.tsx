@@ -1,6 +1,6 @@
 import { useGetCountryQuery } from "@generated/graphql.tsx";
 import { Counter } from "@shared/counter/ui";
-import { Header } from "@shared/header";
+import { Header } from "@widgets/Header";
 import type { FC } from "react";
 
 export const IndexPage: FC = () => {

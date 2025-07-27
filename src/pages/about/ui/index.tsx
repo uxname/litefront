@@ -1,4 +1,4 @@
-import { Header } from "@shared/header";
+import { Header } from "@widgets/Header";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 

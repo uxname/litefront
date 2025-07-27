@@ -1,9 +1,8 @@
+import { LoginForm } from "@features/auth/login";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { LayoutAuth } from "@shared/layout-auth";
 import { useNavigate } from "@tanstack/react-router";
 import { FC, useEffect } from "react";
-
-import { LoginForm } from "./login-form";
 import { LoginSidebar } from "./login-sidebar";
 
 export const LoginPage: FC = () => {

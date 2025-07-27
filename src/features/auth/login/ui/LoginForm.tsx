@@ -1,42 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { useNavigate } from "@tanstack/react-router";
-import { FC, useCallback } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-
-import {
-  getValidationSchema,
-  ILoginFormValues,
-} from "../model/validation-schema";
+import { FC } from "react";
+import { Controller } from "react-hook-form";
+import { useLoginForm } from "../lib/useLoginForm";
 
 export const LoginForm: FC = () => {
-  const { t } = useTranslation(["login"]);
-  const authStore = useAuthStore();
-  const navigate = useNavigate();
-
-  const schema = getValidationSchema(t);
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-
-  const handleLogin = useCallback(
-    async (data: ILoginFormValues) => {
-      authStore.setAccessToken("fake-access-token");
-      console.log("Logged in!", data);
-      await navigate({ to: "/", replace: true });
-    },
-    [authStore, navigate],
-  );
+  const { t, control, errors, handleSubmit } = useLoginForm();
 
   return (
     <form
       className="flex flex-col gap-4 w-full max-w-md mx-auto p-6 bg-base-100 rounded-lg shadow-lg"
-      onSubmit={handleSubmit(handleLogin)}
+      onSubmit={handleSubmit}
     >
       <h1 className="text-3xl font-bold text-center mb-6">
         {t("login:form.title")}
