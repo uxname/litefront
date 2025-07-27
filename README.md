@@ -7,7 +7,7 @@
 ![GitHub Stars](https://img.shields.io/github/stars/uxname/litefront)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
-A modern, scalable, and developer-friendly frontend boilerplate powered by **Vite, React 19, GraphQL, и TypeScript**. Built with the **[Feature-Sliced Design](https://feature-sliced.design)** methodology for maximum maintainability.
+A modern, scalable, and developer-friendly frontend boilerplate powered by **Vite, React 19, GraphQL, and TypeScript**. Built with the **[Feature-Sliced Design](https://feature-sliced.design)** methodology for maximum maintainability.
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **State Management**  | [Zustand](https://github.com/pmndrs/zustand)                                                                |
 | **Styling**           | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)          |
 | **UI Components**     | [Ant Design](https://ant.design)                                                                            |
-| **Forms**             | [React Hook Form](https://react-hook-form.com) with [Yup](https://github.com/jquense/yup) for validation      |
+| **Forms**             | [React Hook Form](https://react-hook-form.com) with [Zod](https://zod.dev) for validation      |
 | **Internationalization** | [i18next](https://www.i18next.com)                                                                        |
 | **Code Generation**   | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                             |
 | **Linting/Formatting**| [Biome](https://biomejs.dev) (All-in-one tool)                                                              |
