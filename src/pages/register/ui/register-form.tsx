@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { FC, useCallback } from "react";
@@ -21,7 +21,7 @@ export const RegisterForm: FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const handleRegister = useCallback(

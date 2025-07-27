@@ -1,28 +1,23 @@
 import { TFunction } from "i18next";
-import * as yup from "yup";
+import { z } from "zod";
 
-export interface IRegisterFormValues {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-}
+export const getValidationSchema = (t: TFunction) =>
+  z
+    .object({
+      email: z.email(t("register:invalidEmail")),
+      password: z
+        .string()
+        .min(6, t("register:passwordMinLength"))
+        .min(1, t("register:requiredPassword")),
+      passwordConfirmation: z
+        .string()
+        .min(1, t("register:requiredPasswordConfirmation")),
+    })
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: t("register:passwordsMustMatch"),
+      path: ["passwordConfirmation"],
+    });
 
-export const getValidationSchema = (
-  t: TFunction,
-): yup.ObjectSchema<IRegisterFormValues> => {
-  const MIN_PASSWORD_LENGTH = 6;
-  return yup.object({
-    email: yup
-      .string()
-      .email(t("register:invalidEmail"))
-      .required(t("register:requiredEmail")),
-    password: yup
-      .string()
-      .min(MIN_PASSWORD_LENGTH, t("register:passwordMinLength"))
-      .required(t("register:requiredPassword")),
-    passwordConfirmation: yup
-      .string()
-      .oneOf([yup.ref("password"), undefined], t("register:passwordsMustMatch"))
-      .required(t("register:requiredPasswordConfirmation")),
-  });
-};
+export type IRegisterFormValues = z.infer<
+  ReturnType<typeof getValidationSchema>
+>;

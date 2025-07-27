@@ -1,4 +1,4 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { FC, useCallback } from "react";
@@ -21,7 +21,7 @@ export const LoginForm: FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const handleLogin = useCallback(
@@ -93,7 +93,7 @@ export const LoginForm: FC = () => {
       </div>
 
       <button type="submit" className="btn btn-primary w-full mt-4">
-        {t("login:form.submit")}
+        {t("login:form.login")}
       </button>
     </form>
   );

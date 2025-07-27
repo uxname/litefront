@@ -1,23 +1,13 @@
 import { TFunction } from "i18next";
-import * as yup from "yup";
+import { z } from "zod";
 
-export interface ILoginFormValues {
-  email: string;
-  password: string;
-}
-
-export const getValidationSchema = (
-  t: TFunction,
-): yup.ObjectSchema<ILoginFormValues> => {
-  const MIN_PASSWORD_LENGTH = 6;
-  return yup.object({
-    email: yup
+export const getValidationSchema = (t: TFunction) =>
+  z.object({
+    email: z.email(t("login:invalidEmail")),
+    password: z
       .string()
-      .email(t("login:invalidEmail"))
-      .required(t("login:requiredEmail")),
-    password: yup
-      .string()
-      .min(MIN_PASSWORD_LENGTH, t("login:passwordMinLength"))
-      .required(t("login:requiredPassword")),
+      .min(6, t("login:passwordMinLength"))
+      .min(1, t("login:requiredPassword")),
   });
-};
+
+export type ILoginFormValues = z.infer<ReturnType<typeof getValidationSchema>>;
