@@ -1,6 +1,12 @@
 /* This file should be CSS, not SCSS, because SCSS is not supported by Tailwind. */
 
+/** biome-ignore-all lint/correctness/noUnknownProperty: biome not aware of tailwind */
+
 /* https://github.com/tailwindlabs/tailwindcss/issues/17724 */
 @import "tailwindcss";
 
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes:
+    cmyk --default,
+    dark --prefersdark;
+}
