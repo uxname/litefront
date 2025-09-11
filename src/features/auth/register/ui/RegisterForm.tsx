@@ -1,9 +1,12 @@
-import { FC } from "react";
+import { FC, useId } from "react";
 import { Controller } from "react-hook-form";
 import { useRegisterForm } from "../lib/useRegisterForm";
 
 export const RegisterForm: FC = () => {
   const { t, control, errors, handleSubmit } = useRegisterForm();
+  const emailId = useId();
+  const passwordId = useId();
+  const passwordConfirmationId = useId();
 
   return (
     <form
@@ -22,7 +25,7 @@ export const RegisterForm: FC = () => {
             <>
               <input
                 {...field}
-                id="email"
+                id={emailId}
                 type="email"
                 placeholder={t("register:form.email")}
                 className={`input input-bordered w-full ${errors.email ? "input-error" : ""}`}
@@ -47,7 +50,7 @@ export const RegisterForm: FC = () => {
             <>
               <input
                 {...field}
-                id="password"
+                id={passwordId}
                 type="password"
                 placeholder={t("register:form.password")}
                 className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
@@ -72,7 +75,7 @@ export const RegisterForm: FC = () => {
             <>
               <input
                 {...field}
-                id="passwordConfirmation"
+                id={passwordConfirmationId}
                 type="password"
                 placeholder={t("register:form.confirmPassword")}
                 className={`input input-bordered w-full ${errors.passwordConfirmation ? "input-error" : ""}`}

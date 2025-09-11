@@ -5,6 +5,7 @@
 /* https://github.com/tailwindlabs/tailwindcss/issues/17724 */
 @import "tailwindcss";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: biome not working with tailwind correctly */
 @plugin "daisyui" {
   themes:
     cmyk --default,

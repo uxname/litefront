@@ -8,8 +8,8 @@ export const useAuthStore = create(
     persist<IAuthStore>(
       (set) => ({
         accessToken: undefined,
-        setAccessToken: (accessToken: string): void => set({ accessToken }),
-        clear: (): void => set({ accessToken: undefined }),
+        setAccessToken: (accessToken: string): unknown => set({ accessToken }),
+        clear: (): unknown => set({ accessToken: undefined }),
       }),
       {
         name: "auth-store",

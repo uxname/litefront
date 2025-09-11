@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, useId } from "react";
 import { Controller } from "react-hook-form";
 import { useLoginForm } from "../lib/useLoginForm";
 
 export const LoginForm: FC = () => {
   const { t, control, errors, handleSubmit } = useLoginForm();
+  const emailId = useId();
+  const passwordId = useId();
 
   return (
     <form
@@ -22,7 +24,7 @@ export const LoginForm: FC = () => {
             <>
               <input
                 {...field}
-                id="email"
+                id={emailId}
                 type="email"
                 placeholder={t("login:form.email")}
                 className={`input input-bordered w-full ${errors.email ? "input-error" : ""}`}
@@ -47,7 +49,7 @@ export const LoginForm: FC = () => {
             <>
               <input
                 {...field}
-                id="password"
+                id={passwordId}
                 type="password"
                 placeholder={t("login:form.password")}
                 className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
