@@ -1,9 +1,14 @@
 ![](./.github/logo.png)
 
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+[![Knip](https://img.shields.io/badge/Maintained_with-Knip-blue?logo=knip)](https://knip.dev/)
 ![Vite](https://img.shields.io/badge/Vite-7.x-blue?logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
+![Playwright](https://img.shields.io/badge/Testing-Playwright-2EAD33?logo=playwright)
+![Vitest](https://img.shields.io/badge/Testing-Vitest-6E9F18?logo=vitest)
+![Zustand](https://img.shields.io/badge/State-Zustand-422f2f?logo=zustand)
+![FSD](https://img.shields.io/badge/Architecture-FSD-3D3D3D?logo=feature-sliced-design)
 ![GitHub Stars](https://img.shields.io/github/stars/uxname/litefront)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
@@ -15,6 +20,7 @@ A modern, scalable, and developer-friendly frontend boilerplate powered by **Vit
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Key Features](#key-features)
+- [Scripts Overview](#scripts-overview)
 - [Perfect Pairing with LiteEnd](#perfect-pairing-with-liteend)
 - [Get Started](#get-started)
 - [Types Generation](#types-generation)
@@ -32,22 +38,22 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 
 ## Tech Stack
 
-| Category              | Technology                                                                                                  |
-| --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Core**              | [Vite](https://vitejs.dev), [React 19](https://react.dev), [TypeScript](https://www.typescriptlang.org)       |
-| **Routing**           | [TanStack Router](https://tanstack.com/router) (Type-safe)                                                  |
-| **Data Fetching**     | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)                    |
-| **State Management**  | [Zustand](https://github.com/pmndrs/zustand)                                                                |
-| **Styling**           | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)          |
-| **UI Components**     | [Ant Design](https://ant.design)                                                                            |
-| **Forms**             | [React Hook Form](https://react-hook-form.com) with [Zod](https://zod.dev) for validation      |
-| **Internationalization** | [i18next](https://www.i18next.com)                                                                        |
-| **Code Generation**   | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                             |
-| **Linting/Formatting**| [Biome](https://biomejs.dev) (All-in-one tool)                                                              |
-| **Git Hooks**         | [Lefthook](https://github.com/evilmartians/lefthook)                                                        |
-| **Testing**           | [Vitest](https://vitest.dev) (Unit), [Playwright](https://playwright.dev) (E2E)                               |
-| **Component Dev**     | [Ladle](https://ladle.dev) (Storybook alternative)                                                          |
-| **Deployment**        | [Docker](https://www.docker.com) with [Caddy Server](https://caddyserver.com)                                 |
+| Category                 | Technology                                                                                              |
+|:-------------------------|:--------------------------------------------------------------------------------------------------------|
+| **Core**                 | [Vite](https://vitejs.dev), [React 19](https://react.dev), [TypeScript](https://www.typescriptlang.org) |
+| **Routing**              | [TanStack Router](https://tanstack.com/router) (Type-safe)                                              |
+| **Data Fetching**        | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)              |
+| **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
+| **Styling**              | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
+| **UI Components**        | [daisyUI](https://daisyui.com/) (for Tailwind CSS)                                                      |
+| **Forms**                | [React Hook Form](https://react-hook-form.com) with [Zod](https://zod.dev) for validation               |
+| **Internationalization** | [i18next](https://www.i18next.com)                                                                      |
+| **Code Generation**      | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                         |
+| **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev)               |
+| **Git Hooks**            | [Lefthook](https://github.com/evilmartians/lefthook)                                                    |
+| **Testing**              | [Vitest](https://vitest.dev) (Unit), [Playwright](https://playwright.dev) (E2E)                         |
+| **Component Dev**        | [Ladle](https://ladle.dev) (Storybook alternative)                                                      |
+| **Deployment**           | [Docker](https://www.docker.com) with [Caddy Server](https://caddyserver.com)                           |
 
 ## Architecture
 
@@ -55,11 +61,19 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 
 ## Key Features
 
-- **Automated Type Generation**: `npm run gen` command to generate TypeScript types from your GraphQL schema and operations.
-- **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync during development.
-- **Optimized for Production**: Multi-stage Dockerfile for small and secure production images, served by the high-performance Caddy web server.
-- **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
-- **Pre-configured Tooling**: Linters, formatters, and git-hooks are set up and ready to go.
+-   **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
+-   **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
+-   **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
+-   **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
+-   **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
+-   **Pre-configured Tooling**: Linters, formatters, and git-hooks are set up and ready to go.
+
+## Scripts Overview
+
+-   `npm run start:dev`: Starts the development server with Hot Module Replacement.
+-   `npm run build`: Bundles the application for production.
+-   `npm run test:prod`: Runs all unit and end-to-end tests.
+-   `npm run check`: Runs all code quality checks (linting, type-checking, etc.).
 
 ## Perfect Pairing with [LiteEnd](https://github.com/uxname/liteend)
 
