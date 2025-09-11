@@ -1,4 +1,3 @@
-/* eslint-disable */
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Maybe<T> = T | null;
@@ -63,6 +62,7 @@ export type CountryFilterInput = {
 export type Language = {
   __typename?: 'Language';
   code: Scalars['ID']['output'];
+  countries: Array<Country>;
   name: Scalars['String']['output'];
   native: Scalars['String']['output'];
   rtl: Scalars['Boolean']['output'];

@@ -39,6 +39,7 @@ input CountryFilterInput {
 
 type Language {
   code: ID!
+  countries: [Country!]!
   name: String!
   native: String!
   rtl: Boolean!
