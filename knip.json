@@ -1,0 +1,32 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/main.tsx!",
+    "src/routes/__root.tsx!",
+    "src/routes/**/*.lazy.tsx!"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}!",
+    "tests/**/*.{ts,tsx}",
+    "!src/generated/**",
+    "!storybook-build/**",
+    "!dist/**",
+    "!node_modules/**"
+  ],
+  "ignore": [
+    "src/generated/**",
+    "src/vite-env.d.ts",
+    "src/app/vite-dotenv-checker.plugin.ts"
+  ],
+  "ignoreDependencies": ["daisyui"],
+  "ignoreBinaries": ["i18next-parser.config.ts"],
+  "ignoreExportsUsedInFile": true,
+  "paths": {
+    "@generated/*": ["./src/generated/*"],
+    "@pages/*": ["./src/pages/*"],
+    "@shared/*": ["./src/shared/*"],
+    "@widgets/*": ["./src/widgets/*"],
+    "@features/*": ["./src/features/*"],
+    "@public/*": ["./public/*"]
+  }
+}
