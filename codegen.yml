@@ -7,9 +7,6 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-urql"
-      - add:
-          content:
-            - "/* eslint-disable */"
     config:
       skipTypename: false
       withHooks: true
