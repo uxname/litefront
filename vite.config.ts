@@ -2,13 +2,14 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
-import { defineConfig } from "vite";
+import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from "vitest/config";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
-export default defineConfig((_) => {
+export default defineConfig(async (_): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT);
