@@ -1,17 +1,14 @@
-/// <reference types="vitest" />
-
 import tailwindcss from "@tailwindcss/vite";
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
-import { UserConfig } from "vite";
+import { defineConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
-// https://vitejs.dev/config/
-const viteConfig = (): UserConfig => {
+export default defineConfig((_) => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT);
@@ -31,7 +28,9 @@ const viteConfig = (): UserConfig => {
       tsconfigPaths(),
       react(),
       ViteImageOptimizer(),
-      TanStackRouterVite({
+      tanstackRouter({
+        target: "react",
+        autoCodeSplitting: true,
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
       }),
       vitePluginVersionMark({
@@ -56,6 +55,4 @@ const viteConfig = (): UserConfig => {
       },
     },
   };
-};
-
-export default viteConfig;
+});
