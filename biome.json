@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -12,7 +12,8 @@
       "!**/node_modules",
       "!**/dist",
       "!**/src/generated",
-      "!**/vite.config.ts.*"
+      "!**/vite.config.ts.*",
+      "!src/index.css"
     ]
   },
   "formatter": {
@@ -48,6 +49,11 @@
     },
     "formatter": {
       "quoteStyle": "double"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   }
 }

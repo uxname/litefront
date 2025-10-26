@@ -7,7 +7,6 @@ import logo from "../../../../.github/logo.svg";
 export const Header: FC = () => {
   const authStore = useAuthStore();
   const handleLogout = useCallback(async () => {
-    // eslint-disable-next-line no-alert
     if (confirm("Are you sure you want to logout?")) {
       authStore.clear();
     }
