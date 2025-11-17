@@ -27,13 +27,13 @@ export default defineConfig(async (_): Promise<UserConfig> => {
     plugins: [
       tailwindcss(),
       tsconfigPaths(),
-      react(),
       ViteImageOptimizer(),
       tanstackRouter({
         target: "react",
         autoCodeSplitting: true,
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
       }),
+      react(),
       vitePluginVersionMark({
         ifLog: true,
         ifGlobal: true,
