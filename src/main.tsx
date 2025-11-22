@@ -6,7 +6,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import "./index.css";
-import "./app/i18next.ts";
 
 const router = createRouter({
   routeTree,

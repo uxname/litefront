@@ -1,0 +1,5 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "not_found_message": "Oops! The page you are looking for does not exist.",
+  "back_to_home": "Back to home"
+}

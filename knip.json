@@ -15,7 +15,7 @@
     "src/app/vite-dotenv-checker.plugin.ts"
   ],
   "ignoreDependencies": ["daisyui"],
-  "ignoreBinaries": ["i18next-parser.config.ts"],
+  "ignoreBinaries": [],
   "ignoreExportsUsedInFile": true,
   "paths": {
     "@generated/*": ["./src/generated/*"],
