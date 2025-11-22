@@ -1,8 +1,10 @@
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
+import { oidcConfig } from "@shared/config/oidc";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { AuthProvider, useAuth } from "react-oidc-context";
 
 import "./index.css";
 import "./app/i18next.ts";
@@ -10,17 +12,40 @@ import "./app/i18next.ts";
 const router = createRouter({
   routeTree,
   defaultNotFoundComponent: NotFoundPage,
+  context: {
+    auth: undefined!,
+  },
 });
 
-// Register the router instance for type safety
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
 
+const onSigninCallback = () => {
+  window.history.replaceState({}, document.title, window.location.pathname);
+  router.navigate({ to: "/", replace: true });
+};
+
+const App = () => {
+  const auth = useAuth();
+
+  if (auth.isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <span className="loading loading-spinner"></span>
+      </div>
+    );
+  }
+
+  return <RouterProvider router={router} context={{ auth }} />;
+};
+
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider {...oidcConfig} onSigninCallback={onSigninCallback}>
+      <App />
+    </AuthProvider>
   </React.StrictMode>,
 );

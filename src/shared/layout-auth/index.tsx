@@ -1,1 +1,0 @@
-export { LayoutAuth } from "./ui";

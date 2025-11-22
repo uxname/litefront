@@ -1,22 +1,17 @@
-import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
 import { Link } from "@tanstack/react-router";
-import { FC, useCallback } from "react";
+import { FC } from "react";
+import { useAuth } from "react-oidc-context";
 
 import logo from "../../../../.github/logo.svg";
 
 export const Header: FC = () => {
-  const authStore = useAuthStore();
-  const handleLogout = useCallback(async () => {
-    if (confirm("Are you sure you want to logout?")) {
-      authStore.clear();
-    }
-  }, [authStore]);
+  const auth = useAuth();
 
   return (
     <div className="container mx-auto px-4 py-4">
       <div className="flex flex-col items-center md:flex-row md:justify-between gap-4">
         <img src={logo} alt="logo" className="h-12 w-auto" />
-        <nav className="flex flex-wrap justify-center gap-4">
+        <nav className="flex flex-wrap justify-center gap-4 items-center">
           <Link
             to="/"
             preload="intent"
@@ -31,30 +26,27 @@ export const Header: FC = () => {
           >
             About
           </Link>
-          {!authStore.accessToken && (
-            <>
-              <Link
-                to="/login"
-                preload="intent"
-                className="btn btn-ghost [&.active]:btn-active"
+
+          {auth.isLoading ? (
+            <div className="loading loading-spinner loading-sm"></div>
+          ) : auth.isAuthenticated ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-bold hidden sm:inline-block">
+                {auth.user?.profile.email || auth.user?.profile.sub}
+              </span>
+              <button
+                onClick={() => void auth.removeUser()} // Логаут
+                className="btn btn-ghost text-error hover:bg-error/10 hover:text-error"
               >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                preload="intent"
-                className="btn btn-ghost [&.active]:btn-active"
-              >
-                Register
-              </Link>
-            </>
-          )}
-          {authStore.accessToken && (
+                Logout
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={handleLogout}
-              className="btn btn-ghost text-error hover:bg-error/10 hover:text-error"
+              onClick={() => void auth.signinRedirect()} // Логин (редирект на Logto)
+              className="btn btn-ghost"
             >
-              Logout
+              Login
             </button>
           )}
         </nav>

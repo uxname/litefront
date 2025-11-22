@@ -1,10 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": [
-    "src/main.tsx!",
-    "src/routes/__root.tsx!",
-    "src/routes/**/*.lazy.tsx!"
-  ],
+  "entry": ["src/main.tsx!", "src/routes/**/*.{ts,tsx}!"],
   "project": [
     "src/**/*.{ts,tsx}!",
     "tests/**/*.{ts,tsx}",

@@ -1,16 +1,20 @@
-import { useAuthStore } from "@shared/auth-store/lib/auth.store.ts";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import React, { useMemo } from "react";
+import { AuthContextProps, useAuth } from "react-oidc-context";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
+
+export interface MyRouterContext {
+  auth: AuthContextProps;
+}
 
 const RootComponent: React.FC = () => {
   const isDevelopment = import.meta.env.MODE === "development";
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const auth = useAuth();
 
   const graphqlClient = useMemo(
-    () => makeGraphQLClient(accessToken),
-    [accessToken],
+    () => makeGraphQLClient(auth.user?.access_token),
+    [auth.user?.access_token],
   );
 
   return (
@@ -36,6 +40,6 @@ function makeGraphQLClient(accessToken: string | undefined): Client {
   });
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 });
