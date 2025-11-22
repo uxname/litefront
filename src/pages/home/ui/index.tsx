@@ -3,7 +3,7 @@ import { Counter } from "@shared/counter/ui";
 import { Header } from "@widgets/Header";
 import type { FC } from "react";
 
-export const IndexPage: FC = () => {
+export const HomePage: FC = () => {
   const [{ data, fetching, error }] = useGetCountryQuery({
     variables: {
       code: "BR",

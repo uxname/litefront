@@ -1,11 +1,11 @@
 import { useCounterStore } from "@shared/counter/lib/counter.store.ts";
 import { FC } from "react";
 
-export interface ICounterProperties {
+export interface CounterProps {
   title?: string;
 }
 
-export const Counter: FC<ICounterProperties> = ({ title = "Counter" }) => {
+export const Counter: FC<CounterProps> = ({ title = "Counter" }) => {
   const { counter, increase } = useCounterStore();
   return (
     <div>
