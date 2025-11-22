@@ -21,6 +21,7 @@ A modern, scalable, and developer-friendly frontend boilerplate powered by **Vit
 - [Architecture](#architecture)
 - [Key Features](#key-features)
 - [Configuration](#configuration)
+- [Custom Authentication](#custom-authentication)
 - [Scripts Overview](#scripts-overview)
 - [Perfect Pairing with LiteEnd](#perfect-pairing-with-liteend)
 - [Get Started](#get-started)
@@ -83,6 +84,16 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
+
+## Custom Authentication
+
+This boilerplate uses a facade pattern for authentication located in `src/shared/auth`. This architecture decouples the application from the specific OIDC library, allowing you to replace it with any other method (e.g., custom JWT/Session based auth) easily.
+
+To replace OIDC with your own logic:
+1.  Open `src/shared/auth/index.ts`.
+2.  Remove `react-oidc-context` exports.
+3.  Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
+4.  Update `src/main.tsx` to remove `oidcConfig` injection if your new provider doesn't need it.
 
 ## Scripts Overview
 
