@@ -35,7 +35,7 @@ export const Header: FC = () => {
                 {auth.user?.profile.email || auth.user?.profile.sub}
               </span>
               <button
-                onClick={() => void auth.removeUser()} // Логаут
+                onClick={() => void auth.removeUser()}
                 className="btn btn-ghost text-error hover:bg-error/10 hover:text-error"
               >
                 Logout
@@ -43,7 +43,7 @@ export const Header: FC = () => {
             </div>
           ) : (
             <button
-              onClick={() => void auth.signinRedirect()} // Логин (редирект на Logto)
+              onClick={() => void auth.signinRedirect()}
               className="btn btn-ghost"
             >
               Login
