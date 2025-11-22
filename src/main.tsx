@@ -1,10 +1,9 @@
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
-import { oidcConfig } from "@shared/config/oidc";
+import { AuthProvider, oidcConfig, useAuth } from "@shared/auth";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { AuthProvider, useAuth } from "react-oidc-context";
 
 import "./index.css";
 import "./app/i18next.ts";

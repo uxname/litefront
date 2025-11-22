@@ -1,6 +1,6 @@
+import { useAuth } from "@shared/auth";
 import { Header } from "@widgets/Header";
 import type { FC } from "react";
-import { useAuth } from "react-oidc-context";
 
 export const ProtectedPage: FC = () => {
   const auth = useAuth();

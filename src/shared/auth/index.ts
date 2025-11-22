@@ -9,3 +9,6 @@ export const oidcConfig: AuthProviderProps = {
   automaticSilentRenew: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
 };
+
+export type { AuthContextProps } from "react-oidc-context";
+export { AuthProvider, useAuth } from "react-oidc-context";

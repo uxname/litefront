@@ -1,6 +1,6 @@
+import { useAuth } from "@shared/auth";
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
-import { useAuth } from "react-oidc-context";
 
 import logo from "../../../../.github/logo.svg";
 

@@ -1,7 +1,7 @@
+import { AuthContextProps, useAuth } from "@shared/auth";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import React, { useMemo } from "react";
-import { AuthContextProps, useAuth } from "react-oidc-context";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
 
 export interface MyRouterContext {
