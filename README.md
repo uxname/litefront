@@ -50,7 +50,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
 | **Styling**              | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
 | **UI Components**        | [daisyUI](https://daisyui.com/) (for Tailwind CSS)                                                      |
-| **Internationalization** | [i18next](https://www.i18next.com)                                                                      |
+| **Internationalization** | [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs) (Type-safe)                    |
 | **Code Generation**      | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                         |
 | **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev)               |
 | **Git Hooks**            | [Lefthook](https://github.com/evilmartians/lefthook)                                                    |
@@ -66,6 +66,7 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 
 -   **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.
 -   **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
+-   **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
 -   **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
 -   **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
 -   **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
