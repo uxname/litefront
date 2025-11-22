@@ -20,11 +20,11 @@ export const Header: FC = () => {
             Home
           </Link>
           <Link
-            to="/about"
+            to="/protected"
             preload="intent"
             className="btn btn-ghost [&.active]:btn-active"
           >
-            About
+            Protected
           </Link>
 
           {auth.isLoading ? (

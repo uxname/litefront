@@ -12,7 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './../routes/__root'
 import { Route as CallbackRouteImport } from './../routes/callback'
-import { Route as AboutIndexRouteImport } from './../routes/about/index'
+import { Route as ProtectedIndexRouteImport } from './../routes/protected/index'
 
 const IndexLazyRouteImport = createFileRoute('/')()
 
@@ -26,40 +26,40 @@ const IndexLazyRoute = IndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./../routes/index.lazy').then((d) => d.Route))
-const AboutIndexRoute = AboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
+  id: '/protected/',
+  path: '/protected/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/callback': typeof CallbackRoute
-  '/about': typeof AboutIndexRoute
+  '/protected': typeof ProtectedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/callback': typeof CallbackRoute
-  '/about': typeof AboutIndexRoute
+  '/protected': typeof ProtectedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
   '/callback': typeof CallbackRoute
-  '/about/': typeof AboutIndexRoute
+  '/protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/callback' | '/about'
+  fullPaths: '/' | '/callback' | '/protected'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/callback' | '/about'
-  id: '__root__' | '/' | '/callback' | '/about/'
+  to: '/' | '/callback' | '/protected'
+  id: '__root__' | '/' | '/callback' | '/protected/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CallbackRoute: typeof CallbackRoute
-  AboutIndexRoute: typeof AboutIndexRoute
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,11 +78,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/': {
-      id: '/about/'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutIndexRouteImport
+    '/protected/': {
+      id: '/protected/'
+      path: '/protected'
+      fullPath: '/protected'
+      preLoaderRoute: typeof ProtectedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -91,7 +91,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CallbackRoute: CallbackRoute,
-  AboutIndexRoute: AboutIndexRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
