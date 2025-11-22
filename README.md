@@ -12,7 +12,7 @@
 ![GitHub Stars](https://img.shields.io/github/stars/uxname/litefront)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
-A modern, scalable, and developer-friendly frontend boilerplate powered by **Vite, React 19, GraphQL, and TypeScript**. Built with the **[Feature-Sliced Design](https://feature-sliced.design)** methodology for maximum maintainability.
+A modern, scalable, and developer-friendly frontend boilerplate powered by **Vite, React 19, GraphQL, and TypeScript**. Built with the **[Feature-Sliced Design](https://feature-sliced.design)** methodology and pre-configured **OIDC Authentication**.
 
 ## Table of Contents
 
@@ -20,6 +20,7 @@ A modern, scalable, and developer-friendly frontend boilerplate powered by **Vit
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Key Features](#key-features)
+- [Configuration](#configuration)
 - [Scripts Overview](#scripts-overview)
 - [Perfect Pairing with LiteEnd](#perfect-pairing-with-liteend)
 - [Get Started](#get-started)
@@ -32,6 +33,7 @@ A modern, scalable, and developer-friendly frontend boilerplate powered by **Vit
 LiteFront is a lightweight and performant frontend boilerplate designed for building fast, efficient, and well-structured web applications. It integrates a modern toolchain to provide an exceptional developer experience (DX) right out of the box.
 
 - **🚀 Performance**: Fast development server and optimized builds thanks to **Vite**.
+- **🔒 Security**: Enterprise-grade authentication via **OpenID Connect (OIDC)**.
 - **🧩 Scalability**: **Feature-Sliced Design** ensures your project stays organized and maintainable as it grows.
 - **✅ Reliability**: Type-safety with **TypeScript**, code quality enforced by **Biome**, and pre-commit checks with **Lefthook**.
 - **🧪 Test-Ready**: Unit testing with **Vitest** and End-to-End testing with **Playwright** are pre-configured.
@@ -42,11 +44,11 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 |:-------------------------|:--------------------------------------------------------------------------------------------------------|
 | **Core**                 | [Vite](https://vitejs.dev), [React 19](https://react.dev), [TypeScript](https://www.typescriptlang.org) |
 | **Routing**              | [TanStack Router](https://tanstack.com/router) (Type-safe)                                              |
+| **Authentication**       | [react-oidc-context](https://github.com/authts/react-oidc-context) (OAuth 2.0 / OIDC)                   |
 | **Data Fetching**        | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)              |
 | **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
 | **Styling**              | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
 | **UI Components**        | [daisyUI](https://daisyui.com/) (for Tailwind CSS)                                                      |
-| **Forms**                | [React Hook Form](https://react-hook-form.com) with [Zod](https://zod.dev) for validation               |
 | **Internationalization** | [i18next](https://www.i18next.com)                                                                      |
 | **Code Generation**      | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                         |
 | **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev)               |
@@ -61,19 +63,34 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 
 ## Key Features
 
+-   **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.
+-   **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
 -   **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
 -   **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
 -   **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
 -   **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
 -   **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
--   **Pre-configured Tooling**: Linters, formatters, and git-hooks are set up and ready to go.
+
+## Configuration
+
+The application requires the following environment variables to be set in `.env` for the OIDC authentication to work correctly.
+
+| Variable                 | Description                                                  | Example                                         |
+|:-------------------------|:-------------------------------------------------------------|:------------------------------------------------|
+| `VITE_OIDC_AUTHORITY`    | The URL of your OIDC provider (Logto, Auth0, Keycloak, etc.) | `https://your-app.logto.app/oidc`               |
+| `VITE_OIDC_CLIENT_ID`    | The Client ID of your application registered in the provider | `abc123xyz...`                                  |
+| `VITE_OIDC_REDIRECT_URI` | The callback URL where the user is redirected after login    | `http://localhost:3000/callback`                |
+| `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
+| `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
+| `PORT`                   | The port the application will run on                         | `3000`                                          |
 
 ## Scripts Overview
 
 -   `npm run start:dev`: Starts the development server with Hot Module Replacement.
 -   `npm run build`: Bundles the application for production.
 -   `npm run test:prod`: Runs all unit and end-to-end tests.
--   `npm run check`: Runs all code quality checks (linting, type-checking, etc.).
+-   `npm run check`: Runs all code quality checks (linting, type-checking, Knip).
+-   `npm run gen`: Generates TypeScript types for GraphQL operations.
 
 ## Perfect Pairing with [LiteEnd](https://github.com/uxname/liteend)
 
@@ -107,8 +124,9 @@ npx degit uxname/litefront my-app && cd my-app && git init && git add . && git c
 4.  **Setup environment variables**
     ```bash
     cp .env.example .env
-    # Edit .env with your configuration
     ```
+    **Important:** Open `.env` and fill in your OIDC provider details (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`, etc.) or the app will not be able to authenticate users.
+
 5.  **Generate GraphQL types**
     ```bash
     npm run gen
