@@ -1,4 +1,4 @@
-![](./.github/logo.png)
+# ![Logo](./.github/logo.png)
 
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 [![Knip](https://img.shields.io/badge/Maintained_with-Knip-blue?logo=knip)](https://knip.dev/)
@@ -64,14 +64,14 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 
 ## Key Features
 
--   **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.
--   **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
--   **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
--   **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
--   **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
--   **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
--   **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
--   **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
+- **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.
+- **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
+- **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
+- **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
+- **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
+- **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
+- **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
+- **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
 
 ## Configuration
 
@@ -91,18 +91,19 @@ The application requires the following environment variables to be set in `.env`
 This boilerplate uses a facade pattern for authentication located in `src/shared/auth`. This architecture decouples the application from the specific OIDC library, allowing you to replace it with any other method (e.g., custom JWT/Session based auth) easily.
 
 To replace OIDC with your own logic:
-1.  Open `src/shared/auth/index.ts`.
-2.  Remove `react-oidc-context` exports.
-3.  Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
-4.  Update `src/main.tsx` to remove `oidcConfig` injection if your new provider doesn't need it.
+
+1. Open `src/shared/auth/index.ts`.
+2. Remove `react-oidc-context` exports.
+3. Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
+4. Update `src/main.tsx` to remove `oidcConfig` injection if your new provider doesn't need it.
 
 ## Scripts Overview
 
--   `npm run start:dev`: Starts the development server with Hot Module Replacement.
--   `npm run build`: Bundles the application for production.
--   `npm run test:prod`: Runs all unit and end-to-end tests.
--   `npm run check`: Runs all code quality checks (linting, type-checking, Knip).
--   `npm run gen`: Generates TypeScript types for GraphQL operations.
+- `npm run start:dev`: Starts the development server with Hot Module Replacement.
+- `npm run build`: Bundles the application for production.
+- `npm run test:prod`: Runs all unit and end-to-end tests.
+- `npm run check`: Runs all code quality checks (linting, type-checking, Knip).
+- `npm run gen`: Generates TypeScript types for GraphQL operations.
 
 ## Perfect Pairing with [LiteEnd](https://github.com/uxname/liteend)
 
@@ -120,33 +121,45 @@ npx degit uxname/litefront my-app && cd my-app && git init && git add . && git c
 
 ### Step-by-Step
 
-1.  **Clone the repository**
+1. **Clone the repository**
+
     ```bash
     npx degit uxname/litefront my-app
     cd my-app
     ```
-2.  **Initialize Git**
+
+2. **Initialize Git**
+
     ```bash
     git init && git add . && git commit -m "Initial commit"
     ```
-3.  **Install dependencies**
+
+3. **Install dependencies**
+
     ```bash
     npm install
     ```
-4.  **Setup environment variables**
+
+4. **Setup environment variables**
+
     ```bash
     cp .env.example .env
     ```
+
     **Important:** Open `.env` and fill in your OIDC provider details (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`, etc.) or the app will not be able to authenticate users.
 
-5.  **Generate GraphQL types**
+5. **Generate GraphQL types**
+
     ```bash
     npm run gen
     ```
-6.  **Run the development server**
+
+6. **Run the development server**
+
     ```bash
     npm run start:dev
     ```
+
 Your app should now be running on the port specified in your `.env` file (default: `http://localhost:3000`).
 
 ## Types Generation
