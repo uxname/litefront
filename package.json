@@ -35,7 +35,7 @@
     "____________________OTHER______________________________________________": "",
     "postinstall": "npm run prepare",
     "prepare": "npx lefthook install",
-    "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i && npm audit fix && npm run check",
+    "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i",
     "postupdate": "npm run lint:fix && npm run check"
   },
   "dependencies": {
