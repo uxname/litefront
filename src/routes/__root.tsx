@@ -1,4 +1,5 @@
 import { AuthContextProps, useAuth } from "@shared/auth";
+import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import React, { useMemo } from "react";
@@ -42,4 +43,9 @@ function makeGraphQLClient(accessToken: string | undefined): Client {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
+  errorComponent: ({ error, reset }) => (
+    <div className="p-4 flex justify-center w-full">
+      <ErrorFallback error={error} reset={reset} />
+    </div>
+  ),
 });

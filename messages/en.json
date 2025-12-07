@@ -1,5 +1,19 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "not_found_message": "Oops! The page you are looking for does not exist.",
-  "back_to_home": "Back to home"
+  "back_to_home": "Back to home",
+  "error_generic_title": "Something went wrong",
+  "error_auth_required": "Authentication required",
+  "error_access_denied": "Access denied",
+  "error_network": "Network issue",
+  "error_server": "Server error",
+  "error_unexpected": "Unexpected error",
+  "error_auth_desc": "You need to be logged in to access this page.",
+  "error_access_desc": "You do not have permission to view this resource.",
+  "error_network_desc": "Please check your internet connection or try again later.",
+  "error_server_desc": "Our servers are having trouble right now. We are working on it.",
+  "error_unexpected_desc": "An unknown error occurred. If this persists, please contact support.",
+  "action_retry": "Try Again",
+  "action_reload": "Reload Page",
+  "dev_details": "Developer Details"
 }

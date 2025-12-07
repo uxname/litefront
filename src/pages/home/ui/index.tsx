@@ -1,7 +1,7 @@
 import { useGetCountryQuery } from "@generated/graphql.tsx";
 import { Counter } from "@shared/counter/ui";
 import { Header } from "@widgets/Header";
-import type { FC } from "react";
+import { FC, useState } from "react";
 
 export const HomePage: FC = () => {
   const [{ data, fetching, error }] = useGetCountryQuery({
@@ -10,10 +10,24 @@ export const HomePage: FC = () => {
     },
   });
 
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    throw new Error("Demo error");
+  }
+
   return (
     <div className="pl-16 pr-16 pt-8 pb-8 rounded-2xl shadow-xl">
       <Header />
       <Counter />
+      <button
+        className={"btn btn-outline btn-error"}
+        onClick={() => {
+          setHasError(true);
+        }}
+      >
+        Show error
+      </button>
       <hr className="my-6" />
       {fetching && <div className="text-center">Loading...</div>}
       {error && (
