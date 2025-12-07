@@ -48,6 +48,7 @@ export default defineConfig(async (_): Promise<UserConfig> => {
       }),
       viteDotenvChecker(),
       VitePWA({
+        disable: true, // enable when PWA is needed
         registerType: "autoUpdate",
         includeAssets: ["favicon.ico", "apple-touch-icon.png"],
         manifest: {
