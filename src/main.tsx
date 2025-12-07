@@ -4,8 +4,12 @@ import { AuthProvider, oidcConfig, useAuth } from "@shared/auth";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
-
 import "./index.css";
+import { scan } from "react-scan";
+
+scan({
+  enabled: true,
+});
 
 const router = createRouter({
   routeTree,
