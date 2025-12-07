@@ -7,3 +7,4 @@ storybook-build/
 docker-compose.yml
 Dockerfile
 playwright-report
+dev-dist/

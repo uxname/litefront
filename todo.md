@@ -1,5 +1,5 @@
 # TODO
 
 - [ ] Add React Error Boundary
-- [ ] PWA
+- [x] PWA
 - [ ] Sentry

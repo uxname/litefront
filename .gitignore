@@ -9,3 +9,4 @@ storybook-build/
 /blob-report/
 /playwright/.cache/
 .husky
+dev-dist/

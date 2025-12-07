@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import { VitePWA } from "vite-plugin-pwa";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
@@ -46,6 +47,31 @@ export default defineConfig(async (_): Promise<UserConfig> => {
         command: 'git log -1 --pretty=format:"%H %s"',
       }),
       viteDotenvChecker(),
+      VitePWA({
+        registerType: "autoUpdate",
+        includeAssets: ["favicon.ico", "apple-touch-icon.png"],
+        manifest: {
+          name: "LiteFront App",
+          short_name: "LiteFront",
+          description: "A modern React application",
+          theme_color: "#ffffff",
+          icons: [
+            {
+              src: "pwa-192x192.png",
+              sizes: "192x192",
+              type: "image/png",
+            },
+            {
+              src: "pwa-512x512.png",
+              sizes: "512x512",
+              type: "image/png",
+            },
+          ],
+        },
+        devOptions: {
+          enabled: true,
+        },
+      }),
     ],
     build: {
       sourcemap: true,

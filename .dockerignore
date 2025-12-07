@@ -6,3 +6,4 @@ storybook-build/
 #.env
 docker-compose.yml
 Dockerfile
+dev-dist/
