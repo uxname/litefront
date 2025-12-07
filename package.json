@@ -39,11 +39,11 @@
     "postupdate": "npm run lint:fix && npm run check"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.139.12",
-    "@tanstack/router-devtools": "^1.139.12",
+    "@tanstack/react-router": "^1.140.0",
+    "@tanstack/router-devtools": "^1.140.0",
     "oidc-client-ts": "^3.4.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "react-oidc-context": "^3.3.0",
     "urql": "^5.0.1",
     "zustand": "^5.0.9"
@@ -55,20 +55,20 @@
     "@graphql-codegen/typescript": "5.0.6",
     "@graphql-codegen/typescript-operations": "5.0.6",
     "@graphql-codegen/typescript-urql": "^4.0.1",
-    "@inlang/paraglide-js": "2.5.0",
+    "@inlang/paraglide-js": "2.6.0",
     "@ladle/react": "^5.1.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/vite": "^4.1.17",
-    "@tanstack/router-plugin": "^1.139.12",
+    "@tanstack/router-plugin": "^1.140.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "daisyui": "^5.5.5",
+    "daisyui": "^5.5.8",
     "dotenv": "^17.2.3",
     "graphql": "^16.12.0",
     "knip": "^5.71.0",
-    "lefthook": "^2.0.4",
+    "lefthook": "^2.0.8",
     "markdownlint-cli": "^0.46.0",
     "npm-check-updates": "^19.1.2",
     "npm-run-all": "^4.1.5",
@@ -78,7 +78,7 @@
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-config-tailwindcss": "^1.0.0",
-    "stylelint-scss": "^6.12.1",
+    "stylelint-scss": "^6.13.0",
     "svgo": "^4.0.0",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
@@ -86,6 +86,6 @@
     "vite-plugin-image-optimizer": "^2.0.3",
     "vite-plugin-version-mark": "^0.2.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.15"
   }
 }
