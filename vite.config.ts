@@ -11,10 +11,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
-export default defineConfig(async (_): Promise<UserConfig> => {
+export default defineConfig(async ({ mode }): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
-  const port = Number(process.env.PORT);
+  const port = Number(process.env.PORT) || 3000;
 
   return {
     server: {
@@ -25,6 +25,46 @@ export default defineConfig(async (_): Promise<UserConfig> => {
     preview: {
       port,
       strictPort: true,
+    },
+    build: {
+      sourcemap: mode === "development" ? true : "hidden",
+      target: "esnext",
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (!id.includes("node_modules")) {
+              return;
+            }
+
+            if (
+              /[\\/]node_modules[\\/](react|react-dom|scheduler|use-sync-external-store|zustand)[\\/]/.test(
+                id,
+              )
+            ) {
+              return "vendor-react";
+            }
+
+            if (id.includes("@tanstack")) {
+              return "vendor-router";
+            }
+
+            if (
+              id.includes("urql") ||
+              id.includes("wonka") ||
+              id.includes("graphql")
+            ) {
+              return "vendor-api";
+            }
+
+            if (
+              id.includes("oidc-client-ts") ||
+              id.includes("react-oidc-context")
+            ) {
+              return "vendor-auth";
+            }
+          },
+        },
+      },
     },
     plugins: [
       paraglideVitePlugin({
@@ -78,9 +118,6 @@ export default defineConfig(async (_): Promise<UserConfig> => {
         },
       }),
     ],
-    build: {
-      sourcemap: true,
-    },
     test: {
       exclude: ["tests/e2e", "node_modules", "dist"],
       testTimeout: 30_000,

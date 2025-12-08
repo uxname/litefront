@@ -5,11 +5,15 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { scan } from "react-scan";
 
-scan({
-  enabled: true,
-});
+if (import.meta.env.DEV) {
+  import("react-scan").then(({ scan }) => {
+    scan({
+      enabled: true,
+      log: true,
+    });
+  });
+}
 
 const router = createRouter({
   routeTree,

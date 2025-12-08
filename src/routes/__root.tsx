@@ -1,13 +1,20 @@
 import { AuthContextProps, useAuth } from "@shared/auth";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import React, { useMemo } from "react";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
 
 export interface MyRouterContext {
   auth: AuthContextProps;
 }
+
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? React.lazy(() =>
+      import("@tanstack/router-devtools").then((res) => ({
+        default: res.TanStackRouterDevtools,
+      })),
+    )
+  : () => null;
 
 const RootComponent: React.FC = () => {
   const isDevelopment = import.meta.env.MODE === "development";
