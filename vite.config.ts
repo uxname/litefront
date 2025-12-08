@@ -40,7 +40,11 @@ export default defineConfig(async (_): Promise<UserConfig> => {
         autoCodeSplitting: true,
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
       }),
-      react(),
+      react({
+        babel: {
+          plugins: ["babel-plugin-react-compiler"],
+        },
+      }),
       vitePluginVersionMark({
         ifLog: true,
         ifGlobal: true,
