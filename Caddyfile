@@ -1,6 +1,17 @@
 :80 {
+    encode zstd gzip
     root * /usr/share/caddy/html
+    @assets {
+        path /assets/*
+    }
+    header @assets {
+        Cache-Control "public, max-age=31536000, immutable"
+    }
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+    }
+
     file_server
     try_files {path} /index.html
-    encode zstd gzip
 }
