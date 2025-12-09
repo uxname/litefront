@@ -1,14 +1,23 @@
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
+  AlertTriangle,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
   CircleAlert,
+  Copy,
   LockKeyhole,
   LucideIcon,
+  RefreshCcw,
+  RotateCcw,
   ServerCrash,
   ShieldBan,
-  WifiOff,
+  Wifi,
 } from "lucide-react";
-import { FC, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import * as m from "../../../generated/paraglide/messages";
+
+// --- Configuration Strategy ---
 
 enum ErrorCategory {
   AUTH = "AUTH",
@@ -18,60 +27,92 @@ enum ErrorCategory {
   UNKNOWN = "UNKNOWN",
 }
 
-const ICON_MAP: Record<ErrorCategory, LucideIcon> = {
-  [ErrorCategory.AUTH]: LockKeyhole,
-  [ErrorCategory.ACCESS]: ShieldBan,
-  [ErrorCategory.NETWORK]: WifiOff,
-  [ErrorCategory.SERVER]: ServerCrash,
-  [ErrorCategory.UNKNOWN]: CircleAlert,
+interface ErrorConfig {
+  icon: LucideIcon;
+  style: { wrapper: string; icon: string };
+  getTitle: () => string;
+  getDesc: () => string;
+  animate?: boolean;
+}
+
+const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
+  [ErrorCategory.AUTH]: {
+    icon: LockKeyhole,
+    style: { wrapper: "bg-warning/10", icon: "text-warning" },
+    getTitle: () => m.error_auth_required(),
+    getDesc: () => m.error_auth_desc(),
+  },
+  [ErrorCategory.ACCESS]: {
+    icon: ShieldBan,
+    style: { wrapper: "bg-error/10", icon: "text-error" },
+    getTitle: () => m.error_access_denied(),
+    getDesc: () => m.error_access_desc(),
+  },
+  [ErrorCategory.NETWORK]: {
+    icon: Wifi,
+    style: { wrapper: "bg-info/10", icon: "text-info" },
+    getTitle: () => m.error_network(),
+    getDesc: () => m.error_network_desc(),
+    animate: true,
+  },
+  [ErrorCategory.SERVER]: {
+    icon: ServerCrash,
+    style: { wrapper: "bg-error/10", icon: "text-error" },
+    getTitle: () => m.error_server(),
+    getDesc: () => m.error_server_desc(),
+  },
+  [ErrorCategory.UNKNOWN]: {
+    icon: CircleAlert,
+    style: { wrapper: "bg-base-content/5", icon: "text-base-content/60" },
+    getTitle: () => m.error_unexpected(),
+    getDesc: () => m.error_unexpected_desc(),
+  },
 };
 
-const STYLES: Record<ErrorCategory, { bg: string; text: string }> = {
-  [ErrorCategory.AUTH]: { bg: "bg-warning", text: "text-warning" },
-  [ErrorCategory.ACCESS]: { bg: "bg-error", text: "text-error" },
-  [ErrorCategory.NETWORK]: { bg: "bg-info", text: "text-info" },
-  [ErrorCategory.SERVER]: { bg: "bg-error", text: "text-error" },
-  [ErrorCategory.UNKNOWN]: { bg: "bg-base-300", text: "text-base-content" },
-};
+// --- Helpers ---
 
 const ERROR_REGEX = /\b(401|403|404|500|502|503)\b/;
 
-const getStatusCode = (message: string): number | null => {
-  const match = message.match(ERROR_REGEX);
-  return match ? Number(match[1]) : null;
-};
-
 const detectErrorCategory = (error: Error): ErrorCategory => {
   const message = error.message.toLowerCase();
-  const statusCode = getStatusCode(message);
+  const match = message.match(ERROR_REGEX);
+  const statusCode = match ? Number(match[1]) : null;
 
-  const isAuthError =
-    message.includes("unauthorized") ||
-    message.includes("authenticated") ||
-    message.includes("jwt");
+  const rules = [
+    {
+      match: () =>
+        message.includes("unauthorized") ||
+        message.includes("jwt") ||
+        statusCode === 401,
+      category: ErrorCategory.AUTH,
+    },
+    {
+      match: () => message.includes("forbidden") || statusCode === 403,
+      category: ErrorCategory.ACCESS,
+    },
+    {
+      match: () =>
+        message.includes("network") ||
+        message.includes("fetch") ||
+        statusCode === 503,
+      category: ErrorCategory.NETWORK,
+    },
+    {
+      match: () => statusCode && statusCode >= 500,
+      category: ErrorCategory.SERVER,
+    },
+  ];
 
-  if (isAuthError || statusCode === 401) return ErrorCategory.AUTH;
-  if (statusCode === 403) return ErrorCategory.ACCESS;
-
-  const isNetworkError =
-    message.includes("network") ||
-    message.includes("failed to fetch") ||
-    message.includes("load failed");
-
-  if (isNetworkError || statusCode === 503) return ErrorCategory.NETWORK;
-  if (statusCode && statusCode >= 500) return ErrorCategory.SERVER;
-
-  return ErrorCategory.UNKNOWN;
+  return rules.find((r) => r.match())?.category ?? ErrorCategory.UNKNOWN;
 };
 
 const normalizeError = (error: unknown): Error => {
   if (error instanceof Error) return error;
-  const message =
-    typeof error === "string"
-      ? error
-      : JSON.stringify(error) || "Unknown error";
-  return new Error(message);
+  const message = typeof error === "string" ? error : JSON.stringify(error);
+  return new Error(message || "Unknown error occurred");
 };
+
+// --- Component ---
 
 interface ErrorFallbackProps {
   error: unknown;
@@ -82,6 +123,8 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   const router = useRouter();
   const routerState = useRouterState();
   const [showDetails, setShowDetails] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   const isDev = import.meta.env.DEV;
 
   const normalizedError = useMemo(() => normalizeError(error), [error]);
@@ -89,98 +132,123 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
     () => detectErrorCategory(normalizedError),
     [normalizedError],
   );
+  const config = ERROR_CONFIG[category];
 
-  const { title, description } = useMemo(() => {
-    switch (category) {
-      case ErrorCategory.AUTH:
-        return {
-          title: m.error_auth_required(),
-          description: m.error_auth_desc(),
-        };
-      case ErrorCategory.ACCESS:
-        return {
-          title: m.error_access_denied(),
-          description: m.error_access_desc(),
-        };
-      case ErrorCategory.NETWORK:
-        return {
-          title: m.error_network(),
-          description: m.error_network_desc(),
-        };
-      case ErrorCategory.SERVER:
-        return { title: m.error_server(), description: m.error_server_desc() };
-      default:
-        return {
-          title: m.error_unexpected(),
-          description: m.error_unexpected_desc(),
-        };
+  const handleRetry = useCallback(() => {
+    reset ? reset() : router.invalidate();
+  }, [reset, router]);
+
+  const handleReload = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  const handleCopyStack = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${normalizedError.message}\n\n${normalizedError.stack}`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy", err);
     }
-  }, [category]);
+  }, [normalizedError]);
 
-  const styles = STYLES[category];
-  const IconComponent = ICON_MAP[category];
-
-  const handleRetry = () => (reset ? reset() : router.invalidate());
-  const handleReload = () => window.location.reload();
+  const IconComponent = config.icon;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 min-h-[60vh] w-full bg-base-100">
-      <div className="card w-full max-w-lg bg-base-100 shadow-xl border border-base-200">
-        <div className="card-body items-center text-center">
-          {/* Icon Container */}
+    <div className="flex min-h-[50vh] w-full flex-col items-center justify-center bg-base-100 p-6 text-base-content">
+      <div className="w-full max-w-lg animate-in fade-in zoom-in duration-300">
+        {/* Main Content - Unified Style with 404 */}
+        <div className="text-center">
+          {/* Visual Icon */}
           <div
-            className={`p-4 rounded-full bg-opacity-10 mb-2 ${styles.bg} ${styles.text}`}
+            className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl ${config.style.wrapper} shadow-sm ring-1 ring-base-content/5`}
           >
-            <IconComponent className="h-12 w-12" aria-hidden="true" />
+            <IconComponent
+              className={`h-10 w-10 ${config.style.icon} ${config.animate ? "animate-pulse" : ""}`}
+              strokeWidth={1.5}
+            />
           </div>
 
-          {/* Title & Description */}
-          <h2 className="card-title text-2xl font-bold mb-1">{title}</h2>
-          <p className="text-base-content/70">{description}</p>
-
-          {/* Dev Route Info */}
-          {isDev && (
-            <div className="badge badge-ghost badge-sm mt-4 font-mono">
-              Route: {routerState.location.pathname}
-            </div>
-          )}
+          {/* Typography */}
+          <p className="text-sm font-bold leading-7 text-base-content/40 uppercase tracking-widest">
+            {m.error_generic_title?.() ?? "System Error"}
+          </p>
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+            {config.getTitle()}
+          </h2>
+          <p className="mt-4 text-lg leading-7 text-base-content/60">
+            {config.getDesc()}
+          </p>
 
           {/* Actions */}
-          <div className="card-actions justify-center mt-8 w-full gap-3">
-            <button onClick={handleRetry} className="btn btn-primary px-8">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={handleRetry}
+              className="btn btn-primary w-full sm:w-auto min-w-[140px] gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+            >
+              <RotateCcw className="h-4 w-4" />
               {m.action_retry()}
             </button>
-            <button onClick={handleReload} className="btn btn-ghost">
+            <button
+              onClick={handleReload}
+              className="btn btn-ghost w-full sm:w-auto min-w-[140px] gap-2 border border-transparent hover:border-base-content/10 hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-base-content/20"
+            >
+              <RefreshCcw className="h-4 w-4" />
               {m.action_reload()}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Developer Details (Stack Trace) */}
-      {isDev && (
-        <div className="w-full max-w-lg mt-6">
-          <div className="collapse collapse-arrow border border-base-300 bg-base-200 rounded-box">
-            <input
-              type="checkbox"
-              checked={showDetails}
-              onChange={() => setShowDetails(!showDetails)}
-            />
-            <div className="collapse-title text-sm font-medium opacity-70">
-              {m.dev_details()}
-            </div>
-            <div className="collapse-content">
-              <div className="mockup-code bg-[#1a1a1a] text-[10px] sm:text-xs shadow-lg max-h-96 overflow-auto">
-                <pre className="px-4 py-2">
-                  <code className="text-error">
-                    {normalizedError.stack || normalizedError.message}
-                  </code>
-                </pre>
+        {/* Developer Section (Collapsible & Soft) */}
+        {isDev && (
+          <div className="mt-12 rounded-xl border border-base-200 bg-base-200/40 overflow-hidden">
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="flex w-full items-center justify-between px-6 py-3 text-xs font-medium uppercase tracking-wider text-base-content/50 hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none"
+            >
+              <span className="flex items-center gap-2">
+                <AlertTriangle className="h-3 w-3" />
+                {m.dev_details()}
+              </span>
+              {showDetails ? (
+                <ChevronUp className="h-3 w-3" />
+              ) : (
+                <ChevronDown className="h-3 w-3" />
+              )}
+            </button>
+
+            {showDetails && (
+              <div className="bg-base-200/60 px-6 py-4 text-left border-t border-base-200 animate-in slide-in-from-top-2 duration-200">
+                <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
+                  <ArrowRight className="h-3 w-3" />
+                  Route:{" "}
+                  <span className="text-base-content/80">
+                    {routerState.location.pathname}
+                  </span>
+                </div>
+
+                <div className="relative rounded-lg border border-base-content/5 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/80 shadow-sm">
+                  <button
+                    onClick={handleCopyStack}
+                    className="absolute right-2 top-2 rounded bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors tooltip tooltip-left"
+                    data-tip={copied ? m.copied?.() : m.copy_stack?.()}
+                  >
+                    <Copy className="h-3 w-3" />
+                  </button>
+                  <div className="max-h-48 overflow-auto whitespace-pre-wrap break-words pr-8 custom-scrollbar">
+                    <span className="block text-error font-bold mb-2">
+                      {normalizedError.name}: {normalizedError.message}
+                    </span>
+                    {normalizedError.stack}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
