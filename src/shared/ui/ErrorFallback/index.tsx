@@ -1,6 +1,5 @@
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
-  AlertTriangle,
   ArrowRight,
   ChevronDown,
   ChevronUp,
@@ -12,6 +11,7 @@ import {
   RotateCcw,
   ServerCrash,
   ShieldBan,
+  Terminal,
   Wifi,
 } from "lucide-react";
 import { FC, useCallback, useMemo, useState } from "react";
@@ -29,7 +29,7 @@ enum ErrorCategory {
 
 interface ErrorConfig {
   icon: LucideIcon;
-  style: { wrapper: string; icon: string };
+  style: { wrapper: string; icon: string; ring: string };
   getTitle: () => string;
   getDesc: () => string;
   animate?: boolean;
@@ -38,32 +38,52 @@ interface ErrorConfig {
 const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.AUTH]: {
     icon: LockKeyhole,
-    style: { wrapper: "bg-warning/10", icon: "text-warning" },
+    style: {
+      wrapper: "bg-amber-50",
+      icon: "text-amber-600",
+      ring: "ring-amber-100",
+    },
     getTitle: () => m.error_auth_required(),
     getDesc: () => m.error_auth_desc(),
   },
   [ErrorCategory.ACCESS]: {
     icon: ShieldBan,
-    style: { wrapper: "bg-error/10", icon: "text-error" },
+    style: {
+      wrapper: "bg-red-50",
+      icon: "text-red-600",
+      ring: "ring-red-100",
+    },
     getTitle: () => m.error_access_denied(),
     getDesc: () => m.error_access_desc(),
   },
   [ErrorCategory.NETWORK]: {
     icon: Wifi,
-    style: { wrapper: "bg-info/10", icon: "text-info" },
+    style: {
+      wrapper: "bg-blue-50",
+      icon: "text-blue-600",
+      ring: "ring-blue-100",
+    },
     getTitle: () => m.error_network(),
     getDesc: () => m.error_network_desc(),
     animate: true,
   },
   [ErrorCategory.SERVER]: {
     icon: ServerCrash,
-    style: { wrapper: "bg-error/10", icon: "text-error" },
+    style: {
+      wrapper: "bg-rose-50",
+      icon: "text-rose-600",
+      ring: "ring-rose-100",
+    },
     getTitle: () => m.error_server(),
     getDesc: () => m.error_server_desc(),
   },
   [ErrorCategory.UNKNOWN]: {
     icon: CircleAlert,
-    style: { wrapper: "bg-base-content/5", icon: "text-base-content/60" },
+    style: {
+      wrapper: "bg-slate-100",
+      icon: "text-slate-600",
+      ring: "ring-slate-200",
+    },
     getTitle: () => m.error_unexpected(),
     getDesc: () => m.error_unexpected_desc(),
   },
@@ -142,7 +162,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
 
   const handleCopyStack = useCallback(async () => {
     try {
-      // Добавляем URL и время к стеку, чтобы было полезнее для разработчика
       const debugInfo = [
         `Error: ${normalizedError.name}: ${normalizedError.message}`,
         `Location: ${window.location.href}`,
@@ -162,12 +181,13 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   const IconComponent = config.icon;
 
   return (
-    <div className="flex min-h-[50vh] w-full flex-col items-center justify-center bg-base-100 p-6 text-base-content">
-      <div className="w-full max-w-lg animate-in fade-in zoom-in duration-300">
-        {/* Main Content */}
-        <div className="text-center">
+    <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        {/* Main Content Padding */}
+        <div className="p-8 sm:p-10 text-center">
+          {/* Dynamic Icon */}
           <div
-            className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl ${config.style.wrapper} shadow-sm ring-1 ring-base-content/5`}
+            className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl ${config.style.wrapper} ring-1 ${config.style.ring}`}
           >
             <IconComponent
               className={`h-10 w-10 ${config.style.icon} ${config.animate ? "animate-pulse" : ""}`}
@@ -175,27 +195,29 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
             />
           </div>
 
-          <p className="text-sm font-bold leading-7 text-base-content/40 uppercase tracking-widest">
-            {m.error_generic_title?.() ?? "System Error"}
+          {/* Titles */}
+          <p className="text-xs font-bold leading-7 text-slate-400 uppercase tracking-widest mb-1">
+            {m.error_generic_title?.() ?? "System Issue"}
           </p>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-3">
             {config.getTitle()}
           </h2>
-          <p className="mt-4 text-lg leading-7 text-base-content/60">
+          <p className="text-slate-500 text-lg leading-relaxed mb-8">
             {config.getDesc()}
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={handleRetry}
-              className="btn btn-primary w-full sm:w-auto min-w-[140px] gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
             >
               <RotateCcw className="h-4 w-4" />
               {m.action_retry()}
             </button>
             <button
               onClick={handleReload}
-              className="btn btn-ghost w-full sm:w-auto min-w-[140px] gap-2 border border-transparent hover:border-base-content/10 hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-base-content/20"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-white text-slate-700 border border-slate-200 font-medium hover:bg-slate-50 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200"
             >
               <RefreshCcw className="h-4 w-4" />
               {m.action_reload()}
@@ -203,46 +225,49 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
           </div>
         </div>
 
-        {/* Developer Section - теперь доступен ВСЕГДА */}
-        <div className="mt-12 rounded-xl border border-base-200 bg-base-200/40 overflow-hidden">
+        {/* Developer Section */}
+        <div className="border-t border-slate-100 bg-slate-50/50">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex w-full items-center justify-between px-6 py-3 text-xs font-medium uppercase tracking-wider text-base-content/50 hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none"
+            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors focus:outline-none"
           >
             <span className="flex items-center gap-2">
-              <AlertTriangle className="h-3 w-3" />
+              <Terminal className="h-4 w-4" />
               {m.dev_details()}
             </span>
             {showDetails ? (
-              <ChevronUp className="h-3 w-3" />
+              <ChevronUp className="h-4 w-4" />
             ) : (
-              <ChevronDown className="h-3 w-3" />
+              <ChevronDown className="h-4 w-4" />
             )}
           </button>
 
           {showDetails && (
-            <div className="bg-base-200/60 px-6 py-4 text-left border-t border-base-200 animate-in slide-in-from-top-2 duration-200">
-              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
+            <div className="px-8 pb-8 pt-2 animate-in slide-in-from-top-2 duration-200">
+              <div className="mb-3 flex items-center gap-2 text-xs text-slate-500 font-mono">
                 <ArrowRight className="h-3 w-3" />
-                Route:{" "}
-                <span className="text-base-content/80">
+                Path:{" "}
+                <span className="text-slate-700 bg-slate-200 px-1.5 py-0.5 rounded">
                   {routerState.location.pathname}
                 </span>
               </div>
 
-              <div className="relative rounded-lg border border-base-content/5 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/80 shadow-sm">
+              <div className="relative rounded-lg border border-slate-200 bg-white p-4 font-mono text-[11px] leading-relaxed text-slate-600 shadow-sm overflow-hidden">
                 <button
                   onClick={handleCopyStack}
-                  className="absolute right-2 top-2 rounded bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors tooltip tooltip-left"
-                  data-tip={copied ? m.copied?.() : m.copy_stack?.()}
+                  className="absolute right-2 top-2 rounded-md bg-slate-100 p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                  title={copied ? "Copied" : "Copy Stack Trace"}
                 >
-                  <Copy className="h-3 w-3" />
+                  <Copy className="h-3.5 w-3.5" />
                 </button>
-                <div className="max-h-48 overflow-auto whitespace-pre-wrap break-words pr-8 custom-scrollbar">
-                  <span className="block text-error font-bold mb-2">
+
+                <div className="max-h-48 overflow-auto pr-8 custom-scrollbar">
+                  <span className="block text-red-600 font-bold mb-2 break-words">
                     {normalizedError.name}: {normalizedError.message}
                   </span>
-                  {normalizedError.stack}
+                  <div className="whitespace-pre-wrap break-words opacity-80">
+                    {normalizedError.stack || "No stack trace available"}
+                  </div>
                 </div>
               </div>
             </div>

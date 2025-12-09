@@ -26,8 +26,6 @@ export const HomePage: FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
-      {/* 1. Header Section */}
-      {/* Добавил py-3, чтобы увеличить вертикальные отступы, и backdrop-blur для красоты при скролле */}
       <div className="bg-white/90 backdrop-blur border-b border-slate-200 sticky top-0 z-40 py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
@@ -37,7 +35,6 @@ export const HomePage: FC = () => {
       </div>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Заголовок страницы */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             Project Capabilities
@@ -48,11 +45,8 @@ export const HomePage: FC = () => {
           </p>
         </div>
 
-        {/* Основная сетка */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* --- ЛЕВАЯ КОЛОНКА: Инструменты --- */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Client State Card */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
               <div className="flex items-center gap-2 mb-4 text-indigo-600">
                 <MousePointer2 className="w-5 h-5" />
@@ -68,7 +62,6 @@ export const HomePage: FC = () => {
               </div>
             </div>
 
-            {/* Developer Controls Card */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
               <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
                 <Activity className="w-4 h-4" />
@@ -83,7 +76,6 @@ export const HomePage: FC = () => {
                   Simulate Runtime Error
                 </button>
 
-                {/* Кнопка Build Stats с подписью */}
                 <a
                   href="/_stats.html"
                   className="btn h-auto py-2 w-full flex-row justify-start flex-nowrap text-slate-600 bg-slate-50 hover:bg-slate-100 border-none normal-case gap-3"
@@ -102,7 +94,6 @@ export const HomePage: FC = () => {
             </div>
           </div>
 
-          {/* --- ПРАВАЯ КОЛОНКА: GraphQL Данные --- */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-emerald-600">
@@ -116,7 +107,6 @@ export const HomePage: FC = () => {
               )}
             </div>
 
-            {/* Скелетоны загрузки */}
             {fetching && !data && (
               <div className="space-y-4 animate-pulse">
                 <div className="h-56 bg-slate-200 rounded-xl w-full"></div>
@@ -128,7 +118,6 @@ export const HomePage: FC = () => {
               </div>
             )}
 
-            {/* Ошибка */}
             {error && (
               <div className="alert alert-error rounded-xl shadow-sm bg-red-50 border-red-200 text-red-800">
                 <AlertTriangle className="stroke-current shrink-0 h-6 w-6" />
@@ -139,10 +128,8 @@ export const HomePage: FC = () => {
               </div>
             )}
 
-            {/* Данные */}
             {data?.country && (
               <>
-                {/* Hero Card */}
                 <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-md p-8 sm:p-10 transition-transform hover:scale-[1.01] duration-300">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center z-10 relative gap-6">
                     <div>
@@ -160,12 +147,10 @@ export const HomePage: FC = () => {
                       {data.country.emoji}
                     </div>
                   </div>
-                  {/* Фоновый декор */}
                   <div className="absolute top-0 right-0 w-80 h-80 bg-white opacity-5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
                   <div className="absolute bottom-0 left-0 w-60 h-60 bg-indigo-900 opacity-20 rounded-full blur-2xl -ml-10 -mb-10 pointer-events-none"></div>
                 </div>
 
-                {/* Details Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="card bg-white border border-slate-200 shadow-sm p-5 hover:border-blue-300 hover:shadow-md transition-all">
                     <div className="flex items-center gap-2 text-slate-400 mb-3">

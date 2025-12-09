@@ -1,66 +1,40 @@
-import { Link, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, FileQuestion, Home } from "lucide-react";
-import React, { useCallback } from "react";
+import { Link } from "@tanstack/react-router";
+import { FileQuestion, Home } from "lucide-react";
+import React from "react";
 import * as m from "../../../generated/paraglide/messages";
 
-// Utility for View Transitions (Progressive Enhancement)
-const navigateWithTransition = (callback: () => void) => {
-  if (!document.startViewTransition) {
-    callback();
-    return;
-  }
-  document.startViewTransition(() => {
-    callback();
-  });
-};
-
 export const NotFoundPage: React.FC = () => {
-  const router = useRouter();
-
-  const handleGoBack = useCallback(() => {
-    navigateWithTransition(() => router.history.back());
-  }, [router]);
-
   return (
-    <main className="grid min-h-[100dvh] place-items-center bg-base-100 px-6 py-12 lg:px-8">
-      <div className="text-center w-full max-w-lg animate-in fade-in zoom-in duration-300">
-        {/* Unified Visual Icon Container */}
-        <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-base-200/50 shadow-sm ring-1 ring-base-content/5">
-          <FileQuestion
-            className="h-10 w-10 text-primary opacity-80"
-            strokeWidth={1.5}
-          />
+    <main className="relative min-h-screen w-full bg-slate-50 flex items-center justify-center p-4 overflow-hidden font-sans">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2" />
+
+      <div className="relative z-10 w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-xl p-8 sm:p-12 text-center animate-in fade-in zoom-in duration-300">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+          <FileQuestion className="h-10 w-10" strokeWidth={1.5} />
         </div>
 
-        {/* Typography */}
-        <p className="text-sm font-bold leading-7 text-primary uppercase tracking-widest opacity-80">
+        <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-3">
           404 Error
         </p>
-        <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-base-content sm:text-5xl">
+
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-4">
           {m.not_found_title?.() ?? "Page not found"}
         </h1>
-        <p className="mt-4 text-lg leading-7 text-base-content/60">
+
+        <p className="text-base text-slate-500 leading-relaxed mb-8">
           {m.not_found_message()}
         </p>
 
-        {/* Actions */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             to="/"
             preload="viewport"
-            className="btn btn-primary w-full sm:w-auto min-w-[140px] gap-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
           >
             <Home className="h-4 w-4" />
             {m.back_to_home()}
           </Link>
-
-          <button
-            onClick={handleGoBack}
-            className="btn btn-ghost w-full sm:w-auto min-w-[140px] gap-2 group border border-transparent hover:border-base-content/10 hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-base-content/20"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Go back
-          </button>
         </div>
       </div>
     </main>
