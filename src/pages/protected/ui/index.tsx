@@ -1,4 +1,5 @@
 import { useAuth } from "@shared/auth";
+import { useRouter } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
 import {
   CheckCircle2,
@@ -9,11 +10,17 @@ import {
   ShieldCheck,
   User,
 } from "lucide-react";
-import type { FC } from "react";
+import { FC, useCallback } from "react";
 
 export const ProtectedPage: FC = () => {
   const auth = useAuth();
   const user = auth.user?.profile;
+  const router = useRouter();
+
+  const handleSignOut = useCallback(async () => {
+    await auth.removeUser();
+    router.invalidate();
+  }, [auth, router]);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
@@ -139,7 +146,7 @@ export const ProtectedPage: FC = () => {
               Session secured via OIDC
             </span>
             <button
-              onClick={() => void auth.removeUser()}
+              onClick={handleSignOut}
               className="btn btn-sm h-10 px-6 bg-white border-slate-200 text-red-600 hover:bg-red-50 hover:border-red-200 hover:text-red-700 shadow-sm normal-case font-medium"
             >
               <LogOut className="w-4 h-4 mr-2" />
