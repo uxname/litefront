@@ -1,11 +1,17 @@
 import { useAuth } from "@shared/auth";
-import { Link } from "@tanstack/react-router";
-import { FC } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
+import { FC, useCallback } from "react";
 
 import logo from "../../../../.github/logo.svg";
 
 export const Header: FC = () => {
   const auth = useAuth();
+  const router = useRouter();
+
+  const handleSignOut = useCallback(async () => {
+    await auth.removeUser();
+    router.invalidate();
+  }, [auth, router]);
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -35,7 +41,7 @@ export const Header: FC = () => {
                 {auth.user?.profile.email || auth.user?.profile.sub}
               </span>
               <button
-                onClick={() => void auth.removeUser()}
+                onClick={handleSignOut}
                 className="btn btn-ghost text-error hover:bg-error/10 hover:text-error"
               >
                 Logout
