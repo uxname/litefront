@@ -1,5 +1,6 @@
 import { AuthContextProps, useAuth } from "@shared/auth";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
+import { Toaster } from "@shared/ui/Toaster";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import React, { useMemo } from "react";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
@@ -28,6 +29,7 @@ const RootComponent: React.FC = () => {
   return (
     <Provider value={graphqlClient}>
       <Outlet />
+      <Toaster closeButton />
       {isDevelopment && <TanStackRouterDevtools />}
     </Provider>
   );
