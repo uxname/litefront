@@ -5,26 +5,27 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
 export const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
-      theme="system"
+      theme="light"
       className="toaster group"
       position="bottom-right"
       richColors={false}
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-base-100 group-[.toaster]:text-base-content group-[.toaster]:border-base-content/10 group-[.toaster]:shadow-lg group-[.toaster]:rounded-xl font-sans",
-          description: "group-[.toast]:text-base-content/60",
+            "group toast group-[.toaster]:bg-white group-[.toaster]:text-slate-900 group-[.toaster]:border-slate-200 group-[.toaster]:shadow-xl group-[.toaster]:rounded-xl font-sans group-[.toaster]:p-4",
+          description: "group-[.toast]:text-slate-500 font-medium",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-content font-bold",
+            "group-[.toast]:bg-slate-900 group-[.toast]:text-white font-medium rounded-lg hover:group-[.toast]:bg-slate-800 transition-colors",
           cancelButton:
-            "group-[.toast]:bg-base-200 group-[.toast]:text-base-content",
+            "group-[.toast]:bg-slate-100 group-[.toast]:text-slate-600 font-medium rounded-lg hover:group-[.toast]:bg-slate-200 transition-colors",
+
           error:
-            "group-[.toaster]:!bg-error/10 group-[.toaster]:!text-error group-[.toaster]:!border-error/20",
+            "group-[.toaster]:!bg-red-50 group-[.toaster]:!text-red-800 group-[.toaster]:!border-red-200",
           success:
-            "group-[.toaster]:!bg-success/10 group-[.toaster]:!text-success group-[.toaster]:!border-success/20",
+            "group-[.toaster]:!bg-emerald-50 group-[.toaster]:!text-emerald-800 group-[.toaster]:!border-emerald-200",
           warning:
-            "group-[.toaster]:!bg-warning/10 group-[.toaster]:!text-warning group-[.toaster]:!border-warning/20",
-          info: "group-[.toaster]:!bg-info/10 group-[.toaster]:!text-info group-[.toaster]:!border-info/20",
+            "group-[.toaster]:!bg-amber-50 group-[.toaster]:!text-amber-800 group-[.toaster]:!border-amber-200",
+          info: "group-[.toaster]:!bg-blue-50 group-[.toaster]:!text-blue-800 group-[.toaster]:!border-blue-200",
         },
       }}
       {...props}
