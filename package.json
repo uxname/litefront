@@ -41,6 +41,7 @@
   "dependencies": {
     "@tanstack/react-router": "^1.140.0",
     "@tanstack/router-devtools": "^1.140.0",
+    "lucide-react": "^0.556.0",
     "oidc-client-ts": "^3.4.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
