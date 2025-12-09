@@ -51,7 +51,6 @@ export const Header: FC = () => {
           )}
         </nav>
       </div>
-      <div className="divider my-2"></div>
     </div>
   );
 };

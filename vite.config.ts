@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
+import { visualizer } from "rollup-plugin-visualizer";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
@@ -117,6 +118,11 @@ export default defineConfig(async (): Promise<UserConfig> => {
           enabled: true,
         },
       }),
+      visualizer({
+        emitFile: true,
+        filename: "_stats.html",
+        template: "flamegraph",
+      }), // must be last in plugins array
     ],
     test: {
       exclude: ["tests/e2e", "node_modules", "dist"],
