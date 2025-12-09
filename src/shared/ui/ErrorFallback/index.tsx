@@ -125,8 +125,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const isDev = import.meta.env.DEV;
-
   const normalizedError = useMemo(() => normalizeError(error), [error]);
   const category = useMemo(
     () => detectErrorCategory(normalizedError),
@@ -144,9 +142,16 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
 
   const handleCopyStack = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(
-        `${normalizedError.message}\n\n${normalizedError.stack}`,
-      );
+      // Добавляем URL и время к стеку, чтобы было полезнее для разработчика
+      const debugInfo = [
+        `Error: ${normalizedError.name}: ${normalizedError.message}`,
+        `Location: ${window.location.href}`,
+        `Time: ${new Date().toISOString()}`,
+        `Stack:`,
+        normalizedError.stack,
+      ].join("\n");
+
+      await navigator.clipboard.writeText(debugInfo);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -159,9 +164,8 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   return (
     <div className="flex min-h-[50vh] w-full flex-col items-center justify-center bg-base-100 p-6 text-base-content">
       <div className="w-full max-w-lg animate-in fade-in zoom-in duration-300">
-        {/* Main Content - Unified Style with 404 */}
+        {/* Main Content */}
         <div className="text-center">
-          {/* Visual Icon */}
           <div
             className={`mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-3xl ${config.style.wrapper} shadow-sm ring-1 ring-base-content/5`}
           >
@@ -171,7 +175,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
             />
           </div>
 
-          {/* Typography */}
           <p className="text-sm font-bold leading-7 text-base-content/40 uppercase tracking-widest">
             {m.error_generic_title?.() ?? "System Error"}
           </p>
@@ -182,7 +185,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
             {config.getDesc()}
           </p>
 
-          {/* Actions */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={handleRetry}
@@ -201,53 +203,51 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
           </div>
         </div>
 
-        {/* Developer Section (Collapsible & Soft) */}
-        {isDev && (
-          <div className="mt-12 rounded-xl border border-base-200 bg-base-200/40 overflow-hidden">
-            <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="flex w-full items-center justify-between px-6 py-3 text-xs font-medium uppercase tracking-wider text-base-content/50 hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none"
-            >
-              <span className="flex items-center gap-2">
-                <AlertTriangle className="h-3 w-3" />
-                {m.dev_details()}
-              </span>
-              {showDetails ? (
-                <ChevronUp className="h-3 w-3" />
-              ) : (
-                <ChevronDown className="h-3 w-3" />
-              )}
-            </button>
+        {/* Developer Section - теперь доступен ВСЕГДА */}
+        <div className="mt-12 rounded-xl border border-base-200 bg-base-200/40 overflow-hidden">
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="flex w-full items-center justify-between px-6 py-3 text-xs font-medium uppercase tracking-wider text-base-content/50 hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none"
+          >
+            <span className="flex items-center gap-2">
+              <AlertTriangle className="h-3 w-3" />
+              {m.dev_details()}
+            </span>
+            {showDetails ? (
+              <ChevronUp className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
+          </button>
 
-            {showDetails && (
-              <div className="bg-base-200/60 px-6 py-4 text-left border-t border-base-200 animate-in slide-in-from-top-2 duration-200">
-                <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
-                  <ArrowRight className="h-3 w-3" />
-                  Route:{" "}
-                  <span className="text-base-content/80">
-                    {routerState.location.pathname}
+          {showDetails && (
+            <div className="bg-base-200/60 px-6 py-4 text-left border-t border-base-200 animate-in slide-in-from-top-2 duration-200">
+              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
+                <ArrowRight className="h-3 w-3" />
+                Route:{" "}
+                <span className="text-base-content/80">
+                  {routerState.location.pathname}
+                </span>
+              </div>
+
+              <div className="relative rounded-lg border border-base-content/5 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/80 shadow-sm">
+                <button
+                  onClick={handleCopyStack}
+                  className="absolute right-2 top-2 rounded bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors tooltip tooltip-left"
+                  data-tip={copied ? m.copied?.() : m.copy_stack?.()}
+                >
+                  <Copy className="h-3 w-3" />
+                </button>
+                <div className="max-h-48 overflow-auto whitespace-pre-wrap break-words pr-8 custom-scrollbar">
+                  <span className="block text-error font-bold mb-2">
+                    {normalizedError.name}: {normalizedError.message}
                   </span>
-                </div>
-
-                <div className="relative rounded-lg border border-base-content/5 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/80 shadow-sm">
-                  <button
-                    onClick={handleCopyStack}
-                    className="absolute right-2 top-2 rounded bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors tooltip tooltip-left"
-                    data-tip={copied ? m.copied?.() : m.copy_stack?.()}
-                  >
-                    <Copy className="h-3 w-3" />
-                  </button>
-                  <div className="max-h-48 overflow-auto whitespace-pre-wrap break-words pr-8 custom-scrollbar">
-                    <span className="block text-error font-bold mb-2">
-                      {normalizedError.name}: {normalizedError.message}
-                    </span>
-                    {normalizedError.stack}
-                  </div>
+                  {normalizedError.stack}
                 </div>
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
-export default defineConfig(async ({ mode }): Promise<UserConfig> => {
+export default defineConfig(async (): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT) || 3000;
@@ -27,7 +27,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       strictPort: true,
     },
     build: {
-      sourcemap: mode === "development" ? true : "hidden",
+      sourcemap: true,
       target: "esnext",
       rollupOptions: {
         output: {
