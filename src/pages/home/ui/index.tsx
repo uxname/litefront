@@ -1,5 +1,5 @@
 import { useGetCountryQuery } from "@generated/graphql.tsx";
-import { Counter } from "@shared/counter/ui";
+import { Counter } from "@shared/counter";
 import { Header } from "@widgets/Header";
 import {
   Activity,
