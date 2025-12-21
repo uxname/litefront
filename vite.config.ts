@@ -7,6 +7,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
+import sitemap from "vite-plugin-sitemap";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
@@ -16,6 +17,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT) || 3000;
+  const hostname = process.env.VITE_BASE_URL || "http://localhost:3000";
 
   return {
     server: {
@@ -80,6 +82,16 @@ export default defineConfig(async (): Promise<UserConfig> => {
         target: "react",
         autoCodeSplitting: true,
         generatedRouteTree: "./src/generated/routeTree.gen.ts",
+      }),
+      sitemap({
+        hostname,
+        robots: [
+          {
+            userAgent: "*",
+            allow: "/",
+            disallow: ["/callback", "/protected", "/404"],
+          },
+        ],
       }),
       react({
         babel: {

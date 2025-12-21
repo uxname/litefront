@@ -92,6 +92,7 @@
     "vite": "^7.2.7",
     "vite-plugin-image-optimizer": "^2.0.3",
     "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-sitemap": "^0.8.2",
     "vite-plugin-version-mark": "^0.2.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.15",
