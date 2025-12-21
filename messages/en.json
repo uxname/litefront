@@ -3,6 +3,7 @@
   "not_found_message": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
   "not_found_title": "Page not found",
   "back_to_home": "Back to home",
+  "go_back": "Go back",
   "error_generic_title": "Something went wrong",
   "error_auth_required": "Authentication required",
   "error_access_denied": "Access denied",

@@ -5,6 +5,7 @@ query GetCountry($code: ID!) {
     capital
     emoji
     currency
+    phone
     languages {
       code
       name

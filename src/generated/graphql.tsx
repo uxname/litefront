@@ -139,7 +139,7 @@ export type GetCountryQueryVariables = Exact<{
 }>;
 
 
-export type GetCountryQuery = { __typename?: 'Query', country?: { __typename?: 'Country', name: string, native: string, capital?: string | null, emoji: string, currency?: string | null, languages: Array<{ __typename?: 'Language', code: string, name: string }> } | null };
+export type GetCountryQuery = { __typename?: 'Query', country?: { __typename?: 'Country', name: string, native: string, capital?: string | null, emoji: string, currency?: string | null, phone: string, languages: Array<{ __typename?: 'Language', code: string, name: string }> } | null };
 
 
 export const GetCountryDocument = gql`
@@ -150,6 +150,7 @@ export const GetCountryDocument = gql`
     capital
     emoji
     currency
+    phone
     languages {
       code
       name
