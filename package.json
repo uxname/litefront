@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "____________________BUILD AND RUN______________________________________": "",
-    "build": "npx run-p check build:vite",
+    "build": "npx run-p check && npm run build:vite",
     "build:vite": "vite build",
     "start:dev": "vite",
     "start:prod": "vite preview",

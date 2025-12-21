@@ -1,3 +1,4 @@
+import { m } from "@generated/paraglide/messages";
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -15,7 +16,6 @@ import {
   Wifi,
 } from "lucide-react";
 import { FC, useCallback, useMemo, useState } from "react";
-import * as m from "../../../generated/paraglide/messages";
 
 // --- Configuration Strategy ---
 
