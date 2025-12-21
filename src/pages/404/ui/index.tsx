@@ -1,7 +1,7 @@
+import { m } from "@generated/paraglide/messages";
 import { Link } from "@tanstack/react-router";
 import { Ghost, Home, MoveLeft, Search } from "lucide-react";
 import React from "react";
-import * as m from "../../../generated/paraglide/messages";
 
 export const NotFoundPage: React.FC = () => {
   const handleGoBack = () => {
