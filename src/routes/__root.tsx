@@ -1,7 +1,12 @@
 import { AuthContextProps, useAuth } from "@shared/auth";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { Toaster } from "@shared/ui/Toaster";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Outlet,
+  Scripts,
+} from "@tanstack/react-router";
 import React, { useMemo } from "react";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
 
@@ -28,8 +33,10 @@ const RootComponent: React.FC = () => {
 
   return (
     <Provider value={graphqlClient}>
+      <HeadContent />
       <Outlet />
       <Toaster closeButton />
+      <Scripts />
       {isDevelopment && <TanStackRouterDevtools />}
     </Provider>
   );
@@ -57,4 +64,30 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <ErrorFallback error={error} reset={reset} />
     </div>
   ),
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: "LiteFront",
+      },
+      {
+        name: "description",
+        content: "Modern Enterprise Boilerplate with React 19, GraphQL and FSD",
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "LiteFront App",
+      },
+    ],
+  }),
 });

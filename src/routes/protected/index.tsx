@@ -9,5 +9,21 @@ export const Route = createFileRoute("/protected/")({
       });
     }
   },
+  head: () => ({
+    meta: [
+      {
+        title: "Dashboard | LiteFront",
+      },
+      {
+        name: "description",
+        content:
+          "Secure user dashboard area. View your session claims and manage identity.",
+      },
+      {
+        name: "robots",
+        content: "noindex, nofollow",
+      },
+    ],
+  }),
   component: ProtectedPage,
 });

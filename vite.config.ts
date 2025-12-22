@@ -101,6 +101,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       vitePluginVersionMark({
         ifLog: true,
         ifGlobal: true,
+        ifMeta: false,
         command: 'git log -1 --pretty=format:"%H %s"',
       }),
       viteDotenvChecker(),
@@ -134,7 +135,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
         emitFile: true,
         filename: "_stats.html",
         template: "flamegraph",
-      }), // must be last in plugins array
+      }),
     ],
     test: {
       exclude: ["tests/e2e", "node_modules", "dist"],
