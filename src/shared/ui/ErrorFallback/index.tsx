@@ -1,5 +1,4 @@
 import { m } from "@generated/paraglide/messages";
-import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
   ChevronDown,
@@ -7,7 +6,7 @@ import {
   CircleAlert,
   Copy,
   LockKeyhole,
-  LucideIcon,
+  type LucideIcon,
   RefreshCcw,
   RotateCcw,
   ServerCrash,
@@ -15,9 +14,7 @@ import {
   Terminal,
   Wifi,
 } from "lucide-react";
-import { FC, useCallback, useMemo, useState } from "react";
-
-// --- Configuration Strategy ---
+import { type FC, useCallback, useMemo, useState } from "react";
 
 enum ErrorCategory {
   AUTH = "AUTH",
@@ -89,8 +86,6 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   },
 };
 
-// --- Helpers ---
-
 const ERROR_REGEX = /\b(401|403|404|500|502|503)\b/;
 
 const detectErrorCategory = (error: Error): ErrorCategory => {
@@ -132,16 +127,19 @@ const normalizeError = (error: unknown): Error => {
   return new Error(message || "Unknown error occurred");
 };
 
-// --- Component ---
-
 interface ErrorFallbackProps {
   error: unknown;
   reset?: () => void;
+  pathname?: string;
+  onRetry?: () => void;
 }
 
-export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
-  const router = useRouter();
-  const routerState = useRouterState();
+export const ErrorFallback: FC<ErrorFallbackProps> = ({
+  error,
+  reset,
+  pathname = window.location.pathname,
+  onRetry,
+}) => {
   const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -153,8 +151,14 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   const config = ERROR_CONFIG[category];
 
   const handleRetry = useCallback(() => {
-    reset ? reset() : router.invalidate();
-  }, [reset, router]);
+    if (onRetry) {
+      onRetry();
+    } else if (reset) {
+      reset();
+    } else {
+      window.location.reload();
+    }
+  }, [reset, onRetry]);
 
   const handleReload = useCallback(() => {
     window.location.reload();
@@ -183,9 +187,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
   return (
     <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-4 font-sans">
       <div className="w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-300">
-        {/* Main Content Padding */}
         <div className="p-8 sm:p-10 text-center">
-          {/* Dynamic Icon */}
           <div
             className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl ${config.style.wrapper} ring-1 ${config.style.ring}`}
           >
@@ -195,7 +197,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
             />
           </div>
 
-          {/* Titles */}
           <p className="text-xs font-bold leading-7 text-slate-400 uppercase tracking-widest mb-1">
             {m.error_generic_title?.() ?? "System Issue"}
           </p>
@@ -206,7 +207,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
             {config.getDesc()}
           </p>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={handleRetry}
@@ -225,7 +225,6 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
           </div>
         </div>
 
-        {/* Developer Section */}
         <div className="border-t border-slate-100 bg-slate-50/50">
           <button
             onClick={() => setShowDetails(!showDetails)}
@@ -248,7 +247,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({ error, reset }) => {
                 <ArrowRight className="h-3 w-3" />
                 Path:{" "}
                 <span className="text-slate-700 bg-slate-200 px-1.5 py-0.5 rounded">
-                  {routerState.location.pathname}
+                  {pathname}
                 </span>
               </div>
 

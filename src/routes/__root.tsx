@@ -6,6 +6,8 @@ import {
   HeadContent,
   Outlet,
   Scripts,
+  useRouter,
+  useRouterState,
 } from "@tanstack/react-router";
 import React, { useMemo } from "react";
 import { Client, cacheExchange, fetchExchange, Provider } from "urql";
@@ -59,11 +61,24 @@ function makeGraphQLClient(accessToken: string | undefined): Client {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
-  errorComponent: ({ error, reset }) => (
-    <div className="p-4 flex justify-center w-full">
-      <ErrorFallback error={error} reset={reset} />
-    </div>
-  ),
+  errorComponent: ({ error, reset }) => {
+    const router = useRouter();
+    const routerState = useRouterState();
+
+    return (
+      <div className="p-4 flex justify-center w-full">
+        <ErrorFallback
+          error={error}
+          reset={reset}
+          pathname={routerState.location.pathname}
+          onRetry={() => {
+            reset();
+            router.invalidate();
+          }}
+        />
+      </div>
+    );
+  },
   head: () => ({
     meta: [
       {

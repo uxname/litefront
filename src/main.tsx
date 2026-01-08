@@ -5,6 +5,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { GlobalErrorBoundary } from "./app/providers/GlobalErrorBoundary.tsx";
 
 if (import.meta.env.DEV) {
   import("react-scan").then(({ scan }) => {
@@ -50,8 +51,10 @@ const App = () => {
 
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
-    <AuthProvider {...oidcConfig} onSigninCallback={onSigninCallback}>
-      <App />
-    </AuthProvider>
+    <GlobalErrorBoundary>
+      <AuthProvider {...oidcConfig} onSigninCallback={onSigninCallback}>
+        <App />
+      </AuthProvider>
+    </GlobalErrorBoundary>
   </React.StrictMode>,
 );

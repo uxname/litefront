@@ -6,6 +6,7 @@ import { Header } from "@widgets/Header";
 import {
   ArrowRight,
   Box,
+  Bug,
   CheckCircle2,
   Code2,
   Database,
@@ -14,18 +15,56 @@ import {
   LayoutTemplate,
   Zap,
 } from "lucide-react";
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
+import { useErrorBoundary } from "react-error-boundary";
+
+const ErrorSimulator = () => {
+  const { showBoundary } = useErrorBoundary();
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-orange-500"></div>
+      <div className="mb-6 flex items-center gap-2 text-rose-600 bg-rose-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
+        <Bug className="w-3 h-3" /> Error Boundary Check
+      </div>
+
+      <div className="text-center space-y-1 mb-6">
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+          Debug Tool
+        </span>
+        <div className="text-xl font-bold text-slate-900 tracking-tight">
+          System Resilience
+        </div>
+      </div>
+
+      <button
+        onClick={() =>
+          showBoundary(
+            new Error(
+              "Simulated Critical Failure: This is a test of the Error Boundary system.",
+            ),
+          )
+        }
+        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-200 transition-all hover:bg-rose-700 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+      >
+        <Zap className="h-4 w-4 fill-white" />
+        Crash Application
+      </button>
+
+      <p className="text-xs text-slate-400 mt-4 text-center max-w-[220px]">
+        This will intentionally throw an error to test the fallback UI.
+      </p>
+    </div>
+  );
+};
 
 export const HomePage: FC = () => {
-  // Data Fetching (Server State)
   const [{ data, fetching, error }] = useGetCountryQuery({
     variables: { code: "BR" },
   });
 
-  // Local UI State for interactions
   const [isHovered, setIsHovered] = useState(false);
 
-  // Quick helper for visuals
   const features = [
     {
       icon: LayoutTemplate,
@@ -64,13 +103,11 @@ export const HomePage: FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      {/* Decorative Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-200/20 rounded-full blur-[100px]" />
         <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-[120px]" />
       </div>
 
-      {/* Header */}
       <div className="sticky top-0 z-50 border-b border-white/20 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -80,7 +117,6 @@ export const HomePage: FC = () => {
       </div>
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 flex flex-col gap-24">
-        {/* HERO SECTION */}
         <section className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wide mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <span className="relative flex h-2 w-2">
@@ -125,7 +161,6 @@ export const HomePage: FC = () => {
           </div>
         </section>
 
-        {/* FEATURES BENTO GRID */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, idx) => (
             <div
@@ -148,7 +183,6 @@ export const HomePage: FC = () => {
           ))}
         </section>
 
-        {/* LIVE DEMO SECTION (INTERACTIVE) */}
         <section className="relative">
           <div className="flex items-center gap-4 mb-8">
             <h2 className="text-3xl font-bold text-slate-900">
@@ -158,7 +192,6 @@ export const HomePage: FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left: Client State (Zustand) */}
             <div className="lg:col-span-4 flex flex-col gap-6">
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
@@ -170,9 +203,10 @@ export const HomePage: FC = () => {
                   State persists across navigation but resets on refresh.
                 </p>
               </div>
+
+              <ErrorSimulator />
             </div>
 
-            {/* Right: Server State (GraphQL) */}
             <div className="lg:col-span-8">
               <section
                 aria-label="Server Data Preview"
@@ -254,7 +288,6 @@ export const HomePage: FC = () => {
                     </div>
                   ) : null}
 
-                  {/* Dynamic background text */}
                   <div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] font-black text-slate-900/5 select-none pointer-events-none transition-all duration-700 ease-out ${isHovered ? "scale-110 opacity-10" : "scale-100"}`}
                   >
@@ -266,7 +299,6 @@ export const HomePage: FC = () => {
           </div>
         </section>
 
-        {/* FOOTER */}
         <footer className="border-t border-slate-200 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold">
