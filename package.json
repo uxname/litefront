@@ -25,7 +25,7 @@
     "____________________LINTING AND FORMATTING_____________________________": "",
     "lint": "biome check",
     "lint:fsd": "steiger ./src",
-    "lint:md": "markdownlint '**/*.md' --ignore node_modules --fix --disable MD013",
+    "lint:md": "markdownlint '**/*.md' --ignore node_modules --ignore project.inlang --ignore src/generated --fix --disable MD013",
     "lint:fix": "biome check --write",
     "lint:fix:unsafe": "biome check --write --unsafe",
     "lint:style": "stylelint \"**/*.{css,scss}\"",
