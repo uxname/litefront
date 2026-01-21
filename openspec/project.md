@@ -35,6 +35,18 @@ This project is a modern, high-performance frontend application designed for sca
 - **Mandatory Verification:** All code changes must pass the strict verification script: `npm run check`.
   - This script aggregates **Stylelint**, **TypeScript compilation**, **Biome fixes**, **Knip analysis**, and **FSD architecture linting** (`steiger`).
 
+### Design & UI/UX Strategy
+
+The application targets a **"Modern, Clean, and Interesting"** aesthetic.
+- **Visual Style:** Use subtle gradients ("blobs"), glassmorphism (`backdrop-blur`), and generous whitespace. Avoid generic "Bootstrap-like" layouts.
+- **Interactivity:** Elements should feel alive. Use `hover:-translate-y`, `active:scale-95`, and smooth transitions for interactive elements.
+- **Motion:** Use entry animations (e.g., `animate-in`, `fade-in`, `slide-in-from-bottom`) for page content to create a polished feel.
+- **Shapes:** Prefer larger border radiuses (`rounded-xl` to `rounded-3xl`) and thin, delicate borders (`border-slate-200`).
+- **Color Palette:**
+  - **Structure:** Slate (50-900) for backgrounds and text.
+  - **Accents:** Indigo/Violet/Blue for primary actions and decorative elements.
+  - **Status:** Emerald (Success), Rose (Error), Amber (Warning).
+
 ### Architecture Patterns (Feature-Sliced Design)
 
 The project strictly follows **Feature-Sliced Design (FSD)**.
@@ -60,11 +72,11 @@ The project strictly follows **Feature-Sliced Design (FSD)**.
 ### Data Fetching & GraphQL
 
 - **Workflow:**
-  1. Define GraphQL operations (`query`, `mutation`) in `*.graphql` files (usually within `src/features` or `src/entities`).
-  2. Run `npm run gen` to generate TypeScript hooks.
-  3. Use the generated hooks (e.g., `useGetCountryQuery`) in components.
+  1. **Create Operation:** Define queries or mutations in a new file within `src/graphql/**/*.graphql` (e.g., `src/graphql/user/GetKey.graphql`).
+  2. **Generate Types:** Run `npm run gen` to update the generated hooks.
+  3. **Implementation:** Use the generated hooks (e.g., `useGetKeyQuery`) in your components.
 - **Client:** The app uses **URQL** configured in `src/routes/__root.tsx`.
-- **Type Safety:** Never manually type GraphQL responses; rely on the Codegen output.
+- **Type Safety:** Never manually type GraphQL responses; rely exclusively on the Codegen output.
 
 ### Internationalization (I18n)
 
