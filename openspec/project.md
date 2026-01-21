@@ -35,17 +35,23 @@ This project is a modern, high-performance frontend application designed for sca
 - **Mandatory Verification:** All code changes must pass the strict verification script: `npm run check`.
   - This script aggregates **Stylelint**, **TypeScript compilation**, **Biome fixes**, **Knip analysis**, and **FSD architecture linting** (`steiger`).
 
-### Design & UI/UX Strategy
+### Design & UX Standards
 
-The application targets a **"Modern, Clean, and Interesting"** aesthetic.
-- **Visual Style:** Use subtle gradients ("blobs"), glassmorphism (`backdrop-blur`), and generous whitespace. Avoid generic "Bootstrap-like" layouts.
-- **Interactivity:** Elements should feel alive. Use `hover:-translate-y`, `active:scale-95`, and smooth transitions for interactive elements.
-- **Motion:** Use entry animations (e.g., `animate-in`, `fade-in`, `slide-in-from-bottom`) for page content to create a polished feel.
-- **Shapes:** Prefer larger border radiuses (`rounded-xl` to `rounded-3xl`) and thin, delicate borders (`border-slate-200`).
-- **Color Palette:**
-  - **Structure:** Slate (50-900) for backgrounds and text.
-  - **Accents:** Indigo/Violet/Blue for primary actions and decorative elements.
-  - **Status:** Emerald (Success), Rose (Error), Amber (Warning).
+- **Visual Style:** Aim for a "Beautiful, Modern, and Interesting" aesthetic.
+  - **Palette:** Use `slate-*` for neutrals and `indigo-*`/`emerald-*` for accents.
+  - **Depth:** Use subtle shadows (`shadow-sm`, `shadow-xl`), glassmorphism (`backdrop-blur-xl`, `bg-white/80`), and gradients (`bg-gradient-to-r`).
+  - **Shape:** Prefer rounded corners (`rounded-xl`, `rounded-2xl`) over sharp edges.
+  - **Ambient Decor:** Use blurred colored orbs/gradients in the background (`blur-[100px]`, `opacity-20`) to add depth to empty spaces.
+  - **Selection:** Use custom selection colors (e.g., `selection:bg-indigo-100 selection:text-indigo-900`) for a polished feel.
+- **Typography & Hierarchy:**
+  - **Headings:** High contrast (`text-slate-900`), `font-black`, and tight tracking (`tracking-tight`) for large text.
+  - **Body:** Lower contrast (`text-slate-500`) with relaxed line height (`leading-relaxed`) for readability.
+- **Interactivity:**
+  - Elements should feel alive. Add hover states (`hover:-translate-y-0.5`, `hover:shadow-md`) and active states (`active:scale-95`).
+  - Use smooth transitions (`transition-all duration-300`).
+- **Feedback & States:**
+  - **Loading:** Prefer "Skeleton" loaders (pulsing gray blocks) over spinners for content areas.
+  - **Transitions:** Use Tailwind `animate-in` utilities (e.g., `animate-in fade-in zoom-in`) for entering elements.
 
 ### Architecture Patterns (Feature-Sliced Design)
 
@@ -72,11 +78,11 @@ The project strictly follows **Feature-Sliced Design (FSD)**.
 ### Data Fetching & GraphQL
 
 - **Workflow:**
-  1. **Create Operation:** Define queries or mutations in a new file within `src/graphql/**/*.graphql` (e.g., `src/graphql/user/GetKey.graphql`).
-  2. **Generate Types:** Run `npm run gen` to update the generated hooks.
-  3. **Implementation:** Use the generated hooks (e.g., `useGetKeyQuery`) in your components.
+  1. **Create Operation:** Create a `.graphql` file containing your `query` or `mutation` inside the `./src/graphql/` directory (e.g., `./src/graphql/GetCountry.graphql`).
+  2. **Generate Types:** Run `npm run gen` in the terminal. This will update the generated hooks in `src/generated/graphql.tsx`.
+  3. **Implement:** Import and use the generated hook (e.g., `useGetCountryQuery`) in your React component.
 - **Client:** The app uses **URQL** configured in `src/routes/__root.tsx`.
-- **Type Safety:** Never manually type GraphQL responses; rely exclusively on the Codegen output.
+- **Type Safety:** Never manually type GraphQL responses; rely on the Codegen output.
 
 ### Internationalization (I18n)
 
