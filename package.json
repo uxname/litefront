@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
+    "@fission-ai/openspec": "^0.22.0",
     "@graphql-codegen/cli": "6.1.1",
     "@graphql-codegen/schema-ast": "^5.0.0",
     "@graphql-codegen/typescript": "5.0.7",
