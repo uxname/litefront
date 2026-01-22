@@ -69,7 +69,9 @@ The project strictly follows **Feature-Sliced Design (FSD)**.
 ### Routing Strategy
 
 - **File-Based Routing:** Routes are defined in `src/routes`.
-- **Generated Tree:** TanStack Router automatically generates the route tree in `src/generated/routeTree.gen.ts`.
+- **Route Generation (Manual/CI):**
+  - **Important:** The route tree (`src/generated/routeTree.gen.ts`) is NOT automatically updated when running static analysis (like `tsc` or `check`) or in CI environments.
+  - **Action:** You must explicitly run `npx tsr generate` (or `npm run gen:routes` if available) after adding, removing, or renaming route files to ensure the generated tree is up-to-date.
 - **Conventions:**
   - Use `__root.tsx` for the layout shell.
   - **Lazy Loading:** Heavy route components (page content) must use the `.lazy.tsx` suffix pattern (e.g., `index.lazy.tsx`) to ensure automatic code splitting by the router.
@@ -119,6 +121,9 @@ The project strictly follows **Feature-Sliced Design (FSD)**.
   - Use **DaisyUI** for base component styles.
   - Use **CSS/SCSS Modules** (`*.module.scss`) only for complex, isolated component styling that Tailwind cannot easily handle.
 - **No Circular Dependencies:** FSD strictness makes circular dependencies fatal. Always move shared logic down to a lower layer (e.g., `shared`).
+- **AI Agent/Editing Tips:**
+  - **Component Editing:** When modifying complex React components (JSX), prefer rewriting the entire component or large blocks rather than small patches to avoid breaking nesting/syntax.
+  - **Generators in CI:** Remember that Vite plugins do not run during `tsc` checks. Always invoke the CLI generators explicitly if creating new routes.
 
 ## External Dependencies
 

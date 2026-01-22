@@ -78,11 +78,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       tailwindcss(),
       tsconfigPaths(),
       ViteImageOptimizer(),
-      tanstackRouter({
-        target: "react",
-        autoCodeSplitting: true,
-        generatedRouteTree: "./src/generated/routeTree.gen.ts",
-      }),
+      tanstackRouter(),
       sitemap({
         hostname,
         robots: [
