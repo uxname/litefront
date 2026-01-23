@@ -32,7 +32,7 @@ const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/callback': typeof CallbackRoute
-  '/protected': typeof ProtectedIndexRoute
+  '/protected/': typeof ProtectedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -47,7 +47,7 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/callback' | '/protected'
+  fullPaths: '/' | '/callback' | '/protected/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/callback' | '/protected'
   id: '__root__' | '/' | '/callback' | '/protected/'
@@ -78,7 +78,7 @@ declare module '@tanstack/react-router' {
     '/protected/': {
       id: '/protected/'
       path: '/protected'
-      fullPath: '/protected'
+      fullPath: '/protected/'
       preLoaderRoute: typeof ProtectedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
