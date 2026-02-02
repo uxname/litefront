@@ -10,3 +10,4 @@ storybook-build/
 /playwright/.cache/
 .husky
 dev-dist/
+.kodu/context.txt
