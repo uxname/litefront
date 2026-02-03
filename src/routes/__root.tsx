@@ -29,8 +29,8 @@ const RootComponent: React.FC = () => {
   const auth = useAuth();
 
   const graphqlClient = useMemo(
-    () => makeGraphQLClient(auth.user?.access_token),
-    [auth.user?.access_token],
+    () => makeGraphQLClient(auth.user?.id_token),
+    [auth.user?.id_token],
   );
 
   return (
