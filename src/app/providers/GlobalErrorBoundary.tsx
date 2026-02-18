@@ -1,3 +1,4 @@
+import { captureException } from "@shared/lib/sentry";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { type ReactNode, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -6,6 +7,7 @@ export const GlobalErrorBoundary = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const errorHandler = (event: PromiseRejectionEvent) => {
       console.error("Uncaught Promise Rejection:", event.reason);
+      captureException(event.reason);
     };
 
     window.addEventListener("unhandledrejection", errorHandler);

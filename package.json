@@ -41,6 +41,7 @@
     "postupdate": "npm run lint:fix && npm run check"
   },
   "dependencies": {
+    "@sentry/react": "^10.39.0",
     "@tanstack/react-router": "^1.157.18",
     "@tanstack/router-devtools": "^1.157.18",
     "lucide-react": "^0.563.0",
@@ -65,9 +66,11 @@
     "@inlang/paraglide-js": "2.10.0",
     "@ladle/react": "^5.1.1",
     "@playwright/test": "^1.58.1",
+    "@sentry/vite-plugin": "^4.9.1",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/router-cli": "^1.157.18",
     "@tanstack/router-plugin": "^1.157.18",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
