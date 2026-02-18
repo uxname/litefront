@@ -137,6 +137,27 @@ export default defineConfig(async (): Promise<UserConfig> => {
       exclude: ["tests/e2e", "node_modules", "dist"],
       testTimeout: 30_000,
       hookTimeout: 30_000,
+      environment: "jsdom",
+      globals: true,
+      setupFiles: ["./tests/setup.ts"],
+      coverage: {
+        provider: "v8",
+        reporter: ["text", "json", "html"],
+        thresholds: {
+          lines: 80,
+          functions: 80,
+          branches: 70,
+          statements: 80,
+        },
+        exclude: [
+          "node_modules/",
+          "src/generated/",
+          "tests/",
+          "**/*.d.ts",
+          "**/*.config.*",
+          "**/*.stories.*",
+        ],
+      },
     },
     css: {
       modules: {
