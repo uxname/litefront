@@ -1,6 +1,6 @@
+import { AuthProvider, oidcConfig, useAuth } from "@features/auth";
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
-import { AuthProvider, oidcConfig, useAuth } from "@shared/auth";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";

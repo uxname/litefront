@@ -1,4 +1,4 @@
-import { AuthContextProps, useAuth } from "@shared/auth";
+import { AuthContextProps, useAuth } from "@features/auth";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { Toaster } from "@shared/ui/Toaster";
 import {

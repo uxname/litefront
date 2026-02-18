@@ -1,4 +1,4 @@
-import { useAuth } from "@shared/auth";
+import { useAuth } from "@features/auth";
 import { toast } from "@shared/ui/Toaster";
 import { useRouter } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";

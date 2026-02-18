@@ -1,4 +1,4 @@
-import { useAuth } from "@shared/auth";
+import { useAuth } from "@features/auth";
 import { Link, useRouter } from "@tanstack/react-router";
 import { Loader2, LogIn, LogOut, User } from "lucide-react";
 import { FC, useCallback } from "react";
