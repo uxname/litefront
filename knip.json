@@ -16,7 +16,8 @@
   "ignore": [
     "src/generated/**",
     "src/vite-env.d.ts",
-    "src/app/vite-dotenv-checker.plugin.ts"
+    "src/app/vite-dotenv-checker.plugin.ts",
+    "src/shared/config/**"
   ],
   "ignoreDependencies": ["daisyui"],
   "ignoreBinaries": [],

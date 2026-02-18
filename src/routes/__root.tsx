@@ -1,4 +1,5 @@
 import { AuthContextProps, useAuth } from "@features/auth";
+import { createGraphQLClient, GraphQLProvider } from "@shared/api";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { Toaster } from "@shared/ui/Toaster";
 import {
@@ -10,7 +11,6 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import React, { useMemo } from "react";
-import { Client, cacheExchange, fetchExchange, Provider } from "urql";
 
 export interface MyRouterContext {
   auth: AuthContextProps;
@@ -29,35 +29,20 @@ const RootComponent: React.FC = () => {
   const auth = useAuth();
 
   const graphqlClient = useMemo(
-    () => makeGraphQLClient(auth.user?.id_token),
+    () => createGraphQLClient(auth.user?.id_token),
     [auth.user?.id_token],
   );
 
   return (
-    <Provider value={graphqlClient}>
+    <GraphQLProvider value={graphqlClient}>
       <HeadContent />
       <Outlet />
       <Toaster closeButton />
       <Scripts />
       {isDevelopment && <TanStackRouterDevtools />}
-    </Provider>
+    </GraphQLProvider>
   );
 };
-
-function makeGraphQLClient(accessToken: string | undefined): Client {
-  return new Client({
-    url: import.meta.env.VITE_GRAPHQL_API_URL,
-    exchanges: [cacheExchange, fetchExchange],
-    fetchOptions: {
-      headers: accessToken
-        ? {
-            Authorization: `Bearer ${accessToken}`,
-          }
-        : {},
-    },
-    requestPolicy: "cache-and-network",
-  });
-}
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
