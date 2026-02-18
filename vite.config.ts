@@ -143,7 +143,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       }),
     ],
     test: {
-      exclude: ["tests/e2e", "node_modules", "dist"],
+      exclude: ["tests/e2e", "node_modules", "dist", ".opencode"],
       testTimeout: 30_000,
       hookTimeout: 30_000,
       environment: "jsdom",

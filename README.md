@@ -26,6 +26,8 @@ A modern, scalable, and developer-friendly frontend boilerplate powered by **Vit
 - [Perfect Pairing with LiteEnd](#perfect-pairing-with-liteend)
 - [Get Started](#get-started)
 - [Types Generation](#types-generation)
+- [Testing](#testing)
+- [Error Monitoring](#error-monitoring)
 - [License](#license)
 - [Contributing](#contributing)
 
@@ -165,6 +167,35 @@ Your app should now be running on the port specified in your `.env` file (defaul
 ## Types Generation
 
 Run `npm run gen` after every change to the GraphQL API Schema or after modifying any `*.graphql` files in the `src/graphql` directory. This command is crucial for maintaining type safety between your frontend and backend.
+
+## Testing
+
+### Unit Tests
+```bash
+npm run test:prod
+```
+
+### E2E Tests
+```bash
+# Run in headless mode
+npm run test:e2e:prod
+
+# Run with UI
+npm run test:e2e:dev
+```
+
+### Coverage
+```bash
+npm run test:coverage
+```
+
+## Error Monitoring
+
+This application uses Sentry for error monitoring. Configure via environment variables:
+
+```env
+VITE_SENTRY_DSN=your-sentry-dsn
+```
 
 ## License
 
