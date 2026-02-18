@@ -13,6 +13,7 @@
       "@shared/*": ["./src/shared/*"],
       "@widgets/*": ["./src/widgets/*"],
       "@features/*": ["./src/features/*"],
+      "@entities/*": ["./src/entities/*"],
       "@public/*": ["./public/*"]
     },
     "moduleResolution": "bundler",

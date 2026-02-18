@@ -1,7 +1,7 @@
-import { useCounterStore } from "@shared/counter";
 import { toast } from "@shared/ui/Toaster";
 import { Plus } from "lucide-react";
 import { FC } from "react";
+import { useCounterStore } from "../model/store";
 
 export interface CounterProps {
   title?: string;

@@ -1,14 +1,10 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
-export interface CounterStore {
-  counter: number;
-  increase: () => void;
-}
+import { CounterStore } from "./types";
 
 export const useCounterStore = create(
   devtools<CounterStore>((set) => ({
     counter: 0,
-    increase: (): void => set((state) => ({ counter: state.counter + 1 })),
+    increase: () => set((state) => ({ counter: state.counter + 1 })),
   })),
 );

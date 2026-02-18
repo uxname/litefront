@@ -1,5 +1,5 @@
+import { Counter } from "@entities/counter";
 import { useGetCountryQuery } from "@generated/graphql";
-import { Counter } from "@shared/counter";
 import { toast } from "@shared/ui/Toaster";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
