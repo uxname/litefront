@@ -50,14 +50,15 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **Authentication**       | [react-oidc-context](https://github.com/authts/react-oidc-context) (OAuth 2.0 / OIDC)                   |
 | **Data Fetching**        | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)              |
 | **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
-| **Styling**              | [Tailwind CSS](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
+| **Styling**              | [Tailwind CSS v4](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
 | **UI Components**        | [daisyUI](https://daisyui.com/) (for Tailwind CSS)                                                      |
 | **Internationalization** | [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs) (Type-safe)                    |
 | **Code Generation**      | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                         |
-| **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev)               |
+| **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev), [Steiger](https://github.com/nicokant/steiger)               |
 | **Git Hooks**            | [Lefthook](https://github.com/evilmartians/lefthook)                                                    |
 | **Testing**              | [Vitest](https://vitest.dev) (Unit), [Playwright](https://playwright.dev) (E2E)                         |
 | **Component Dev**        | [Ladle](https://ladle.dev) (Storybook alternative)                                                      |
+| **Performance / DX**      | [React Scan](https://react-scan.com) (Performance debugging)                                            |
 | **Deployment**           | [Docker](https://www.docker.com) with [Caddy Server](https://caddyserver.com)                           |
 
 ## Architecture
@@ -74,6 +75,9 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 - **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
 - **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
 - **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
+- **Architectural Linting**: Strict FSD boundaries enforced by **Steiger**.
+- **Performance Debugging**: Built-in **React Scan** for debugging performance and unexpected renders in development mode.
+- **PWA Ready**: Pre-configured Vite PWA plugin for transforming the app into a Progressive Web App.
 
 ## Configuration
 
@@ -86,6 +90,7 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_OIDC_REDIRECT_URI` | The callback URL where the user is redirected after login    | `http://localhost:3000/callback`                |
 | `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
+| `VITE_BASE_URL`          | Base URL of the application (used for E2E testing and routing) | `http://localhost:3000`                        |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
 | `VITE_SENTRY_DSN`        | The DSN key for Sentry error tracking                        | `https://xxx@yyy.ingest.sentry.io/zzz`           |
 | `VITE_SENTRY_ORG`        | Sentry organization slug (used for source maps)             | `your-org`                                      |
@@ -108,7 +113,10 @@ To replace OIDC with your own logic:
 - `npm run start:dev`: Starts the development server with Hot Module Replacement.
 - `npm run build`: Bundles the application for production.
 - `npm run test:prod`: Runs all unit and end-to-end tests.
-- `npm run check`: Runs all code quality checks (linting, type-checking, Knip).
+- `npm run check`: Runs all code quality checks in parallel: `tsc`, `biome`, `stylelint`, `knip`, and `steiger`.
+- `npm run lint:fsd`: Manually runs FSD layer boundary checks with Steiger.
+- `npm run storybook:serve`: Starts the component playground (Ladle) for developing UI components.
+- `npm run storybook:build`: Builds the static storybook for deployment.
 - `npm run gen`: Generates TypeScript types for GraphQL operations.
 
 ## Perfect Pairing with [LiteEnd](https://github.com/uxname/liteend)
