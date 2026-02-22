@@ -13,7 +13,7 @@
     "test:dev": "vitest",
     "test:prod": "vitest run",
     "test:e2e:dev": "playwright test --ui",
-    "test:e2e:prod": "playwright test --project=chromium",
+    "test:e2e:prod": "playwright test --project=chromium --reporter=list",
     "test:coverage": "vitest run --coverage",
     "test:all": "npm run test:prod && npm run test:e2e:prod",
     "test:e2e:show-trace": "playwright show-trace",
