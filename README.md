@@ -87,17 +87,21 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
+| `VITE_SENTRY_DSN`        | The DSN key for Sentry error tracking                        | `https://xxx@yyy.ingest.sentry.io/zzz`           |
+| `VITE_SENTRY_ORG`        | Sentry organization slug (used for source maps)             | `your-org`                                      |
+| `VITE_SENTRY_PROJECT`    | Sentry project name (used for source maps)                    | `your-project`                                  |
+| `VITE_SENTRY_AUTH_TOKEN` | Build-time token for uploading source maps                   | `sntrys_...`                                    |
 
 ## Custom Authentication
 
-This boilerplate uses a facade pattern for authentication located in `src/shared/auth`. This architecture decouples the application from the specific OIDC library, allowing you to replace it with any other method (e.g., custom JWT/Session based auth) easily.
+This boilerplate uses a facade pattern for authentication located in `src/features/auth`. This architecture decouples the application from the specific OIDC library, allowing you to replace it with any other method (e.g., custom JWT/Session based auth) easily.
 
 To replace OIDC with your own logic:
 
-1. Open `src/shared/auth/index.ts`.
+1. Open `src/features/auth/index.ts`.
 2. Remove `react-oidc-context` exports.
 3. Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
-4. Update `src/main.tsx` to remove `oidcConfig` injection if your new provider doesn't need it.
+4. Update `src/app/providers/...` (or `src/main.tsx` if providers are there) to remove `oidcConfig` injection if your new provider doesn't need it.
 
 ## Scripts Overview
 
@@ -170,6 +174,11 @@ Run `npm run gen` after every change to the GraphQL API Schema or after modifyin
 
 ## Testing
 
+This boilerplate includes a complete testing infrastructure for both unit and end-to-end testing.
+
+- **Unit/Component Tests**: Written with **Vitest** and **Testing Library** for testing React components and Zustand stores.
+- **E2E Tests**: Run on **Playwright** with pre-configured **Mock Auth** — allows stable test runs without requiring a real OIDC provider.
+
 ### Unit Tests
 ```bash
 npm run test:prod
@@ -191,11 +200,17 @@ npm run test:coverage
 
 ## Error Monitoring
 
-This application uses Sentry for error monitoring. Configure via environment variables:
+This application uses **Sentry** for production error tracking and performance monitoring. The integration includes automatic source map uploading during the build process via `@sentry/vite-plugin`.
 
+To enable Sentry, configure the following environment variables:
 ```env
 VITE_SENTRY_DSN=your-sentry-dsn
+VITE_SENTRY_ORG=your-sentry-org
+VITE_SENTRY_PROJECT=your-sentry-project
+VITE_SENTRY_AUTH_TOKEN=your-auth-token # Required only at build time
 ```
+
+*(Note: `VITE_SENTRY_AUTH_TOKEN` should be kept secret and configured in your CI/CD pipeline, not committed to the repository).*
 
 ## License
 
