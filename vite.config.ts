@@ -10,7 +10,6 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
 import sitemap from "vite-plugin-sitemap";
 import { vitePluginVersionMark } from "vite-plugin-version-mark";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
@@ -70,6 +69,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         },
       },
     },
+    resolve: {
+      tsconfigPaths: true,
+    },
     plugins: [
       sentryVitePlugin({
         org: process.env.VITE_SENTRY_ORG,
@@ -85,7 +87,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
         strategy: ["preferredLanguage"],
       }),
       tailwindcss(),
-      tsconfigPaths(),
       ViteImageOptimizer(),
       tanstackRouter(),
       sitemap({
