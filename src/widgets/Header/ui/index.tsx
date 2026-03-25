@@ -1,16 +1,14 @@
 import { useAuth } from "@features/auth";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Loader2, LogIn, LogOut, User } from "lucide-react";
 import { FC, useCallback } from "react";
 
 export const Header: FC = () => {
   const auth = useAuth();
-  const router = useRouter();
 
-  const handleSignOut = useCallback(async () => {
-    await auth.removeUser();
-    router.invalidate();
-  }, [auth, router]);
+  const handleSignOut = useCallback(() => {
+    void auth.signoutRedirect();
+  }, [auth]);
 
   return (
     <nav className="flex w-full items-center justify-between">

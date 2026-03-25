@@ -1,6 +1,5 @@
 import { useAuth } from "@features/auth";
 import { toast } from "@shared/ui/Toaster";
-import { useRouter } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
 import {
   Check,
@@ -19,15 +18,11 @@ import { FC, useCallback, useState } from "react";
 export const ProtectedPage: FC = () => {
   const auth = useAuth();
   const user = auth.user?.profile;
-  const router = useRouter();
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleSignOut = useCallback(async () => {
-    toast.info("Signing out...", { duration: 1000 });
-    await new Promise((resolve) => setTimeout(resolve, 500)); // Fake delay for UX
-    await auth.removeUser();
-    router.invalidate();
-  }, [auth, router]);
+  const handleSignOut = useCallback(() => {
+    void auth.signoutRedirect();
+  }, [auth]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);

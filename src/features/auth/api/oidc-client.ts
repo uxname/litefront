@@ -5,6 +5,7 @@ export const oidcConfig: AuthProviderProps = {
   authority: import.meta.env.VITE_OIDC_AUTHORITY,
   client_id: import.meta.env.VITE_OIDC_CLIENT_ID,
   redirect_uri: import.meta.env.VITE_OIDC_REDIRECT_URI,
+  post_logout_redirect_uri: import.meta.env.VITE_BASE_URL,
   scope: import.meta.env.VITE_OIDC_SCOPE,
   automaticSilentRenew: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
