@@ -11,8 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 # git required for lefthook
 COPY .git .git
-# Todo remove --force
-RUN npm install --force
+RUN npm install
 
 # Copy the rest of the application code
 COPY . ./
