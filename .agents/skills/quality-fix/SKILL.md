@@ -1,6 +1,6 @@
 ---
 name: quality-fix
-description: Use this skill when the user asks to fix linting errors, resolve pre-commit hook failures, fix TypeScript errors, fix Biome issues, or when the lefthook pre-commit check is blocking a commit. Trigger phrases: "почини линтер", "fix lint errors", "lefthook fails", "pre-commit failed", "biome errors", "ts errors", "исправь ошибки".
+description: Use this skill when the user asks to fix linting errors, resolve pre-commit hook failures, fix TypeScript errors, fix Biome issues, or when the lefthook pre-commit check is blocking a commit. Trigger phrases: "fix lint errors", "lefthook fails", "pre-commit failed", "biome errors", "ts errors".
 version: 1.0.0
 ---
 

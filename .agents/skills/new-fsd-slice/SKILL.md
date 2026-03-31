@@ -1,6 +1,6 @@
 ---
 name: new-fsd-slice
-description: Use this skill when the user asks to create a new FSD slice, add a new feature, entity, widget, or shared module, or when scaffolding any new architectural unit in the project. Trigger phrases: "создай фичу", "добавь entity", "новый widget", "создай shared модуль", "new feature", "new entity", "new widget".
+description: Use this skill when the user asks to create a new FSD slice, add a new feature, entity, widget, or shared module, or when scaffolding any new architectural unit in the project. Trigger phrases: "new feature", "new entity", "new widget", "new fsd slice", "scaffold slice".
 version: 1.0.0
 ---
 

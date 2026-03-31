@@ -1,6 +1,6 @@
 ---
 name: add-gql
-description: Use this skill when the user asks to add a GraphQL query, mutation, or subscription, fetch data from the API, or work with GraphQL operations. Trigger phrases: "добавь GraphQL запрос", "создай mutation", "fetch данные с API", "add graphql query", "add mutation", "add subscription", "graphql codegen".
+description: Use this skill when the user asks to add a GraphQL query, mutation, or subscription, fetch data from the API, or work with GraphQL operations. Trigger phrases: "add graphql query", "add mutation", "add subscription", "graphql codegen".
 version: 1.0.0
 ---
 

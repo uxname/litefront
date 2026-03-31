@@ -1,6 +1,6 @@
 ---
 name: analyze-bundle
-description: Use this skill when the user asks to analyze the bundle size, find large dependencies, optimize the build output, check what's included in the bundle, or reduce the app size. Trigger phrases: "анализ бандла", "размер бандла", "analyze bundle", "bundle size", "что в бандле", "оптимизация сборки", "large bundle", "reduce bundle size".
+description: Use this skill when the user asks to analyze the bundle size, find large dependencies, optimize the build output, check what's included in the bundle, or reduce the app size. Trigger phrases: "analyze bundle", "bundle size", "large bundle", "reduce bundle size".
 version: 1.0.0
 ---
 
@@ -14,15 +14,15 @@ Analyzes the production bundle to identify size issues and optimization opportun
 ANALYZE=true npm run build:vite
 ```
 
-This generates `stats.html` in the project root (via `rollup-plugin-visualizer`). Open it in a browser to see an interactive treemap of the bundle.
+This generates `_stats.html` in the project root (via `rollup-plugin-visualizer`). Open it in a browser to see an interactive treemap of the bundle.
 
 Alternatively, build and open directly:
 
 ```bash
 # Linux
-npm run build:vite && xdg-open stats.html
+npm run build:vite && xdg-open _stats.html
 # macOS
-npm run build:vite && open stats.html
+npm run build:vite && open _stats.html
 ```
 
 ## Reading the Visualizer
@@ -75,7 +75,7 @@ General targets for a modern SPA:
 
 ## Optimization Checklist
 
-- [ ] Run `ANALYZE=true npm run build:vite` and open `stats.html`
+- [ ] Run `ANALYZE=true npm run build:vite` and open `_stats.html`
 - [ ] Identify the largest 3-5 chunks
 - [ ] Check if large libraries have lighter alternatives
 - [ ] Verify routes are code-split (separate chunks in visualizer)

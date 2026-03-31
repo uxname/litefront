@@ -1,6 +1,6 @@
 ---
 name: add-story
-description: Use this skill when the user asks to add a Ladle story, create a storybook story, document a component visually, or add component examples. Trigger phrases: "добавь story", "ladle story", "storybook", "задокументируй компонент", "add story", "create story", "component story".
+description: Use this skill when the user asks to add a Ladle story, create a storybook story, document a component visually, or add component examples. Trigger phrases: "add story", "create story", "component story", "ladle story".
 version: 1.0.0
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: update-deps
-description: Use this skill when the user asks to update dependencies, upgrade packages, update npm packages, or keep the project up to date. Trigger phrases: "обнови зависимости", "update dependencies", "upgrade packages", "npm update", "обнови пакеты", "update npm".
+description: Use this skill when the user asks to update dependencies, upgrade packages, update npm packages, or keep the project up to date. Trigger phrases: "update dependencies", "upgrade packages", "npm update", "update npm".
 version: 1.0.0
 ---
 

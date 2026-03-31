@@ -1,6 +1,6 @@
 ---
 name: write-tests
-description: Use this skill when the user asks to write tests, add test coverage, create unit tests, component tests, or E2E tests. Trigger phrases: "напиши тесты", "добавь тесты", "write tests", "unit test", "component test", "e2e test", "playwright test", "vitest".
+description: Use this skill when the user asks to write tests, add test coverage, create unit tests, component tests, or E2E tests. Trigger phrases: "write tests", "unit test", "component test", "e2e test", "playwright test", "vitest".
 version: 1.0.0
 ---
 

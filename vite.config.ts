@@ -137,12 +137,13 @@ export default defineConfig(async (): Promise<UserConfig> => {
           enabled: true,
         },
       }),
-      visualizer({
-        emitFile: true,
-        filename: "_stats.html",
-        template: "flamegraph",
-      }),
-    ],
+      process.env.ANALYZE === "true" &&
+        visualizer({
+          emitFile: true,
+          filename: "_stats.html",
+          template: "flamegraph",
+        }),
+    ].filter(Boolean),
     test: {
       exclude: ["tests/e2e", "node_modules", "dist", ".opencode"],
       testTimeout: 30_000,

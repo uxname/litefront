@@ -1,6 +1,6 @@
 ---
 name: new-store
-description: Use this skill when the user asks to create a new Zustand store, add global state, add client state management, or create a state slice. Trigger phrases: "создай store", "добавь состояние", "zustand store", "глобальное состояние", "new store", "state management", "add state".
+description: Use this skill when the user asks to create a new Zustand store, add global state, add client state management, or create a state slice. Trigger phrases: "new store", "state management", "add state", "zustand store".
 version: 1.0.0
 ---
 

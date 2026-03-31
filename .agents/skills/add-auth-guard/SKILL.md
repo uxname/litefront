@@ -1,6 +1,6 @@
 ---
 name: add-auth-guard
-description: Use this skill when the user asks to protect a route, add authentication to a page, restrict access to authenticated users, or work with OIDC/OAuth auth context. Trigger phrases: "защити роут", "добавь авторизацию", "protect route", "auth guard", "только для авторизованных", "restricted page", "protected route".
+description: Use this skill when the user asks to protect a route, add authentication to a page, restrict access to authenticated users, or work with OIDC/OAuth auth context. Trigger phrases: "protect route", "auth guard", "restricted page", "protected route".
 version: 1.0.0
 ---
 

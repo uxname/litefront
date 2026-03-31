@@ -1,6 +1,6 @@
 ---
 name: run-check
-description: Use this skill when the user asks to run project checks, verify code quality, run the quality gate, check the project before committing, or validate the codebase. Trigger phrases: "запусти проверку", "проверь проект", "run check", "quality check", "npm run check", "проверь перед коммитом", "validate project".
+description: Use this skill when the user asks to run project checks, verify code quality, run the quality gate, check the project before committing, or validate the codebase. Trigger phrases: "run check", "quality check", "npm run check", "validate project".
 version: 1.0.0
 ---
 

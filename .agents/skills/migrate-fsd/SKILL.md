@@ -1,6 +1,6 @@
 ---
 name: migrate-fsd
-description: Use this skill when the user asks to move code between FSD layers, refactor a module to a different layer, promote an entity to a feature, or reorganize the architecture. Trigger phrases: "перенеси в другой слой", "сделай из entity feature", "переместить модуль", "migrate fsd", "move to feature", "promote entity".
+description: Use this skill when the user asks to move code between FSD layers, refactor a module to a different layer, promote an entity to a feature, or reorganize the architecture. Trigger phrases: "migrate fsd", "move to feature", "promote entity", "refactor layer".
 version: 1.0.0
 ---
 

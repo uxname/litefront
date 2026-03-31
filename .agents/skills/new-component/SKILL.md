@@ -1,6 +1,6 @@
 ---
 name: new-component
-description: Use this skill when the user asks to create a new reusable UI component, shared UI element, or design system component. Trigger phrases: "создай компонент", "новый UI компонент", "shared компонент", "new component", "new ui component", "create component", "add to shared/ui".
+description: Use this skill when the user asks to create a new reusable UI component, shared UI element, or design system component. Trigger phrases: "new component", "new ui component", "create component", "add to shared/ui".
 version: 1.0.0
 ---
 

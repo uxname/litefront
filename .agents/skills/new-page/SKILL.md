@@ -1,6 +1,6 @@
 ---
 name: new-page
-description: Use this skill when the user asks to create a new page, add a new route, or add a new screen to the application. Trigger phrases: "создай страницу", "добавь роут", "новая страница", "new page", "new route", "add route".
+description: Use this skill when the user asks to create a new page, add a new route, or add a new screen to the application. Trigger phrases: "new page", "new route", "add route".
 version: 1.0.0
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: add-translation
-description: Use this skill when the user adds UI text, labels, messages, or any user-facing strings that need to be internationalized. Also use when adding new i18n keys, translation strings, or working with Paraglide JS. Trigger phrases: "добавь перевод", "i18n", "локализация", "новый текст в UI", "add translation", "new i18n key", "paraglide".
+description: Use this skill when the user adds UI text, labels, messages, or any user-facing strings that need to be internationalized. Also use when adding new i18n keys, translation strings, or working with Paraglide JS. Trigger phrases: "add translation", "new i18n key", "paraglide", "i18n", "localization".
 version: 1.0.0
 ---
 
@@ -10,7 +10,7 @@ Adds translation keys using Paraglide JS — the project's type-safe i18n librar
 
 ## How Paraglide Works
 
-1. Translation files live in `messages/` (one per language: `en.json`, `ru.json`, etc.)
+1. Translation files live in `messages/` (one per language: `en.json`, `de.json`, etc.)
 2. Paraglide generates typed functions into `src/generated/paraglide/`
 3. Import and use `m.key_name()` in components — **never hardcode UI text**
 
@@ -29,12 +29,12 @@ Adds translation keys using Paraglide JS — the project's type-safe i18n librar
 ```
 
 ```json
-// messages/ru.json
+// messages/de.json
 {
-  "welcome_title": "Добро пожаловать в LiteFront",
-  "welcome_subtitle": "Современный React шаблон",
-  "button_sign_in": "Войти",
-  "button_sign_out": "Выйти"
+  "welcome_title": "Willkommen bei LiteFront",
+  "welcome_subtitle": "Ein modernes React-Boilerplate",
+  "button_sign_in": "Anmelden",
+  "button_sign_out": "Abmelden"
 }
 ```
 
