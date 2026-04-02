@@ -21,7 +21,7 @@ Adds translation keys using Paraglide JS — the project's type-safe i18n librar
 ```json
 // messages/en.json
 {
-  "welcome_title": "Welcome to LiteFront",
+  "welcome_title": "Welcome to My App",
   "welcome_subtitle": "A modern React boilerplate",
   "button_sign_in": "Sign In",
   "button_sign_out": "Sign Out"
@@ -31,7 +31,7 @@ Adds translation keys using Paraglide JS — the project's type-safe i18n librar
 ```json
 // messages/de.json
 {
-  "welcome_title": "Willkommen bei LiteFront",
+  "welcome_title": "Willkommen bei meiner App",
   "welcome_subtitle": "Ein modernes React-Boilerplate",
   "button_sign_in": "Anmelden",
   "button_sign_out": "Abmelden"
