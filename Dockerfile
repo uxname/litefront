@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 # git required for lefthook
 COPY .git .git
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . ./

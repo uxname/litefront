@@ -30,7 +30,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
       strictPort: true,
     },
     build: {
-      sourcemap: true,
+      sourcemap: process.env.NODE_ENV !== "production",
       target: "esnext",
       rollupOptions: {
         output: {

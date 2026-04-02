@@ -1,7 +1,7 @@
 ---
 name: update-deps
 description: Use this skill when the user asks to update dependencies, upgrade packages, update npm packages, or keep the project up to date. Trigger phrases: "update dependencies", "upgrade packages", "npm update", "update npm".
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Update Dependencies
@@ -72,6 +72,55 @@ git checkout package.json
 npm install
 ```
 
+## Overrides
+
+The project may use `overrides` in `package.json` to force specific transitive dependency versions (usually to fix security vulnerabilities that upstream packages haven't addressed yet).
+
+### What are overrides?
+
+`overrides` force npm to use a specific version of a transitive dependency regardless of what parent packages request. Example:
+
+```json
+{
+  "overrides": {
+    "lodash": "^4.17.24"
+  }
+}
+```
+
+### When to add overrides
+
+- A transitive dependency has a known vulnerability
+- The upstream package maintainer hasn't updated the dependency
+- The fix is a patch version (low risk of breaking changes)
+
+### When to remove overrides
+
+After each `npm run update`, check if overrides are still needed:
+
+1. Temporarily remove an override from `package.json`
+2. Run `npm install`
+3. Run `npm audit` — if the vulnerability disappears, the override is no longer needed
+4. Run `npm run check` — make sure nothing broke
+5. If clean, commit the removal
+
+### Maintenance schedule
+
+- **After every `npm run update`**: review overrides, remove obsolete ones
+- **Monthly**: run `npm audit` and check if remaining overrides can be dropped
+- **Quarterly**: audit all remaining overrides with `npm ls <package>` to see which parent still needs them
+
+### Finding which override is still needed
+
+```bash
+# See which package depends on the overridden package
+npm ls lodash
+npm ls ws
+npm ls minimatch
+```
+
+If no parent package requires the specific vulnerable version, the override is safe to remove.
+
 ## Checklist
 
 - [ ] Preview changes with `npx ncu` before applying
@@ -79,4 +128,5 @@ npm install
 - [ ] `npm run check` passes after update
 - [ ] `npm run test:prod` passes
 - [ ] `npm run build:vite` succeeds
+- [ ] Review and clean up `overrides` section
 - [ ] Commit `package.json` and `package-lock.json` together
