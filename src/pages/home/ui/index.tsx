@@ -15,7 +15,7 @@ import {
   LayoutTemplate,
   Zap,
 } from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC, useCallback, useState } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 
 const ErrorSimulator = () => {
@@ -96,10 +96,10 @@ export const HomePage: FC = () => {
     },
   ];
 
-  const handleCopyCommand = () => {
+  const handleCopyCommand = useCallback(() => {
     navigator.clipboard.writeText("npx degit uxname/litefront my-app");
     toast.success("Command copied to clipboard!");
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
