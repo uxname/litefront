@@ -72,20 +72,20 @@ This updates `src/generated/routeTree.gen.ts`. **Never edit this file manually.*
 
 ## Protected Page
 
-For pages that require authentication, wrap with `AuthGuard`:
+For pages that require authentication, use `beforeLoad` with redirect:
 
 ```tsx
 // src/routes/dashboard.tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { AuthGuard } from "@features/auth";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { DashboardPage } from "@pages/dashboard";
 
 export const Route = createFileRoute("/dashboard")({
-  component: () => (
-    <AuthGuard>
-      <DashboardPage />
-    </AuthGuard>
-  ),
+  beforeLoad: ({ context }) => {
+    if (!context.auth?.isAuthenticated) {
+      throw redirect({ to: "/" });
+    }
+  },
+  component: DashboardPage,
 });
 ```
 

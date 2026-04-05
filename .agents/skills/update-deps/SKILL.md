@@ -8,21 +8,9 @@ version: 1.1.0
 
 Updates project dependencies using the project's interactive update workflow.
 
-## Update Command
-
-```bash
-npm run update
-```
-
-This does:
-1. `npx ncu -u` — bumps all versions in `package.json` to latest
-2. `npx rimraf node_modules package-lock.json` — cleans old install
-3. `npm install` — fresh install with new versions
-4. `npm run lint:fix && npm run check` — auto-fix and verify (postinstall hook)
-
-**This updates ALL dependencies at once.** It's aggressive — see selective update below for safer approach.
-
 ## Selective Update (Safer)
+
+Always prefer updating specific packages one by one using `npx ncu -u <package_name>` to prevent breaking the build.
 
 To update specific packages only:
 
@@ -37,6 +25,22 @@ To preview what would change without applying:
 ```bash
 npx ncu   # Shows available updates without modifying package.json
 ```
+
+## Bulk Update (Use with extreme caution)
+
+Run this ONLY if the user explicitly asks to update ALL dependencies unconditionally.
+
+```bash
+npm run update
+```
+
+This does:
+1. `npx ncu -u` — bumps all versions in `package.json` to latest
+2. `npx rimraf node_modules package-lock.json` — cleans old install
+3. `npm install` — fresh install with new versions
+4. `npm run lint:fix && npm run check` — auto-fix and verify (postinstall hook)
+
+**This updates ALL dependencies at once.** It's aggressive — see selective update above for safer approach.
 
 ## High-Risk Packages (Extra Caution)
 

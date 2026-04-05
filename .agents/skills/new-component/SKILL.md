@@ -65,15 +65,9 @@ import { Button } from "./Button";
 export const Primary: Story = () => (
   <Button variant="primary">Primary Button</Button>
 );
-
-export const Secondary: Story = () => (
-  <Button variant="secondary">Secondary Button</Button>
-);
-
-export const Ghost: Story = () => (
-  <Button variant="ghost">Ghost Button</Button>
-);
 ```
+
+For more complex stories (controls, context providers), refer to the `add-story` skill.
 
 ## Index Export
 

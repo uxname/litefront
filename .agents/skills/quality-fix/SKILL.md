@@ -1,6 +1,6 @@
 ---
 name: quality-fix
-description: Use this skill when the user asks to fix linting errors, resolve pre-commit hook failures, fix TypeScript errors, fix Biome issues, or when the lefthook pre-commit check is blocking a commit. Trigger phrases: "fix lint errors", "lefthook fails", "pre-commit failed", "biome errors", "ts errors".
+description: Use this skill when the user asks to fix linting errors, resolve pre-commit hook failures, fix TypeScript errors, fix Biome issues, or when the lefthook pre-commit check is blocking a commit. Trigger phrases: "fix lint errors", "lefthook fails", "pre-commit failed", "biome errors", "ts errors", "run check", "quality check", "npm run check", "validate project".
 version: 1.0.0
 ---
 
@@ -12,9 +12,11 @@ Resolves issues caught by the project's quality gate.
 
 `npm run check` runs these tools in parallel:
 
-```
-stylelint → tsc → biome --fix → knip → steiger
-```
+1. **stylelint** — CSS/SCSS linting
+2. **tsc --noEmit** — TypeScript type checking
+3. **biome check --write** — JS/TS linting + auto-format
+4. **knip --production** — dead code and unused exports/deps
+5. **steiger ./src** — FSD architectural boundary checks
 
 This same pipeline runs on every `git commit` via Lefthook.
 

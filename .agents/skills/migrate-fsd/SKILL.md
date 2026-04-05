@@ -19,13 +19,7 @@ Moving between layers (e.g., `entities/` → `features/`) means:
 
 ### 1. Identify all usages
 
-Before moving anything, find all import references:
-
-```bash
-# Replace "counter" with your slice name
-grep -r "from.*entities/counter" src/ --include="*.ts" --include="*.tsx"
-grep -r "@entities/counter" src/ --include="*.ts" --include="*.tsx"
-```
+Use your workspace search tools / file reading capabilities to find all exact string matches for the old import path (e.g., `"@entities/counter"` or `"/entities/counter"`). Do not proceed until you have a complete list of consumers.
 
 ### 2. Create the new slice location
 

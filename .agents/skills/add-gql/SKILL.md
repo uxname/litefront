@@ -86,6 +86,8 @@ function UserProfile({ userId }: { userId: string }) {
 
 This keeps the `@generated/graphql` import boundary inside the entity's `api/` folder.
 
+**Global operations:** If the query/mutation does not belong to a specific FSD entity or feature, place the wrapped hook in `src/shared/api/queries.ts` and export it from `src/shared/api/index.ts`.
+
 ## URQL Client
 
 The URQL client is configured in `src/shared/api/`. It automatically:

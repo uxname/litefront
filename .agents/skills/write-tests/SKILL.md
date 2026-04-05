@@ -12,8 +12,8 @@ Writes tests following the project's three-tier testing strategy.
 
 | Type | Tool | Location | What to test |
 |---|---|---|---|
-| Unit | Vitest | `tests/unit/` | Stores, utilities, pure logic |
-| Component | Vitest + Testing Library | `tests/component/` | React components in isolation |
+| Unit | Vitest | Live next to the tested module (e.g., `store.test.ts`) | Stores, utilities, pure logic |
+| Component | Vitest + Testing Library | Live next to the component in ui/ folder (e.g., `Button.test.tsx`) | React components in isolation |
 | E2E | Playwright | `tests/e2e/` | Full user flows in a browser |
 
 ## Running Tests
@@ -29,7 +29,7 @@ npm run test:e2e:dev       # E2E with UI
 ## Unit Test (Zustand Store)
 
 ```ts
-// tests/unit/entities/counter/store.test.ts
+// src/entities/counter/model/store.test.ts
 import { beforeEach, describe, expect, it } from "vitest";
 import { useCounterStore } from "@entities/counter";
 
@@ -60,7 +60,7 @@ describe("counterStore", () => {
 ## Component Test
 
 ```tsx
-// tests/component/entities/counter/Counter.test.tsx
+// src/entities/counter/ui/Counter.test.tsx
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
@@ -121,7 +121,7 @@ Vitest enforces minimum coverage:
 
 ## Checklist
 
-- [ ] Test file in correct directory (`tests/unit/`, `tests/component/`, `tests/e2e/`)
+- [ ] Test file in correct location (colocated for unit/component, `tests/e2e/` for E2E)
 - [ ] File naming: `*.test.ts(x)` for Vitest, `*.spec.ts` for Playwright
 - [ ] Unit tests reset store state in `beforeEach`
 - [ ] Component tests call `cleanup` in `afterEach`

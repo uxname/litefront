@@ -55,26 +55,7 @@ export { useAuthStore } from "./model/store";
 export type { AuthUser } from "./model/types";
 ```
 
-## Zustand Store Pattern (entities/features)
-
-```ts
-// model/store.ts
-import { create } from "zustand";
-
-interface CounterState {
-  count: number;
-  increment: () => void;
-  decrement: () => void;
-  reset: () => void;
-}
-
-export const useCounterStore = create<CounterState>((set) => ({
-  count: 0,
-  increment: () => set((state) => ({ count: state.count + 1 })),
-  decrement: () => set((state) => ({ count: state.count - 1 })),
-  reset: () => set({ count: 0 }),
-}));
-```
+If the slice requires state management, use the `new-store` skill to generate a Zustand store in the `model/` folder.
 
 ## After Creating
 
