@@ -81,3 +81,5 @@ General targets for a modern SPA:
 - [ ] Verify routes are code-split (separate chunks in visualizer)
 - [ ] Ensure images are optimized (vite-plugin-image-optimizer handles this at build time)
 - [ ] Remove unused dependencies (`npm run knip` catches unused packages)
+- [ ] If a dependency is too large, suggest replacing it and use the `update-deps` skill (Selective Update) to swap it.
+- [ ] If an FSD slice is bloated, suggest splitting it using the `refactor-fsd` skill.

@@ -9,7 +9,7 @@ The user wants to commit all current changes to git.
 
 ### Step 1: Run the quality check
 
-Run `npm run check`. If it fails, use the `quality-fix` skill to resolve issues. Never commit if checks fail.
+Run `npm run check`. If the process exits with an error, STOP. Do not proceed. Invoke the `quality-fix` skill to resolve all issues before attempting to commit.
 
 ### Step 2: Review what will be committed
 
@@ -56,7 +56,7 @@ EOF
 
 ### Step 6: Handle hook failures
 
-If the pre-commit hook blocks the commit, use the `quality-fix` skill to resolve issues, then retry the commit.
+If the lefthook pre-commit fails, abort the commit process. Invoke `quality-fix` and restart from Step 1.
 
 ## What NOT to do
 

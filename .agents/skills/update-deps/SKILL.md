@@ -28,6 +28,8 @@ npx ncu   # Shows available updates without modifying package.json
 
 ## Bulk Update (Use with extreme caution)
 
+**DO NOT EXECUTE THIS AUTOMATICALLY.** If the user asks to "update dependencies", default to the **Selective Update** method. You may ONLY run `npm run update` if the user explicitly confirms it by saying exactly: "run full update" or "update all dependencies and ignore risks".
+
 Run this ONLY if the user explicitly asks to update ALL dependencies unconditionally.
 
 ```bash

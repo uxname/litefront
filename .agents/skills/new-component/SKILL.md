@@ -1,6 +1,6 @@
 ---
 name: new-component
-description: Use this skill when the user asks to create a new reusable UI component, shared UI element, or design system component. Trigger phrases: "new component", "new ui component", "create component", "add to shared/ui".
+description: Use this skill when the user asks to create a new reusable UI component, shared UI element, or design system component. Strictly for shared/ui layer. Trigger phrases: "new component", "new ui component", "create component", "add to shared/ui".
 version: 1.0.0
 ---
 
@@ -13,6 +13,8 @@ Creates a reusable component in `shared/ui/` with a Ladle story and optional tes
 - `shared/ui/` — generic, reusable, no domain logic (Button, Modal, Card, Badge)
 - `entities/<name>/ui/` — domain-specific component tied to one entity (UserAvatar, ProductCard)
 - `features/<name>/ui/` — interactive feature component (LoginForm, AddToCartButton)
+
+**CRITICAL:** This skill is **ONLY** for creating generic components in `src/shared/ui/`. If the user asks to add a component to a specific feature or entity, DO NOT use this skill. Instead, add the component to the existing slice's `ui/` folder or use `new-fsd-slice` if the slice doesn't exist.
 
 ## Structure
 
@@ -57,17 +59,7 @@ export function Button({
 
 ## Ladle Story Template
 
-```tsx
-// src/shared/ui/Button/Button.stories.tsx
-import type { Story } from "@ladle/react";
-import { Button } from "./Button";
-
-export const Primary: Story = () => (
-  <Button variant="primary">Primary Button</Button>
-);
-```
-
-For more complex stories (controls, context providers), refer to the `add-story` skill.
+Every new shared component MUST have a `.stories.tsx` file. To generate the correct Ladle story content and boilerplate, strictly use the `add-story` skill.
 
 ## Index Export
 

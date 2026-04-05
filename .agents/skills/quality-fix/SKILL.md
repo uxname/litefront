@@ -86,7 +86,16 @@ FSD violations to fix:
 - **Cross-layer import** — entity importing from feature → move logic or use a different pattern
 - **Cross-slice import** — one feature directly importing from another feature → extract to shared or use events
 
-See the `migrate-fsd` skill for refactoring guidance.
+See the `refactor-fsd` skill for refactoring guidance.
+
+### CRITICAL MAPPING: Use the right tool for the right error
+
+| Error Type | Tool | What to do |
+|---|---|---|
+| **"Forbidden cross-layer import"** | Steiger (FSD) | Do NOT use Biome. You must manually move the file using `refactor-fsd` or change the import pattern. |
+| **"Unused export"** or **"Unresolved import"** | Knip | Remove the dead code manually. |
+| **"Type X is not assignable to type Y"** | TypeScript | Fix the interface/type manually. |
+| **"formatting, quotes, or simple unused variables"** | Biome | Run `npm run lint:fix`. |
 
 ## Common Pre-commit Failure Patterns
 

@@ -59,6 +59,8 @@ describe("counterStore", () => {
 
 ## Component Test
 
+**Zustand Warning:** If the tested component reads from a Zustand store, you MUST reset the store in a `beforeEach` block (just like in Unit Tests) or the state will leak between test cases causing unpredictable failures.
+
 ```tsx
 // src/entities/counter/ui/Counter.test.tsx
 import { cleanup, render, screen } from "@testing-library/react";

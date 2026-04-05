@@ -103,3 +103,9 @@ No manual client setup is needed per-operation.
 - [ ] Generated hooks imported from `@generated/graphql` (not from the file directly)
 - [ ] Never editing `src/generated/graphql.tsx` manually
 - [ ] Operation placed in the correct FSD layer (`api/` subfolder of the relevant slice)
+
+## Next Steps (Skill Chaining)
+
+After successfully adding and implementing the GraphQL operation:
+- If the user wants to test this data fetching, invoke the `write-tests` skill.
+- If this data needs to be stored globally across different pages, invoke the `new-store` skill to save the GraphQL response into a Zustand store.

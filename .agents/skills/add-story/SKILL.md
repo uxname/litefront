@@ -6,6 +6,12 @@ version: 1.0.0
 
 # Add Ladle Story
 
+**⚠️ CRITICAL ANTI-HALLUCINATION PROMPT:**
+Even though the npm scripts use the word `storybook` (e.g., `npm run storybook:serve`), this project uses **Ladle**, NOT Storybook.
+- **NEVER** import from `@storybook/*`.
+- **ALWAYS** import `type { Story }` from `@ladle/react`.
+- **NEVER** create `.storybook/main.js` or similar config files.
+
 Adds a visual story for a component using Ladle (the project's Storybook alternative).
 
 ## Story File Location

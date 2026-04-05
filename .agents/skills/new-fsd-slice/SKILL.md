@@ -64,3 +64,10 @@ Always run:
 npm run lint:fsd   # Check FSD boundaries
 npm run ts:check   # Check types
 ```
+
+## Adding to an Existing Slice
+
+If the user asks to add a component/hook to an **existing** slice (e.g., add a `CartItem` to `entities/cart`), do not recreate the slice.
+1. Locate the slice directory.
+2. Add the file to the appropriate folder (e.g., `ui/CartItem.tsx`).
+3. Export it from the slice's `index.ts` public API if it needs to be accessed by higher layers.
