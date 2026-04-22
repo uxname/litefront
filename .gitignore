@@ -11,3 +11,4 @@ storybook-build/
 .husky
 dev-dist/
 .kodu/context.txt
+coverage
