@@ -23,7 +23,7 @@ const MOCK_USER = {
 } as const;
 
 export const MockAuthProvider: FC<MockAuthProviderProps> = ({ children }) => {
-  const [isAuthenticated] = useState(
+  const [isAuthenticated, setIsAuthenticated] = useState(
     () => localStorage.getItem("isTestAuthenticated") === "true",
   );
 
@@ -34,6 +34,8 @@ export const MockAuthProvider: FC<MockAuthProviderProps> = ({ children }) => {
     signinRedirect: async () => {},
     signoutRedirect: async () => {
       localStorage.removeItem("isTestAuthenticated");
+      sessionStorage.setItem("__logged_out__", "true");
+      setIsAuthenticated(false);
     },
     signinPopup: async () => undefined,
     signinSilent: async () => undefined,

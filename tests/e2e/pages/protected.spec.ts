@@ -22,7 +22,9 @@ test.describe("Protected Page", () => {
 
   test("authenticated user is redirected after logout", async ({ page }) => {
     await page.addInitScript(() => {
-      localStorage.setItem("isTestAuthenticated", "true");
+      if (!sessionStorage.getItem("__logged_out__")) {
+        localStorage.setItem("isTestAuthenticated", "true");
+      }
     });
 
     await page.goto("/protected");

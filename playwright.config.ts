@@ -70,9 +70,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "VITE_MOCK_AUTH=true npm run start:dev",
+    command: "VITE_MOCK_AUTH=true npm run build:vite && npm run start:prod",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: 120_000,
   },
 });
