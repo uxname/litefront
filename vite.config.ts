@@ -167,6 +167,18 @@ export default defineConfig(async (): Promise<UserConfig> => {
           "**/*.d.ts",
           "**/*.config.*",
           "**/*.stories.*",
+          // Entry points and global providers (covered by E2E)
+          "src/main.tsx",
+          "src/routes/__root.tsx",
+          "src/app/providers/**",
+          // Third-party library adapters and configs (no business logic)
+          "src/shared/lib/sentry/**",
+          "src/shared/config/**",
+          "src/features/auth/api/oidc-client.ts",
+          // Dead code: protection logic lives in beforeLoad, not this component
+          "src/features/auth/ui/AuthGuard.tsx",
+          // Test-only mock provider
+          "src/features/auth/ui/MockAuthProvider.tsx",
         ],
       },
     },

@@ -1,4 +1,5 @@
 import { AuthProvider, oidcConfig, useAuth } from "@features/auth";
+import { MockAuthProvider } from "@features/auth/ui/MockAuthProvider";
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
@@ -64,12 +65,20 @@ const App = () => {
   return <RouterProvider router={router} context={{ auth }} />;
 };
 
+const isMockAuth = import.meta.env.VITE_MOCK_AUTH === "true";
+
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
     <GlobalErrorBoundary>
-      <AuthProvider {...oidcConfig} onSigninCallback={onSigninCallback}>
-        <App />
-      </AuthProvider>
+      {isMockAuth ? (
+        <MockAuthProvider>
+          <App />
+        </MockAuthProvider>
+      ) : (
+        <AuthProvider {...oidcConfig} onSigninCallback={onSigninCallback}>
+          <App />
+        </AuthProvider>
+      )}
     </GlobalErrorBoundary>
   </React.StrictMode>,
 );

@@ -2,7 +2,7 @@ import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-// Mock paraglide messages
+// Local mock takes precedence over the global setup.ts mock — kept for self-containedness
 vi.mock("@generated/paraglide/messages", () => ({
   m: {
     error_generic_title: () => "System Issue",
@@ -23,30 +23,64 @@ vi.mock("@generated/paraglide/messages", () => ({
 }));
 
 describe("ErrorFallback", () => {
-  it("displays error message", () => {
+  it("displays error message in developer details", () => {
     const error = new Error("Test error message");
     render(<ErrorFallback error={error} reset={vi.fn()} />);
 
-    // Click to expand developer details to see error message
-    const detailsButton = screen.getByRole("button", {
-      name: /developer details/i,
-    });
-    fireEvent.click(detailsButton);
+    fireEvent.click(screen.getByRole("button", { name: /developer details/i }));
 
-    // Error message appears in both title and stack trace
     const errorMessages = screen.getAllByText(/test error message/i);
     expect(errorMessages.length).toBeGreaterThanOrEqual(1);
   });
 
   it("calls reset when retry button clicked", () => {
     const reset = vi.fn();
-    const error = new Error("Test error");
+    render(<ErrorFallback error={new Error("Test error")} reset={reset} />);
 
-    render(<ErrorFallback error={error} reset={reset} />);
-
-    const retryButton = screen.getByRole("button", { name: /retry/i });
-    fireEvent.click(retryButton);
-
+    fireEvent.click(screen.getByRole("button", { name: /retry/i }));
     expect(reset).toHaveBeenCalled();
+  });
+
+  it("shows AUTH title for 401 errors", () => {
+    render(<ErrorFallback error={new Error("401 Unauthorized")} />);
+    expect(
+      screen.getByRole("heading", { name: "Authentication Required" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows ACCESS title for 403 errors", () => {
+    render(<ErrorFallback error={new Error("Forbidden 403")} />);
+    expect(
+      screen.getByRole("heading", { name: "Access Denied" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows NETWORK title for network errors", () => {
+    render(
+      <ErrorFallback error={new Error("Network Error (Failed to fetch)")} />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Network Error" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows SERVER title for 500 errors", () => {
+    render(<ErrorFallback error={new Error("Internal Server Error 500")} />);
+    expect(
+      screen.getByRole("heading", { name: "Server Error" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows UNKNOWN title for unrecognised errors", () => {
+    render(<ErrorFallback error={new Error("Some strange bug")} />);
+    expect(
+      screen.getByRole("heading", { name: "Unexpected Error" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders retry and reload buttons", () => {
+    render(<ErrorFallback error={new Error("Error")} reset={vi.fn()} />);
+    expect(screen.getByRole("button", { name: /retry/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /reload/i })).toBeInTheDocument();
   });
 });
