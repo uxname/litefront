@@ -35,6 +35,7 @@ describe("Protected Route — beforeLoad guard", () => {
       thrownValue = e;
     }
     // TanStack Router v1 redirect() throws a Response; destination is in options.to
+    // biome-ignore lint/suspicious/noExplicitAny: thrown value has no exported type
     expect((thrownValue as any)?.options?.to).toBe("/");
   });
 

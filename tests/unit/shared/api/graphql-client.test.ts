@@ -20,9 +20,10 @@ vi.mock("urql", async (importOriginal) => {
   return {
     ...actual,
     // urql v5 stores fetchOptions in a closure — capture constructor opts to inspect them
+    // biome-ignore lint/complexity/useArrowFunction: arrow functions cannot be used with `new`
     Client: function (opts: Record<string, unknown>) {
       refs.clientOpts = opts;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: urql Client constructor type is opaque
       return new actual.Client(opts as any);
     },
     errorExchange: (options: { onError: (error: CombinedError) => void }) => {
