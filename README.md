@@ -203,7 +203,7 @@ npm run test:e2e:dev
 
 ### Coverage
 ```bash
-npm run test:coverage
+npm run test:cov
 ```
 
 ## Error Monitoring

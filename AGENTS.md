@@ -29,7 +29,7 @@ conventions to stay aligned with existing tooling and architecture.
 ### Vitest (unit/component)
 - `npm run test:dev` — interactive/watch
 - `npm run test:prod` — run once (CI style)
-- `npm run test:coverage` — coverage
+- `npm run test:cov` — coverage
 
 **Single test file**
 - `npm run test:dev -- src/path/to/file.test.tsx`

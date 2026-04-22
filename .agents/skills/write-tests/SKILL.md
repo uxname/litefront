@@ -21,7 +21,7 @@ Writes tests following the project's three-tier testing strategy.
 ```bash
 npm run test:prod          # Unit + component (one run)
 npm run test:dev           # Unit + component (watch mode)
-npm run test:coverage      # Coverage report (thresholds: 80% lines/functions)
+npm run test:cov           # Coverage report (thresholds: 80% lines/functions)
 npm run test:e2e:prod      # E2E headless chromium
 npm run test:e2e:dev       # E2E with UI
 ```
@@ -128,4 +128,4 @@ Vitest enforces minimum coverage:
 - [ ] Unit tests reset store state in `beforeEach`
 - [ ] Component tests call `cleanup` in `afterEach`
 - [ ] `npm run test:prod` passes
-- [ ] `npm run test:coverage` meets thresholds
+- [ ] `npm run test:cov` meets thresholds
