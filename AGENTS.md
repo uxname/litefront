@@ -8,6 +8,10 @@ conventions to stay aligned with existing tooling and architecture.
 - Dev server: `npm run start:dev`
 - Full quality gate: `npm run check` (runs stylelint, tsc, biome fix, knip, steiger)
 
+## IMPORTANT — Quality Gate Rule
+- **Always** use `npm run check` for the full quality gate.
+- **Never** call `npm run lint && npm run ts:check` separately — this skips knip, steiger, and biome auto-fix, which will cause pre-commit (lefthook) to fail. Rely on `npm run check` exclusively.
+
 ## Build / Run
 - `npm run start:dev` — Vite dev server (HMR)
 - `npm run start:prod` — Vite preview (serves build)
