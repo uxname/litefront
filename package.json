@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
+    "@colbymchenry/codegraph": "^0.9.4",
     "@graphql-codegen/cli": "^7.0.0",
     "@graphql-codegen/schema-ast": "^6.0.0",
     "@graphql-codegen/typescript": "^6.0.1",
