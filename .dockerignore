@@ -3,7 +3,6 @@ dist/
 storybook-build/
 .idea
 .vscode
-#.env
 docker-compose.yml
 Dockerfile
 dev-dist/

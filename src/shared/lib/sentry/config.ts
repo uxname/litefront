@@ -1,15 +1,18 @@
 import * as Sentry from "@sentry/react";
+import { env } from "@shared/config";
 
 export const initSentry = () => {
-  if (!import.meta.env.VITE_SENTRY_DSN) {
-    console.warn("Sentry DSN not configured");
+  if (!env.VITE_SENTRY_DSN) {
+    if (env.DEV) {
+      console.warn("Sentry DSN not configured");
+    }
     return;
   }
 
   Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN,
-    environment: import.meta.env.MODE,
-    release: import.meta.env.VITE_APP_VERSION || "development",
+    dsn: env.VITE_SENTRY_DSN,
+    environment: env.MODE,
+    release: env.VITE_APP_VERSION || "development",
 
     integrations: [
       Sentry.browserTracingIntegration(),
@@ -19,7 +22,7 @@ export const initSentry = () => {
       }),
     ],
 
-    tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
+    tracesSampleRate: env.PROD ? 0.1 : 1.0,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
 

@@ -22,61 +22,60 @@
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
 | VAL-01 | OIDC callback без validateSearch | ❌ FAIL 🟡 | `src/routes/callback.tsx:15` — `createFileRoute("/callback")` без `validateSearch` | **1. Добавить validateSearch с zod-схемой** \\ 2. Добавить parseSearchWith для дефолтной валидации \\ 3. OIDC-библиотека проверяет state внутренне — риск снижен | Нет |
-| ERR-05 | Нет таймаутов OIDC | ❌ FAIL 🟠 | `src/features/auth/api/oidc-client.ts:4-12` — нет конфигурации таймаута | **1. Добавить timeout в AuthProvider** \\ 2. Использовать AbortSignal.timeout() \\ 3. Добавить глобальный timeout в oidc-client | Нет |
-| YAGNI-02 | Dead code: AuthGuard не используется | ❌ FAIL 🟡 | `src/features/auth/ui/AuthGuard.tsx:11` — экспортирован, но нигде не импортирован | **1. Удалить AuthGuard** \\ 2. Подключить к protected-роуту \\ 3. Оставить как документированный компонент | Нет |
-| YAGNI-02 | Dead code: AuthState, AuthActions, AuthStore, User | ❌ FAIL 🟡 | `src/features/auth/model/types.ts` — типы не потребляются | **1. Удалить неиспользуемые типы** \\ 2. Оставить только используемый AuthStore | Нет |
-| ERR-09 | Нет AbortSignal в OIDC | ❌ FAIL 🟠 | `oidc-client.ts` — не принимает signal | **См. ERR-05** | Нет |
+| ERR-05 | Нет таймаутов OIDC | ❌ FAIL 🟠 | `src/features/auth/api/oidc-client.ts:4-12` — нет конфигурации таймаута | **1. Добавить timeout в AuthProvider** \\ 2. Использовать AbortSignal.timeout() \\ 3. Добавить глобальный timeout в oidc-client | ❌ OIDC не поддерживает таймаут напрямую (redirect flow) |
+| YAGNI-02 | Dead code: AuthGuard не используется | ❌ FAIL 🟡 | `src/features/auth/ui/AuthGuard.tsx:11` — экспортирован, но нигде не импортирован | **1. Удалить AuthGuard** \\ 2. Подключить к protected-роуту \\ 3. Оставить как документированный компонент | ✅ AuthGuard удалён |
+| YAGNI-02 | Dead code: AuthState, AuthActions, AuthStore, User | ❌ FAIL 🟡 | `src/features/auth/model/types.ts` — типы не потребляются | **1. Удалить неиспользуемые типы** \\ 2. Оставить только используемый AuthStore | ✅ Типы схлопнуты в единый AuthStore |
+| ERR-09 | Нет AbortSignal в OIDC | ❌ FAIL 🟠 | `oidc-client.ts` — не принимает signal | **См. ERR-05** | ❌ Сложно, не делали |
 
 ## Компонент: Общие UI-компоненты (ErrorFallback)
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| BUG-03 | JSON.stringify крашит fallback | ❌ FAIL 🟡 | `src/shared/ui/ErrorFallback/index.tsx:126` — `JSON.stringify(error)` без try-catch | **1. Обернуть в try-catch** \\ 2. Использовать `String(error)` \\ 3. Использовать safeStringify | Нет |
-| OWA-07 | Stack trace в production UI | ❌ FAIL 🟠 | `src/shared/ui/ErrorFallback/index.tsx:265-269` — `normalizedError.stack` без `import.meta.env.PROD` | **1. Обернуть в `if (import.meta.env.DEV)`** \\ 2. Показывать Sentry event ID вместо stack trace в production \\ 3. Логировать в Sentry, не показывать пользователю | Нет |
-| ERR-08 | Retry без exponential backoff | ❌ FAIL 🟠 | `ErrorFallback/index.tsx:153-161` — `handleRetry` делает мгновенную попытку | **1. Добавить attempt-счётчик с увеличивающейся задержкой** \\ 2. Установить `@urql/exchange-retry` \\ 3. Добавить jitter в retry-логику | Нет |
-| LOG-01 | console.error в ErrorFallback | ❌ FAIL 🟡 | `src/shared/ui/ErrorFallback/index.tsx:181` — `console.error("Failed to copy", err)` | **1. Заменить на Sentry captureException** \\ 2. Обернуть в DEV-условие | Нет |
+| BUG-03 | JSON.stringify крашит fallback | ❌ FAIL 🟡 | `src/shared/ui/ErrorFallback/index.tsx:126` — `JSON.stringify(error)` без try-catch | **1. Обернуть в try-catch** \\ 2. Использовать `String(error)` \\ 3. Использовать safeStringify | ✅ `normalizeError` обёрнут в try-catch |
+| OWA-07 | Stack trace в production UI | ❌ FAIL 🟠 | `src/shared/ui/ErrorFallback/index.tsx:265-269` — `normalizedError.stack` без `import.meta.env.PROD` | **1. Обернуть в `if (import.meta.env.DEV)`** \\ 2. Показывать Sentry event ID вместо stack trace в production \\ 3. Логировать в Sentry, не показывать пользователю | ✅ Stack trace скрыт в production |
+| ERR-08 | Retry без exponential backoff | ⏸ **ACCEPTED** | `ErrorFallback/index.tsx:153-161` — `handleRetry` делает мгновенную попытку | **1. Добавить attempt-счётчик с увеличивающейся задержкой** \\ 2. Установить `@urql/exchange-retry` \\ 3. Добавить jitter в retry-логику | ✅ Exponential backoff (1s, 2s, 4s… до 30s). ⏸ Jitter: accepted (human-initiated retry) |
+| LOG-01 | console.error в ErrorFallback | ❌ FAIL 🟡 | `src/shared/ui/ErrorFallback/index.tsx:181` — `console.error("Failed to copy", err)` | **1. Заменить на Sentry captureException** \\ 2. Обернуть в DEV-условие | ✅ DEV guard |
 | ERR-02 | Stack trace утекает (cross-ref) | ⚠️ WARN | См. OWA-07 | — | — |
 
 ## Компонент: API-слой
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| ERR-05 | Нет таймаутов GraphQL | ❌ FAIL 🟠 | `src/shared/api/graphql-client.ts:4-29` — URQL без fetchOptions.timeout | **1. Добавить `fetchOptions: { signal: AbortSignal.timeout(15000) }`** \\ 2. Использовать custom fetch с таймаутом \\ 3. Установить @urql/exchange-retry | Нет |
-| ERR-09 | Нет AbortSignal в URQL | ❌ FAIL 🟠 | `graphql-client.ts` — не принимает signal | **1. Добавить поддержку signal в обёртку** \\ 2. Рассмотреть TanStack Query | Нет |
-| ARC-05 | import.meta.env напрямую | ❌ FAIL 🟠 | `src/shared/api/graphql-client.ts:6` — VITE_GRAPHQL_API_URL | **См. Конфигурация** | Нет |
+| ERR-05 | Нет таймаутов GraphQL | ❌ FAIL 🟠 | `src/shared/api/graphql-client.ts:4-29` — URQL без fetchOptions.timeout | **1. Добавить `fetchOptions: { signal: AbortSignal.timeout(15000) }`** \\ 2. Использовать custom fetch с таймаутом \\ 3. Установить @urql/exchange-retry | ✅ `AbortSignal.timeout(15000)` добавлен |
+| ERR-09 | Нет AbortSignal в URQL | ❌ FAIL 🟠 | `graphql-client.ts` — не принимает signal | **1. Добавить поддержку signal в обёртку** \\ 2. Рассмотреть TanStack Query | ❌ Сложно, не делали |
+| ARC-05 | import.meta.env напрямую | ❌ FAIL 🟠 | `src/shared/api/graphql-client.ts:6` — VITE_GRAPHQL_API_URL | **См. Конфигурация** | ✅ `env.VITE_GRAPHQL_API_URL` |
 
 ## Компонент: Конфигурация
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| ARC-05 | import.meta.env напрямую (4 файла) | ❌ FAIL 🟠 | `oidc-client.ts:5-9`, `graphql-client.ts:6`, `sentry/config.ts:4,10,12,22`, `main.tsx:68` | **1. Заменить на импорт из `@shared/config/env`** \\ 2. Удалить env.ts если не используется \\ 3. Добавить runtime-валидацию env при старте | Нет |
-| YAGNI-02 | Dead code: env.ts и PORT | ❌ FAIL 🟡 | `shared/config/env.ts` — экспорт нигде не импортирован | **1. Удалить env.ts** \\ 2. Подключить потребителей к env.ts | Нет |
-| NAM-05 | Magic string "3000" | ❌ FAIL 🟢 | `shared/config/env.ts:24` — `PORT: import.meta.env.PORT \|\| "3000"` | **1. Вынести в DEFAULT_PORT = "3000"** | Нет |
+| ARC-05 | import.meta.env напрямую (4 файла) | ❌ FAIL 🟠 | `oidc-client.ts:5-9`, `graphql-client.ts:6`, `sentry/config.ts:4,10,12,22`, `main.tsx:68` | **1. Заменить на импорт из `@shared/config/env`** \\ 2. Удалить env.ts если не используется \\ 3. Добавить runtime-валидацию env при старте | ✅ Все 4 файла переведены на `env` из `@shared/config` |
+| YAGNI-02 | Dead code: env.ts и PORT | ❌ FAIL 🟡 | `shared/config/env.ts` — экспорт нигде не импортирован | **1. Удалить env.ts** \\ 2. Подключить потребителей к env.ts | ✅ env.ts теперь центральный хаб конфигов, потребители подключены |
+| NAM-05 | Magic string "3000" | ❌ FAIL 🟢 | `shared/config/env.ts:24` — `PORT: import.meta.env.PORT \|\| "3000"` | **1. Вынести в DEFAULT_PORT = "3000"** | ✅ `DEFAULT_PORT` вынесен |
 
 ## Компонент: Мониторинг (Sentry)
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| ARC-05 | import.meta.env в sentry/config | ❌ FAIL 🟠 | `src/shared/lib/sentry/config.ts:4,10,12,22` | **См. Конфигурация** | Нет |
-| LOG-01 | console.warn в sentry/config | ❌ FAIL 🟡 | `src/shared/lib/sentry/config.ts:5` — `console.warn("Sentry DSN not configured")` | **1. Обернуть в `if (import.meta.env.DEV)`** \\ 2. Удалить, Sentry сам логирует отсутствие DSN | Нет |
+| ARC-05 | import.meta.env в sentry/config | ❌ FAIL 🟠 | `src/shared/lib/sentry/config.ts:4,10,12,22` | **См. Конфигурация** | ✅ Переведены на `env.*` |
+| LOG-01 | console.warn в sentry/config | ❌ FAIL 🟡 | `src/shared/lib/sentry/config.ts:5` — `console.warn("Sentry DSN not configured")` | **1. Обернуть в `if (import.meta.env.DEV)`** \\ 2. Удалить, Sentry сам логирует отсутствие DSN | ✅ DEV guard |
 
 ## Компонент: Провайдеры приложения
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| LOG-01 | console.error в GlobalErrorBoundary | ❌ FAIL 🟡 | `src/app/providers/GlobalErrorBoundary.tsx:9` — `console.error("Uncaught Promise...")` | **1. Заменить на Sentry captureMessage** \\ 2. Удалить (Sentry уже ловит) | Нет |
-| LOG-07 | event.reason без санитизации | ⚠️ WARN | `GlobalErrorBoundary.tsx:9` — `event.reason` логируется без санитизации | **1. Санитизировать перед console.error** \\ 2. Передавать только message | Нет |
-| ERR-04 | Нет window.error обработчика | ⚠️ WARN | `GlobalErrorBoundary.tsx:8-14` — только unhandledrejection | **1. Добавить `window.addEventListener('error', handler)`** | Нет |
+| LOG-01 | console.error в GlobalErrorBoundary | ❌ FAIL 🟡 | `src/app/providers/GlobalErrorBoundary.tsx:9` — `console.error("Uncaught Promise...")` | **1. Заменить на Sentry captureMessage** \\ 2. Удалить (Sentry уже ловит) | ✅ console.error удалён, Sentry captureException вместо него |
+| LOG-07 | event.reason без санитизации | ⚠️ WARN | `GlobalErrorBoundary.tsx:9` — `event.reason` логируется без санитизации | **1. Санитизировать перед console.error** \\ 2. Передавать только message | ✅ console.error удалён, Sentry обрабатывает безопасно |
+| ERR-04 | Нет window.error обработчика | ⚠️ WARN | `GlobalErrorBoundary.tsx:8-14` — только unhandledrejection | **1. Добавить `window.addEventListener('error', handler)`** | ✅ Добавлен `window.error` обработчик |
 
 ## Компонент: Сборка и Деплой
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| SEC-04 | .env.example с реальными credentials | ❌ FAIL 🟠 | `.env.example:7-8` — `VITE_OIDC_AUTHORITY=https://oalmxx.logto.app/oidc`, `VITE_OIDC_CLIENT_ID=foxpqpb09d3rzxn9r4pfj` | **1. Заменить на `https://your-oidc-provider.example.com`** \\ 2. Отозвать реальные client_id \\ 3. Добавить комментарий о замене | Нет |
-| SEC-02 | .dockerignore: .env закомментирован | ⚠️ WARN | `.dockerignore:6` — `#.env` | **1. Раскомментировать `.env`** \\ 2. Добавить `.env.*` | Нет |
-| DEP-04 | .git и .env в Docker build context | ❌ FAIL 🟠 | `.dockerignore` — нет `.git`; `.env` закомментирован | **1. Добавить `.git` и `.env` в .dockerignore** \\ 2. Копировать только `.git/HEAD` + `.git/refs/` | Нет |
-| DEP-08 | .env.example неполный | ❌ FAIL 🟠 | Нет `VITE_MOCK_AUTH` и `VITE_APP_VERSION` | **1. Добавить `VITE_MOCK_AUTH=false`** \\ **2. Добавить `VITE_APP_VERSION=development`** | Нет |
-| DEP-09 | NODE_ENV не установлен | ❌ FAIL 🟠 | Dockerfile — нет `ENV NODE_ENV=production` | **1. Добавить `ENV NODE_ENV=production`** \\ 2. Заменить `npm run build` на `npm run build:vite` | Нет |
+| SEC-04 | .env.example с реальными credentials | ❌ FAIL 🟠 | `.env.example:7-8` — `VITE_OIDC_AUTHORITY=https://oalmxx.logto.app/oidc`, `VITE_OIDC_CLIENT_ID=foxpqpb09d3rzxn9r4pfj` | **1. Заменить на `https://your-oidc-provider.example.com`** \\ 2. Отозвать реальные client_id \\ 3. Добавить комментарий о замене | ✅ Заменены на placeholder |
+| DEP-04 | .git и .env в Docker build context | ❌ FAIL 🟠 | `.dockerignore` — нет `.git`; `.env` закомментирован | **1. Добавить `.git` и `.env` в .dockerignore** \\ 2. Копировать только `.git/HEAD` + `.git/refs/` | ✅ `.git`, `.env`, `.env.*` добавлены в .dockerignore |
+| DEP-08 | .env.example неполный | ❌ FAIL 🟠 | Нет `VITE_MOCK_AUTH` и `VITE_APP_VERSION` | **1. Добавить `VITE_MOCK_AUTH=false`** \\ **2. Добавить `VITE_APP_VERSION=development`** | ✅ Добавлены |
+| DEP-09 | NODE_ENV не установлен | ❌ FAIL 🟠 | Dockerfile — нет `ENV NODE_ENV=production` | **1. Добавить `ENV NODE_ENV=production`** \\ 2. Заменить `npm run build` на `npm run build:vite` | ✅ `NODE_ENV` + `build:vite` |
 
 ## Компонент: CI и Тесты
 
@@ -89,23 +88,23 @@
 
 | Check ID | Проверка | Статус | Доказательство | Решение | Исправлено |
 |----------|----------|--------|----------------|---------|------------|
-| OWA-05 | dev-сервер на 0.0.0.0 | ❌ FAIL 🟡 | `vite.config.ts:26` — `host: "0.0.0.0"` | **1. Заменить на `host: "localhost"`** \\ 2. Оставить для Docker, документировать риск | Нет |
+| OWA-05 | dev-сервер на 0.0.0.0 | ❌ FAIL 🟡 | `vite.config.ts:26` — `host: "0.0.0.0"` | **1. Заменить на `host: "localhost"`** \\ 2. Оставить для Docker, документировать риск | ✅ `process.env.CI ? "0.0.0.0" : "localhost"` |
 
 ---
 
 ## Сводка
 
-| Компонент | 🔴 Critical | 🟠 High | 🟡 Medium | 🟢 Low | ⏸ ACCEPTED | Итого FAIL |
-|-----------|-----------|---------|----------|--------|------------|------------|
-| Аутентификация | 0 | 3 | 3 | 0 | 0 | 6 |
-| Общие UI | 0 | 2 | 2 | 0 | 0 | 4 |
-| API-слой | 0 | 2 | 0 | 0 | 0 | 2 |
-| Конфигурация | 0 | 1 | 1 | 1 | 0 | 3 |
-| Мониторинг | 0 | 1 | 1 | 0 | 0 | 2 |
-| Провайдеры | 0 | 0 | 1 | 0 | 0 | 1 |
-| Сборка/Деплой | 0 | 4 | 0 | 0 | 0 | 4 |
-| CI/Тесты | 0 | 1 | 0 | 0 | 0 | 1 |
-| **ИТОГО** | **0** | **14** | **8** | **1** | **0** | **23** |
+| Компонент | 🔴 Critical | 🟠 High | 🟡 Medium | 🟢 Low | ✅ Fixed | ⏸ ACCEPTED | ⏸ Осталось | Итого FAIL |
+|-----------|-----------|---------|----------|--------|---------|------------|------------|------------|
+| Аутентификация | 0 | 3 | 3 | 0 | 4 | 0 | 2 | 6 |
+| Общие UI | 0 | 2 | 2 | 0 | 4 | 1 | 0 | 4 |
+| API-слой | 0 | 2 | 0 | 0 | 1 | 0 | 1 | 2 |
+| Конфигурация | 0 | 1 | 1 | 1 | 3 | 0 | 0 | 3 |
+| Мониторинг | 0 | 1 | 1 | 0 | 2 | 0 | 0 | 2 |
+| Провайдеры | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 1 |
+| Сборка/Деплой | 0 | 4 | 0 | 0 | 4 | 1 | 0 | 4 |
+| CI/Тесты | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 1 |
+| **ИТОГО** | **0** | **14** | **8** | **1** | **19** | **2** | **4** | **23** |
 
 ## Критические риски 🔴
 

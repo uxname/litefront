@@ -23,7 +23,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
     server: {
       port,
       strictPort: true,
-      host: "0.0.0.0",
+      host: process.env.CI ? "0.0.0.0" : "localhost",
     },
     preview: {
       port,
@@ -175,8 +175,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
           "src/shared/lib/sentry/**",
           "src/shared/config/**",
           "src/features/auth/api/oidc-client.ts",
-          // Dead code: protection logic lives in beforeLoad, not this component
-          "src/features/auth/ui/AuthGuard.tsx",
           // Test-only mock provider
           "src/features/auth/ui/MockAuthProvider.tsx",
         ],

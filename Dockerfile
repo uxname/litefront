@@ -7,17 +7,18 @@ RUN apk add --no-cache git
 # Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy source and install dependencies
 COPY package*.json ./
-# git required for lefthook
 COPY .git .git
 RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . ./
 
+ENV NODE_ENV=production
+
 # Build the application
-RUN npm run build
+RUN npm run build:vite
 
 # Production stage
 FROM caddy:alpine

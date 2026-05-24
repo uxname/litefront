@@ -1,4 +1,5 @@
 import { m } from "@generated/paraglide/messages";
+import { env } from "@shared/config";
 import {
   ArrowRight,
   ChevronDown,
@@ -14,7 +15,7 @@ import {
   Terminal,
   Wifi,
 } from "lucide-react";
-import { type FC, useCallback, useMemo, useState } from "react";
+import { type FC, useCallback, useMemo, useRef, useState } from "react";
 
 enum ErrorCategory {
   AUTH = "AUTH",
@@ -123,8 +124,12 @@ const detectErrorCategory = (error: Error): ErrorCategory => {
 
 const normalizeError = (error: unknown): Error => {
   if (error instanceof Error) return error;
-  const message = typeof error === "string" ? error : JSON.stringify(error);
-  return new Error(message || "Unknown error occurred");
+  try {
+    const message = typeof error === "string" ? error : JSON.stringify(error);
+    return new Error(message || "Unknown error occurred");
+  } catch {
+    return new Error("Non-serializable error (circular or BigInt)");
+  }
 };
 
 interface ErrorFallbackProps {
@@ -142,6 +147,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
+  const retryCountRef = useRef(0);
 
   const normalizedError = useMemo(() => normalizeError(error), [error]);
   const category = useMemo(
@@ -151,12 +157,21 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   const config = ERROR_CONFIG[category];
 
   const handleRetry = useCallback(() => {
-    if (onRetry) {
-      onRetry();
-    } else if (reset) {
-      reset();
+    const attempt = retryCountRef.current++;
+    const delay = Math.min(1000 * 2 ** attempt, 30000);
+    const doRetry = () => {
+      if (onRetry) {
+        onRetry();
+      } else if (reset) {
+        reset();
+      } else {
+        window.location.reload();
+      }
+    };
+    if (delay <= 1000) {
+      doRetry();
     } else {
-      window.location.reload();
+      setTimeout(doRetry, delay);
     }
   }, [reset, onRetry]);
 
@@ -178,7 +193,9 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy", err);
+      if (env.DEV) {
+        console.error("Failed to copy", err);
+      }
     }
   }, [normalizedError]);
 
@@ -264,9 +281,11 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
                   <span className="block text-red-600 font-bold mb-2 break-words">
                     {normalizedError.name}: {normalizedError.message}
                   </span>
-                  <div className="whitespace-pre-wrap break-words opacity-80">
-                    {normalizedError.stack || "No stack trace available"}
-                  </div>
+                  {env.DEV && (
+                    <div className="whitespace-pre-wrap break-words opacity-80">
+                      {normalizedError.stack || "No stack trace available"}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

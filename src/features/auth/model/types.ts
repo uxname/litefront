@@ -1,21 +1,17 @@
-export interface User {
+export interface AuthUser {
   sub: string;
   email?: string;
+  preferred_username?: string;
   name?: string;
-  picture?: string;
+  [key: string]: unknown;
 }
 
-export interface AuthState {
+export interface AuthStore {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: User | null;
+  user: AuthUser | null;
   error: Error | null;
-}
-
-export interface AuthActions {
   login: () => Promise<void>;
   logout: () => Promise<void>;
   handleCallback: () => Promise<void>;
 }
-
-export type AuthStore = AuthState & AuthActions;

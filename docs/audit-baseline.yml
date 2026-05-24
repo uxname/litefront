@@ -3,14 +3,10 @@
 # Скопируй в корень проекта: docs/audit-baseline.yml
 
 accepted:
-  # Пример:
-  # - check_id: OWA-06
-  #   file: src/app.ts          # Опционально: ограничить конкретным файлом
-  #   reason: "Rate limiting на nginx уровне"
-  #   type: accepted-risk        # accepted-risk | false-positive | intentional-design
-  #   accepted_by: username
-  #   accepted_date: 2026-01-01
-  #   expires: 2026-12-31       # Опционально: когда пересмотреть
+  - check_id: DEP-04
+    reason: "Public Vite environment variables are embedded in the static build. Leaking them via Docker build layers poses no security risk."
+    type: accepted-risk
+    accepted_date: 2026-05-24
 
 # ─────────────────────────────────────────
 # Ложные срабатывания (инструмент ошибся, нарушения нет)
@@ -21,9 +17,10 @@ false_positives:
 
 # Намеренные архитектурные решения (не баги, обоснованный выбор)
 intentional:
-  # - check_id: NAM-06
-  #   reason: "utils.ts contains 3 tightly related helpers, intentional"
-  #   type: intentional-design
+  - check_id: ERR-08
+    reason: "Jitter is omitted in ErrorFallback because retries are strictly human-initiated (button clicks). UX must remain instant on the first attempt."
+    type: intentional-design
+    accepted_date: 2026-05-24
 
 # ─────────────────────────────────────────
 # ПОЛНЫЙ СПИСОК check_id

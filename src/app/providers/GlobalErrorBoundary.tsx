@@ -5,13 +5,20 @@ import { ErrorBoundary } from "react-error-boundary";
 
 export const GlobalErrorBoundary = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
-    const errorHandler = (event: PromiseRejectionEvent) => {
-      console.error("Uncaught Promise Rejection:", event.reason);
+    const handleRejection = (event: PromiseRejectionEvent) => {
       captureException(event.reason);
     };
 
-    window.addEventListener("unhandledrejection", errorHandler);
-    return () => window.removeEventListener("unhandledrejection", errorHandler);
+    const handleError = (event: ErrorEvent) => {
+      captureException(event.error || event.message);
+    };
+
+    window.addEventListener("unhandledrejection", handleRejection);
+    window.addEventListener("error", handleError);
+    return () => {
+      window.removeEventListener("unhandledrejection", handleRejection);
+      window.removeEventListener("error", handleError);
+    };
   }, []);
 
   return (

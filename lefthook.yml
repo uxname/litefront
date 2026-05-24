@@ -1,6 +1,8 @@
 pre-commit:
-  parallel: true
+  parallel: false
   commands:
+    secrets:
+      run: bash -c 'if command -v gitleaks >/dev/null 2>&1; then gitleaks detect --source . -v --no-banner; else echo "⚠️  gitleaks is not installed locally. Skipping pre-commit secrets scan."; fi'
     check:
       run: npm run check
 

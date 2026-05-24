@@ -2,11 +2,12 @@ import { AuthProvider, oidcConfig, useAuth } from "@features/auth";
 import { MockAuthProvider } from "@features/auth/ui/MockAuthProvider";
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
+import { env } from "@shared/config";
+import { captureMessage, initSentry, setUser } from "@shared/lib/sentry";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { initSentry, setUser } from "@shared/lib/sentry";
 import { GlobalErrorBoundary } from "./app/providers/GlobalErrorBoundary.tsx";
 
 initSentry();
@@ -35,6 +36,7 @@ declare module "@tanstack/react-router" {
 }
 
 const onSigninCallback = () => {
+  captureMessage("Auth: sign-in completed", { level: "info" });
   window.history.replaceState({}, document.title, window.location.pathname);
   router.navigate({ to: "/", replace: true });
 };
@@ -65,7 +67,7 @@ const App = () => {
   return <RouterProvider router={router} context={{ auth }} />;
 };
 
-const isMockAuth = import.meta.env.VITE_MOCK_AUTH === "true";
+const isMockAuth = env.VITE_MOCK_AUTH === "true";
 
 ReactDOM.createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>

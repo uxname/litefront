@@ -1,9 +1,10 @@
+import { env } from "@shared/config";
 import { captureException } from "@shared/lib/sentry";
 import { Client, cacheExchange, errorExchange, fetchExchange } from "urql";
 
 export const createGraphQLClient = (accessToken?: string): Client => {
   return new Client({
-    url: import.meta.env.VITE_GRAPHQL_API_URL,
+    url: env.VITE_GRAPHQL_API_URL,
     exchanges: [
       cacheExchange,
       errorExchange({
@@ -24,6 +25,7 @@ export const createGraphQLClient = (accessToken?: string): Client => {
     ],
     fetchOptions: {
       headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      signal: AbortSignal.timeout(15000),
     },
     requestPolicy: "cache-and-network",
   });

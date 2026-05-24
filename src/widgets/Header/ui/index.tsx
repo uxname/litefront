@@ -1,4 +1,5 @@
 import { useAuth } from "@features/auth";
+import { captureMessage } from "@shared/lib/sentry";
 import { Link } from "@tanstack/react-router";
 import { Loader2, LogIn, LogOut, User } from "lucide-react";
 import { FC, useCallback } from "react";
@@ -7,6 +8,7 @@ export const Header: FC = () => {
   const auth = useAuth();
 
   const handleSignOut = useCallback(() => {
+    captureMessage("Auth: sign-out initiated", { level: "info" });
     void auth.signoutRedirect();
   }, [auth]);
 

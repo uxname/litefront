@@ -1,4 +1,5 @@
 import { useAuth } from "@features/auth";
+import { captureMessage } from "@shared/lib/sentry";
 import { toast } from "@shared/ui/Toaster";
 import { Header } from "@widgets/Header";
 import {
@@ -21,6 +22,7 @@ export const ProtectedPage: FC = () => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleSignOut = useCallback(() => {
+    captureMessage("Auth: sign-out initiated", { level: "info" });
     void auth.signoutRedirect();
   }, [auth]);
 
