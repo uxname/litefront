@@ -1,0 +1,170 @@
+# audit-baseline.yml
+# Принятые/отложенные риски. Совпадение по check_id → статус ⏸ ACCEPTED в отчёте.
+# Скопируй в корень проекта: docs/audit-baseline.yml
+
+accepted:
+  # Пример:
+  # - check_id: OWA-06
+  #   file: src/app.ts          # Опционально: ограничить конкретным файлом
+  #   reason: "Rate limiting на nginx уровне"
+  #   type: accepted-risk        # accepted-risk | false-positive | intentional-design
+  #   accepted_by: username
+  #   accepted_date: 2026-01-01
+  #   expires: 2026-12-31       # Опционально: когда пересмотреть
+
+# ─────────────────────────────────────────
+# Ложные срабатывания (инструмент ошибся, нарушения нет)
+false_positives:
+  # - check_id: ARC-03
+  #   reason: "import cycle from prisma-generated client, not real cycle"
+  #   type: false-positive
+
+# Намеренные архитектурные решения (не баги, обоснованный выбор)
+intentional:
+  # - check_id: NAM-06
+  #   reason: "utils.ts contains 3 tightly related helpers, intentional"
+  #   type: intentional-design
+
+# ─────────────────────────────────────────
+# ПОЛНЫЙ СПИСОК check_id
+# ─────────────────────────────────────────
+#
+# audit-secrets:
+#   SEC-01  Нет hardcoded credentials в коде (пароли, токены, API-ключи, приватные ключи)
+#   SEC-02  Файлы с секретами исключены из VCS (.env* в .gitignore)
+#   SEC-03  Секреты не передаются через URL (query params, Basic Auth в URL)
+#   SEC-04  .env.example содержит только placeholder-значения без реальных данных
+#   SEC-05  Dockerfile не содержит секретов в ENV-директивах
+#   SEC-06  Комментарии в коде не содержат credentials
+#   SEC-07  Автоматическое сканирование секретов настроено (pre-commit или CI)
+#
+# audit-owasp:
+#   OWA-01  A03: Все запросы к БД/OS/LDAP параметризованы, нет injection
+#   OWA-02  A01: Все защищённые маршруты имеют auth-middleware
+#   OWA-03  A01: Resource ownership проверяется, нет IDOR
+#   OWA-04  A02: Пароли хранятся безопасно (bcrypt/argon2/scrypt)
+#   OWA-05  A05: Безопасная конфигурация сервера (CORS, security headers, body limits)
+#   OWA-06  A07: Защита от перебора (rate limiting на auth и чувствительных эндпоинтах)
+#   OWA-07  A09: Техническая информация не утекает в ответы (stack trace, внутренние пути)
+#   OWA-08  A10: URL из user input не передаётся в HTTP-клиент без whitelist (SSRF)
+#   OWA-09  A05: CSRF-защита реализована (SameSite cookies или CSRF-токены на state-changing запросах)
+#
+# audit-validation:
+#   VAL-01  Все входящие данные (body, params, query) проходят schema-валидацию
+#   VAL-02  Строки имеют maxLength, числа — диапазон, enum-значения — whitelist
+#   VAL-03  JSON.parse обёрнут в try/catch с последующей валидацией структуры
+#   VAL-04  Identity данные берутся из аутентифицированного контекста (не из user input)
+#   VAL-05  Вложенные структуры и массивы ограничены (глубина, minItems/maxItems)
+#   VAL-06  Валидатор не выполняет неявный coercion
+#   VAL-07  Prototype pollution: merge/assign с user input фильтрует __proto__, constructor, prototype
+#   VAL-08  Загрузка файлов: MIME тип проверяется по содержимому, имя файла санитизировано, размер ограничен
+#
+# audit-errors:
+#   ERR-01  Ошибки не проглатываются — catch-блоки обрабатывают или пробрасывают
+#   ERR-02  Внутренние детали (stack trace, пути, версии) не попадают в ответы
+#   ERR-03  Async handlers корректно пробрасывают исключения в error middleware
+#   ERR-04  Unhandled rejections и uncaught exceptions имеют process-level обработчики
+#   ERR-05  Внешние вызовы (HTTP-клиенты, DB) имеют явные таймауты
+#   ERR-06  Graceful shutdown реализован — SIGTERM обрабатывается
+#   ERR-07  Error responses консистентны по структуре во всём приложении
+#   ERR-08  Retry-стратегии используют exponential backoff с jitter
+#   ERR-09  AbortSignal/CancellationToken пробрасывается во внешние вызовы
+#
+# audit-logging:
+#   LOG-01  Production-код не использует console.log/console.error напрямую
+#   LOG-02  PII не логируется (email, телефон, имена, адреса, финансовые данные)
+#   LOG-03  Секреты и токены не попадают в логи
+#   LOG-04  Запросы трассируются (Request ID или correlation ID сквозной)
+#   LOG-05  Формат логов структурирован (JSON) в production
+#   LOG-06  Критические операции логируются (auth, create, update, delete)
+#   LOG-07  User input санитизируется перед логированием (защита от log injection)
+#   LOG-08  Критические события безопасности логируются: вход, выход, изменение прав, массовая выгрузка данных
+#
+# audit-performance:
+#   PER-01  Нет N+1: DB-запросы не выполняются внутри циклов
+#   PER-02  Выборки из БД ограничены (LIMIT, пагинация)
+#   PER-03  Обработчики запросов не содержат блокирующего I/O
+#   PER-04  CPU-интенсивные операции вынесены из main thread
+#   PER-05  Независимые async-операции выполняются параллельно
+#   PER-06  Кэши ограничены по размеру и времени жизни (TTL + size limit)
+#   PER-07  Event listeners и subscriptions очищаются при завершении
+#   PER-08  Нет утечек памяти: timers и closures не удерживают большие объекты в долгоживущем scope
+#
+# audit-architecture:
+#   ARC-01  Бизнес-логика вынесена из route handlers в service/domain слой
+#   ARC-02  Presentation layer не взаимодействует с БД напрямую
+#   ARC-03  Нет circular dependencies между модулями
+#   ARC-04  Нет god-объектов: файлы и классы имеют единственную ответственность
+#   ARC-05  Конфигурация и env-переменные изолированы в config-модуле
+#   ARC-06  Внешние зависимости инжектируются (DI), не импортируются напрямую
+#   ARC-07  Доменный слой не импортирует инфраструктурные модули
+#
+# audit-concurrency:
+#   CON-01  async/await не используется в неасинхронных итераторах (forEach, map)
+#   CON-02  Read-modify-write операции выполняются в транзакциях
+#   CON-03  Нет shared mutable state на уровне модуля (синглтоны, кэши без locks)
+#   CON-04  Module-level кэш имеет механизм инвалидации
+#   CON-05  Обработчики событий и webhook-handlers идемпотентны
+#   CON-06  Background async операции имеют механизм отмены (AbortController/signal) и не блокируют graceful shutdown
+#
+# audit-naming:
+#   NAM-01  Соглашение об именовании соблюдается консистентно (camelCase/snake_case)
+#   NAM-02  Имена переменных, функций и классов описывают назначение, не реализацию
+#   NAM-03  Boolean-переменные имеют предикативные имена (is/has/can/should)
+#   NAM-04  Функции-читатели (get*/find*) не имеют side effects
+#   NAM-05  Magic numbers и magic strings заменены именованными константами
+#   NAM-06  Утилитные модули не являются свалкой несвязанного кода
+#   NAM-07  Ключевые сущности названы в соответствии с доменным глоссарием
+#
+# audit-yagni:
+#   YAGNI-01  Нет закомментированного кода
+#   YAGNI-02  Нет dead code — неиспользуемых экспортов, функций, переменных
+#   YAGNI-03  Абстракции оправданы: интерфейс/фабрика имеет >1 реализации или требуется тестами
+#   YAGNI-04  Feature flags не зафиксированы в одном значении
+#   YAGNI-05  Технический долг актуален — нет заброшенных TODO/FIXME без даты или прогресса
+#
+# audit-bugs:
+#   BUG-01  Преобразования типов безопасны (NaN, radix, coercion)
+#   BUG-02  async/await используется корректно (нет await в forEach, нет if(asyncFn()))
+#   BUG-03  Null-safety соблюдается — обращения к свойствам защищены от undefined/null
+#   BUG-04  Функции не мутируют входные аргументы (sort, splice, object spread)
+#   BUG-05  Exhaustive handling — все enum/union-ветки обработаны
+#   BUG-06  Математические guard-условия (деление на ноль, граничные значения)
+#   BUG-07  Off-by-one: границы диапазонов корректны (< vs <=, индексы массивов, slice)
+#   BUG-08  Float comparison не использует === для проверки равенства
+#   BUG-09  Дата/время хранятся и обрабатываются в UTC, не локальном времени
+#   BUG-10  RegExp с user input не содержит катастрофического backtracking (ReDoS)
+#
+# audit-tests:
+#   TST-01  TypeScript strict mode включён
+#   TST-02  Coverage thresholds настроены и применяются в CI
+#   TST-03  Pre-commit/pre-push хуки запускают проверки (tests, lint, typecheck)
+#   TST-04  Критические пути покрыты тестами (auth, validation, error handling)
+#   TST-05  Тесты изолированы — нет shared mutable state между тестами
+#   TST-06  Нет пропущенных или зафиксированных тестов (.only/.skip без обоснования)
+#   TST-07  Тесты проверяют поведение, а не детали реализации
+#   TST-08  Нет нестабильных тестов (Math.random, Date.now без mock, sleep)
+#   TST-09  Snapshot-тесты охватывают значимые изменения, не весь DOM
+#
+# audit-deployment:
+#   DEP-01  Docker images используют pinned versions (нет :latest)
+#   DEP-02  Контейнеры запускаются от непривилегированного пользователя (USER nonroot)
+#   DEP-03  Multi-stage build разделяет dev и prod зависимости
+#   DEP-04  .dockerignore исключает node_modules, .git, .env
+#   DEP-05  HEALTHCHECK определён в Dockerfile
+#   DEP-06  Секреты не hardcoded в Dockerfile (нет в ENV)
+#   DEP-07  .env исключён из VCS
+#   DEP-08  .env.example документирует все переменные окружения
+#   DEP-09  NODE_ENV корректно устанавливается для production
+#   DEP-10  npm ci используется вместо npm install в Docker
+#   DEP-11  Ограничения ресурсов контейнера определены (CPU limits, Memory limits)
+#   DEP-12  Возможность запуска с read-only root filesystem проверена
+#
+# audit-api-contracts:
+#   API-01  Форма ответов консистентна — единый envelope или его отсутствие по всему API
+#   API-02  HTTP статус-коды семантически корректны (201 при создании, 4xx для client errors)
+#   API-03  Error responses машиночитаемы и консистентны по структуре
+#   API-04  Именование полей консистентно (camelCase или snake_case, не смешано)
+#   API-05  Stack trace и внутренние детали не попадают в error responses
+#   API-06  Пагинация включает метаданные (total/hasNext) где применима
+#   API-07  Публичный API имеет стратегию версионирования
