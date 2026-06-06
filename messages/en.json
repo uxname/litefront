@@ -21,5 +21,22 @@
   "action_reload": "Reload Page",
   "dev_details": "Debug Information",
   "copy_stack": "Copy Stack",
-  "copied": "Copied!"
+  "copied": "Copied!",
+  "account_title": "Account settings",
+  "account_subtitle": "Manage your identity and security. These actions are handled securely by your identity provider.",
+  "account_security": "Security",
+  "account_profile": "Profile",
+  "change_password": "Change password",
+  "change_password_desc": "Update your password. You'll confirm your current password first.",
+  "change_password_success": "Password changed successfully",
+  "change_email": "Change email",
+  "change_email_desc": "Update the email address linked to your account.",
+  "change_username": "Change username",
+  "change_username_desc": "Update the username you sign in with.",
+  "manage_mfa": "Two-factor authentication",
+  "manage_mfa_desc": "Set up an authenticator app for extra security.",
+  "manage_passkey": "Passkeys",
+  "manage_passkey_desc": "Add a passkey for passwordless sign-in.",
+  "account_action_open": "Manage",
+  "account_back": "Back to dashboard"
 }

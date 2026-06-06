@@ -24,6 +24,7 @@ vi.stubGlobal("import.meta", {
     VITE_OIDC_CLIENT_ID: "test-client",
     VITE_OIDC_REDIRECT_URI: "http://localhost:3000/callback",
     VITE_OIDC_SCOPE: "openid profile",
+    VITE_BASE_URL: "http://localhost:3000",
     DEV: true,
     PROD: false,
   },

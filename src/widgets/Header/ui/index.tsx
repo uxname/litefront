@@ -1,7 +1,16 @@
-import { useAuth } from "@features/auth";
+import { buildAccountCenterUrl, useAuth } from "@features/auth";
+import { m } from "@generated/paraglide/messages";
 import { captureMessage } from "@shared/lib/sentry";
 import { Link } from "@tanstack/react-router";
-import { Loader2, LogIn, LogOut, User } from "lucide-react";
+import {
+  ChevronDown,
+  Loader2,
+  Lock,
+  LogIn,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react";
 import { FC, useCallback } from "react";
 
 export const Header: FC = () => {
@@ -11,6 +20,10 @@ export const Header: FC = () => {
     captureMessage("Auth: sign-out initiated", { level: "info" });
     void auth.signoutRedirect();
   }, [auth]);
+
+  const handleChangePassword = useCallback(() => {
+    window.location.assign(buildAccountCenterUrl("password"));
+  }, []);
 
   return (
     <nav className="flex w-full items-center justify-between">
@@ -47,25 +60,49 @@ export const Header: FC = () => {
             <span className="text-xs font-medium">Verifying...</span>
           </div>
         ) : auth.isAuthenticated ? (
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
-              <div className="p-0.5 bg-white rounded-full shadow-sm">
+          <details className="dropdown dropdown-end">
+            <summary className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200 transition-colors hover:bg-slate-200 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <span className="p-0.5 bg-white rounded-full shadow-sm">
                 <User className="h-3 w-3 text-slate-600" />
-              </div>
+              </span>
               <span className="text-xs font-semibold text-slate-700 max-w-[120px] truncate">
                 {auth.user?.profile.email || "User"}
               </span>
-            </div>
+              <ChevronDown className="h-3 w-3 text-slate-400" />
+            </summary>
 
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-              title="Sign Out"
-            >
-              <span className="hidden sm:inline">Logout</span>
-              <LogOut className="h-4 w-4" />
-            </button>
-          </div>
+            <ul className="dropdown-content menu z-[60] mt-2 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+              <li>
+                <Link
+                  to="/protected/account"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Settings className="h-4 w-4 text-slate-400" />
+                  {m.account_title()}
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={handleChangePassword}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                  <Lock className="h-4 w-4 text-slate-400" />
+                  {m.change_password()}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </details>
         ) : (
           <button
             onClick={() => void auth.signinRedirect()}
