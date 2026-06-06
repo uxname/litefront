@@ -3,7 +3,13 @@ import { MockAuthProvider } from "@features/auth/ui/MockAuthProvider";
 import { routeTree } from "@generated/routeTree.gen.ts";
 import { NotFoundPage } from "@pages/404";
 import { env } from "@shared/config";
-import { captureMessage, initSentry, setUser } from "@shared/lib/sentry";
+import {
+  captureException,
+  captureMessage,
+  initSentry,
+  setUser,
+} from "@shared/lib/sentry";
+import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
@@ -45,6 +51,23 @@ const App = () => {
   const auth = useAuth();
 
   useEffect(() => {
+    if (auth.error) {
+      captureException(auth.error);
+    }
+  }, [auth.error]);
+
+  useEffect(() => {
+    if (!auth.events?.addSilentRenewError) return;
+    const handler = (error: Error) => {
+      captureException(error);
+    };
+    auth.events.addSilentRenewError(handler);
+    return () => {
+      auth.events.removeSilentRenewError(handler);
+    };
+  }, [auth.events]);
+
+  useEffect(() => {
     if (auth.user) {
       setUser({
         id: auth.user.profile.sub,
@@ -61,6 +84,15 @@ const App = () => {
       <div className="flex h-screen items-center justify-center">
         <span className="loading loading-spinner"></span>
       </div>
+    );
+  }
+
+  if (auth.error) {
+    return (
+      <ErrorFallback
+        error={auth.error}
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 

@@ -16,6 +16,8 @@ vi.mock("@generated/paraglide/messages", () => ({
     error_network_desc: () => "Please check your connection",
     error_server: () => "Server Error",
     error_server_desc: () => "The server encountered an error",
+    error_auth_config: () => "Auth Config Error",
+    error_auth_config_desc: () => "Authentication is not configured correctly",
     action_retry: () => "Retry",
     action_reload: () => "Reload",
     dev_details: () => "Developer Details",
@@ -68,6 +70,17 @@ describe("ErrorFallback", () => {
     render(<ErrorFallback error={new Error("Internal Server Error 500")} />);
     expect(
       screen.getByRole("heading", { name: "Server Error" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows AUTH_CONFIG title for OIDC configuration errors", () => {
+    render(
+      <ErrorFallback
+        error={new Error("Failed to fetch .well-known/openid-configuration")}
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Auth Config Error" }),
     ).toBeInTheDocument();
   });
 

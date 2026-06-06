@@ -10,6 +10,8 @@
   "error_network": "Connection lost",
   "error_server": "Server error",
   "error_unexpected": "Unexpected error",
+  "error_auth_config": "Authentication configuration error",
+  "error_auth_config_desc": "The authentication system is not properly configured. Please try again later or contact the administrator.",
   "error_auth_desc": "Your session has expired or you need to log in to view this page.",
   "error_access_desc": "You do not have the necessary permissions to view this resource.",
   "error_network_desc": "It looks like you're offline. Please check your internet connection.",

@@ -22,6 +22,7 @@ enum ErrorCategory {
   ACCESS = "ACCESS",
   NETWORK = "NETWORK",
   SERVER = "SERVER",
+  AUTH_CONFIG = "AUTH_CONFIG",
   UNKNOWN = "UNKNOWN",
 }
 
@@ -43,6 +44,16 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
     },
     getTitle: () => m.error_auth_required(),
     getDesc: () => m.error_auth_desc(),
+  },
+  [ErrorCategory.AUTH_CONFIG]: {
+    icon: ShieldBan,
+    style: {
+      wrapper: "bg-red-50",
+      icon: "text-red-600",
+      ring: "ring-red-100",
+    },
+    getTitle: () => m.error_auth_config(),
+    getDesc: () => m.error_auth_config_desc(),
   },
   [ErrorCategory.ACCESS]: {
     icon: ShieldBan,
@@ -89,6 +100,17 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
 
 const ERROR_REGEX = /\b(401|403|404|500|502|503)\b/;
 
+const AUTH_CONFIG_KEYWORDS = [
+  "oidc-config",
+  "oidc configuration",
+  "discovery",
+  ".well-known/openid-configuration",
+  "signin_response error",
+  "silent renew",
+  "authority",
+  "client_id",
+];
+
 const detectErrorCategory = (error: Error): ErrorCategory => {
   const message = error.message.toLowerCase();
   const match = message.match(ERROR_REGEX);
@@ -105,6 +127,10 @@ const detectErrorCategory = (error: Error): ErrorCategory => {
     {
       match: () => message.includes("forbidden") || statusCode === 403,
       category: ErrorCategory.ACCESS,
+    },
+    {
+      match: () => AUTH_CONFIG_KEYWORDS.some((kw) => message.includes(kw)),
+      category: ErrorCategory.AUTH_CONFIG,
     },
     {
       match: () =>
