@@ -1,5 +1,4 @@
 import { Counter } from "@entities/counter";
-import { useGetCountryQuery } from "@generated/graphql";
 import { toast } from "@shared/ui/Toaster";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
@@ -10,12 +9,11 @@ import {
   CheckCircle2,
   Code2,
   Database,
-  Globe,
   Layers,
   LayoutTemplate,
   Zap,
 } from "lucide-react";
-import { type FC, useCallback, useState } from "react";
+import { type FC, useCallback } from "react";
 import { useErrorBoundary } from "react-error-boundary";
 
 const ErrorSimulator = () => {
@@ -59,12 +57,6 @@ const ErrorSimulator = () => {
 };
 
 export const HomePage: FC = () => {
-  const [{ data, fetching, error }] = useGetCountryQuery({
-    variables: { code: "BR" },
-  });
-
-  const [isHovered, setIsHovered] = useState(false);
-
   const features = [
     {
       icon: LayoutTemplate,
@@ -191,111 +183,19 @@ export const HomePage: FC = () => {
             <div className="h-px flex-1 bg-slate-200"></div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-                <div className="mb-6 flex items-center gap-2 text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                  <Box className="w-3 h-3" /> Client State (Zustand)
-                </div>
-                <Counter />
-                <p className="text-xs text-slate-400 mt-6 text-center max-w-[200px]">
-                  State persists across navigation but resets on refresh.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+              <div className="mb-6 flex items-center gap-2 text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                <Box className="w-3 h-3" /> Client State (Zustand)
               </div>
-
-              <ErrorSimulator />
+              <Counter />
+              <p className="text-xs text-slate-400 mt-6 text-center max-w-[200px]">
+                State persists across navigation but resets on refresh.
+              </p>
             </div>
 
-            <div className="lg:col-span-8">
-              <section
-                aria-label="Server Data Preview"
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-full flex flex-col"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                    <Globe className="w-3 h-3" /> Server State (GraphQL)
-                  </div>
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
-                  </div>
-                </div>
-
-                <div className="p-8 flex-1 relative">
-                  {fetching ? (
-                    <div className="flex flex-col gap-4 animate-pulse">
-                      <div className="h-8 bg-slate-100 rounded w-1/3"></div>
-                      <div className="h-4 bg-slate-100 rounded w-1/2"></div>
-                      <div className="grid grid-cols-3 gap-4 mt-8">
-                        <div className="h-24 bg-slate-100 rounded-xl"></div>
-                        <div className="h-24 bg-slate-100 rounded-xl"></div>
-                        <div className="h-24 bg-slate-100 rounded-xl"></div>
-                      </div>
-                    </div>
-                  ) : error ? (
-                    <div className="flex flex-col items-center justify-center h-full text-red-500 gap-2">
-                      <Zap className="w-8 h-8" />
-                      <p className="font-medium">Failed to load data</p>
-                    </div>
-                  ) : data?.country ? (
-                    <div className="relative z-10">
-                      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                        <div>
-                          <p className="text-slate-400 text-sm font-mono mb-1">
-                            QUERY: {`{ country(code: "BR") }`}
-                          </p>
-                          <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
-                            {data.country.name}
-                          </h3>
-                          <p className="text-lg text-slate-500 font-medium mt-2">
-                            Native: {data.country.native}
-                          </p>
-                        </div>
-                        <div className="text-[80px] leading-none select-none filter drop-shadow-2xl hover:scale-110 transition-transform duration-300 cursor-help">
-                          {data.country.emoji}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                            Capital
-                          </p>
-                          <p className="text-xl font-bold text-slate-800">
-                            {data.country.capital}
-                          </p>
-                        </div>
-                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                            Currency
-                          </p>
-                          <p className="text-xl font-bold text-slate-800">
-                            {data.country.currency}
-                          </p>
-                        </div>
-                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">
-                            Phone Code
-                          </p>
-                          <p className="text-xl font-bold text-slate-800">
-                            +{data.country.phone}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] font-black text-slate-900/5 select-none pointer-events-none transition-all duration-700 ease-out ${isHovered ? "scale-110 opacity-10" : "scale-100"}`}
-                  >
-                    BR
-                  </div>
-                </div>
-              </section>
-            </div>
+            <ErrorSimulator />
           </div>
         </section>
 

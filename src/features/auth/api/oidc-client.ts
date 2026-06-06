@@ -8,6 +8,11 @@ export const oidcConfig: AuthProviderProps = {
   redirect_uri: env.VITE_OIDC_REDIRECT_URI,
   post_logout_redirect_uri: env.VITE_BASE_URL,
   scope: env.VITE_OIDC_SCOPE,
+  // Request the access_token for the backend API resource so its `aud` matches
+  // the server's OIDC_AUDIENCE (OAuth2-correct token for API calls).
+  ...(env.VITE_OIDC_API_RESOURCE
+    ? { resource: env.VITE_OIDC_API_RESOURCE }
+    : {}),
   automaticSilentRenew: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
 };

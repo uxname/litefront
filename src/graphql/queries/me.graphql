@@ -1,0 +1,11 @@
+query Me {
+  me {
+    id
+    roles
+    avatarUrl
+    displayName
+    bio
+    createdAt
+    updatedAt
+  }
+}

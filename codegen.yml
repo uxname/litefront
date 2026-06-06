@@ -4,7 +4,10 @@ documents: "./src/graphql/**/*.graphql"
 generates:
   src/generated/graphql.tsx:
     plugins:
-      - "typescript"
+      # NOTE: the standalone `typescript` plugin is intentionally omitted.
+      # typescript-operations v6 self-declares the enum/input types its
+      # operations use, so including `typescript` produces duplicate
+      # declarations. The full schema SDL is emitted to schema.graphql below.
       - "typescript-operations"
       - "typescript-urql"
     config:

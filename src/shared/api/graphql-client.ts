@@ -1,12 +1,19 @@
 import { env } from "@shared/config";
 import { captureException } from "@shared/lib/sentry";
-import { Client, cacheExchange, errorExchange, fetchExchange } from "urql";
+import { cacheExchange } from "@urql/exchange-graphcache";
+import { Client, errorExchange, fetchExchange } from "urql";
 
 export const createGraphQLClient = (accessToken?: string): Client => {
   return new Client({
     url: env.VITE_GRAPHQL_API_URL,
     exchanges: [
-      cacheExchange,
+      // Normalized cache: entities are keyed by id, so a mutation returning an
+      // updated Profile patches every query holding it (e.g. `me`) automatically.
+      cacheExchange({
+        keys: {
+          Profile: (data) => (data.id != null ? String(data.id) : null),
+        },
+      }),
       errorExchange({
         onError: (error) => {
           captureException(error, {

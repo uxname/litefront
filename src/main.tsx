@@ -10,6 +10,7 @@ import {
   setUser,
 } from "@shared/lib/sentry";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
+import { PageLoader } from "@shared/ui/PageLoader";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
@@ -30,6 +31,7 @@ if (import.meta.env.DEV) {
 const router = createRouter({
   routeTree,
   defaultNotFoundComponent: NotFoundPage,
+  defaultPendingComponent: PageLoader,
   context: {
     auth: undefined!,
   },

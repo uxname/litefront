@@ -1,11 +1,12 @@
-import { buildAccountCenterUrl, useAuth } from "@features/auth";
+import { useAuth } from "@features/auth";
+import { LocaleSwitcher } from "@features/locale";
+import { ThemeToggle } from "@features/theme";
 import { m } from "@generated/paraglide/messages";
 import { captureMessage } from "@shared/lib/sentry";
 import { Link } from "@tanstack/react-router";
 import {
   ChevronDown,
   Loader2,
-  Lock,
   LogIn,
   LogOut,
   Settings,
@@ -20,10 +21,6 @@ export const Header: FC = () => {
     captureMessage("Auth: sign-out initiated", { level: "info" });
     void auth.signoutRedirect();
   }, [auth]);
-
-  const handleChangePassword = useCallback(() => {
-    window.location.assign(buildAccountCenterUrl("password"));
-  }, []);
 
   return (
     <nav className="flex w-full items-center justify-between">
@@ -53,7 +50,10 @@ export const Header: FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5">
+        <LocaleSwitcher />
+        <ThemeToggle />
+
         {auth.isLoading ? (
           <div className="flex items-center gap-2 text-slate-400 px-3 py-1.5 bg-slate-50 rounded-full">
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -78,18 +78,8 @@ export const Header: FC = () => {
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                   <Settings className="h-4 w-4 text-slate-400" />
-                  {m.account_title()}
+                  {m.profile_settings_title()}
                 </Link>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={handleChangePassword}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                >
-                  <Lock className="h-4 w-4 text-slate-400" />
-                  {m.change_password()}
-                </button>
               </li>
               <li>
                 <button

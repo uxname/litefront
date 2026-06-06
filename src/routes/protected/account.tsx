@@ -40,11 +40,11 @@ export const Route = createFileRoute("/protected/account")({
   head: () => ({
     meta: [
       {
-        title: "Account Settings | LiteFront",
+        title: "Profile | LiteFront",
       },
       {
         name: "description",
-        content: "Manage your account identity and security settings.",
+        content: "Manage your profile, identity and security settings.",
       },
       {
         name: "robots",

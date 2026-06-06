@@ -1,79 +1,73 @@
 schema {
   query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
 
-type Continent {
-  code: ID!
-  countries: [Country!]!
-  name: String!
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Mutation {
+  """Adds a job to the test queue"""
+  addTestJob(message: String!): Boolean!
+  """Echo mutation — returns the input text (dev utility)"""
+  echo(text: String!): String!
+  """Update the current user profile fields"""
+  updateProfile(input: ProfileUpdateInput!): Profile!
 }
 
-input ContinentFilterInput {
-  code: StringQueryOperatorInput
+"""Authenticated user profile linked to an OIDC account"""
+type Profile {
+  """Avatar image URL"""
+  avatarUrl: String
+  """Short biography"""
+  bio: String
+  """Profile creation timestamp"""
+  createdAt: DateTime!
+  """Public display name"""
+  displayName: String
+  """Unique profile identifier"""
+  id: Int!
+  """Assigned roles (ADMIN, USER)"""
+  roles: [ProfileRole!]
+  """Profile last update timestamp"""
+  updatedAt: DateTime!
 }
 
-type Country {
-  awsRegion: String!
-  capital: String
-  code: ID!
-  continent: Continent!
-  currencies: [String!]!
-  currency: String
-  emoji: String!
-  emojiU: String!
-  languages: [Language!]!
-  name(lang: String): String!
-  native: String!
-  phone: String!
-  phones: [String!]!
-  states: [State!]!
-  subdivisions: [Subdivision!]!
+"""User authorization roles"""
+enum ProfileRole {
+  ADMIN
+  USER
 }
 
-input CountryFilterInput {
-  code: StringQueryOperatorInput
-  continent: StringQueryOperatorInput
-  currency: StringQueryOperatorInput
-  name: StringQueryOperatorInput
-}
-
-type Language {
-  code: ID!
-  countries: [Country!]!
-  name: String!
-  native: String!
-  rtl: Boolean!
-}
-
-input LanguageFilterInput {
-  code: StringQueryOperatorInput
+"""Input fields for updating a user profile"""
+input ProfileUpdateInput {
+  """New avatar image URL"""
+  avatarUrl: String
+  """New short biography"""
+  bio: String
+  """New public display name"""
+  displayName: String
 }
 
 type Query {
-  continent(code: ID!): Continent
-  continents(filter: ContinentFilterInput = {}): [Continent!]!
-  countries(filter: CountryFilterInput = {}): [Country!]!
-  country(code: ID!): Country
-  language(code: ID!): Language
-  languages(filter: LanguageFilterInput = {}): [Language!]!
+  debug: JSON!
+  """Echo back the input text (dev utility)"""
+  echo(text: String!): String!
+  """Get the currently authenticated profile"""
+  me: Profile!
+  """Test i18n translation by username"""
+  testTranslation(username: String!): String!
 }
 
-type State {
-  code: String
-  country: Country!
-  name: String!
-}
-
-input StringQueryOperatorInput {
-  eq: String
-  in: [String!]
-  ne: String
-  nin: [String!]
-  regex: String
-}
-
-type Subdivision {
-  code: ID!
-  emoji: String
-  name: String!
+type Subscription {
+  """Receive real-time updates when the current user profile changes"""
+  profileUpdated: Profile!
 }

@@ -5,6 +5,7 @@ interface Env {
   VITE_OIDC_CLIENT_ID: string;
   VITE_OIDC_REDIRECT_URI: string;
   VITE_OIDC_SCOPE: string;
+  VITE_OIDC_API_RESOURCE: string;
   VITE_GRAPHQL_API_URL: string;
   VITE_BASE_URL: string;
   VITE_SENTRY_DSN: string;
@@ -29,6 +30,7 @@ export const env: Env = {
   VITE_OIDC_CLIENT_ID: import.meta.env.VITE_OIDC_CLIENT_ID,
   VITE_OIDC_REDIRECT_URI: import.meta.env.VITE_OIDC_REDIRECT_URI,
   VITE_OIDC_SCOPE: import.meta.env.VITE_OIDC_SCOPE,
+  VITE_OIDC_API_RESOURCE: import.meta.env.VITE_OIDC_API_RESOURCE,
   VITE_GRAPHQL_API_URL: import.meta.env.VITE_GRAPHQL_API_URL,
   VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
   VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
