@@ -89,6 +89,7 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_OIDC_CLIENT_ID`    | The Client ID of your application registered in the provider | `abc123xyz...`                                  |
 | `VITE_OIDC_REDIRECT_URI` | The callback URL where the user is redirected after login    | `http://localhost:3000/callback`                |
 | `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
+| `VITE_OIDC_API_RESOURCE` | API resource indicator. Sent on both the authorize and token requests so the access token is a JWT whose `aud` equals the backend's `OIDC_AUDIENCE` | `http://localhost:4000` |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
 | `VITE_BASE_URL`          | Base URL of the application (used for E2E testing and routing) | `http://localhost:3000`                        |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
@@ -96,6 +97,27 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_SENTRY_ORG`        | Sentry organization slug (used for source maps)             | `your-org`                                      |
 | `VITE_SENTRY_PROJECT`    | Sentry project name (used for source maps)                    | `your-project`                                  |
 | `VITE_SENTRY_AUTH_TOKEN` | Build-time token for uploading source maps                   | `sntrys_...`                                    |
+
+### Logto Provider Setup
+
+The env vars only tell the app *where* the provider is — register the app in the Logto Console too:
+
+1. **Create a `Single Page App`** (Applications → Create). PKCE-based, no client secret. Copy its
+   **App ID** into `VITE_OIDC_CLIENT_ID`.
+2. **Redirect URIs** (app settings): sign-in `http://localhost:3000/callback` (= `VITE_OIDC_REDIRECT_URI`),
+   post sign-out `http://localhost:3000`. Add production URLs when you deploy.
+3. **Register an API Resource** (Console → API Resources → Create). Set its **API Identifier** to
+   exactly `VITE_OIDC_API_RESOURCE` (e.g. `http://localhost:4000`, no trailing slash), then enable
+   the resource's **Default API** toggle. Without a resource-bound token Logto issues an *opaque*
+   token the backend can't verify → `401 Unauthorized`.
+
+> **Three values must match exactly:** `VITE_OIDC_API_RESOURCE` (frontend) == `OIDC_AUDIENCE`
+> (backend) == the API Identifier in Logto.
+>
+> `VITE_OIDC_AUTHORITY` is the **OIDC endpoint** — the Logto base URL plus `/oidc`
+> (e.g. `https://auth.example.com/oidc`). The frontend sends the `resource` on both the authorize
+> and token requests (see `src/features/auth/api/oidc-client.ts`); sending it only on authorize
+> yields an opaque token.
 
 ## Custom Authentication
 

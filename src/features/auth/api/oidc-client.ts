@@ -10,8 +10,14 @@ export const oidcConfig: AuthProviderProps = {
   scope: env.VITE_OIDC_SCOPE,
   // Request the access_token for the backend API resource so its `aud` matches
   // the server's OIDC_AUDIENCE (OAuth2-correct token for API calls).
+  // `resource` is sent on the authorize request; `extraTokenParams.resource`
+  // repeats it on the token exchange — Logto requires it on BOTH or it falls
+  // back to issuing an opaque OP token the backend can't verify.
   ...(env.VITE_OIDC_API_RESOURCE
-    ? { resource: env.VITE_OIDC_API_RESOURCE }
+    ? {
+        resource: env.VITE_OIDC_API_RESOURCE,
+        extraTokenParams: { resource: env.VITE_OIDC_API_RESOURCE },
+      }
     : {}),
   automaticSilentRenew: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
