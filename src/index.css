@@ -3,8 +3,89 @@
 /* https://github.com/tailwindlabs/tailwindcss/issues/17724 */
 @import "tailwindcss";
 
-@plugin "daisyui" {
-  themes:
-    cmyk --default,
-    dark --prefersdark;
+@plugin "daisyui";
+
+/*
+ * Custom light theme. Based on DaisyUI's built-in `cmyk` palette, but tuned for
+ * WCAG AA contrast without changing the visual identity:
+ *   - `primary` darkened (L 71.8% -> 55%) so `text-primary` clears 4.5:1 on white;
+ *     `primary-content` switched to white so primary buttons stay legible.
+ *   - `error` darkened so inline form-error text clears AA on white.
+ *   - `base-300` darkened a touch so borders/dividers are actually visible.
+ * Everything else mirrors the DaisyUI `cmyk` defaults.
+ */
+@plugin "daisyui/theme" {
+  name: "cmyk";
+  default: true;
+  color-scheme: light;
+
+  --color-base-100: oklch(100% 0 0deg);
+  --color-base-200: oklch(95% 0 0deg);
+  --color-base-300: oklch(87% 0 0deg);
+  --color-base-content: oklch(20% 0 0deg);
+  --color-primary: oklch(55% 0.15 239.443deg);
+  --color-primary-content: oklch(98% 0 0deg);
+  --color-secondary: oklch(64.476% 0.202 359.339deg);
+  --color-secondary-content: oklch(12.895% 0.04 359.339deg);
+  --color-accent: oklch(94.228% 0.189 105.306deg);
+  --color-accent-content: oklch(18.845% 0.037 105.306deg);
+  --color-neutral: oklch(21.778% 0 0deg);
+  --color-neutral-content: oklch(84.355% 0 0deg);
+  --color-info: oklch(68.475% 0.094 217.284deg);
+  --color-info-content: oklch(13.695% 0.018 217.284deg);
+  --color-success: oklch(46.949% 0.162 321.406deg);
+  --color-success-content: oklch(89.389% 0.032 321.406deg);
+  --color-warning: oklch(71.236% 0.159 52.023deg);
+  --color-warning-content: oklch(14.247% 0.031 52.023deg);
+  --color-error: oklch(55% 0.21 28.717deg);
+  --color-error-content: oklch(98% 0 0deg);
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/*
+ * Custom dark theme. Based on DaisyUI's built-in `dark` palette, tuned for AA:
+ *   - `primary` lightened (L 58% -> 70%) so `text-primary` clears 4.5:1 on the
+ *     dark base; `primary-content` switched to dark so primary buttons stay legible.
+ * Hue (violet ~277) and everything else mirror the DaisyUI `dark` defaults.
+ */
+@plugin "daisyui/theme" {
+  name: "dark";
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: oklch(25.33% 0.016 252.42deg);
+  --color-base-200: oklch(23.26% 0.014 253.1deg);
+  --color-base-300: oklch(21.15% 0.012 254.09deg);
+  --color-base-content: oklch(97.807% 0.029 256.847deg);
+  --color-primary: oklch(70% 0.18 277.117deg);
+  --color-primary-content: oklch(20% 0.04 277.117deg);
+  --color-secondary: oklch(65% 0.241 354.308deg);
+  --color-secondary-content: oklch(94% 0.028 342.258deg);
+  --color-accent: oklch(77% 0.152 181.912deg);
+  --color-accent-content: oklch(38% 0.063 188.416deg);
+  --color-neutral: oklch(14% 0.005 285.823deg);
+  --color-neutral-content: oklch(92% 0.004 286.32deg);
+  --color-info: oklch(74% 0.16 232.661deg);
+  --color-info-content: oklch(29% 0.066 243.157deg);
+  --color-success: oklch(76% 0.177 163.223deg);
+  --color-success-content: oklch(37% 0.077 168.94deg);
+  --color-warning: oklch(82% 0.189 84.429deg);
+  --color-warning-content: oklch(41% 0.112 45.904deg);
+  --color-error: oklch(71% 0.194 13.428deg);
+  --color-error-content: oklch(27% 0.105 12.094deg);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }

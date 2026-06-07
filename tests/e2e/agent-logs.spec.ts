@@ -113,7 +113,7 @@ test("agent log harness: capture frontend console + errors + network", async ({
 
   // Walk the key routes.
   await visit("/", "home");
-  await visit("/protected", "protected");
+  await visit("/account", "account");
   await visit("/non-existent-page", "404");
 
   // Exercise the theme + locale switchers (the two things that were broken),

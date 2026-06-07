@@ -41,7 +41,7 @@ export const NotFoundPage: React.FC = () => {
             {m.not_found_title?.() ?? "Lost in the void"}
           </h1>
 
-          <p className="text-lg sm:text-xl text-base-content/60 max-w-lg mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-base-content/70 max-w-lg mx-auto leading-relaxed">
             {m.not_found_message()}
           </p>
         </div>
@@ -50,7 +50,7 @@ export const NotFoundPage: React.FC = () => {
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
           <button
             onClick={handleGoBack}
-            className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-base-100 text-base-content font-bold border border-base-300 hover:border-base-300 hover:bg-base-200 transition-all shadow-sm active:scale-95"
+            className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-base-100 text-base-content font-bold border border-base-300 hover:border-base-300 hover:bg-base-200 transition-all shadow-sm active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <MoveLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
             {m.go_back()}
@@ -59,7 +59,7 @@ export const NotFoundPage: React.FC = () => {
           <Link
             to="/"
             preload="viewport"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-primary text-primary-content font-bold hover:bg-primary/90 transition-all shadow-xl hover:shadow-2xl active:scale-95 hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-primary text-primary-content font-bold hover:bg-primary/90 transition-all shadow-xl hover:shadow-2xl active:scale-95 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <Home className="h-5 w-5" />
             {m.back_to_home()}

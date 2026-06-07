@@ -36,7 +36,7 @@ export const FormField: FC<FormFieldProps> = ({
         {error}
       </p>
     ) : (
-      hint && <p className="text-xs text-base-content/60">{hint}</p>
+      hint && <p className="text-xs text-base-content/70">{hint}</p>
     )}
   </div>
 );

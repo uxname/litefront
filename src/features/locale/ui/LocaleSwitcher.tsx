@@ -38,7 +38,7 @@ export const LocaleSwitcher: FC = () => {
       <summary
         aria-label={m.locale_label()}
         title={m.locale_label()}
-        className="flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-base-content/60 transition-colors hover:bg-base-200 hover:text-base-content [&::-webkit-details-marker]:hidden"
+        className="flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-base-content/70 transition-colors hover:bg-base-200 hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden"
       >
         <Languages className="h-4 w-4" />
         <span className="text-xs font-bold uppercase">{current}</span>
@@ -50,11 +50,11 @@ export const LocaleSwitcher: FC = () => {
             <button
               type="button"
               onClick={() => select(loc)}
-              className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200"
+              className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <span>
                 {localeName(loc)}
-                <span className="ml-1.5 text-xs uppercase text-base-content/50">
+                <span className="ml-1.5 text-xs uppercase text-base-content/70">
                   {loc}
                 </span>
               </span>

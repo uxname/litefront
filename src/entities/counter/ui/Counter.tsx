@@ -21,7 +21,7 @@ export const Counter: FC<CounterProps> = ({ title }) => {
   return (
     <div className="flex flex-col items-center gap-4 w-full max-w-[240px]">
       <div className="text-center space-y-1">
-        <span className="text-[10px] font-bold text-base-content/60 uppercase tracking-widest">
+        <span className="text-[10px] font-bold text-base-content/70 uppercase tracking-widest">
           {title ?? m.counter_current_value()}
         </span>
         <div className="text-6xl font-black text-base-content tracking-tight leading-none tabular-nums select-none">

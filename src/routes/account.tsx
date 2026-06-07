@@ -24,17 +24,21 @@ const AccountRoute = () => {
   return <AccountPage />;
 };
 
-export const Route = createFileRoute("/protected/account")({
+export const Route = createFileRoute("/account")({
   validateSearch: (search: Record<string, unknown>): AccountSearch =>
     // Only carry the flag when truthy so the URL stays clean otherwise.
     search.show_success === true || search.show_success === "true"
       ? { show_success: true }
       : {},
-  beforeLoad: ({ context }) => {
+  beforeLoad: async ({ context, location }) => {
     if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/",
+      // Kick off sign-in and remember where the user was headed so the
+      // post-login callback can bring them right back here.
+      await context.auth.signinRedirect({
+        state: { returnTo: location.href },
       });
+      // Fallback for the mock-auth provider (signinRedirect is a no-op there).
+      throw redirect({ to: "/" });
     }
   },
   head: () => ({

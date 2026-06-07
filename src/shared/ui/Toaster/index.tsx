@@ -14,11 +14,11 @@ export const Toaster = ({ ...props }: ToasterProps) => {
           toast:
             "group toast font-sans !bg-base-100/80 !backdrop-blur-xl !border-base-300/60 !shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] !rounded-2xl !p-4 !flex !items-start !gap-4 !transition-all !duration-500",
           title: "!text-base-content !font-bold !text-sm !leading-tight",
-          description: "!text-base-content/60 !text-xs !mt-1 !leading-relaxed",
+          description: "!text-base-content/70 !text-xs !mt-1 !leading-relaxed",
           actionButton:
             "!bg-primary !text-primary-content !font-bold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-primary/90 !transition-colors",
           cancelButton:
-            "!bg-base-200 !text-base-content/60 !font-semibold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-base-300 !transition-colors",
+            "!bg-base-200 !text-base-content/70 !font-semibold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-base-300 !transition-colors",
 
           success:
             "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-success group-[.toaster]:!bg-success/10",

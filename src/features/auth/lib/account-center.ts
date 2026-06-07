@@ -41,7 +41,7 @@ export const buildAccountCenterUrl = (
 
   url.searchParams.set(
     "redirect",
-    opts?.returnTo ?? `${env.VITE_BASE_URL}/protected/account`,
+    opts?.returnTo ?? `${env.VITE_BASE_URL}/account`,
   );
   if (opts?.showSuccess ?? true) {
     url.searchParams.set("show_success", "true");

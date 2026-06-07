@@ -1,1 +1,0 @@
-export { ProtectedPage } from "./ui";

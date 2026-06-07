@@ -90,7 +90,7 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
     icon: CircleAlert,
     style: {
       wrapper: "bg-base-200",
-      icon: "text-base-content/60",
+      icon: "text-base-content/70",
       ring: "ring-base-300",
     },
     getTitle: () => m.error_unexpected(),
@@ -240,13 +240,13 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
             />
           </div>
 
-          <p className="text-xs font-bold leading-7 text-base-content/60 uppercase tracking-widest mb-1">
+          <p className="text-xs font-bold leading-7 text-base-content/70 uppercase tracking-widest mb-1">
             {m.error_generic_title?.() ?? "System Issue"}
           </p>
           <h2 className="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl mb-3">
             {config.getTitle()}
           </h2>
-          <p className="text-base-content/60 text-lg leading-relaxed mb-8">
+          <p className="text-base-content/70 text-lg leading-relaxed mb-8">
             {config.getDesc()}
           </p>
 
@@ -271,7 +271,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
         <div className="border-t border-base-300 bg-base-200/50">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/60 hover:text-base-content hover:bg-base-200 transition-colors focus:outline-none"
+            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/70 hover:text-base-content hover:bg-base-200 transition-colors focus:outline-none"
           >
             <span className="flex items-center gap-2">
               <Terminal className="h-4 w-4" />
@@ -286,7 +286,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 
           {showDetails && (
             <div className="px-8 pb-8 pt-2 animate-in slide-in-from-top-2 duration-200">
-              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
+              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/70 font-mono">
                 <ArrowRight className="h-3 w-3" />
                 Path:{" "}
                 <span className="text-base-content bg-base-300 px-1.5 py-0.5 rounded">
@@ -294,10 +294,10 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
                 </span>
               </div>
 
-              <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/60 shadow-sm overflow-hidden">
+              <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/70 shadow-sm overflow-hidden">
                 <button
                   onClick={handleCopyStack}
-                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors"
+                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/70 hover:text-primary hover:bg-primary/10 transition-colors"
                   title={copied ? "Copied" : "Copy Stack Trace"}
                 >
                   <Copy className="h-3.5 w-3.5" />

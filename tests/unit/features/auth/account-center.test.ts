@@ -21,7 +21,7 @@ describe("buildAccountCenterUrl", () => {
     const url = new URL(buildAccountCenterUrl("password"));
 
     expect(url.searchParams.get("redirect")).toBe(
-      "http://localhost:3000/protected/account",
+      "http://localhost:3000/account",
     );
     expect(url.searchParams.get("show_success")).toBe("true");
     expect(url.searchParams.get("ui_locales")).toBe("ru");

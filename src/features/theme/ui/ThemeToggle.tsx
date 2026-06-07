@@ -21,7 +21,7 @@ export const ThemeToggle: FC = () => {
       onClick={toggle}
       aria-label={m.theme_toggle()}
       title={m.theme_toggle()}
-      className="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/60 transition-colors hover:bg-base-200 hover:text-base-content"
+      className="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors hover:bg-base-200 hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </button>

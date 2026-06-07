@@ -22,13 +22,13 @@ const ErrorSimulator = () => {
 
   return (
     <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-8 flex flex-col items-center justify-center relative overflow-hidden group">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-error to-orange-500"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-error to-warning"></div>
       <div className="mb-6 flex items-center gap-2 text-error bg-error/10 px-3 py-1 rounded-full text-xs font-bold uppercase">
         <Bug className="w-3 h-3" /> {m.home_error_boundary_badge()}
       </div>
 
       <div className="text-center space-y-1 mb-6">
-        <span className="text-[10px] font-bold text-base-content/60 uppercase tracking-widest">
+        <span className="text-[10px] font-bold text-base-content/70 uppercase tracking-widest">
           {m.home_debug_tool()}
         </span>
         <div className="text-xl font-bold text-base-content tracking-tight">
@@ -44,13 +44,13 @@ const ErrorSimulator = () => {
             ),
           )
         }
-        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-error px-4 py-3 text-sm font-semibold text-error-content shadow-lg transition-all hover:bg-error/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-error px-4 py-3 text-sm font-semibold text-error-content shadow-lg transition-all hover:bg-error/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-error"
       >
-        <Zap className="h-4 w-4 fill-white" />
+        <Zap className="h-4 w-4 fill-current" />
         {m.home_crash_app()}
       </button>
 
-      <p className="text-xs text-base-content/60 mt-4 text-center max-w-[220px]">
+      <p className="text-xs text-base-content/70 mt-4 text-center max-w-[220px]">
         {m.home_error_sim_hint()}
       </p>
     </div>
@@ -77,8 +77,8 @@ export const HomePage: FC = () => {
       icon: Database,
       title: m.home_feature_graphql_title(),
       desc: m.home_feature_graphql_desc(),
-      color: "text-purple-600",
-      bg: "bg-purple-50",
+      color: "text-secondary",
+      bg: "bg-secondary/10",
     },
     {
       icon: Layers,
@@ -101,7 +101,7 @@ export const HomePage: FC = () => {
         <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-info/10 rounded-full blur-[120px]" />
       </div>
 
-      <div className="sticky top-0 z-50 border-b border-white/20 bg-base-100/70 backdrop-blur-xl">
+      <div className="sticky top-0 z-50 border-b border-base-300/60 bg-base-100/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Header />
@@ -121,12 +121,12 @@ export const HomePage: FC = () => {
 
           <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-base-content mb-6 leading-[1.1] animate-in fade-in zoom-in duration-700 delay-100">
             {m.home_hero_title_lead()} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-600 to-info">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-info">
               {m.home_hero_title_accent()}
             </span>
           </h1>
 
-          <p className="text-xl text-base-content/60 mb-10 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <p className="text-xl text-base-content/70 mb-10 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
             {m.home_hero_subtitle()}
           </p>
 
@@ -134,7 +134,7 @@ export const HomePage: FC = () => {
             <button
               type="button"
               onClick={handleCopyCommand}
-              className="cursor-pointer group relative flex items-center gap-3 px-6 py-3.5 bg-primary text-primary-content rounded-xl font-mono text-sm shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all duration-300 border-none"
+              className="cursor-pointer group relative flex items-center gap-3 px-6 py-3.5 bg-primary text-primary-content rounded-xl font-mono text-sm shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all duration-300 border-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <span className="text-primary-content">$</span>
               <span>npx degit uxname/litefront my-app</span>
@@ -144,8 +144,8 @@ export const HomePage: FC = () => {
             </button>
 
             <Link
-              to="/protected"
-              className="flex items-center gap-2 px-8 py-3.5 bg-base-100 text-base-content border border-base-300 rounded-xl font-bold hover:bg-base-200 hover:border-base-300 transition-all shadow-sm hover:shadow-md active:scale-95"
+              to="/account"
+              className="flex items-center gap-2 px-8 py-3.5 bg-base-100 text-base-content border border-base-300 rounded-xl font-bold hover:bg-base-200 hover:border-base-300 transition-all shadow-sm hover:shadow-md active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {m.home_cta_live_demo()}
               <ArrowRight className="w-4 h-4" />
@@ -168,7 +168,7 @@ export const HomePage: FC = () => {
               <h3 className="text-lg font-bold text-base-content mb-2">
                 {feature.title}
               </h3>
-              <p className="text-sm text-base-content/60 leading-relaxed">
+              <p className="text-sm text-base-content/70 leading-relaxed">
                 {feature.desc}
               </p>
             </div>
@@ -190,7 +190,7 @@ export const HomePage: FC = () => {
                 <Box className="w-3 h-3" /> {m.home_client_state_badge()}
               </div>
               <Counter />
-              <p className="text-xs text-base-content/60 mt-6 text-center max-w-[200px]">
+              <p className="text-xs text-base-content/70 mt-6 text-center max-w-[200px]">
                 {m.home_counter_hint()}
               </p>
             </div>
@@ -199,20 +199,20 @@ export const HomePage: FC = () => {
           </div>
         </section>
 
-        <footer className="border-t border-base-300 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-base-content/60 text-sm">
+        <footer className="border-t border-base-300 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-base-content/70 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold">
               L
             </div>
             <span className="font-semibold text-base-content">LiteFront</span>
-            <span>© 2025</span>
+            <span>© {new Date().getFullYear()}</span>
           </div>
           <div className="flex gap-6">
             <a
               href="https://github.com/uxname/litefront"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-primary transition-colors flex items-center gap-2"
+              className="flex items-center gap-2 rounded-md transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <Code2 className="w-4 h-4" /> GitHub
             </a>
@@ -220,7 +220,7 @@ export const HomePage: FC = () => {
               href="https://feature-sliced.design/"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-primary transition-colors flex items-center gap-2"
+              className="flex items-center gap-2 rounded-md transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <Layers className="w-4 h-4" /> {m.home_footer_docs()}
             </a>

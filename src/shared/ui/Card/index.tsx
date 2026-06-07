@@ -31,7 +31,7 @@ export const Card: FC<CardProps> = ({
             <h2 className="text-sm font-bold text-base-content">{title}</h2>
           )}
           {description && (
-            <p className="mt-0.5 text-sm text-base-content/60">{description}</p>
+            <p className="mt-0.5 text-sm text-base-content/70">{description}</p>
           )}
         </div>
         {actions}

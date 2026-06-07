@@ -44,7 +44,7 @@ const authenticate = (page: Page) =>
 
 test.describe("Account/Profile Page", () => {
   test("redirects unauthenticated users to home", async ({ page }) => {
-    await page.goto("/protected/account");
+    await page.goto("/account");
     await expect(page).toHaveURL("/");
   });
 
@@ -52,9 +52,9 @@ test.describe("Account/Profile Page", () => {
     await authenticate(page);
     await stubGraphQL(page);
 
-    await page.goto("/protected/account");
+    await page.goto("/account");
 
-    await expect(page).toHaveURL("/protected/account");
+    await expect(page).toHaveURL("/account");
     await expect(
       page.getByRole("heading", { name: "Profile", exact: true }),
     ).toBeVisible();
@@ -69,7 +69,7 @@ test.describe("Account/Profile Page", () => {
     await authenticate(page);
     await stubGraphQL(page);
 
-    await page.goto("/protected/account");
+    await page.goto("/account");
 
     const nameInput = page.getByLabel("Display name");
     await nameInput.fill("Ada Updated");

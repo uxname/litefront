@@ -12,6 +12,7 @@ import {
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { PageLoader } from "@shared/ui/PageLoader";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import type { User } from "oidc-client-ts";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -43,10 +44,21 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const onSigninCallback = () => {
+// biome-ignore lint/suspicious/noConfusingVoidType: matches react-oidc-context's onSigninCallback signature
+const onSigninCallback = (user: User | void) => {
   captureMessage("Auth: sign-in completed", { level: "info" });
-  window.history.replaceState({}, document.title, window.location.pathname);
-  router.navigate({ to: "/", replace: true });
+  // `state.returnTo` is the path the user was on before sign-in (set by
+  // signinRedirect). Bring them back there; fall back to home.
+  const state = user?.state;
+  const returnTo =
+    state &&
+    typeof state === "object" &&
+    "returnTo" in state &&
+    typeof (state as { returnTo?: unknown }).returnTo === "string"
+      ? (state as { returnTo: string }).returnTo
+      : "/";
+  // Replace so the OIDC callback URL (with code/state) drops out of history.
+  router.history.replace(returnTo);
 };
 
 const App = () => {

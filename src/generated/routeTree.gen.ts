@@ -10,13 +10,17 @@
 
 import { Route as rootRouteImport } from './../routes/__root'
 import { Route as CallbackRouteImport } from './../routes/callback'
+import { Route as AccountRouteImport } from './../routes/account'
 import { Route as IndexRouteImport } from './../routes/index'
-import { Route as ProtectedIndexRouteImport } from './../routes/protected/index'
-import { Route as ProtectedAccountRouteImport } from './../routes/protected/account'
 
 const CallbackRoute = CallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -24,49 +28,35 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./../routes/index.lazy').then((d) => d.Route))
-const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
-  id: '/protected/',
-  path: '/protected/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProtectedAccountRoute = ProtectedAccountRouteImport.update({
-  id: '/protected/account',
-  path: '/protected/account',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
-  '/protected/account': typeof ProtectedAccountRoute
-  '/protected/': typeof ProtectedIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
-  '/protected/account': typeof ProtectedAccountRoute
-  '/protected': typeof ProtectedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/callback': typeof CallbackRoute
-  '/protected/account': typeof ProtectedAccountRoute
-  '/protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/callback' | '/protected/account' | '/protected/'
+  fullPaths: '/' | '/account' | '/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/callback' | '/protected/account' | '/protected'
-  id: '__root__' | '/' | '/callback' | '/protected/account' | '/protected/'
+  to: '/' | '/account' | '/callback'
+  id: '__root__' | '/' | '/account' | '/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
   CallbackRoute: typeof CallbackRoute
-  ProtectedAccountRoute: typeof ProtectedAccountRoute
-  ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,6 +68,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -85,28 +82,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/protected/': {
-      id: '/protected/'
-      path: '/protected'
-      fullPath: '/protected/'
-      preLoaderRoute: typeof ProtectedIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/protected/account': {
-      id: '/protected/account'
-      path: '/protected/account'
-      fullPath: '/protected/account'
-      preLoaderRoute: typeof ProtectedAccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
   CallbackRoute: CallbackRoute,
-  ProtectedAccountRoute: ProtectedAccountRoute,
-  ProtectedIndexRoute: ProtectedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

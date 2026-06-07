@@ -19,7 +19,6 @@ import {
   Lock,
   type LucideIcon,
   Mail,
-  ShieldCheck,
   Smartphone,
   User as UserIcon,
 } from "lucide-react";
@@ -69,32 +68,28 @@ export const AccountPage: FC = () => {
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-info/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="sticky top-0 z-50 border-b border-white/20 bg-base-100/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-50 border-b border-base-300/60 bg-base-100/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Header />
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary uppercase tracking-wide">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              {m.profile_settings_title()}
-            </div>
+          <div className="flex h-16 items-center">
+            <Header title={m.profile_settings_title()} />
           </div>
         </div>
       </div>
 
       <main className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link
-          to="/protected"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-base-content/60 transition-colors hover:text-base-content"
+          to="/"
+          className="mb-8 inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-base-content/70 transition-colors hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <ArrowLeft className="h-4 w-4" />
-          {m.account_back()}
+          {m.back_to_home()}
         </Link>
 
         <div className="mb-10">
           <h1 className="text-3xl font-black tracking-tight text-base-content mb-2">
             {m.profile_settings_title()}
           </h1>
-          <p className="max-w-xl text-base-content/60">
+          <p className="max-w-xl text-base-content/70">
             {m.profile_settings_subtitle()}
           </p>
         </div>
@@ -134,7 +129,7 @@ export const AccountPage: FC = () => {
                     className="h-16 w-16 shrink-0 rounded-full border border-base-300 object-cover"
                   />
                 ) : (
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-base-300 bg-base-200 text-base-content/60">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-base-300 bg-base-200 text-base-content/70">
                     <UserIcon className="h-7 w-7" />
                   </span>
                 )}
@@ -143,8 +138,8 @@ export const AccountPage: FC = () => {
                     {displayName ?? m.profile_user_id()}
                   </p>
                   {email && (
-                    <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-base-content/60">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-base-content/60" />
+                    <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-base-content/70">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-base-content/70" />
                       {email}
                       {emailVerified && (
                         <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-success" />
@@ -155,13 +150,13 @@ export const AccountPage: FC = () => {
                     {me?.roles?.map((role) => (
                       <span
                         key={role}
-                        className="inline-flex items-center rounded-full bg-base-200 px-2.5 py-0.5 text-xs font-semibold text-base-content/60"
+                        className="inline-flex items-center rounded-full bg-base-200 px-2.5 py-0.5 text-xs font-semibold text-base-content/70"
                       >
                         {roleLabel(role)}
                       </span>
                     ))}
                     {memberSince && (
-                      <span className="text-xs text-base-content/60">
+                      <span className="text-xs text-base-content/70">
                         {m.profile_member_since()} {memberSince}
                       </span>
                     )}
@@ -188,15 +183,15 @@ export const AccountPage: FC = () => {
                     onClick={() =>
                       window.location.assign(buildAccountCenterUrl(action))
                     }
-                    className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-base-200 active:bg-base-300"
+                    className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-base-200 active:bg-base-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-base-300 bg-base-200 text-base-content/60">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-base-300 bg-base-200 text-base-content/70">
                       <Icon className="h-5 w-5" />
                     </span>
                     <span className="flex-1 text-sm font-semibold text-base-content">
                       {title}
                     </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-base-content/60 transition-transform group-hover:translate-x-0.5 group-hover:text-base-content/60" />
+                    <ChevronRight className="h-4 w-4 shrink-0 text-base-content/70 transition-transform group-hover:translate-x-0.5 group-hover:text-base-content/70" />
                   </button>
                 </li>
               ))}
