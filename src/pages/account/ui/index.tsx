@@ -63,17 +63,17 @@ export const AccountPage: FC = () => {
     role === "ADMIN" ? m.role_admin() : m.role_user();
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20 selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-base-200 font-sans text-base-content pb-20 selection:bg-primary/10 selection:text-primary">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[20%] w-[600px] h-[600px] bg-indigo-100/40 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100/40 rounded-full blur-[100px]" />
+        <div className="absolute top-[-20%] left-[20%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-info/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-50 border-b border-white/20 bg-base-100/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Header />
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100 uppercase tracking-wide">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary uppercase tracking-wide">
               <ShieldCheck className="w-3.5 h-3.5" />
               {m.profile_settings_title()}
             </div>
@@ -84,17 +84,17 @@ export const AccountPage: FC = () => {
       <main className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link
           to="/protected"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-base-content/60 transition-colors hover:text-base-content"
         >
           <ArrowLeft className="h-4 w-4" />
           {m.account_back()}
         </Link>
 
         <div className="mb-10">
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 mb-2">
+          <h1 className="text-3xl font-black tracking-tight text-base-content mb-2">
             {m.profile_settings_title()}
           </h1>
-          <p className="max-w-xl text-slate-500">
+          <p className="max-w-xl text-base-content/60">
             {m.profile_settings_subtitle()}
           </p>
         </div>
@@ -114,7 +114,7 @@ export const AccountPage: FC = () => {
           ) : error ? (
             <Card>
               <div className="flex flex-col items-start gap-3">
-                <p className="text-sm text-red-600">{m.profile_load_error()}</p>
+                <p className="text-sm text-error">{m.profile_load_error()}</p>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -131,23 +131,23 @@ export const AccountPage: FC = () => {
                   <img
                     src={avatarUrl}
                     alt={displayName ?? ""}
-                    className="h-16 w-16 shrink-0 rounded-full border border-slate-200 object-cover"
+                    className="h-16 w-16 shrink-0 rounded-full border border-base-300 object-cover"
                   />
                 ) : (
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-400">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-base-300 bg-base-200 text-base-content/60">
                     <UserIcon className="h-7 w-7" />
                   </span>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-lg font-bold text-slate-900">
+                  <p className="truncate text-lg font-bold text-base-content">
                     {displayName ?? m.profile_user_id()}
                   </p>
                   {email && (
-                    <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-slate-500">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                    <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-base-content/60">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-base-content/60" />
                       {email}
                       {emailVerified && (
-                        <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                        <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-success" />
                       )}
                     </p>
                   )}
@@ -155,13 +155,13 @@ export const AccountPage: FC = () => {
                     {me?.roles?.map((role) => (
                       <span
                         key={role}
-                        className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600"
+                        className="inline-flex items-center rounded-full bg-base-200 px-2.5 py-0.5 text-xs font-semibold text-base-content/60"
                       >
                         {roleLabel(role)}
                       </span>
                     ))}
                     {memberSince && (
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-base-content/60">
                         {m.profile_member_since()} {memberSince}
                       </span>
                     )}
@@ -180,7 +180,7 @@ export const AccountPage: FC = () => {
 
           {/* Account & security (Logto-managed) */}
           <Card title={m.profile_security_section()} bodyClassName="p-0">
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-base-300">
               {securityActions.map(({ action, title, icon: Icon }) => (
                 <li key={action}>
                   <button
@@ -188,15 +188,15 @@ export const AccountPage: FC = () => {
                     onClick={() =>
                       window.location.assign(buildAccountCenterUrl(action))
                     }
-                    className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50 active:bg-slate-100"
+                    className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-base-200 active:bg-base-300"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-500">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-base-300 bg-base-200 text-base-content/60">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="flex-1 text-sm font-semibold text-slate-900">
+                    <span className="flex-1 text-sm font-semibold text-base-content">
                       {title}
                     </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-500" />
+                    <ChevronRight className="h-4 w-4 shrink-0 text-base-content/60 transition-transform group-hover:translate-x-0.5 group-hover:text-base-content/60" />
                   </button>
                 </li>
               ))}

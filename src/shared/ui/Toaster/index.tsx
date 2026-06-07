@@ -12,23 +12,23 @@ export const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "group toast font-sans !bg-white/80 !backdrop-blur-xl !border-slate-200/60 !shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] !rounded-2xl !p-4 !flex !items-start !gap-4 !transition-all !duration-500",
-          title: "!text-slate-900 !font-bold !text-sm !leading-tight",
-          description: "!text-slate-500 !text-xs !mt-1 !leading-relaxed",
+            "group toast font-sans !bg-base-100/80 !backdrop-blur-xl !border-base-300/60 !shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] !rounded-2xl !p-4 !flex !items-start !gap-4 !transition-all !duration-500",
+          title: "!text-base-content !font-bold !text-sm !leading-tight",
+          description: "!text-base-content/60 !text-xs !mt-1 !leading-relaxed",
           actionButton:
-            "!bg-slate-900 !text-white !font-bold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-slate-800 !transition-colors",
+            "!bg-primary !text-primary-content !font-bold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-primary/90 !transition-colors",
           cancelButton:
-            "!bg-slate-100 !text-slate-600 !font-semibold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-slate-200 !transition-colors",
+            "!bg-base-200 !text-base-content/60 !font-semibold !text-xs !px-4 !py-2 !rounded-xl !hover:bg-base-300 !transition-colors",
 
           success:
-            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-emerald-500 group-[.toaster]:!bg-emerald-50/50",
+            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-success group-[.toaster]:!bg-success/10",
           error:
-            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-rose-500 group-[.toaster]:!bg-rose-50/50",
+            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-error group-[.toaster]:!bg-error/10",
           warning:
-            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-amber-500 group-[.toaster]:!bg-amber-50/50",
-          info: "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-blue-500 group-[.toaster]:!bg-blue-50/50",
+            "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-warning group-[.toaster]:!bg-warning/10",
+          info: "group-[.toaster]:!border-l-4 group-[.toaster]:!border-l-info group-[.toaster]:!bg-info/10",
 
-          icon: "group-data-[type=success]:!text-emerald-600 group-data-[type=error]:!text-rose-600 group-data-[type=warning]:!text-amber-600 group-data-[type=info]:!text-blue-600",
+          icon: "group-data-[type=success]:!text-success group-data-[type=error]:!text-error group-data-[type=warning]:!text-warning group-data-[type=info]:!text-info",
         },
       }}
       {...props}

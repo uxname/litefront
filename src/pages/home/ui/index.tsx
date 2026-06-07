@@ -1,4 +1,5 @@
 import { Counter } from "@entities/counter";
+import { m } from "@generated/paraglide/messages";
 import { toast } from "@shared/ui/Toaster";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
@@ -20,18 +21,18 @@ const ErrorSimulator = () => {
   const { showBoundary } = useErrorBoundary();
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center relative overflow-hidden group">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-orange-500"></div>
-      <div className="mb-6 flex items-center gap-2 text-rose-600 bg-rose-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
-        <Bug className="w-3 h-3" /> Error Boundary Check
+    <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-8 flex flex-col items-center justify-center relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-error to-orange-500"></div>
+      <div className="mb-6 flex items-center gap-2 text-error bg-error/10 px-3 py-1 rounded-full text-xs font-bold uppercase">
+        <Bug className="w-3 h-3" /> {m.home_error_boundary_badge()}
       </div>
 
       <div className="text-center space-y-1 mb-6">
-        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-          Debug Tool
+        <span className="text-[10px] font-bold text-base-content/60 uppercase tracking-widest">
+          {m.home_debug_tool()}
         </span>
-        <div className="text-xl font-bold text-slate-900 tracking-tight">
-          System Resilience
+        <div className="text-xl font-bold text-base-content tracking-tight">
+          {m.home_system_resilience()}
         </div>
       </div>
 
@@ -43,14 +44,14 @@ const ErrorSimulator = () => {
             ),
           )
         }
-        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-200 transition-all hover:bg-rose-700 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-error px-4 py-3 text-sm font-semibold text-error-content shadow-lg transition-all hover:bg-error/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
       >
         <Zap className="h-4 w-4 fill-white" />
-        Crash Application
+        {m.home_crash_app()}
       </button>
 
-      <p className="text-xs text-slate-400 mt-4 text-center max-w-[220px]">
-        This will intentionally throw an error to test the fallback UI.
+      <p className="text-xs text-base-content/60 mt-4 text-center max-w-[220px]">
+        {m.home_error_sim_hint()}
       </p>
     </div>
   );
@@ -60,47 +61,47 @@ export const HomePage: FC = () => {
   const features = [
     {
       icon: LayoutTemplate,
-      title: "Feature-Sliced Design",
-      desc: "Scalable architecture for serious frontend teams.",
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      title: m.home_feature_fsd_title(),
+      desc: m.home_feature_fsd_desc(),
+      color: "text-info",
+      bg: "bg-info/10",
     },
     {
       icon: Zap,
-      title: "Vite + React 19",
-      desc: "Blazing fast build times and latest React features.",
-      color: "text-amber-600",
-      bg: "bg-amber-50",
+      title: m.home_feature_vite_title(),
+      desc: m.home_feature_vite_desc(),
+      color: "text-warning",
+      bg: "bg-warning/10",
     },
     {
       icon: Database,
-      title: "GraphQL + URQL",
-      desc: "Type-safe data fetching with auto-generated hooks.",
+      title: m.home_feature_graphql_title(),
+      desc: m.home_feature_graphql_desc(),
       color: "text-purple-600",
       bg: "bg-purple-50",
     },
     {
       icon: Layers,
-      title: "Strict Typing",
-      desc: "TypeScript everywhere. No any, strict null checks.",
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
+      title: m.home_feature_typing_title(),
+      desc: m.home_feature_typing_desc(),
+      color: "text-success",
+      bg: "bg-success/10",
     },
   ];
 
   const handleCopyCommand = useCallback(() => {
     navigator.clipboard.writeText("npx degit uxname/litefront my-app");
-    toast.success("Command copied to clipboard!");
+    toast.success(m.home_copy_command_success());
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-base-200 font-sans selection:bg-primary/10 selection:text-primary">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-200/20 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-info/10 rounded-full blur-[120px]" />
       </div>
 
-      <div className="sticky top-0 z-50 border-b border-white/20 bg-white/70 backdrop-blur-xl">
+      <div className="sticky top-0 z-50 border-b border-white/20 bg-base-100/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Header />
@@ -110,44 +111,43 @@ export const HomePage: FC = () => {
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 flex flex-col gap-24">
         <section className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wide mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary text-primary text-xs font-bold uppercase tracking-wide mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
-            v1.0.0 is now available
+            {m.home_badge_available()}
           </div>
 
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-slate-900 mb-6 leading-[1.1] animate-in fade-in zoom-in duration-700 delay-100">
-            Build Modern Frontends <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600">
-              Without the Hassle
+          <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-base-content mb-6 leading-[1.1] animate-in fade-in zoom-in duration-700 delay-100">
+            {m.home_hero_title_lead()} <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-600 to-info">
+              {m.home_hero_title_accent()}
             </span>
           </h1>
 
-          <p className="text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            A production-ready React 19 boilerplate powered by Feature-Sliced
-            Design, GraphQL, and OIDC authentication.
+          <p className="text-xl text-base-content/60 mb-10 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+            {m.home_hero_subtitle()}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             <button
               type="button"
               onClick={handleCopyCommand}
-              className="cursor-pointer group relative flex items-center gap-3 px-6 py-3.5 bg-slate-900 text-slate-300 rounded-xl font-mono text-sm shadow-xl shadow-slate-200 hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all duration-300 border-none"
+              className="cursor-pointer group relative flex items-center gap-3 px-6 py-3.5 bg-primary text-primary-content rounded-xl font-mono text-sm shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all duration-300 border-none"
             >
-              <span className="text-indigo-400">$</span>
+              <span className="text-primary-content">$</span>
               <span>npx degit uxname/litefront my-app</span>
               <div className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <CheckCircle2 className="w-4 h-4 text-success" />
               </div>
             </button>
 
             <Link
               to="/protected"
-              className="flex items-center gap-2 px-8 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow-md active:scale-95"
+              className="flex items-center gap-2 px-8 py-3.5 bg-base-100 text-base-content border border-base-300 rounded-xl font-bold hover:bg-base-200 hover:border-base-300 transition-all shadow-sm hover:shadow-md active:scale-95"
             >
-              Live Demo
+              {m.home_cta_live_demo()}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -157,7 +157,7 @@ export const HomePage: FC = () => {
           {features.map((feature, idx) => (
             <div
               key={feature.title}
-              className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              className="group p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div
@@ -165,10 +165,10 @@ export const HomePage: FC = () => {
               >
                 <feature.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">
+              <h3 className="text-lg font-bold text-base-content mb-2">
                 {feature.title}
               </h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
+              <p className="text-sm text-base-content/60 leading-relaxed">
                 {feature.desc}
               </p>
             </div>
@@ -177,21 +177,21 @@ export const HomePage: FC = () => {
 
         <section className="relative">
           <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-3xl font-bold text-slate-900">
-              Interactive Playground
+            <h2 className="text-3xl font-bold text-base-content">
+              {m.home_playground_title()}
             </h2>
-            <div className="h-px flex-1 bg-slate-200"></div>
+            <div className="h-px flex-1 bg-base-300"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-              <div className="mb-6 flex items-center gap-2 text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                <Box className="w-3 h-3" /> Client State (Zustand)
+            <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-info to-primary"></div>
+              <div className="mb-6 flex items-center gap-2 text-primary bg-primary/10 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                <Box className="w-3 h-3" /> {m.home_client_state_badge()}
               </div>
               <Counter />
-              <p className="text-xs text-slate-400 mt-6 text-center max-w-[200px]">
-                State persists across navigation but resets on refresh.
+              <p className="text-xs text-base-content/60 mt-6 text-center max-w-[200px]">
+                {m.home_counter_hint()}
               </p>
             </div>
 
@@ -199,12 +199,12 @@ export const HomePage: FC = () => {
           </div>
         </section>
 
-        <footer className="border-t border-slate-200 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 text-sm">
+        <footer className="border-t border-base-300 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-base-content/60 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white font-bold">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold">
               L
             </div>
-            <span className="font-semibold text-slate-900">LiteFront</span>
+            <span className="font-semibold text-base-content">LiteFront</span>
             <span>© 2025</span>
           </div>
           <div className="flex gap-6">
@@ -212,7 +212,7 @@ export const HomePage: FC = () => {
               href="https://github.com/uxname/litefront"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-indigo-600 transition-colors flex items-center gap-2"
+              className="hover:text-primary transition-colors flex items-center gap-2"
             >
               <Code2 className="w-4 h-4" /> GitHub
             </a>
@@ -220,9 +220,9 @@ export const HomePage: FC = () => {
               href="https://feature-sliced.design/"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-indigo-600 transition-colors flex items-center gap-2"
+              className="hover:text-primary transition-colors flex items-center gap-2"
             >
-              <Layers className="w-4 h-4" /> Documentation
+              <Layers className="w-4 h-4" /> {m.home_footer_docs()}
             </a>
           </div>
         </footer>

@@ -13,10 +13,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary:
-    "bg-slate-900 text-white hover:bg-slate-800 shadow-sm shadow-slate-300",
-  ghost: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50",
-  danger: "bg-white text-red-600 border border-red-100 hover:bg-red-50",
+  primary: "bg-primary text-primary-content hover:bg-primary/90 shadow-sm",
+  ghost:
+    "bg-base-100 text-base-content border border-base-300 hover:bg-base-200",
+  danger: "bg-base-100 text-error border border-error hover:bg-error/10",
 };
 
 const SIZES: Record<ButtonSize, string> = {

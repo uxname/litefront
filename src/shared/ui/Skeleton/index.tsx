@@ -31,7 +31,7 @@ export const Skeleton: FC<SkeletonProps> = ({
       aria-hidden="true"
       style={style}
       className={cn(
-        "animate-pulse bg-slate-200/70",
+        "animate-pulse bg-base-300/70",
         VARIANTS[variant],
         className,
       )}

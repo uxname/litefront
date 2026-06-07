@@ -98,10 +98,10 @@ export const ProfileForm: FC<ProfileFormProps> = ({ profile, accessToken }) => {
           <img
             src={avatarUrl}
             alt={m.profile_avatar()}
-            className="h-16 w-16 shrink-0 rounded-full border border-slate-200 object-cover"
+            className="h-16 w-16 shrink-0 rounded-full border border-base-300 object-cover"
           />
         ) : (
-          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-400">
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-base-300 bg-base-200 text-base-content/60">
             <UserIcon className="h-7 w-7" />
           </span>
         )}
@@ -124,7 +124,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ profile, accessToken }) => {
               ? m.profile_avatar_uploading()
               : m.profile_avatar_upload()}
           </Button>
-          <p className="mt-1.5 text-xs text-slate-400">
+          <p className="mt-1.5 text-xs text-base-content/60">
             {m.profile_avatar_hint()}
           </p>
         </div>

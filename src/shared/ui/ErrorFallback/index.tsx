@@ -38,9 +38,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.AUTH]: {
     icon: LockKeyhole,
     style: {
-      wrapper: "bg-amber-50",
-      icon: "text-amber-600",
-      ring: "ring-amber-100",
+      wrapper: "bg-warning/10",
+      icon: "text-warning",
+      ring: "ring-warning",
     },
     getTitle: () => m.error_auth_required(),
     getDesc: () => m.error_auth_desc(),
@@ -48,9 +48,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.AUTH_CONFIG]: {
     icon: ShieldBan,
     style: {
-      wrapper: "bg-red-50",
-      icon: "text-red-600",
-      ring: "ring-red-100",
+      wrapper: "bg-error/10",
+      icon: "text-error",
+      ring: "ring-error",
     },
     getTitle: () => m.error_auth_config(),
     getDesc: () => m.error_auth_config_desc(),
@@ -58,9 +58,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.ACCESS]: {
     icon: ShieldBan,
     style: {
-      wrapper: "bg-red-50",
-      icon: "text-red-600",
-      ring: "ring-red-100",
+      wrapper: "bg-error/10",
+      icon: "text-error",
+      ring: "ring-error",
     },
     getTitle: () => m.error_access_denied(),
     getDesc: () => m.error_access_desc(),
@@ -68,9 +68,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.NETWORK]: {
     icon: Wifi,
     style: {
-      wrapper: "bg-blue-50",
-      icon: "text-blue-600",
-      ring: "ring-blue-100",
+      wrapper: "bg-info/10",
+      icon: "text-info",
+      ring: "ring-info",
     },
     getTitle: () => m.error_network(),
     getDesc: () => m.error_network_desc(),
@@ -79,9 +79,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.SERVER]: {
     icon: ServerCrash,
     style: {
-      wrapper: "bg-rose-50",
-      icon: "text-rose-600",
-      ring: "ring-rose-100",
+      wrapper: "bg-error/10",
+      icon: "text-error",
+      ring: "ring-error",
     },
     getTitle: () => m.error_server(),
     getDesc: () => m.error_server_desc(),
@@ -89,9 +89,9 @@ const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.UNKNOWN]: {
     icon: CircleAlert,
     style: {
-      wrapper: "bg-slate-100",
-      icon: "text-slate-600",
-      ring: "ring-slate-200",
+      wrapper: "bg-base-200",
+      icon: "text-base-content/60",
+      ring: "ring-base-300",
     },
     getTitle: () => m.error_unexpected(),
     getDesc: () => m.error_unexpected_desc(),
@@ -228,8 +228,8 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   const IconComponent = config.icon;
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-300">
+    <div className="min-h-screen w-full bg-base-200 flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-lg bg-base-100 rounded-2xl border border-base-300 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-300">
         <div className="p-8 sm:p-10 text-center">
           <div
             className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl ${config.style.wrapper} ring-1 ${config.style.ring}`}
@@ -240,27 +240,27 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
             />
           </div>
 
-          <p className="text-xs font-bold leading-7 text-slate-400 uppercase tracking-widest mb-1">
+          <p className="text-xs font-bold leading-7 text-base-content/60 uppercase tracking-widest mb-1">
             {m.error_generic_title?.() ?? "System Issue"}
           </p>
-          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl mb-3">
+          <h2 className="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl mb-3">
             {config.getTitle()}
           </h2>
-          <p className="text-slate-500 text-lg leading-relaxed mb-8">
+          <p className="text-base-content/60 text-lg leading-relaxed mb-8">
             {config.getDesc()}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={handleRetry}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-content font-medium hover:bg-primary/90 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
               <RotateCcw className="h-4 w-4" />
               {m.action_retry()}
             </button>
             <button
               onClick={handleReload}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-white text-slate-700 border border-slate-200 font-medium hover:bg-slate-50 hover:text-slate-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-base-100 text-base-content border border-base-300 font-medium hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-base-300"
             >
               <RefreshCcw className="h-4 w-4" />
               {m.action_reload()}
@@ -268,10 +268,10 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
           </div>
         </div>
 
-        <div className="border-t border-slate-100 bg-slate-50/50">
+        <div className="border-t border-base-300 bg-base-200/50">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors focus:outline-none"
+            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/60 hover:text-base-content hover:bg-base-200 transition-colors focus:outline-none"
           >
             <span className="flex items-center gap-2">
               <Terminal className="h-4 w-4" />
@@ -286,25 +286,25 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 
           {showDetails && (
             <div className="px-8 pb-8 pt-2 animate-in slide-in-from-top-2 duration-200">
-              <div className="mb-3 flex items-center gap-2 text-xs text-slate-500 font-mono">
+              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/60 font-mono">
                 <ArrowRight className="h-3 w-3" />
                 Path:{" "}
-                <span className="text-slate-700 bg-slate-200 px-1.5 py-0.5 rounded">
+                <span className="text-base-content bg-base-300 px-1.5 py-0.5 rounded">
                   {pathname}
                 </span>
               </div>
 
-              <div className="relative rounded-lg border border-slate-200 bg-white p-4 font-mono text-[11px] leading-relaxed text-slate-600 shadow-sm overflow-hidden">
+              <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/60 shadow-sm overflow-hidden">
                 <button
                   onClick={handleCopyStack}
-                  className="absolute right-2 top-2 rounded-md bg-slate-100 p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/60 hover:text-primary hover:bg-primary/10 transition-colors"
                   title={copied ? "Copied" : "Copy Stack Trace"}
                 >
                   <Copy className="h-3.5 w-3.5" />
                 </button>
 
                 <div className="max-h-48 overflow-auto pr-8 custom-scrollbar">
-                  <span className="block text-red-600 font-bold mb-2 break-words">
+                  <span className="block text-error font-bold mb-2 break-words">
                     {normalizedError.name}: {normalizedError.message}
                   </span>
                   {env.DEV && (

@@ -84,7 +84,10 @@ export default defineConfig(async (): Promise<UserConfig> => {
       paraglideVitePlugin({
         project: "./project.inlang",
         outdir: "./src/generated/paraglide",
-        strategy: ["preferredLanguage"],
+        // localStorage first so an explicit user choice (LocaleSwitcher → setLocale)
+        // persists and wins over the browser language on reload; preferredLanguage is
+        // the first-visit default; baseLocale ("en") is the final fallback.
+        strategy: ["localStorage", "preferredLanguage", "baseLocale"],
       }),
       tailwindcss(),
       ViteImageOptimizer(),

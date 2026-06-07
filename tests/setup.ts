@@ -30,26 +30,18 @@ vi.stubGlobal("import.meta", {
   },
 });
 
-// Global mock: i18n messages — prevents missing-translation crashes in all component tests
+// Global mock: i18n messages — prevents missing-translation crashes in all component tests.
+// A Proxy returns a function echoing the key name for ANY message, so adding a new
+// Paraglide key never breaks tests that rely on this global mock. Tests needing specific
+// strings override this with their own `vi.mock("@generated/paraglide/messages", …)`.
 vi.mock("@generated/paraglide/messages", () => ({
-  m: {
-    error_generic_title: () => "System Issue",
-    error_unexpected: () => "Unexpected Error",
-    error_unexpected_desc: () => "An unexpected error occurred",
-    error_auth_required: () => "Authentication Required",
-    error_auth_desc: () => "Please sign in to continue",
-    error_access_denied: () => "Access Denied",
-    error_access_desc: () => "You do not have permission",
-    error_network: () => "Network Error",
-    error_network_desc: () => "Please check your connection",
-    error_server: () => "Server Error",
-    error_server_desc: () => "The server encountered an error",
-    error_auth_config: () => "Auth Config Error",
-    error_auth_config_desc: () => "Authentication is not configured correctly",
-    action_retry: () => "Retry",
-    action_reload: () => "Reload",
-    dev_details: () => "Developer Details",
-  },
+  m: new Proxy(
+    {},
+    {
+      get: (_target, prop) =>
+        typeof prop === "string" ? () => prop : undefined,
+    },
+  ),
 }));
 
 // Global mock: OIDC — default unauthenticated state; override per test via vi.mocked(useAuth).mockReturnValue(...)

@@ -26,17 +26,17 @@ export const FormField: FC<FormFieldProps> = ({
   children,
 }) => (
   <div className={cn("flex flex-col gap-1.5", className)}>
-    <label htmlFor={htmlFor} className="text-sm font-medium text-slate-700">
+    <label htmlFor={htmlFor} className="text-sm font-medium text-base-content">
       {label}
-      {required && <span className="ml-0.5 text-red-500">*</span>}
+      {required && <span className="ml-0.5 text-error">*</span>}
     </label>
     {children}
     {error ? (
-      <p id={`${htmlFor}-error`} className="text-xs font-medium text-red-600">
+      <p id={`${htmlFor}-error`} className="text-xs font-medium text-error">
         {error}
       </p>
     ) : (
-      hint && <p className="text-xs text-slate-400">{hint}</p>
+      hint && <p className="text-xs text-base-content/60">{hint}</p>
     )}
   </div>
 );

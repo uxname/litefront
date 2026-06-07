@@ -63,6 +63,65 @@ conventions to stay aligned with existing tooling and architecture.
 - Base URL uses `VITE_BASE_URL` or defaults to `http://localhost:3000`.
 - Playwright starts `npm run start:prod` via `webServer` in config.
 
+## Frontend observability for AI agents (READ THIS — you cannot see the browser)
+
+An AI agent has no eyes on a browser console. To **read what the frontend actually
+does at runtime** — `console.*`, uncaught errors, unhandled promise rejections, failed
+network requests — use the **agent log harness**, a Playwright spec that drives the app
+headlessly and dumps everything to files you can read.
+
+```bash
+npm run test:e2e:logs
+```
+
+Then read the captured output (do NOT try to watch a live browser):
+- `test-results/frontend-logs.log` — human-readable, one line per event.
+- `test-results/frontend-logs.json` — same data, structured (parse this).
+
+How it works (`tests/e2e/agent-logs.spec.ts`):
+- Walks the key routes (`/`, `/protected`, a 404), then exercises the theme + locale
+  switchers, capturing every console/error/network event along the way.
+- `/protected` renders because the harness sets `localStorage.isTestAuthenticated`
+  (mock-auth path, same as `tests/e2e/pages/account.spec.ts`).
+- react-scan render-profiling noise is filtered out so the log stays signal.
+- It is a **collector**, not a strict gate: plain console output never fails it, but a
+  **`pageerror` or a same-origin failed request DOES fail it** — those are real
+  breakages you must surface and fix.
+
+**To debug a specific page/flow**, copy this spec, change the routes/interactions, and
+read the same output files. This is the canonical way for an agent to "look at" the UI.
+
+> Port note: Playwright reuses an already-running dev server on `:3000` when present
+> (`reuseExistingServer`), so logs may come from the dev build (react-scan, HMR). For a
+> clean prod capture, stop the dev server first so the harness builds + previews fresh.
+
+## Theming & i18n (how the switchers work — don't re-break them)
+
+**Theme (daisyUI).** Two themes are declared in `src/index.css`
+(`cmyk` = light/default, `dark`). The toggle (`src/features/theme`) is a zustand store
+that sets `document.documentElement[data-theme]` and persists to `localStorage`
+(`litefront-theme`), re-applied on rehydrate.
+- **The whole UI must be styled with daisyUI SEMANTIC tokens, not hardcoded Tailwind
+  palette colors.** Use `bg-base-100/200/300`, `text-base-content` (+ `/60` for muted),
+  `border-base-300`, `text-primary`, `text-error/success/info/warning`, `*-content` for
+  text on accent fills. **Never** use `bg-white`, `text-slate-900`, `text-indigo-600`,
+  `bg-red-50`, etc. — those ignore `data-theme` and stay light in dark mode (this exact
+  bug is why the theme appeared "broken"). Decorative gradient orbs are the only allowed
+  exception.
+
+**i18n (Paraglide JS).** Messages live in `messages/{en,ru}.json`; generated accessors in
+`src/generated/paraglide`. Switcher: `src/features/locale`. Strategy is set in
+`vite.config.ts`:
+```ts
+strategy: ["localStorage", "preferredLanguage", "baseLocale"]
+```
+- **`localStorage` MUST come before `preferredLanguage`** so an explicit user choice
+  (`setLocale`) persists and wins over the browser language on reload. A strategy of
+  `["preferredLanguage"]` alone silently discards the choice on every reload (the original
+  bug). Changing strategy requires a **dev-server restart / rebuild** (it's compiled into
+  `src/generated/paraglide/runtime.js`).
+- Add strings via the `add-translation` skill; keep `en.json` and `ru.json` in sync.
+
 ## Codegen / Routing
 - `npm run gen` — GraphQL codegen (reads `src/graphql/**/*.graphql`)
 - `npm run gen:routes` — TanStack Router route tree (`src/generated/routeTree.gen.ts`)

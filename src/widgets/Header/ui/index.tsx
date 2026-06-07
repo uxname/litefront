@@ -29,7 +29,7 @@ export const Header: FC = () => {
           to="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
         >
-          <span className="font-bold text-lg tracking-tight text-slate-900 hidden sm:block">
+          <span className="font-bold text-lg tracking-tight text-base-content hidden sm:block">
             LiteFront
           </span>
         </Link>
@@ -37,15 +37,15 @@ export const Header: FC = () => {
         <div className="hidden md:flex items-center gap-6">
           <Link
             to="/"
-            className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors [&.active]:text-indigo-600 [&.active]:font-semibold"
+            className="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors [&.active]:text-primary [&.active]:font-semibold"
           >
-            Home
+            {m.nav_home()}
           </Link>
           <Link
             to="/protected"
-            className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors [&.active]:text-indigo-600 [&.active]:font-semibold"
+            className="text-sm font-medium text-base-content/60 hover:text-base-content transition-colors [&.active]:text-primary [&.active]:font-semibold"
           >
-            Protected Area
+            {m.nav_protected()}
           </Link>
         </div>
       </div>
@@ -55,29 +55,29 @@ export const Header: FC = () => {
         <ThemeToggle />
 
         {auth.isLoading ? (
-          <div className="flex items-center gap-2 text-slate-400 px-3 py-1.5 bg-slate-50 rounded-full">
+          <div className="flex items-center gap-2 text-base-content/60 px-3 py-1.5 bg-base-200 rounded-full">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-xs font-medium">Verifying...</span>
+            <span className="text-xs font-medium">{m.auth_verifying()}</span>
           </div>
         ) : auth.isAuthenticated ? (
           <details className="dropdown dropdown-end">
-            <summary className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200 transition-colors hover:bg-slate-200 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-              <span className="p-0.5 bg-white rounded-full shadow-sm">
-                <User className="h-3 w-3 text-slate-600" />
+            <summary className="flex items-center gap-2 px-3 py-1.5 bg-base-200 rounded-full border border-base-300 transition-colors hover:bg-base-300 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <span className="p-0.5 bg-base-100 rounded-full shadow-sm">
+                <User className="h-3 w-3 text-base-content/60" />
               </span>
-              <span className="text-xs font-semibold text-slate-700 max-w-[120px] truncate">
+              <span className="text-xs font-semibold text-base-content max-w-[120px] truncate">
                 {auth.user?.profile.email || "User"}
               </span>
-              <ChevronDown className="h-3 w-3 text-slate-400" />
+              <ChevronDown className="h-3 w-3 text-base-content/60" />
             </summary>
 
-            <ul className="dropdown-content menu z-[60] mt-2 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+            <ul className="dropdown-content menu z-[60] mt-2 w-56 rounded-xl border border-base-300 bg-base-100 p-1.5 shadow-lg">
               <li>
                 <Link
                   to="/protected/account"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200"
                 >
-                  <Settings className="h-4 w-4 text-slate-400" />
+                  <Settings className="h-4 w-4 text-base-content/60" />
                   {m.profile_settings_title()}
                 </Link>
               </li>
@@ -85,10 +85,10 @@ export const Header: FC = () => {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-error hover:bg-error/10"
                 >
                   <LogOut className="h-4 w-4" />
-                  Logout
+                  {m.auth_logout()}
                 </button>
               </li>
             </ul>
@@ -96,10 +96,10 @@ export const Header: FC = () => {
         ) : (
           <button
             onClick={() => void auth.signinRedirect()}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg shadow-sm shadow-slate-300 transition-all hover:-translate-y-0.5"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-content text-sm font-medium rounded-lg shadow-sm transition-all hover:-translate-y-0.5"
           >
             <LogIn className="h-4 w-4" />
-            Sign In
+            {m.auth_sign_in()}
           </button>
         )}
       </div>
