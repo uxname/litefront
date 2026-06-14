@@ -5,18 +5,20 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-/** User authorization roles */
+/** Access role granted to a profile; drives authorization on guarded fields. */
 export type ProfileRole =
+  /** Full access — may call admin-only queries and mutations. */
   | 'ADMIN'
+  /** Standard authenticated user. */
   | 'USER';
 
-/** Input fields for updating a user profile */
+/** Fields a user may change on their own profile. Omitted fields are left unchanged. */
 export type ProfileUpdateInput = {
-  /** New avatar image URL */
+  /** New avatar image URL. */
   avatarUrl?: string | null | undefined;
-  /** New short biography */
+  /** New biography text. */
   bio?: string | null | undefined;
-  /** New public display name */
+  /** New display name. */
   displayName?: string | null | undefined;
 };
 
@@ -25,12 +27,12 @@ export type UpdateProfileMutationVariables = Exact<{
 }>;
 
 
-export type UpdateProfileMutation = { updateProfile: { id: number, avatarUrl: string | null, displayName: string | null, bio: string | null, updatedAt: unknown } };
+export type UpdateProfileMutation = { updateProfile: { id: string, avatarUrl: string | null, displayName: string | null, bio: string | null, updatedAt: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { me: { id: number, roles: Array<ProfileRole> | null, avatarUrl: string | null, displayName: string | null, bio: string | null, createdAt: unknown, updatedAt: unknown } };
+export type MeQuery = { me: { id: string, roles: Array<ProfileRole>, avatarUrl: string | null, displayName: string | null, bio: string | null, createdAt: string, updatedAt: string } };
 
 
 export const UpdateProfileDocument = gql`

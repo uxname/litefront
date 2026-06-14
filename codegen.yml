@@ -15,6 +15,11 @@ generates:
       withHooks: true
       withHOC: false
       withComponent: false
+      # liteend-go (gqlgen) exposes custom scalars. Map them to the TS types the UI
+      # actually uses so fields stay strongly typed instead of falling back to `any`.
+      scalars:
+        URL: string
+        DateTime: string
   src/generated/schema.graphql:
     plugins:
       - schema-ast

@@ -4,66 +4,73 @@ schema {
   subscription: Subscription
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
+"""RFC 3339 / ISO 8601 timestamp (e.g. 2024-01-02T15:04:05Z)."""
 scalar DateTime
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
+"""Arbitrary JSON value, serialized as a JSON object/scalar."""
 scalar JSON
 
 type Mutation {
   """Adds a job to the test queue"""
   addTestJob(message: String!): Boolean!
-  """Echo mutation — returns the input text (dev utility)"""
+  """Echo mutation — returns the input text (ADMIN only, dev utility)"""
   echo(text: String!): String!
   """Update the current user profile fields"""
   updateProfile(input: ProfileUpdateInput!): Profile!
 }
 
-"""Authenticated user profile linked to an OIDC account"""
+"""A user profile, created on first login from the OIDC subject."""
 type Profile {
-  """Avatar image URL"""
-  avatarUrl: String
-  """Short biography"""
+  """URL of the profile avatar image, if set."""
+  avatarUrl: URL
+  """Free-form user biography, if set."""
   bio: String
-  """Profile creation timestamp"""
+  """When the profile was first created."""
   createdAt: DateTime!
-  """Public display name"""
+  """Human-readable display name, if set."""
   displayName: String
-  """Unique profile identifier"""
-  id: Int!
-  """Assigned roles (ADMIN, USER)"""
-  roles: [ProfileRole!]
-  """Profile last update timestamp"""
+  """Unique profile identifier."""
+  id: ID!
+  """
+  OIDC subject (`sub` claim) this profile is bound to — stable per identity provider.
+  """
+  oidcSub: String!
+  """Roles granted to this profile; controls access to guarded operations."""
+  roles: [ProfileRole!]!
+  """When the profile was last modified."""
   updatedAt: DateTime!
 }
 
-"""User authorization roles"""
+"""
+Access role granted to a profile; drives authorization on guarded fields.
+"""
 enum ProfileRole {
+  """Full access — may call admin-only queries and mutations."""
   ADMIN
+  """Standard authenticated user."""
   USER
 }
 
-"""Input fields for updating a user profile"""
+"""
+Fields a user may change on their own profile. Omitted fields are left unchanged.
+"""
 input ProfileUpdateInput {
-  """New avatar image URL"""
-  avatarUrl: String
-  """New short biography"""
+  """New avatar image URL."""
+  avatarUrl: URL
+  """New biography text."""
   bio: String
-  """New public display name"""
+  """New display name."""
   displayName: String
 }
 
 type Query {
+  """Debug info: uptime, memory, app version, users count (ADMIN only)"""
   debug: JSON!
-  """Echo back the input text (dev utility)"""
+  """Echo back the input text (ADMIN only, dev utility)"""
   echo(text: String!): String!
   """Get the currently authenticated profile"""
   me: Profile!
-  """Test i18n translation by username"""
+  """Test i18n translation by username (ADMIN only)"""
   testTranslation(username: String!): String!
 }
 
@@ -71,3 +78,6 @@ type Subscription {
   """Receive real-time updates when the current user profile changes"""
   profileUpdated: Profile!
 }
+
+"""Absolute URL string."""
+scalar URL
