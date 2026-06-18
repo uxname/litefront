@@ -92,10 +92,20 @@ npm run storybook:build     # Build static output
 npm run storybook:preview   # Preview static build
 ```
 
+## Verifying it visually (agents can't see Ladle)
+
+`storybook:serve` opens a browser an agent can't watch. To confirm the rendered
+output, use the **screenshot harness** instead: most components show up on a real
+page, so `npm run test:e2e:screens` and read the PNG
+(`test-results/screenshots/*.png`) with the Read tool — in both `cmyk` and `dark`.
+For a state only the story shows, capture it via a temporary route. See
+[docs/DEBUGGING.md](../../../docs/DEBUGGING.md).
+
 ## Checklist
 
 - [ ] Story file named `ComponentName.stories.tsx`
 - [ ] Lives in the same directory as the component
 - [ ] Each meaningful variant has its own exported story
 - [ ] Stories render without errors (`npm run storybook:serve`)
+- [ ] Confirmed the rendered output by reading a screenshot in both themes
 - [ ] If the component needs providers, wrap them in the story

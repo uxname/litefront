@@ -91,6 +91,25 @@ How it works (`tests/e2e/agent-logs.spec.ts`):
 **To debug a specific page/flow**, copy this spec, change the routes/interactions, and
 read the same output files. This is the canonical way for an agent to "look at" the UI.
 
+### Seeing the UI (not just the logs)
+
+Logs tell you what the app *did*; they don't show what it *looks like*. For layout,
+spacing, and especially **theme** work, use the **screenshot harness** — it drives the
+app headlessly and writes a full-page PNG for every key route, in **both daisyUI themes**
+(`cmyk`/`dark`) at **desktop + mobile** widths:
+
+```bash
+npm run test:e2e:screens
+```
+
+Then **read the PNGs with the Read tool** (it renders images) — do NOT open a live browser:
+- `test-results/screenshots/<route>-<theme>-<viewport>.png`, e.g. `home-dark-mobile.png`.
+
+It's the same collector contract as the log harness (always writes; fails only on a real
+`pageerror`/same-origin failure). Comparing `*-cmyk-*` vs `*-dark-*` is how you catch the
+hardcoded-color dark-mode bug (see "Theming & i18n" below). Full triage workflow and a
+symptom → cause → fix matrix live in [docs/DEBUGGING.md](./docs/DEBUGGING.md).
+
 > Port note: Playwright reuses an already-running dev server on `:3000` when present
 > (`reuseExistingServer`), so logs may come from the dev build (react-scan, HMR). For a
 > clean prod capture, stop the dev server first so the harness builds + previews fresh.

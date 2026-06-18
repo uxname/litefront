@@ -70,6 +70,21 @@ npm run gen:routes
 
 This updates `src/generated/routeTree.gen.ts`. **Never edit this file manually.**
 
+### 4. Look at the page (agents can't see a browser)
+
+After the route renders, capture it and **read the PNG** to confirm the layout
+and that it works in dark mode:
+
+```bash
+npm run test:e2e:screens
+```
+
+Add your route to the matrix in `tests/e2e/agent-screens.spec.ts` (or temporarily),
+then read `test-results/screenshots/<route>-cmyk-desktop.png` and
+`<route>-dark-desktop.png` with the Read tool. If the dark shot looks light, you
+used hardcoded Tailwind colors instead of daisyUI tokens — fix and re-capture.
+See [docs/DEBUGGING.md](../../../docs/DEBUGGING.md).
+
 ## Protected Page
 
 If the new page requires authentication, **DO NOT** write auth logic manually. After creating the basic route structure, immediately invoke the `add-auth-guard` skill to protect the route properly.
@@ -124,4 +139,5 @@ export function UserPage() {
 - [ ] `npm run gen:routes` executed
 - [ ] If protected: `AuthGuard` added or `beforeLoad` redirect (see `add-auth-guard` skill)
 - [ ] If data-fetching: `loader` + `pendingComponent` + `errorComponent` added
+- [ ] Captured + read the page screenshot in both themes (`npm run test:e2e:screens`)
 - [ ] `npm run ts:check` passes

@@ -81,6 +81,22 @@ export { Button } from "./Button";
 - **Use daisyUI classes** (`btn`, `card`, `badge`, etc.) for semantic component styles
 - **Use SCSS Modules** (`.module.scss`) only for complex scoped styles not achievable with Tailwind
 
+## Verify it visually (agents can't see a browser)
+
+`npm run storybook:serve` is for a human; an agent can't see it. To confirm the
+component looks right **and reacts to dark mode**, capture a screenshot and read
+the PNG. Most shared components appear on a real page (`/`, `/account`) — run the
+screenshot harness and read where it renders:
+
+```bash
+npm run test:e2e:screens   # → test-results/screenshots/<route>-<theme>-*.png
+```
+
+For an off-page state (e.g. a loading or error variant not on any page), add a
+temporary route that renders it, capture, read, then remove the throwaway. Compare
+`*-cmyk-*` vs `*-dark-*`: identical-looking regions mean hardcoded colors instead
+of daisyUI tokens. See [docs/DEBUGGING.md](../../../docs/DEBUGGING.md).
+
 ## Checklist
 
 - [ ] Component in `src/shared/ui/<ComponentName>/`
@@ -89,4 +105,4 @@ export { Button } from "./Button";
 - [ ] `index.ts` created
 - [ ] Ladle story added with main variants
 - [ ] Component test added if logic is non-trivial
-- [ ] Run `npm run storybook:serve` to verify story renders
+- [ ] Verified visually in both themes (`npm run test:e2e:screens`, read the PNG)
