@@ -1,0 +1,14 @@
+/* Storybook (Ladle) stylesheet entry.
+ *
+ * Ladle runs Vite with its own root inside node_modules, so Tailwind v4's
+ * automatic content detection scans there and misses the app's src/ tree —
+ * the generated CSS ends up with only the theme + preflight and none of the
+ * utility/component classes the stories use (.btn, .card, .p-8, ...).
+ *
+ * Re-use the app's stylesheet and register src/ as an explicit source. The
+ * @source path is resolved relative to THIS file, so it stays correct no
+ * matter what root Ladle picks. This is additive and a no-op for the real app
+ * build, which already detects src/ on its own. */
+@import "../src/index.css";
+
+@source "../src";
