@@ -11,6 +11,7 @@ storybook-build/
 .husky
 dev-dist/
 coverage
-# Ladle auto-generates .ladle/ (incl. styles.css) on serve/build — not source.
-.ladle/
+# Ladle (Storybook) config in .ladle/ is hand-written source and IS tracked.
+# Its build output goes to storybook-build/ (ignored above) and its cache to
+# node_modules/.ladle, so nothing under .ladle/ needs ignoring.
 tmp/
