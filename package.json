@@ -44,7 +44,7 @@
     "verify:push": "npm run verify:commit && npm run test:cov && npm run test:e2e:prod && npm run storybook:build && npx rimraf storybook-build",
     "____________________OTHER______________________________________________": "",
     "postinstall": "npm run prepare",
-    "prepare": "npx lefthook install",
+    "prepare": "npx lefthook install || true",
     "update": "npx ncu -u && npx rimraf node_modules package-lock.json && npm i",
     "postupdate": "npm run lint:fix && npm run check"
   },

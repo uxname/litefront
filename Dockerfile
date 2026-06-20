@@ -7,9 +7,12 @@ RUN apk add --no-cache git
 # Set the working directory
 WORKDIR /app
 
-# Copy source and install dependencies
+# Copy source and install dependencies. We do NOT copy .git: in the meta-repo the
+# frontend's .git is a submodule pointer file (gitdir: ...) that breaks any git
+# command inside the image, and in a standalone repo it would bloat the build
+# context with full history. The `prepare` script (lefthook install) is non-fatal
+# without git, and vite-plugin-version-mark skips the commit stamp gracefully.
 COPY package*.json ./
-COPY .git .git
 RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code

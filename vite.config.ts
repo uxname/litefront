@@ -111,7 +111,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         ifLog: true,
         ifGlobal: true,
         ifMeta: false,
-        command: 'git log -1 --pretty=format:"%H %s"',
+        // Fall back to "unknown" when git isn't available (e.g. Docker builds,
+        // where .git is intentionally not copied) so the build never fails on it.
+        command: 'git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
       }),
       viteDotenvChecker(),
       VitePWA({
