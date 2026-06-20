@@ -111,10 +111,12 @@ export default defineConfig(async (): Promise<UserConfig> => {
         ifLog: true,
         ifGlobal: true,
         ifMeta: false,
-        // Fall back to "unknown" when git isn't available (e.g. Docker builds,
-        // where .git is intentionally not copied) so the build never fails on it.
+        // Stamp the running version (logged to the console + exposed on window) so
+        // prod/stage shows exactly what's deployed. Prefer the SOURCE_COMMIT build
+        // arg (injected by the Dockerfile — the image has no .git), fall back to
+        // local git for dev, and to "unknown" if neither is available.
         command:
-          'git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
+          'test -n "$SOURCE_COMMIT" && echo "$SOURCE_COMMIT" || git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
       }),
       viteDotenvChecker(),
       VitePWA({

@@ -11,7 +11,7 @@ WORKDIR /app
 # frontend's .git is a submodule pointer file (gitdir: ...) that breaks any git
 # command inside the image, and in a standalone repo it would bloat the build
 # context with full history. The `prepare` script (lefthook install) is non-fatal
-# without git, and vite-plugin-version-mark skips the commit stamp gracefully.
+# without git (see package.json).
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
@@ -19,6 +19,13 @@ RUN npm install --legacy-peer-deps
 COPY . ./
 
 ENV NODE_ENV=production
+
+# Version stamp shown on prod/stage (console + window global via
+# vite-plugin-version-mark). Since the image has no .git, the commit is injected
+# as a build arg — pass it from your build/deploy pipeline, e.g.:
+#   docker compose build --build-arg SOURCE_COMMIT="$(git rev-parse --short HEAD)"
+ARG SOURCE_COMMIT=unknown
+ENV SOURCE_COMMIT=$SOURCE_COMMIT
 
 # Build the application
 RUN npm run build:vite
