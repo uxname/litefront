@@ -17,6 +17,10 @@ conventions to stay aligned with existing tooling and architecture.
 - `npm run start:prod` — Vite preview (serves build)
 - `npm run build` — Production build + `check`
 - `npm run build:vite` — Vite build only
+- `npm run docker:build` — Build the production image, auto-stamping the git commit
+  (`SOURCE_COMMIT`) so prod/stage shows the running version in the console. Use this
+  instead of a bare `docker compose build` (which would report "unknown").
+- `npm run docker:up` — Same stamp, then build + start the container in the background.
 
 ## Lint / Format / Typecheck
 - `npm run lint` — Biome check (read-only)

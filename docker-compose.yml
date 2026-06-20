@@ -3,8 +3,9 @@ services:
     build:
       context: .
       # Version stamp baked into the bundle (visible in the browser console on
-      # prod/stage). Set SOURCE_COMMIT in the environment when building, e.g.:
-      #   SOURCE_COMMIT="$(git rev-parse --short HEAD)" docker compose build
+      # prod/stage). Prefer `npm run docker:build` / `npm run docker:up` — they
+      # fill SOURCE_COMMIT from git automatically. A bare `docker compose build`
+      # still works and just reports "unknown".
       args:
         SOURCE_COMMIT: ${SOURCE_COMMIT:-unknown}
     restart: unless-stopped

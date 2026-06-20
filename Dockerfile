@@ -21,9 +21,9 @@ COPY . ./
 ENV NODE_ENV=production
 
 # Version stamp shown on prod/stage (console + window global via
-# vite-plugin-version-mark). Since the image has no .git, the commit is injected
-# as a build arg — pass it from your build/deploy pipeline, e.g.:
-#   docker compose build --build-arg SOURCE_COMMIT="$(git rev-parse --short HEAD)"
+# vite-plugin-version-mark). The image has no .git, so the commit is injected as
+# a build arg. Use `npm run docker:build` (or docker:up) — it fills SOURCE_COMMIT
+# from git automatically, so it can't be forgotten.
 ARG SOURCE_COMMIT=unknown
 ENV SOURCE_COMMIT=$SOURCE_COMMIT
 
