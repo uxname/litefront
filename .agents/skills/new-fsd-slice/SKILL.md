@@ -45,6 +45,7 @@ Not every slice needs all folders — include only what's relevant.
 4. No default exports — use named exports only
 5. Run `npm run lint:fsd` to verify boundaries
 6. Run `npm run ts:check` to verify types
+7. Write the slice's tests **first** (see below), then make `npm run check` and `npm run test:cov` pass
 
 ## index.ts Pattern
 
@@ -64,6 +65,10 @@ Always run:
 npm run lint:fsd   # Check FSD boundaries
 npm run ts:check   # Check types
 ```
+
+## Tests (required — write them first)
+
+Every slice ships tests, and they come **before** the implementation (TDD): encode the contract as failing assertions, then build the slice to green. Stores, hooks, and pure `model/`/util functions get unit tests; UI components in `ui/` get a component test — and a `shared/ui` component additionally needs a Ladle story (the story+test+component "trio"). Tests are non-optional: `npm run check` runs the suite and `npm run test:cov` enforces the coverage floors locally and in CI, so the slice is not done until both pass. Use the `write-tests` skill for the patterns.
 
 ## Adding to an Existing Slice
 

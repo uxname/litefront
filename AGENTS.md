@@ -30,10 +30,30 @@ conventions to stay aligned with existing tooling and architecture.
 - `npm run check` — Runs stylelint + tsc + biome fix + knip + steiger
 
 ## Testing
+
+### Component & test discipline (the "trio" + TDD) — READ THIS
+This project treats tests as **non-optional**, and the rule is machine-enforced
+so it cannot drift:
+
+- **Every `shared/ui` component is a trio**: `<Name>.tsx` (impl) +
+  `<Name>.stories.tsx` (Ladle story) + `<Name>.test.tsx` (Vitest test), with a
+  thin `index.ts` re-export. The `trio` step in `npm run check`
+  (`scripts/check-component-trio.mjs`) **fails the build** for any `shared/ui`
+  component missing its story or test. Use the `new-component` / `add-story` /
+  `write-tests` skills.
+- **New business logic is written test-first (TDD).** For features, stores,
+  hooks, utils, schemas and feature/entity components: write the failing test
+  that encodes the contract, then implement until green. New code that drops
+  coverage below the floors in `vite.config.ts` (lines/statements 82, functions
+  85, branches 78) fails `npm run test:cov` — locally and in CI. Ratchet the
+  floors **up** as coverage grows; never lower one to dodge a finding.
+- Both gates run in CI (`.github/workflows/ci.yml`), so `--no-verify` cannot
+  bypass them.
+
 ### Vitest (unit/component)
 - `npm run test:dev` — interactive/watch
 - `npm run test:prod` — run once (CI style)
-- `npm run test:cov` — coverage
+- `npm run test:cov` — coverage (enforces the thresholds above)
 
 **Single test file**
 - `npm run test:dev -- src/path/to/file.test.tsx`

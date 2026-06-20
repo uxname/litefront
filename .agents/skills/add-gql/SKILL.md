@@ -96,6 +96,10 @@ The URQL client is configured in `src/shared/api/`. It automatically:
 
 No manual client setup is needed per-operation.
 
+## Tests (required — write them first)
+
+Before wiring the operation, write the test for the component or hook that will consume it. Encode the contract as failing assertions — mock the generated urql hook (`useGetUserQuery`, `useUpdateUserMutation`, etc.) to return the loading/data/error shapes the consumer must handle — then add the `.graphql` file, run codegen, and implement to green. Tests are non-optional and machine-enforced: `npm run test:cov` enforces coverage floors locally and in CI. See the `write-tests` skill for urql mocking patterns.
+
 ## Checklist
 
 - [ ] `.graphql` file created in `src/graphql/queries/`
@@ -103,6 +107,7 @@ No manual client setup is needed per-operation.
 - [ ] Generated hooks imported from `@generated/graphql` (not from the file directly)
 - [ ] Never editing `src/generated/graphql.tsx` manually
 - [ ] Operation placed in the correct FSD layer (`api/` subfolder of the relevant slice)
+- [ ] Consumer test written first (generated urql hook mocked) and `npm run check` / `npm run test:cov` pass
 
 ## Next Steps (Skill Chaining)
 

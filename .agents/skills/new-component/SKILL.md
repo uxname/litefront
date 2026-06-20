@@ -6,7 +6,12 @@ version: 1.0.0
 
 # New Shared UI Component
 
-Creates a reusable component in `shared/ui/` with a Ladle story and optional test.
+Creates a reusable component in `shared/ui/` as a **trio**: implementation +
+Ladle story + Vitest test. **The story and the test are mandatory** — the
+`trio` check in `npm run check` (`scripts/check-component-trio.mjs`) fails the
+build for any `src/shared/ui/<Name>/` missing `<Name>.stories.tsx` or
+`<Name>.test.tsx`, and the same gate runs in CI. Write the test first (TDD):
+encode the component's contract as failing assertions, then implement to green.
 
 ## When to Use shared/ui vs Other Layers
 
@@ -22,9 +27,9 @@ Creates a reusable component in `shared/ui/` with a Ladle story and optional tes
 src/shared/ui/
 └── ComponentName/
     ├── ComponentName.tsx       # Component implementation
-    ├── ComponentName.stories.tsx  # Ladle story
-    ├── ComponentName.test.tsx  # Vitest component test (optional)
-    └── index.ts                # Named export
+    ├── ComponentName.stories.tsx  # Ladle story (REQUIRED — trio gate)
+    ├── ComponentName.test.tsx  # Vitest component test (REQUIRED — trio gate)
+    └── index.ts                # Named re-export (export * from "./ComponentName")
 ```
 
 ## Component Template
@@ -103,6 +108,7 @@ of daisyUI tokens. See [docs/DEBUGGING.md](../../../docs/DEBUGGING.md).
 - [ ] Props typed with explicit interface
 - [ ] Named export (no default exports)
 - [ ] `index.ts` created
-- [ ] Ladle story added with main variants
-- [ ] Component test added if logic is non-trivial
+- [ ] Ladle story added with main variants (**required** — trio gate)
+- [ ] Vitest test added covering rendering, props/variants, and behaviour (**required** — trio gate; write it test-first)
+- [ ] `npm run check` passes (runs the `trio` gate among biome/ts/knip/steiger)
 - [ ] Verified visually in both themes (`npm run test:e2e:screens`, read the PNG)

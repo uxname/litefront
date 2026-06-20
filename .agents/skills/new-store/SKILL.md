@@ -108,6 +108,10 @@ export { useSliceStore } from "./model/store";
 export type { SliceState } from "./model/store"; // if needed externally
 ```
 
+## Tests (required — write them first)
+
+Every store ships a colocated `model/store.test.ts`. Write it FIRST (TDD): encode the contract as failing assertions, then implement the store to green. Assert the initial state and each action's effect on state. Reset the store in `beforeEach` (e.g. `useSliceStore.setState(initialState)`) so cases stay isolated. See the `write-tests` skill for patterns. `npm run test:cov` enforces coverage floors locally and in CI, so the store is not done until its test passes.
+
 ## Checklist
 
 - [ ] Store created in `model/store.ts` of the correct slice
@@ -116,3 +120,4 @@ export type { SliceState } from "./model/store"; // if needed externally
 - [ ] `initialState` extracted for easy reset
 - [ ] Exported through slice `index.ts`
 - [ ] No logic in `shared/` — stores are domain-specific
+- [ ] Colocated `model/store.test.ts` written first, covering initial state and each action (`npm run check` / `npm run test:cov` pass)

@@ -131,6 +131,16 @@ export function UserPage() {
 }
 ```
 
+## Tests (required — write them first)
+
+Tests are non-optional and machine-enforced (`npm run test:cov` enforces coverage
+floors locally and in CI). Keep the page UI thin and push any non-trivial logic —
+selectors, fallback/derive helpers, query-param parsing — into the page's `lib/`,
+then test that logic **test-first**: write the failing unit assertions that encode
+its contract before implementing to green. Cover the route itself with an E2E spec
+in `tests/e2e/` for its happy path (and any redirect/loader/error states). Use the
+`write-tests` skill for patterns.
+
 ## Checklist
 
 - [ ] Route file created in `src/routes/`
@@ -140,4 +150,5 @@ export function UserPage() {
 - [ ] If protected: `AuthGuard` added or `beforeLoad` redirect (see `add-auth-guard` skill)
 - [ ] If data-fetching: `loader` + `pendingComponent` + `errorComponent` added
 - [ ] Captured + read the page screenshot in both themes (`npm run test:e2e:screens`)
+- [ ] Tests written first: unit tests for extracted `lib/` logic + an E2E spec in `tests/e2e/` for the route; `npm run check` and `npm run test:cov` pass
 - [ ] `npm run ts:check` passes

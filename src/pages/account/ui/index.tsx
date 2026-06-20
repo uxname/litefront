@@ -1,8 +1,4 @@
-import {
-  type AccountAction,
-  buildAccountCenterUrl,
-  useAuth,
-} from "@features/auth";
+import { buildAccountCenterUrl, useAuth } from "@features/auth";
 import { ProfileForm } from "@features/profile";
 import { useMeQuery } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
@@ -15,20 +11,19 @@ import {
   ArrowLeft,
   BadgeCheck,
   ChevronRight,
-  KeyRound,
-  Lock,
-  type LucideIcon,
   Mail,
-  Smartphone,
   User as UserIcon,
 } from "lucide-react";
 import { type FC } from "react";
-
-interface SecurityAction {
-  action: AccountAction;
-  title: string;
-  icon: LucideIcon;
-}
+import {
+  buildSecurityActions,
+  formatMemberSince,
+  resolveAvatarUrl,
+  resolveDisplayName,
+  resolveEmail,
+  resolveEmailVerified,
+  roleLabel,
+} from "../lib/account";
 
 export const AccountPage: FC = () => {
   const auth = useAuth();
@@ -36,30 +31,13 @@ export const AccountPage: FC = () => {
   const [{ data, fetching, error }, refetchMe] = useMeQuery();
   const me = data?.me;
 
-  const securityActions: SecurityAction[] = [
-    { action: "email", title: m.change_email(), icon: Mail },
-    { action: "password", title: m.change_password(), icon: Lock },
-    { action: "authenticator-app", title: m.manage_mfa(), icon: Smartphone },
-    { action: "passkey/add", title: m.manage_passkey(), icon: KeyRound },
-  ];
+  const securityActions = buildSecurityActions();
 
-  const avatarUrl =
-    me?.avatarUrl ??
-    (typeof claims?.picture === "string" ? claims.picture : null);
-  const displayName =
-    me?.displayName ??
-    (typeof claims?.name === "string" ? claims.name : undefined) ??
-    (typeof claims?.email === "string" ? claims.email : undefined);
-  const email = typeof claims?.email === "string" ? claims.email : undefined;
-  const emailVerified =
-    typeof claims?.email_verified === "boolean"
-      ? claims.email_verified
-      : undefined;
-  const memberSince = me?.createdAt
-    ? new Date(String(me.createdAt)).toLocaleDateString()
-    : undefined;
-  const roleLabel = (role: string) =>
-    role === "ADMIN" ? m.role_admin() : m.role_user();
+  const avatarUrl = resolveAvatarUrl(me, claims);
+  const displayName = resolveDisplayName(me, claims);
+  const email = resolveEmail(claims);
+  const emailVerified = resolveEmailVerified(claims);
+  const memberSince = formatMemberSince(me?.createdAt);
 
   return (
     <div className="min-h-screen bg-base-200 font-sans text-base-content pb-20 selection:bg-primary/10 selection:text-primary">

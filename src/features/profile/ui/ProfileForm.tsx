@@ -1,19 +1,11 @@
-import {
-  type ProfileUpdateInput,
-  useUpdateProfileMutation,
-} from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@shared/ui/Button";
 import { FormField } from "@shared/ui/FormField";
 import { Input } from "@shared/ui/Input";
 import { Textarea } from "@shared/ui/Textarea";
-import { toast } from "@shared/ui/Toaster";
 import { ImageUp, User as UserIcon } from "lucide-react";
-import { type FC, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { uploadAvatar } from "../api/upload-avatar";
-import { type ProfileFormValues, profileFormSchema } from "../model/schema";
+import type { FC } from "react";
+import { useProfileForm } from "../lib/useProfileForm";
 
 export interface ProfileFormProps {
   profile: {
@@ -26,69 +18,17 @@ export interface ProfileFormProps {
 }
 
 export const ProfileForm: FC<ProfileFormProps> = ({ profile, accessToken }) => {
-  const [, updateProfile] = useUpdateProfileMutation();
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const {
     register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors, isDirty, isSubmitting, dirtyFields },
-  } = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    mode: "onBlur",
-    defaultValues: {
-      displayName: profile.displayName ?? "",
-      bio: profile.bio ?? "",
-      avatarUrl: profile.avatarUrl ?? "",
-    },
-  });
-
-  const avatarUrl = watch("avatarUrl");
-
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow re-selecting the same file
-    if (!file) return;
-
-    setUploading(true);
-    try {
-      const url = await uploadAvatar(file, accessToken);
-      setValue("avatarUrl", url, { shouldDirty: true, shouldValidate: true });
-    } catch {
-      toast.error(m.profile_avatar_upload_error());
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const onSubmit = handleSubmit(async (values) => {
-    const input: ProfileUpdateInput = {};
-    if (dirtyFields.displayName && values.displayName?.trim()) {
-      input.displayName = values.displayName.trim();
-    }
-    if (dirtyFields.bio) {
-      input.bio = values.bio?.trim() ?? "";
-    }
-    if (dirtyFields.avatarUrl && values.avatarUrl?.trim()) {
-      input.avatarUrl = values.avatarUrl.trim();
-    }
-
-    if (Object.keys(input).length === 0) return;
-
-    const result = await updateProfile({ input });
-    if (result.error) {
-      toast.error(m.profile_save_error());
-      return;
-    }
-    toast.success(m.profile_saved());
-    reset(values); // clear dirty state, keep current values
-  });
+    errors,
+    isDirty,
+    isSubmitting,
+    uploading,
+    avatarUrl,
+    fileInputRef,
+    handleFileSelect,
+    onSubmit,
+  } = useProfileForm({ profile, accessToken });
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">

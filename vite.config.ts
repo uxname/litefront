@@ -157,11 +157,14 @@ export default defineConfig(async (): Promise<UserConfig> => {
       coverage: {
         provider: "v8",
         reporter: ["text", "json", "html"],
+        // Floors calibrated from a real `npm run test:cov` run (~84% lines /
+        // 82% branches / 89% funcs at calibration). Ratchet these UP as coverage
+        // grows — never lower one to dodge a finding; add the missing test.
         thresholds: {
-          lines: 80,
-          functions: 80,
-          branches: 70,
-          statements: 80,
+          lines: 82,
+          functions: 85,
+          branches: 78,
+          statements: 82,
         },
         exclude: [
           "node_modules/",

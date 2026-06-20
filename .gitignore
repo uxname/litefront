@@ -11,3 +11,6 @@ storybook-build/
 .husky
 dev-dist/
 coverage
+# Ladle auto-generates .ladle/ (incl. styles.css) on serve/build — not source.
+.ladle/
+tmp/
