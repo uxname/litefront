@@ -9,7 +9,6 @@ import { UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
 import sitemap from "vite-plugin-sitemap";
-import { vitePluginVersionMark } from "vite-plugin-version-mark";
 import { defineConfig } from "vitest/config";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
@@ -106,16 +105,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
         babel: {
           plugins: ["babel-plugin-react-compiler"],
         },
-      }),
-      vitePluginVersionMark({
-        ifLog: true,
-        ifGlobal: true,
-        ifMeta: false,
-        // Stamp the commit when git is available (local/CI dev builds). The
-        // Docker image has no .git, so it falls back to "unknown" — that's fine,
-        // we don't guarantee a version stamp in the image.
-        command:
-          'git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
       }),
       viteDotenvChecker(),
       VitePWA({
