@@ -111,12 +111,11 @@ export default defineConfig(async (): Promise<UserConfig> => {
         ifLog: true,
         ifGlobal: true,
         ifMeta: false,
-        // Stamp the running version (logged to the console + exposed on window) so
-        // prod/stage shows exactly what's deployed. Prefer the SOURCE_COMMIT build
-        // arg (injected by the Dockerfile — the image has no .git), fall back to
-        // local git for dev, and to "unknown" if neither is available.
+        // Stamp the commit when git is available (local/CI dev builds). The
+        // Docker image has no .git, so it falls back to "unknown" — that's fine,
+        // we don't guarantee a version stamp in the image.
         command:
-          'test -n "$SOURCE_COMMIT" && echo "$SOURCE_COMMIT" || git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
+          'git log -1 --pretty=format:"%H %s" 2>/dev/null || echo unknown',
       }),
       viteDotenvChecker(),
       VitePWA({
