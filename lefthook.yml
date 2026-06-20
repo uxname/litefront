@@ -1,15 +1,15 @@
-# Хуки намеренно тонкие: вся логика живёт в npm-скриптах (package.json), а хук лишь
-# вызывает один скрипт на стадию. Так разработчик может прогнать ровно те же проверки
-# руками: `npm run verify:commit` (быстро) / `npm run verify:push` (полный прогон).
+# Hooks are deliberately thin: all logic lives in npm scripts (package.json), and
+# the hook just calls one script per stage. This way a developer can run the exact
+# same checks by hand: `npm run verify:commit` (fast) / `npm run verify:push` (full).
 #
-# Здесь нет CI — гарантия качества целиком на этих хуках, поэтому pre-push — суперсет:
-# повторяет быстрые проверки и добавляет медленные.
+# There is no CI here — the whole quality guarantee rests on these hooks, so
+# pre-push is a superset: it repeats the fast checks and adds the slow ones.
 pre-commit:
   commands:
     verify:
-      run: npm run verify:commit # быстрые статические проверки + сканер секретов
+      run: npm run verify:commit # fast static checks + secrets scan
 
 pre-push:
   commands:
     verify:
-      run: npm run verify:push # быстрые проверки + тесты с покрытием, E2E, сборка Storybook
+      run: npm run verify:push # fast checks + tests with coverage, E2E, Storybook build

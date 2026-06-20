@@ -45,14 +45,14 @@ so it cannot drift:
   hooks, utils, schemas and feature/entity components: write the failing test
   that encodes the contract, then implement until green. New code that drops
   coverage below the floors in `vite.config.ts` (lines/statements 82, functions
-  85, branches 78) fails `npm run test:cov` — locally and in CI. Ratchet the
+  85, branches 78) fails `npm run test:cov` (run by the pre-push hook). Ratchet the
   floors **up** as coverage grows; never lower one to dodge a finding.
-- Both gates run in CI (`.github/workflows/ci.yml`), so `--no-verify` cannot
-  bypass them.
+- **There is no CI** — the trio and coverage gates run only in the git hooks, so
+  `--no-verify` bypasses them locally. Don't.
 
 ### Vitest (unit/component)
 - `npm run test:dev` — interactive/watch
-- `npm run test:prod` — run once (CI style)
+- `npm run test:prod` — run once (one-shot)
 - `npm run test:cov` — coverage (enforces the thresholds above)
 
 **Single test file**
@@ -172,8 +172,11 @@ strategy: ["localStorage", "preferredLanguage", "baseLocale"]
 - Required vars for auth/data: `VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
   `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
 - Test base URL and routing use `VITE_BASE_URL` (defaults to `http://localhost:3000`).
+- Run `npx playwright install chromium` once after cloning — the pre-push hook runs the
+  E2E suite, which fails without the browser installed.
 
 ## Code Style & Formatting (Biome + EditorConfig)
+- Write all code, comments, and identifiers in **English** (repo-wide rule — see root `AGENTS.md`).
 - Indent with 2 spaces, LF line endings, trim trailing whitespace.
 - Use Biome as the source of truth for formatting.
 - Quotes: Biome formats JS/TS with **double quotes**.
@@ -214,16 +217,26 @@ strategy: ["localStorage", "preferredLanguage", "baseLocale"]
 
 ## Storybook (Ladle)
 - `npm run storybook:serve` — start Ladle
-- `npm run storybook:build` — build static Ladle
-- `npm run storybook:preview` — preview built storybook
+- `npm run storybook:build` — build static Ladle (output dir from `.ladle/config.mjs`)
+- `npm run storybook:preview` — preview the built storybook
+- Ladle config lives in `.ladle/` (its own minimal Vite config + a Tailwind entry that
+  re-scans `src/` so stories are styled). The build also runs in the pre-push gate
+  (`verify:push`) and is cleaned up afterwards.
 
 ## Monitoring / DX
 - Sentry integration is configured via Vite plugin; set `VITE_SENTRY_*` vars for builds.
 - React Scan is available for performance debugging in development.
 
 ## Git Hooks / Quality Gate
-- Lefthook runs `npm run check` on pre-commit.
-- Expect auto-fixes from Biome during `check`.
+Hooks are thin — all logic lives in npm scripts, so you can run the exact same gate by hand.
+There is **no CI**: these hooks are the whole quality guarantee.
+- **pre-commit → `npm run verify:commit`** — fast static checks (`check`) + secrets scan
+  (`secrets`, gitleaks). Expect auto-fixes from Biome during `check`.
+- **pre-push → `npm run verify:push`** — superset: `verify:commit` + `test:cov`
+  (unit + coverage floors) + `test:e2e:prod` (Playwright) + `storybook:build`
+  (then cleans up `storybook-build/`).
+- Run them yourself anytime: `npm run verify:commit` / `npm run verify:push`.
+- `--no-verify` skips hooks; since there is no CI to catch it, don't.
 
 ## Skills
 
