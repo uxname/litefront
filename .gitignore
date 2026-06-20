@@ -1,5 +1,9 @@
 node_modules/
 dist/
+# TanStack Start / Nitro SSR build output and caches
+.output/
+.nitro/
+.tanstack/
 storybook-build/
 .idea
 .vscode

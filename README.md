@@ -46,7 +46,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | Category                 | Technology                                                                                              |
 |:-------------------------|:--------------------------------------------------------------------------------------------------------|
 | **Core**                 | [Vite](https://vitejs.dev), [React 19](https://react.dev), [TypeScript](https://www.typescriptlang.org) |
-| **Routing**              | [TanStack Router](https://tanstack.com/router) (Type-safe)                                              |
+| **SSR / Routing**        | [TanStack Start](https://tanstack.com/start) + [TanStack Router](https://tanstack.com/router) (SSR, type-safe) |
 | **Authentication**       | [react-oidc-context](https://github.com/authts/react-oidc-context) (OAuth 2.0 / OIDC)                   |
 | **Data Fetching**        | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)              |
 | **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
@@ -59,7 +59,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **Testing**              | [Vitest](https://vitest.dev) (Unit), [Playwright](https://playwright.dev) (E2E)                         |
 | **Component Dev**        | [Ladle](https://ladle.dev) (Storybook alternative)                                                      |
 | **Performance / DX**      | [React Scan](https://react-scan.com) (Performance debugging)                                            |
-| **Deployment**           | [Docker](https://www.docker.com) with [Caddy Server](https://caddyserver.com)                           |
+| **Deployment**           | [Docker](https://www.docker.com) — Node SSR server ([Nitro](https://nitro.build) `node-server`)         |
 
 ## Architecture
 
@@ -72,7 +72,8 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 - **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
 - **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
 - **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
-- **Production-Optimized**: Multi-stage Dockerfile for small, secure images served by the high-performance Caddy web server.
+- **Server-Side Rendering**: Public pages are server-rendered via **TanStack Start** (Nitro `node-server`) for fast first paint and SEO; auth-only routes opt out with `ssr: false`.
+- **Production-Optimized**: Multi-stage Dockerfile producing a small, self-contained Node SSR image (`.output`).
 - **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.
 - **Dead Code & Dependency Analysis**: Keeps the codebase clean with **Knip** by detecting unused files, exports, and dependencies.
 - **Architectural Linting**: Strict FSD boundaries enforced by **Steiger**.
@@ -128,7 +129,7 @@ To replace OIDC with your own logic:
 1. Open `src/features/auth/index.ts`.
 2. Remove `react-oidc-context` exports.
 3. Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
-4. Update `src/app/providers/...` (or `src/main.tsx` if providers are there) to remove `oidcConfig` injection if your new provider doesn't need it.
+4. Update `src/app/providers/AppProviders.tsx` (the isomorphic auth + GraphQL `Wrap`) to mount your provider and drop the `getOidcConfig()` injection if your new provider doesn't need it.
 
 ## Scripts Overview
 

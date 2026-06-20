@@ -8,49 +8,49 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './../routes/__root'
-import { Route as CallbackRouteImport } from './../routes/callback'
-import { Route as AccountRouteImport } from './../routes/account'
-import { Route as IndexRouteImport } from './../routes/index'
+import { Route as rootRouteImport } from "./../routes/__root"
+import { Route as CallbackRouteImport } from "./../routes/callback"
+import { Route as AccountRouteImport } from "./../routes/account"
+import { Route as IndexRouteImport } from "./../routes/index"
 
 const CallbackRoute = CallbackRouteImport.update({
-  id: '/callback',
-  path: '/callback',
+  id: "/callback",
+  path: "/callback",
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
-  id: '/account',
-  path: '/account',
+  id: "/account",
+  path: "/account",
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./../routes/index.lazy').then((d) => d.Route))
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/callback': typeof CallbackRoute
+  "/": typeof IndexRoute
+  "/account": typeof AccountRoute
+  "/callback": typeof CallbackRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/callback': typeof CallbackRoute
+  "/": typeof IndexRoute
+  "/account": typeof AccountRoute
+  "/callback": typeof CallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/callback': typeof CallbackRoute
+  "/": typeof IndexRoute
+  "/account": typeof AccountRoute
+  "/callback": typeof CallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/account' | '/callback'
+  fullPaths: "/" | "/account" | "/callback"
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/account' | '/callback'
-  id: '__root__' | '/' | '/account' | '/callback'
+  to: "/" | "/account" | "/callback"
+  id: "__root__" | "/" | "/account" | "/callback"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -59,26 +59,26 @@ export interface RootRouteChildren {
   CallbackRoute: typeof CallbackRoute
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/callback': {
-      id: '/callback'
-      path: '/callback'
-      fullPath: '/callback'
+    "/callback": {
+      id: "/callback"
+      path: "/callback"
+      fullPath: "/callback"
       preLoaderRoute: typeof CallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
+    "/account": {
+      id: "/account"
+      path: "/account"
+      fullPath: "/account"
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -93,3 +93,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from "../router.tsx"
+import type { startInstance } from "../start.ts"
+declare module "@tanstack/react-start" {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

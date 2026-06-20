@@ -1,7 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
-    "src/main.tsx!",
+    "src/client.tsx!",
+    "src/server.ts!",
+    "src/router.tsx!",
+    "src/start.ts!",
     "src/routes/**/*.{ts,tsx}!",
     "src/features/*/index.ts!"
   ],
@@ -10,13 +13,14 @@
     "tests/**/*.{ts,tsx}",
     "!src/generated/**",
     "!storybook-build/**",
-    "!dist/**",
+    "!.output/**",
     "!node_modules/**"
   ],
   "ignore": [
     "src/generated/**",
     "src/vite-env.d.ts",
     "src/app/vite-dotenv-checker.plugin.ts",
+    "src/app/strip-dangling-sourcemaps.plugin.ts",
     "src/shared/config/**",
     "src/shared/lib/sentry/**"
   ],

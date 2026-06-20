@@ -11,54 +11,51 @@ Protects routes so only authenticated users can access them. Uses OIDC via `reac
 ## How Auth Works in This Project
 
 - Authentication is OIDC/OAuth 2.0 via Logto (or any compatible provider)
-- `react-oidc-context` provides `useAuth()` hook and `AuthProvider`
-- `AuthGuard` component (in `src/features/auth/`) handles redirect logic
+- `react-oidc-context` provides the `useAuth()` hook
 - The `/callback` route handles the OAuth redirect after login
+- **This app is SSR (TanStack Start).** OIDC is browser-only, so on the server the
+  app renders a neutral logged-out context (`NeutralAuthProvider`) and the real auth
+  hydrates on the client. **Protected routes must be client-only** (`ssr: false`):
+  there is no server session and no `context.auth` on the router — guard inside the
+  component with `useAuth()`. Do **not** use `beforeLoad` + `context.auth` (removed).
 
 ## Protecting a Route
 
-### Option 1: beforeLoad redirect (preferred — route-level, no flicker)
+### Option 1: client-only route + in-component guard (preferred)
+
+Mark the route `ssr: false` (auth is browser-only) and gate rendering with `useAuth()`.
+This mirrors `src/routes/account.tsx`.
 
 ```tsx
 // src/routes/dashboard.tsx
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { DashboardPage } from "@pages/dashboard";
-
-export const Route = createFileRoute("/dashboard")({
-  beforeLoad: ({ context }) => {
-    // context.auth is injected via router context — see src/app/router.tsx
-    if (!context.auth?.isAuthenticated) {
-      throw redirect({ to: "/" });
-    }
-  },
-  component: DashboardPage,
-});
-```
-
-### Option 2: AuthGuard component wrapper (simpler, shows loading state)
-
-```tsx
-// src/routes/dashboard.tsx
+import { useAuth } from "@features/auth";
 import { createFileRoute } from "@tanstack/react-router";
-import { AuthGuard } from "@features/auth";
 import { DashboardPage } from "@pages/dashboard";
+import { PageLoader } from "@shared/ui/PageLoader";
+import { useEffect } from "react";
+
+const DashboardRoute = () => {
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (auth.isLoading || auth.isAuthenticated) return;
+    void auth.signinRedirect({ state: { returnTo: window.location.href } });
+  }, [auth.isLoading, auth.isAuthenticated, auth.signinRedirect]);
+
+  if (auth.isLoading || !auth.isAuthenticated) return <PageLoader />;
+  return <DashboardPage />;
+};
 
 export const Route = createFileRoute("/dashboard")({
-  component: () => (
-    <AuthGuard>
-      <DashboardPage />
-    </AuthGuard>
-  ),
+  ssr: false, // auth is browser-only — never render this on the server
+  component: DashboardRoute,
 });
 ```
 
-Use Option 1 when you want instant redirects with no flash of protected content.
-Use Option 2 when the component itself handles loading states gracefully.
-
-### Option 3: Use auth state inside a component
+### Option 2: Read auth state inside any component
 
 ```tsx
-import { useAuth } from "react-oidc-context";
+import { useAuth } from "@features/auth";
 
 function ProfilePage() {
   const auth = useAuth();
@@ -69,14 +66,6 @@ function ProfilePage() {
   return <div>Hello, {auth.user?.profile.name}</div>;
 }
 ```
-
-## AuthGuard Behavior
-
-`AuthGuard` automatically:
-- Checks if the user is authenticated
-- Redirects to the OIDC login page if not authenticated (using `auth.signinRedirect()`)
-- Shows a loading state while authentication is being checked
-- Passes auth context to children once authenticated
 
 ## Accessing User Data
 
@@ -131,7 +120,7 @@ VITE_OIDC_SCOPE=openid profile offline_access
 
 ## Checklist
 
-- [ ] Route uses `AuthGuard` wrapper or `useAuth()` check
-- [ ] Route file regenerated with `npm run gen:routes` if new route created
+- [ ] Protected route is `ssr: false` and guards with `useAuth()` in the component
+- [ ] Route tree auto-regenerates on dev/build (no manual `gen:routes` step)
 - [ ] Environment variables set in `.env`
 - [ ] Sign-out calls `auth.signoutRedirect()` (not just clearing state)

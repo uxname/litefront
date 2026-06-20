@@ -12,14 +12,46 @@ conventions to stay aligned with existing tooling and architecture.
 - **Always** use `npm run check` for the full quality gate.
 - **Never** call `npm run lint && npm run ts:check` separately — this skips knip, steiger, and biome auto-fix, which will cause pre-commit (lefthook) to fail. Rely on `npm run check` exclusively.
 
-## Build / Run
-- `npm run start:dev` — Vite dev server (HMR)
-- `npm run start:prod` — Vite preview (serves build)
-- `npm run build` — Production build + `check`
-- `npm run build:vite` — Vite build only
-- `docker compose build` / `docker compose up -d` — production image (Caddy serving the
-  built SPA). No npm/task needed on the host. The version-mark stamp shows the commit only
-  when built where git is available (dev/CI); in a plain Docker build it reports "unknown".
+## Build / Run (SSR via TanStack Start)
+This app runs **server-side rendered** via TanStack Start (Vite plugin + Nitro
+`node-server`). Public routes render on the server; auth-only routes opt out
+(`ssr: false`). See "SSR architecture" below.
+- `npm run start:dev` — Vite dev server with SSR (HMR)
+- `npm run build:vite` — production build → `.output/` (Nitro Node server + `.output/public` assets)
+- `npm run start:prod` — run the built Node SSR server (`node .output/server/index.mjs`)
+- `npm run build` — production build + `check`
+- `docker compose build` / `docker compose up -d` — production image: a Node runtime
+  serving `.output/server/index.mjs` on port 3000 (replaces the old static Caddy host).
+  Only `.output` is copied into the runtime image — it is self-contained.
+
+## SSR architecture (read before touching routing/entry/auth)
+- **Entry files** (wired by the Start plugin): `src/router.tsx` exports `getRouter()`;
+  `src/client.tsx` hydrates + runs browser-only side effects (Sentry, react-scan);
+  `src/server.ts` is the SSR handler (wraps Start's handler in Paraglide's locale
+  middleware); `src/start.ts` sets `defaultSsr: true`. There is **no** `main.tsx` or
+  `index.html` — `src/routes/__root.tsx` renders the full `<html>` document.
+- **Providers** (auth + GraphQL) are injected via the router's `Wrap` option in
+  `src/app/providers/AppProviders.tsx` (isomorphic): the server renders
+  `NeutralAuthProvider` (always logged-out, SSR-safe); the client mounts the real
+  `react-oidc-context` `AuthProvider` (or `MockAuthProvider` when `VITE_MOCK_AUTH`).
+  OIDC is browser-only, so `getOidcConfig()` is lazy and auth-only routes use `ssr: false`.
+- **Hydration safety**: auth-dependent UI must render its logged-out markup while
+  `isLoading` (see `HeaderControls`) so the first client paint matches the server's
+  neutral render. `MockAuthProvider` defers its `localStorage` read to an effect for the
+  same reason.
+- **FOUC**: the daisyUI theme is applied pre-paint by a blocking inline script in
+  `__root.tsx`; the locale is resolved server-side from the `PARAGLIDE_LOCALE` cookie
+  (Paraglide middleware in `src/server.ts`), so `<html lang>` and messages match on
+  hydration. The global stylesheet is linked via `head()` in `__root.tsx`
+  (`import "../index.css?url"`).
+- **Security/caching headers** (formerly Caddy) are set by Nitro `routeRules` in
+  `vite.config.ts`. `robots.txt` is a static file in `public/`. There is **no** sitemap
+  plugin anymore — configure a sitemap per deployment if needed (host-specific).
+- **Env**: `VITE_*` vars are inlined at build time (unchanged from the SPA setup).
+- **Dev console noise**: `src/app/strip-dangling-sourcemaps.plugin.ts` is a dev-only Vite
+  plugin that suppresses `Failed to load source map … ENOENT … .js.map` errors caused by
+  `@tanstack/*-start*` packages shipping sourcemap comments without the `.map` files. It
+  doesn't affect the build — don't remove it or the dev log fills with false errors.
 
 ## Lint / Format / Typecheck
 - `npm run lint` — Biome check (read-only)
@@ -155,18 +187,31 @@ that sets `document.documentElement[data-theme]` and persists to `localStorage`
 `src/generated/paraglide`. Switcher: `src/features/locale`. Strategy is set in
 `vite.config.ts`:
 ```ts
-strategy: ["localStorage", "preferredLanguage", "baseLocale"]
+strategy: ["cookie", "localStorage", "preferredLanguage", "baseLocale"]
 ```
-- **`localStorage` MUST come before `preferredLanguage`** so an explicit user choice
-  (`setLocale`) persists and wins over the browser language on reload. A strategy of
-  `["preferredLanguage"]` alone silently discards the choice on every reload (the original
-  bug). Changing strategy requires a **dev-server restart / rebuild** (it's compiled into
-  `src/generated/paraglide/runtime.js`).
+- **`cookie` is first** because it's the only writable strategy the SSR server can read
+  (Paraglide middleware in `src/server.ts`), so server render and client hydration agree on
+  the locale. `setLocale` writes BOTH cookie and localStorage, so an explicit user choice
+  persists and wins over the browser language on reload. Changing strategy requires a
+  **dev-server restart / rebuild** (it's compiled into `src/generated/paraglide/runtime.js`).
+- **Fallback (two layers, both automatic):**
+  1. *Locale detection* — `baseLocale` ("en") is the **last** strategy and is the guaranteed
+     fallback. Any unsupported/unknown locale (a French browser, a `PARAGLIDE_LOCALE` cookie
+     with a value not in `locales`) is validated away by `toLocale()` and resolution falls
+     through to `en`. **Never remove `baseLocale` from the strategy** — without it,
+     `getLocale()` can throw "No locale found".
+  2. *Missing message* — a key absent from a non-base locale compiles to an alias of the
+     baseLocale message (`const de_x = en_x`), so untranslated strings render in English
+     instead of breaking. en/ru are kept at full key parity regardless.
+- **Adding a language:** add the code to `locales` in `project.inlang/settings.json`, create
+  `messages/<locale>.json` (untranslated keys fall back to `en` automatically), and rebuild.
+  The `LocaleSwitcher` lists every locale in `locales` automatically (via `Intl.DisplayNames`).
 - Add strings via the `add-translation` skill; keep `en.json` and `ru.json` in sync.
 
 ## Codegen / Routing
 - `npm run gen` — GraphQL codegen (reads `src/graphql/**/*.graphql`)
-- `npm run gen:routes` — TanStack Router route tree (`src/generated/routeTree.gen.ts`)
+- The route tree (`src/generated/routeTree.gen.ts`) is generated automatically by the
+  TanStack Start Vite plugin on dev/build — there is no separate `gen:routes` script.
 - Run `gen` after changing GraphQL schema or operations.
 - `gen` requires `VITE_GRAPHQL_API_URL` (see `.env` / `.env.example`).
 

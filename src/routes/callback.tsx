@@ -24,6 +24,8 @@ const CallbackComponent: FC = () => {
 };
 
 export const Route = createFileRoute("/callback")({
+  // OIDC redirect handling is browser-only; don't render on the server.
+  ssr: false,
   validateSearch: (search: Record<string, unknown>): CallbackSearch => ({
     code: typeof search.code === "string" ? search.code : undefined,
     state: typeof search.state === "string" ? search.state : undefined,

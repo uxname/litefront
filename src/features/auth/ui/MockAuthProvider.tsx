@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode, useEffect, useState } from "react";
 import { AuthContext, type AuthContextProps } from "react-oidc-context";
 
 interface MockAuthProviderProps {
@@ -23,9 +23,15 @@ const MOCK_USER = {
 } as const;
 
 export const MockAuthProvider: FC<MockAuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    () => localStorage.getItem("isTestAuthenticated") === "true",
-  );
+  // Start logged-out so the first client render matches the server's
+  // unauthenticated SSR markup (NeutralAuthProvider), then read the persisted
+  // test flag in an effect — mirroring how the real OIDC provider resolves
+  // asynchronously after mount. This keeps SSR'd public pages hydration-clean.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsAuthenticated(localStorage.getItem("isTestAuthenticated") === "true");
+  }, []);
 
   const value = {
     isAuthenticated,

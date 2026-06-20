@@ -9,8 +9,7 @@ WORKDIR /app
 
 # Copy source and install dependencies. .git is not in the build context
 # (see .dockerignore), so the `prepare` script (lefthook install) is made
-# non-fatal without git in package.json, and the version-mark plugin falls back
-# to "unknown" — we don't stamp a version into the image.
+# non-fatal without git in package.json.
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
@@ -19,23 +18,27 @@ COPY . ./
 
 ENV NODE_ENV=production
 
-# Build the application
+# Build the SSR app. TanStack Start + the Nitro node-server preset emit a
+# standalone server bundle under .output (server + public assets).
 RUN npm run build:vite
 
-# Production stage
-FROM caddy:alpine
+# Production stage — Node runtime serving the SSR server (replaces the previous
+# static Caddy host now that rendering happens on the server).
+FROM node:lts-alpine AS runtime
 
-# Set the working directory for Caddy
-WORKDIR /usr/share/caddy
+WORKDIR /app
 
-# Copy built files from the build stage
-COPY --from=build /app/dist /usr/share/caddy/html
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Copy the Caddyfile configuration
-COPY Caddyfile /etc/caddy/Caddyfile
+# The Nitro output is fully self-contained (bundled deps + public assets), so we
+# copy only .output — no node_modules needed at runtime.
+COPY --from=build /app/.output ./.output
 
-# Expose port 80 for the web server
-EXPOSE 80
+# Run as the built-in non-root `node` user.
+USER node
 
-# Start Caddy server
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+EXPOSE 3000
+
+# Start the Node SSR server (same entry as `npm run start:prod`).
+CMD ["node", ".output/server/index.mjs"]

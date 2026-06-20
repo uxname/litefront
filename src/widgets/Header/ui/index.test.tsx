@@ -93,13 +93,15 @@ describe("Header", () => {
     );
   });
 
-  it("shows a verifying badge while auth is loading", async () => {
+  it("renders the sign-in (logged-out) view while auth is loading", async () => {
+    // During `isLoading` the controls render the logged-out sign-in button, so
+    // the first client paint matches the server's unauthenticated SSR render
+    // (NeutralAuthProvider) and there's no hydration mismatch.
     mockedUseAuth.mockReturnValue({ ...baseAuth, isLoading: true } as never);
     renderHeader();
-    expect(await screen.findByText("auth_verifying")).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "auth_sign_in" }),
-    ).not.toBeInTheDocument();
+      await screen.findByRole("button", { name: "auth_sign_in" }),
+    ).toBeInTheDocument();
   });
 
   it("shows the profile dropdown with the user email when authenticated", async () => {

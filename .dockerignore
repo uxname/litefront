@@ -1,6 +1,9 @@
 .git
 node_modules/
 dist/
+.output/
+.nitro/
+.tanstack/
 storybook-build/
 .idea
 .vscode

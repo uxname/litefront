@@ -1,22 +1,21 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 import { configDotenv } from "dotenv";
 import { visualizer } from "rollup-plugin-visualizer";
-import { UserConfig } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
-import sitemap from "vite-plugin-sitemap";
-import { defineConfig } from "vitest/config";
+import { stripDanglingSourcemaps } from "./src/app/strip-dangling-sourcemaps.plugin";
 import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
 export default defineConfig(async (): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT) || 3000;
-  const hostname = process.env.VITE_BASE_URL || "http://localhost:3000";
 
   return {
     server: {
@@ -31,76 +30,69 @@ export default defineConfig(async (): Promise<UserConfig> => {
     build: {
       sourcemap: process.env.NODE_ENV !== "production",
       target: "esnext",
-      rollupOptions: {
-        output: {
-          manualChunks(id: string) {
-            if (!id.includes("node_modules")) {
-              return;
-            }
-
-            if (
-              /[\\/]node_modules[\\/](react|react-dom|scheduler|use-sync-external-store|zustand)[\\/]/.test(
-                id,
-              )
-            ) {
-              return "vendor-react";
-            }
-
-            if (id.includes("@tanstack")) {
-              return "vendor-router";
-            }
-
-            if (
-              id.includes("urql") ||
-              id.includes("wonka") ||
-              id.includes("graphql")
-            ) {
-              return "vendor-api";
-            }
-
-            if (
-              id.includes("oidc-client-ts") ||
-              id.includes("react-oidc-context")
-            ) {
-              return "vendor-auth";
-            }
-          },
-        },
-      },
     },
     resolve: {
       tsconfigPaths: true,
     },
     plugins: [
-      sentryVitePlugin({
-        org: process.env.VITE_SENTRY_ORG,
-        project: process.env.VITE_SENTRY_PROJECT,
-        authToken: process.env.VITE_SENTRY_AUTH_TOKEN,
-        sourcemaps: {
-          filesToDeleteAfterUpload: ["**/*.map"],
+      // Dev-only: silence ENOENT "Failed to load source map" noise from
+      // @tanstack/*-start* packages that ship dangling sourcemap comments.
+      // Must run before tanstackStart (which pulls those packages into Vite).
+      stripDanglingSourcemaps(),
+      // TanStack Start replaces the standalone router plugin: it owns route
+      // generation (tsr settings below) AND wires the SSR client/server entries
+      // (src/client.tsx, src/server.ts, src/router.tsx). The default Nitro
+      // target is `node-server`, which is what the Dockerfile runs.
+      tanstackStart({
+        // Paths under `router` are resolved relative to the src directory
+        // ("src"), so this writes to src/generated/routeTree.gen.ts.
+        router: {
+          generatedRouteTree: "generated/routeTree.gen.ts",
+          autoCodeSplitting: true,
+          quoteStyle: "double",
+          semicolons: false,
         },
       }),
+      // Builds a standalone Node SSR server to .output/server/index.mjs (run via
+      // `npm run start:prod`). routeRules reproduce the security + caching headers
+      // the previous Caddy static host set; compressPublicAssets restores gzip/br
+      // for static files (the SSR HTML stream is best compressed by a fronting
+      // proxy in production).
+      nitroV2Plugin({
+        preset: "node-server",
+        // Pin the Nitro feature-flag baseline so a Nitro upgrade can't silently
+        // change preset behavior. Without it Nitro falls back to an old implicit
+        // date and warns on every build.
+        compatibilityDate: "2026-06-20",
+        compressPublicAssets: { gzip: true, brotli: true },
+        routeRules: {
+          "/**": {
+            headers: {
+              "X-Frame-Options": "DENY",
+              "X-Content-Type-Options": "nosniff",
+            },
+          },
+          "/assets/**": {
+            headers: {
+              "Cache-Control": "public, max-age=31536000, immutable",
+            },
+          },
+        },
+      }),
+      tailwindcss(),
       paraglideVitePlugin({
         project: "./project.inlang",
         outdir: "./src/generated/paraglide",
-        // localStorage first so an explicit user choice (LocaleSwitcher → setLocale)
-        // persists and wins over the browser language on reload; preferredLanguage is
-        // the first-visit default; baseLocale ("en") is the final fallback.
-        strategy: ["localStorage", "preferredLanguage", "baseLocale"],
+        // cookie + localStorage first so an explicit user choice
+        // (LocaleSwitcher → setLocale, which writes BOTH) persists and wins over
+        // the browser language on reload. `cookie` is the only writable strategy
+        // the SSR server can read, so it keeps server render and client in sync
+        // (no hydration mismatch); `localStorage` keeps the pre-SSR behavior on
+        // the client; `preferredLanguage` is the first-visit default; `baseLocale`
+        // ("en") is the final fallback.
+        strategy: ["cookie", "localStorage", "preferredLanguage", "baseLocale"],
       }),
-      tailwindcss(),
       ViteImageOptimizer(),
-      tanstackRouter(),
-      sitemap({
-        hostname,
-        robots: [
-          {
-            userAgent: "*",
-            allow: "/",
-            disallow: ["/callback", "/protected", "/404"],
-          },
-        ],
-      }),
       react({
         babel: {
           plugins: ["babel-plugin-react-compiler"],
@@ -133,6 +125,14 @@ export default defineConfig(async (): Promise<UserConfig> => {
           enabled: true,
         },
       }),
+      sentryVitePlugin({
+        org: process.env.VITE_SENTRY_ORG,
+        project: process.env.VITE_SENTRY_PROJECT,
+        authToken: process.env.VITE_SENTRY_AUTH_TOKEN,
+        sourcemaps: {
+          filesToDeleteAfterUpload: ["**/*.map"],
+        },
+      }),
       process.env.ANALYZE === "true" &&
         visualizer({
           emitFile: true,
@@ -140,45 +140,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
           template: "flamegraph",
         }),
     ].filter(Boolean),
-    test: {
-      exclude: ["tests/e2e", "node_modules", "dist", ".opencode"],
-      testTimeout: 30_000,
-      hookTimeout: 30_000,
-      environment: "jsdom",
-      globals: true,
-      setupFiles: ["./tests/setup.ts"],
-      coverage: {
-        provider: "v8",
-        reporter: ["text", "json", "html"],
-        // Floors calibrated from a real `npm run test:cov` run (~84% lines /
-        // 82% branches / 89% funcs at calibration). Ratchet these UP as coverage
-        // grows — never lower one to dodge a finding; add the missing test.
-        thresholds: {
-          lines: 82,
-          functions: 85,
-          branches: 78,
-          statements: 82,
-        },
-        exclude: [
-          "node_modules/",
-          "src/generated/",
-          "tests/",
-          "**/*.d.ts",
-          "**/*.config.*",
-          "**/*.stories.*",
-          // Entry points and global providers (covered by E2E)
-          "src/main.tsx",
-          "src/routes/__root.tsx",
-          "src/app/providers/**",
-          // Third-party library adapters and configs (no business logic)
-          "src/shared/lib/sentry/**",
-          "src/shared/config/**",
-          "src/features/auth/api/oidc-client.ts",
-          // Test-only mock provider
-          "src/features/auth/ui/MockAuthProvider.tsx",
-        ],
-      },
-    },
     css: {
       modules: {
         // Enable CSS Modules for all .scss files

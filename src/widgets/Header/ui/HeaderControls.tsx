@@ -4,21 +4,18 @@ import { ThemeToggle } from "@features/theme";
 import { m } from "@generated/paraglide/messages";
 import { captureMessage } from "@shared/lib/sentry";
 import { Link } from "@tanstack/react-router";
-import {
-  ChevronDown,
-  Loader2,
-  LogIn,
-  LogOut,
-  Settings,
-  User,
-} from "lucide-react";
+import { ChevronDown, LogIn, LogOut, Settings, User } from "lucide-react";
 import { FC, useCallback } from "react";
 
 /**
  * Right-hand control cluster of the {@link Header}: locale switcher, theme
- * toggle, and the auth-dependent area (loading badge / profile dropdown /
- * sign-in button). Extracted so the Header shell stays a thin layout wrapper;
- * the rendered markup is identical to the previously inlined version.
+ * toggle, and the auth-dependent area (profile dropdown / sign-in button).
+ *
+ * Auth state drives only two branches: authenticated → profile, otherwise →
+ * sign-in. The transient `isLoading` state intentionally renders the sign-in
+ * (logged-out) markup so the first client paint matches the server's
+ * unauthenticated SSR render — avoiding a hydration mismatch (the server uses
+ * NeutralAuthProvider; the real OIDC context resolves after hydration).
  */
 export const HeaderControls: FC = () => {
   const auth = useAuth();
@@ -40,14 +37,7 @@ export const HeaderControls: FC = () => {
       <LocaleSwitcher />
       <ThemeToggle />
 
-      {auth.isLoading ? (
-        <div className="flex items-center gap-2 rounded-full bg-base-200 px-3 py-1.5 text-base-content/70">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <span className="hidden text-xs font-medium sm:inline">
-            {m.auth_verifying()}
-          </span>
-        </div>
-      ) : auth.isAuthenticated ? (
+      {auth.isAuthenticated ? (
         <details className="dropdown dropdown-end">
           <summary
             aria-haspopup="menu"
