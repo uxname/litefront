@@ -33,7 +33,7 @@ describe("AuthObserver", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("sets the Sentry user from the OIDC profile when logged in", () => {
+  it("sets the Sentry user to the subject only (no PII) when logged in", () => {
     mockedUseAuth.mockReturnValue({
       ...baseAuth,
       user: {
@@ -45,11 +45,8 @@ describe("AuthObserver", () => {
       },
     } as never);
     render(<AuthObserver />);
-    expect(setUser).toHaveBeenCalledWith({
-      id: "user-1",
-      email: "jane@example.com",
-      username: "jane",
-    });
+    // Only the opaque subject is sent — email/username PII must not be forwarded.
+    expect(setUser).toHaveBeenCalledWith({ id: "user-1" });
   });
 
   it("clears the Sentry user when logged out", () => {

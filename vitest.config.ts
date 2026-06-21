@@ -16,6 +16,10 @@ export default defineConfig({
     hookTimeout: 30_000,
     environment: "jsdom",
     globals: true,
+    // Clear mock call history between tests for isolation. (restoreMocks is
+    // intentionally NOT enabled: it would wipe the implementations of the global
+    // vi.fn mocks defined once in tests/setup.ts — matchMedia, useAuth, …)
+    clearMocks: true,
     setupFiles: ["./tests/setup.ts"],
     coverage: {
       provider: "v8",

@@ -1,5 +1,5 @@
 # Build stage
-FROM node:lts-alpine AS build
+FROM node:22-alpine AS build
 
 # Install git for dependencies that require it
 RUN apk add --no-cache git
@@ -24,7 +24,7 @@ RUN npm run build:vite
 
 # Production stage — Node runtime serving the SSR server (replaces the previous
 # static Caddy host now that rendering happens on the server).
-FROM node:lts-alpine AS runtime
+FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
@@ -39,6 +39,12 @@ COPY --from=build /app/.output ./.output
 USER node
 
 EXPOSE 3000
+
+# Liveness probe baked into the image (also present in docker-compose) so the
+# container reports health under any orchestrator. busybox wget ships with the
+# alpine base.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD wget --spider -q http://localhost:3000/ || exit 1
 
 # Start the Node SSR server (same entry as `npm run start:prod`).
 CMD ["node", ".output/server/index.mjs"]

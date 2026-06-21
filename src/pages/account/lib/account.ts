@@ -85,9 +85,31 @@ export const resolveEmailVerified = (
  */
 export const formatMemberSince = (
   createdAt: Me["createdAt"] | null | undefined,
-): string | undefined =>
-  createdAt ? new Date(String(createdAt)).toLocaleDateString() : undefined;
+): string | undefined => {
+  if (!createdAt) return undefined;
+  const date = new Date(String(createdAt));
+  // Guard against an unparseable timestamp.
+  if (Number.isNaN(date.getTime())) return undefined;
+  // Format in UTC with a fixed locale so the server and client always produce
+  // the same string (toLocaleDateString uses the runtime locale/timezone and
+  // would mismatch on hydration). "en-CA" yields a stable YYYY-MM-DD.
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+};
 
 /** Map a profile role to its localized label. */
-export const roleLabel = (role: ProfileRole | string): string =>
-  role === "ADMIN" ? m.role_admin() : m.role_user();
+export const roleLabel = (role: ProfileRole | string): string => {
+  switch (role) {
+    case "ADMIN":
+      return m.role_admin();
+    case "USER":
+      return m.role_user();
+    default:
+      // Unknown/unhandled roles fall back to the least-privileged label.
+      return m.role_user();
+  }
+};

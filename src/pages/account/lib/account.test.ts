@@ -127,17 +127,18 @@ describe("resolveEmailVerified", () => {
 });
 
 describe("formatMemberSince", () => {
-  it("formats a timestamp as a locale date string", () => {
-    const iso = "2024-01-15T00:00:00.000Z";
-    expect(formatMemberSince(iso)).toBe(
-      new Date(String(iso)).toLocaleDateString(),
-    );
+  it("formats a timestamp as a stable UTC YYYY-MM-DD string", () => {
+    // Deterministic across runtime locale/timezone (no hydration mismatch).
+    expect(formatMemberSince("2024-01-15T00:00:00.000Z")).toBe("2024-01-15");
+    // A late-evening UTC instant still maps to the same UTC calendar day.
+    expect(formatMemberSince("2024-01-15T23:30:00.000Z")).toBe("2024-01-15");
   });
 
-  it("returns undefined for an empty or missing value", () => {
+  it("returns undefined for an empty, missing or invalid value", () => {
     expect(formatMemberSince(undefined)).toBeUndefined();
     expect(formatMemberSince(null)).toBeUndefined();
     expect(formatMemberSince("")).toBeUndefined();
+    expect(formatMemberSince("not-a-date")).toBeUndefined();
   });
 });
 

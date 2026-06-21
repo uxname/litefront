@@ -3,6 +3,13 @@ services:
     build:
       context: .
     restart: unless-stopped
+    # Cap resources so a leak in the SSR process can't exhaust the host. Honored
+    # by `docker compose up` (Compose v2); tune to the target host.
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 512M
     env_file:
       - .env
     ports:

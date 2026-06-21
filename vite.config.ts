@@ -70,6 +70,14 @@ export default defineConfig(async (): Promise<UserConfig> => {
             headers: {
               "X-Frame-Options": "DENY",
               "X-Content-Type-Options": "nosniff",
+              // Don't leak full URLs (which may carry tokens/ids) to other origins.
+              "Referrer-Policy": "strict-origin-when-cross-origin",
+              // Deny powerful APIs the app doesn't use, by default.
+              "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+              // Force HTTPS for a year (incl. subdomains); ignored over plain HTTP.
+              "Strict-Transport-Security":
+                "max-age=31536000; includeSubDomains",
+              "X-XSS-Protection": "0",
             },
           },
           "/assets/**": {

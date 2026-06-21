@@ -5,6 +5,15 @@ interface UploadedFile {
   path: string;
 }
 
+/** Backend REST error envelope (`internal/httperr`): `{ statusCode, message }`. */
+interface UploadErrorBody {
+  statusCode?: number;
+  message?: string;
+}
+
+/** Abort the upload if the backend hangs, so the form never stays stuck. */
+const UPLOAD_TIMEOUT_MS = 30_000;
+
 /**
  * Upload an avatar image to the backend REST endpoint (`POST /upload`) and
  * return the absolute, publicly-servable URL of the stored file.
@@ -24,10 +33,20 @@ export const uploadAvatar = async (
     method: "POST",
     headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
     body,
+    signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
   });
 
   if (!response.ok) {
-    throw new Error(`Upload failed with status ${response.status}`);
+    // Surface the server's reason (e.g. "file too large", "disallowed mime
+    // type") instead of a bare status code, when the body carries one.
+    let detail = "";
+    try {
+      const errorBody = (await response.json()) as UploadErrorBody;
+      if (errorBody?.message) detail = `: ${errorBody.message}`;
+    } catch {
+      // Non-JSON / empty error body — fall back to the status code alone.
+    }
+    throw new Error(`Upload failed with status ${response.status}${detail}`);
   }
 
   const files = (await response.json()) as UploadedFile[];

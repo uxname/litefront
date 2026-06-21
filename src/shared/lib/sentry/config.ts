@@ -16,9 +16,11 @@ export const initSentry = () => {
 
     integrations: [
       Sentry.browserTracingIntegration(),
+      // Mask all text and block media in session replays so PII and secrets
+      // visible in the DOM (emails, tokens, profile data) are never recorded.
       Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
+        maskAllText: true,
+        blockAllMedia: true,
       }),
     ],
 

@@ -11,6 +11,17 @@ import { uploadAvatar } from "../api/upload-avatar";
 import { type ProfileFormValues, profileFormSchema } from "../model/schema";
 import type { ProfileFormProps } from "../ui/ProfileForm";
 
+// Client-side guards mirroring the backend upload allowlist (image/* up to 5 MB).
+// They give immediate feedback and avoid a pointless round-trip; the server
+// remains the trust boundary.
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+const ALLOWED_AVATAR_TYPES = [
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+];
+
 /**
  * Form logic for {@link ProfileForm}: react-hook-form setup, the avatar
  * upload handler (with its uploading state) and the dirty-field-diffed submit
@@ -47,6 +58,14 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     const file = event.target.files?.[0];
     event.target.value = ""; // allow re-selecting the same file
     if (!file) return;
+
+    if (
+      !ALLOWED_AVATAR_TYPES.includes(file.type) ||
+      file.size > MAX_AVATAR_SIZE
+    ) {
+      toast.error(m.profile_avatar_upload_error());
+      return;
+    }
 
     setUploading(true);
     try {

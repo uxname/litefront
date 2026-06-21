@@ -9,7 +9,14 @@ import {
   RotateCcw,
   Terminal,
 } from "lucide-react";
-import { type FC, useCallback, useMemo, useRef, useState } from "react";
+import {
+  type FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { detectErrorCategory } from "./detectErrorCategory";
 import { ERROR_CONFIG } from "./errorConfig";
 import { normalizeError } from "./normalizeError";
@@ -30,6 +37,15 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
   const retryCountRef = useRef(0);
+  // Track pending timers so they are cancelled on unmount (no state updates or
+  // retries fire after the component is gone).
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(
+    () => () => {
+      for (const id of timeoutsRef.current) clearTimeout(id);
+    },
+    [],
+  );
 
   const normalizedError = useMemo(() => normalizeError(error), [error]);
   const category = useMemo(
@@ -53,7 +69,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
     if (delay <= 1000) {
       doRetry();
     } else {
-      setTimeout(doRetry, delay);
+      timeoutsRef.current.push(setTimeout(doRetry, delay));
     }
   }, [reset, onRetry]);
 
@@ -73,7 +89,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 
       await navigator.clipboard.writeText(debugInfo);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      timeoutsRef.current.push(setTimeout(() => setCopied(false), 2000));
     } catch (err) {
       if (env.DEV) {
         console.error("Failed to copy", err);

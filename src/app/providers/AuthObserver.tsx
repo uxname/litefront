@@ -40,11 +40,9 @@ export const AuthObserver: FC = () => {
 
   useEffect(() => {
     if (auth.user) {
-      setUser({
-        id: auth.user.profile.sub,
-        email: auth.user.profile.email,
-        username: auth.user.profile.preferred_username,
-      });
+      // Identify by the opaque subject only — never send email/username PII to
+      // Sentry. The `sub` is enough to correlate a user's events.
+      setUser({ id: auth.user.profile.sub });
     } else {
       setUser(null);
     }

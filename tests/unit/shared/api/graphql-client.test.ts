@@ -43,9 +43,16 @@ describe("createGraphQLClient", () => {
     refs.clientOpts = undefined;
   });
 
+  // fetchOptions is a function (fresh abort signal per request), so call it to
+  // inspect the resolved RequestInit.
+  const resolveFetchOptions = (): RequestInit => {
+    const fo = refs.clientOpts?.fetchOptions;
+    return (typeof fo === "function" ? fo() : fo) as RequestInit;
+  };
+
   it("does not include Authorization header for anonymous requests", () => {
     createGraphQLClient(undefined);
-    const headers = (refs.clientOpts?.fetchOptions as RequestInit)?.headers as
+    const headers = resolveFetchOptions().headers as
       | Record<string, string>
       | undefined;
     expect(headers?.Authorization).toBeUndefined();
@@ -53,8 +60,7 @@ describe("createGraphQLClient", () => {
 
   it("sets Authorization: Bearer <token> for authenticated requests", () => {
     createGraphQLClient("test-jwt-token");
-    const headers = (refs.clientOpts?.fetchOptions as RequestInit)
-      ?.headers as Record<string, string>;
+    const headers = resolveFetchOptions().headers as Record<string, string>;
     expect(headers.Authorization).toBe("Bearer test-jwt-token");
   });
 

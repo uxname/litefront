@@ -64,7 +64,8 @@ describe("createGraphQLClient", () => {
   it("sets the Authorization header when an access token is provided", () => {
     createGraphQLClient("test-token");
     const args = clientSpy.mock.calls[0][0];
-    expect(args.fetchOptions).toMatchObject({
+    // fetchOptions is a function so each request gets a fresh abort signal.
+    expect(args.fetchOptions()).toMatchObject({
       headers: { Authorization: "Bearer test-token" },
     });
   });
@@ -72,6 +73,6 @@ describe("createGraphQLClient", () => {
   it("omits the Authorization header when no access token is provided", () => {
     createGraphQLClient();
     const args = clientSpy.mock.calls[0][0];
-    expect(args.fetchOptions.headers).toEqual({});
+    expect(args.fetchOptions().headers).toEqual({});
   });
 });

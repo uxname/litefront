@@ -42,11 +42,13 @@ export const env: Env = {
   DEV: import.meta.env.DEV,
 };
 
-if (env.DEV) {
-  const missing = requiredEnvVars.filter((key) => !env[key]);
-  if (missing.length > 0) {
-    console.error(
-      `Missing required environment variables: ${missing.join(", ")}`,
-    );
-  }
+// Validate unconditionally (not just in DEV): a missing OIDC/API variable
+// silently breaks authentication and every network call. Fail fast at startup —
+// in production too — instead of crashing later with an opaque `new URL` /
+// network error.
+const missing = requiredEnvVars.filter((key) => !env[key]);
+if (missing.length > 0) {
+  throw new Error(
+    `Missing required environment variables: ${missing.join(", ")}`,
+  );
 }

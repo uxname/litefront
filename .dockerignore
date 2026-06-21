@@ -1,4 +1,8 @@
 .git
+# NOTE: .env is intentionally NOT ignored. Vite inlines `import.meta.env.VITE_*`
+# at BUILD time, so the build stage needs .env present. The VITE_* vars are
+# public (they ship to the browser anyway), and the multi-stage runtime image
+# copies only .output — .env never reaches the final image.
 node_modules/
 dist/
 .output/
