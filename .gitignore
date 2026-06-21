@@ -19,3 +19,6 @@ coverage
 # Its build output goes to storybook-build/ (ignored above) and its cache to
 # node_modules/.ladle, so nothing under .ladle/ needs ignoring.
 tmp/
+
+# jscpd duplication-report output (audit tooling)
+.jscpd/

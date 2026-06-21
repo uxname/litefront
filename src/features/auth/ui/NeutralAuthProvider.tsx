@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from "react";
-import { AuthContext, type AuthContextProps } from "react-oidc-context";
+import { AuthContext } from "react-oidc-context";
+import { createStubAuthValue } from "../lib/stub-auth-value";
 
 interface NeutralAuthProviderProps {
   children: ReactNode;
@@ -21,42 +22,8 @@ interface NeutralAuthProviderProps {
  */
 export const NeutralAuthProvider: FC<NeutralAuthProviderProps> = ({
   children,
-}) => {
-  const value = {
-    isAuthenticated: false,
-    isLoading: false,
-    user: undefined,
-    signinRedirect: async () => {},
-    signoutRedirect: async () => {},
-    signinPopup: async () => undefined,
-    signinSilent: async () => undefined,
-    signinResourceOwnerCredentials: async () => undefined,
-    signoutPopup: async () => {},
-    signoutSilent: async () => {},
-    removeUser: async () => {},
-    revokeTokens: async () => {},
-    startSilentRenew: () => {},
-    stopSilentRenew: () => {},
-    clearStaleState: async () => {},
-    querySessionStatus: async () => undefined,
-    events: {
-      addSilentRenewError: () => {},
-      removeSilentRenewError: () => {},
-      addUserLoaded: () => {},
-      removeUserLoaded: () => {},
-      addUserUnloaded: () => {},
-      removeUserUnloaded: () => {},
-      addAccessTokenExpiring: () => {},
-      removeAccessTokenExpiring: () => {},
-      addAccessTokenExpired: () => {},
-      removeAccessTokenExpired: () => {},
-      addUserSessionChanged: () => {},
-      removeUserSessionChanged: () => {},
-    } as unknown as AuthContextProps["events"],
-    settings: {} as AuthContextProps["settings"],
-    activeNavigator: undefined,
-    error: undefined,
-  } as unknown as AuthContextProps;
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}) => (
+  <AuthContext.Provider value={createStubAuthValue()}>
+    {children}
+  </AuthContext.Provider>
+);

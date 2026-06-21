@@ -1,5 +1,6 @@
 import { type FC, type ReactNode, useEffect, useState } from "react";
 import { AuthContext, type AuthContextProps } from "react-oidc-context";
+import { createStubAuthValue } from "../lib/stub-auth-value";
 
 interface MockAuthProviderProps {
   children: ReactNode;
@@ -33,44 +34,19 @@ export const MockAuthProvider: FC<MockAuthProviderProps> = ({ children }) => {
     setIsAuthenticated(localStorage.getItem("isTestAuthenticated") === "true");
   }, []);
 
-  const value = {
+  // Reuse the shared stub and override only what the mock changes: the auth
+  // state, the resolved user, and a sign-out that clears the test flag.
+  const value = createStubAuthValue({
     isAuthenticated,
-    isLoading: false,
-    user: isAuthenticated ? MOCK_USER : undefined,
-    signinRedirect: async () => {},
+    user: isAuthenticated
+      ? (MOCK_USER as unknown as AuthContextProps["user"])
+      : undefined,
     signoutRedirect: async () => {
       localStorage.removeItem("isTestAuthenticated");
       sessionStorage.setItem("__logged_out__", "true");
       setIsAuthenticated(false);
     },
-    signinPopup: async () => undefined,
-    signinSilent: async () => undefined,
-    signoutPopup: async () => {},
-    signoutSilent: async () => {},
-    removeUser: async () => {},
-    revokeTokens: async () => {},
-    startSilentRenew: () => {},
-    stopSilentRenew: () => {},
-    clearStaleState: async () => {},
-    querySessionStatus: async () => undefined,
-    events: {
-      addSilentRenewError: () => {},
-      removeSilentRenewError: () => {},
-      addUserLoaded: () => {},
-      removeUserLoaded: () => {},
-      addUserUnloaded: () => {},
-      removeUserUnloaded: () => {},
-      addAccessTokenExpiring: () => {},
-      removeAccessTokenExpiring: () => {},
-      addAccessTokenExpired: () => {},
-      removeAccessTokenExpired: () => {},
-      addUserSessionChanged: () => {},
-      removeUserSessionChanged: () => {},
-    } as unknown as AuthContextProps["events"],
-    settings: {} as AuthContextProps["settings"],
-    activeNavigator: undefined,
-    error: undefined,
-  } as unknown as AuthContextProps;
+  });
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
