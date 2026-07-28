@@ -1,0 +1,20 @@
+# npm-check-updates config — read by `npx ncu` and therefore by `npm run update`.
+#
+# Without this file `ncu -u` silently re-bumps the packages below, and the next
+# `npm run check` / `npm run gen` breaks for a reason that looks unrelated to the
+# update. Each hold is blocked by a THIRD-PARTY incompatibility, not by our code:
+# re-check them when the linked cause is resolved, then drop the entry.
+reject:
+  # typescript 7 type-checks @ladle/react's shipped .tsx sources: its types entry
+  # re-exports ./src/ui, and TS resolves .tsx before the sibling .d.ts, so
+  # skipLibCheck does not apply and `tsc --noEmit` fails inside node_modules.
+  # Unblocked when @ladle/react ships types that don't route through .tsx.
+  - typescript
+  # graphql 17 breaks `npm run gen`: @graphql-codegen/typescript-urql@5.0.1 caps
+  # its peer range at ^16 and throws "Cannot read properties of undefined
+  # (reading 'some')" while generating. Unblocked when that plugin supports 17
+  # (or when the client-preset replaces it).
+  - graphql
+  # npm-check-updates 23 requires node ^22.22.2 || ^24.15.0 || >=26; this project
+  # builds on node:22-alpine and devs run 24.x. Unblocked on a node bump.
+  - npm-check-updates

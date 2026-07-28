@@ -30,14 +30,16 @@ describe("profileFormSchema", () => {
     ).toBe(false);
   });
 
-  it("rejects a display name longer than 80 chars", () => {
+  // Limits come from the backend constants (ProfileDisplayNameMaxLen /
+  // ProfileBioMaxLen in backend/internal/config/constants.go).
+  it("rejects a display name longer than 100 chars", () => {
     expect(
-      profileFormSchema.safeParse({ displayName: "x".repeat(81) }).success,
+      profileFormSchema.safeParse({ displayName: "x".repeat(101) }).success,
     ).toBe(false);
   });
 
-  it("rejects a bio longer than 500 chars", () => {
-    expect(profileFormSchema.safeParse({ bio: "x".repeat(501) }).success).toBe(
+  it("rejects a bio longer than 1000 chars", () => {
+    expect(profileFormSchema.safeParse({ bio: "x".repeat(1001) }).success).toBe(
       false,
     );
   });

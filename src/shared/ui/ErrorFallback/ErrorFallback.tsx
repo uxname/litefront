@@ -31,7 +31,11 @@ interface ErrorFallbackProps {
 export const ErrorFallback: FC<ErrorFallbackProps> = ({
   error,
   reset,
-  pathname = window.location.pathname,
+  // Read lazily and SSR-safely: this component is the *fallback*, so it renders
+  // exactly when something already failed — including inside the server render,
+  // where touching `window` would make the error boundary throw from its own
+  // fallback and turn a handled error into a bare 500.
+  pathname = typeof window === "undefined" ? "" : window.location.pathname,
   onRetry,
 }) => {
   const [showDetails, setShowDetails] = useState(false);

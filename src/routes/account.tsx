@@ -1,6 +1,7 @@
 import { useAuth } from "@features/auth";
 import { m } from "@generated/paraglide/messages";
 import { AccountPage } from "@pages/account";
+import { captureException } from "@shared/lib/sentry";
 import { PageLoader } from "@shared/ui/PageLoader";
 import { toast } from "@shared/ui/Toaster";
 import { createFileRoute } from "@tanstack/react-router";
@@ -32,11 +33,27 @@ const AccountRoute = () => {
     if (auth.isLoading || auth.isAuthenticated) return;
     let cancelled = false;
     void (async () => {
-      // Kick off sign-in, remembering where the user was headed so the callback
-      // returns them here.
-      await auth.signinRedirect({
-        state: { returnTo: window.location.href },
-      });
+      try {
+        // Kick off sign-in, remembering where the user was headed so the callback
+        // returns them here. `returnTo` is consumed by `history.replace()` in
+        // AppProviders, which takes a router path — an absolute URL would be
+        // parsed as the pathname itself and land on a 404. Same shape as
+        // HeaderControls.
+        await auth.signinRedirect({
+          state: {
+            returnTo: window.location.pathname + window.location.search,
+          },
+        });
+      } catch (error) {
+        // The IdP being unreachable must not strand the user on the loader
+        // forever: report it and fall back to a page they can actually use.
+        captureException(error, { tags: { flow: "account-signin-redirect" } });
+        if (!cancelled) {
+          toast.error(m.error_unexpected());
+          void navigate({ to: "/" });
+        }
+        return;
+      }
       // Fallback for the mock-auth provider (signinRedirect is a no-op there):
       // send the user home instead of leaving them on a blocked page.
       if (!cancelled) void navigate({ to: "/" });

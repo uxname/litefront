@@ -14,8 +14,11 @@ export default defineConfig({
   testDir: "./tests/e2e",
   /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
+  /* Fail if a `test.only` was left in the source. Always on, not `!!process.env.CI`:
+     this project has no CI, so the pre-push hook IS the gate — and a stray
+     `test.only` would silently shrink the whole E2E suite to one test while
+     `verify:push` still reported success. */
+  forbidOnly: true,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */

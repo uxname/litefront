@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { profileFormSchema } from "./schema";
 
 /**
- * Boundary coverage for the profile form schema. Constraints (mirrored from
- * the backend): displayName trimmed ≤80, bio trimmed ≤500, avatarUrl is
- * either "" or a valid URL ≤2048. All three fields are optional.
+ * Boundary coverage for the profile form schema. Constraints mirror the backend
+ * constants in `backend/internal/config/constants.go`: displayName trimmed ≤100,
+ * bio trimmed ≤1000, avatarUrl is either "" or a valid URL ≤2048. All three
+ * fields are optional. Update these numbers together with those constants.
  */
 describe("profileFormSchema", () => {
   describe("valid inputs", () => {
@@ -48,16 +49,16 @@ describe("profileFormSchema", () => {
   });
 
   describe("displayName", () => {
-    it("accepts exactly 80 characters (upper boundary)", () => {
+    it("accepts exactly 100 characters (upper boundary)", () => {
       const result = profileFormSchema.safeParse({
-        displayName: "a".repeat(80),
+        displayName: "a".repeat(100),
       });
       expect(result.success).toBe(true);
     });
 
-    it("rejects 81 characters with a displayName error", () => {
+    it("rejects 101 characters with a displayName error", () => {
       const result = profileFormSchema.safeParse({
-        displayName: "a".repeat(81),
+        displayName: "a".repeat(101),
       });
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -65,23 +66,23 @@ describe("profileFormSchema", () => {
       }
     });
 
-    it("counts length after trimming (trailing space does not push over 80)", () => {
-      // 80 chars + trailing space → trimmed to 80, should pass.
+    it("counts length after trimming (trailing space does not push over 100)", () => {
+      // 100 chars + trailing space → trimmed to 100, should pass.
       const result = profileFormSchema.safeParse({
-        displayName: `${"a".repeat(80)} `,
+        displayName: `${"a".repeat(100)} `,
       });
       expect(result.success).toBe(true);
     });
   });
 
   describe("bio", () => {
-    it("accepts exactly 500 characters (upper boundary)", () => {
-      const result = profileFormSchema.safeParse({ bio: "a".repeat(500) });
+    it("accepts exactly 1000 characters (upper boundary)", () => {
+      const result = profileFormSchema.safeParse({ bio: "a".repeat(1000) });
       expect(result.success).toBe(true);
     });
 
-    it("rejects 501 characters with a bio error", () => {
-      const result = profileFormSchema.safeParse({ bio: "a".repeat(501) });
+    it("rejects 1001 characters with a bio error", () => {
+      const result = profileFormSchema.safeParse({ bio: "a".repeat(1001) });
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0]?.path).toEqual(["bio"]);

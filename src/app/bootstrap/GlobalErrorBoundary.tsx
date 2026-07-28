@@ -27,8 +27,11 @@ export const GlobalErrorBoundary = ({ children }: { children: ReactNode }) => {
         <ErrorFallback
           error={error}
           reset={resetErrorBoundary}
+          // Only a click handler, so it never runs during the server render.
           onRetry={() => window.location.reload()}
-          pathname={window.location.pathname}
+          // `pathname` is deliberately not passed: ErrorFallback reads it
+          // SSR-safely itself. Passing `window.location.pathname` here evaluated
+          // it during render, and this tree is isomorphic (`defaultSsr: true`).
         />
       )}
     >
