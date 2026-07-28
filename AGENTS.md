@@ -1,296 +1,67 @@
-# AGENTS.md — LiteFront Repository Guide
+# AGENTS.md — litefront (frontend)
 
-This file is for agentic tools working in this repo. Follow these commands and
-conventions to stay aligned with existing tooling and architecture.
+Vite · React 19 · TanStack Start (SSR) · URQL · Zustand · Tailwind v4 + daisyUI ·
+Paraglide · Feature-Sliced Design.
 
-## Quick Start
-- Install: `npm install`
-- Dev server: `npm run start:dev`
-- Full quality gate: `npm run check` (runs stylelint, tsc, biome fix, knip, steiger)
+**This file is the entry point, not the whole manual:** it holds the rules you must not
+break and a map of where everything else lives. Read the file that matches your task —
+don't read them all.
 
-## IMPORTANT — Quality Gate Rule
-- **Always** use `npm run check` for the full quality gate.
-- **Never** call `npm run lint && npm run ts:check` separately — this skips knip, steiger, and biome auto-fix, which will cause pre-commit (lefthook) to fail. Rely on `npm run check` exclusively.
-
-## Build / Run (SSR via TanStack Start)
-This app runs **server-side rendered** via TanStack Start (Vite plugin + Nitro
-`node-server`). Public routes render on the server; auth-only routes opt out
-(`ssr: false`). See "SSR architecture" below.
-- `npm run start:dev` — Vite dev server with SSR (HMR)
-- `npm run build:vite` — production build → `.output/` (Nitro Node server + `.output/public` assets)
-- `npm run start:prod` — run the built Node SSR server (`node .output/server/index.mjs`)
-- `npm run build` — production build + `check`
-- `docker compose build` / `docker compose up -d` — production image: a Node runtime
-  serving `.output/server/index.mjs` on port 3000 (replaces the old static Caddy host).
-  Only `.output` is copied into the runtime image — it is self-contained.
-
-## SSR architecture (read before touching routing/entry/auth)
-- **Entry files** (wired by the Start plugin): `src/router.tsx` exports `getRouter()`;
-  `src/client.tsx` hydrates + runs browser-only side effects (Sentry, react-scan);
-  `src/server.ts` is the SSR handler (wraps Start's handler in Paraglide's locale
-  middleware); `src/start.ts` sets `defaultSsr: true`. There is **no** `main.tsx` or
-  `index.html` — `src/routes/__root.tsx` renders the full `<html>` document.
-- **Providers** (auth + GraphQL) are injected via the router's `Wrap` option in
-  `src/app/providers/AppProviders.tsx` (isomorphic): the server renders
-  `NeutralAuthProvider` (always logged-out, SSR-safe); the client mounts the real
-  `react-oidc-context` `AuthProvider` (or `MockAuthProvider` when `VITE_MOCK_AUTH`).
-  OIDC is browser-only, so `getOidcConfig()` is lazy and auth-only routes use `ssr: false`.
-- **Hydration safety**: auth-dependent UI must render its logged-out markup while
-  `isLoading` (see `HeaderControls`) so the first client paint matches the server's
-  neutral render. `MockAuthProvider` defers its `localStorage` read to an effect for the
-  same reason.
-- **FOUC**: the daisyUI theme is applied pre-paint by a blocking inline script in
-  `__root.tsx`; the locale is resolved server-side from the `PARAGLIDE_LOCALE` cookie
-  (Paraglide middleware in `src/server.ts`), so `<html lang>` and messages match on
-  hydration. The global stylesheet is linked via `head()` in `__root.tsx`
-  (`import "../index.css?url"`).
-- **Security/caching headers** (formerly Caddy) are set by Nitro `routeRules` in
-  `vite.config.ts`. `robots.txt` is a static file in `public/`. There is **no** sitemap
-  plugin anymore — configure a sitemap per deployment if needed (host-specific).
-- **Env**: `VITE_*` vars are inlined at build time (unchanged from the SPA setup).
-- **Dev console noise**: `src/app/strip-dangling-sourcemaps.plugin.ts` is a dev-only Vite
-  plugin that suppresses `Failed to load source map … ENOENT … .js.map` errors caused by
-  `@tanstack/*-start*` packages shipping sourcemap comments without the `.map` files. It
-  doesn't affect the build — don't remove it or the dev log fills with false errors.
-
-## Lint / Format / Typecheck
-- `npm run lint` — Biome check (read-only)
-- `npm run lint:fix` — Biome check + write fixes
-- `npm run lint:fix:unsafe` — Biome fix incl. unsafe
-- `npm run lint:style` — Stylelint (CSS/SCSS)
-- `npm run lint:style:fix` — Stylelint auto-fix
-- `npm run ts:check` — `tsc --noEmit`
-- `npm run knip` — Dead code & unused exports/deps
-- `npm run lint:fsd` — FSD boundary checks (Steiger)
-- `npm run check` — Runs stylelint + tsc + biome fix + knip + steiger
-
-## Testing
-
-### Component & test discipline (the "trio" + TDD) — READ THIS
-This project treats tests as **non-optional**, and the rule is machine-enforced
-so it cannot drift:
-
-- **Every `shared/ui` component is a trio**: `<Name>.tsx` (impl) +
-  `<Name>.stories.tsx` (Ladle story) + `<Name>.test.tsx` (Vitest test), with a
-  thin `index.ts` re-export. The `trio` step in `npm run check`
-  (`scripts/check-component-trio.mjs`) **fails the build** for any `shared/ui`
-  component missing its story or test. Use the `new-component` / `add-story` /
-  `write-tests` skills.
-- **New business logic is written test-first (TDD).** For features, stores,
-  hooks, utils, schemas and feature/entity components: write the failing test
-  that encodes the contract, then implement until green. New code that drops
-  coverage below the floors in `vite.config.ts` (lines/statements 82, functions
-  85, branches 78) fails `npm run test:cov` (run by the pre-push hook). Ratchet the
-  floors **up** as coverage grows; never lower one to dodge a finding.
-- **There is no CI** — the trio and coverage gates run only in the git hooks, so
-  `--no-verify` bypasses them locally. Don't.
-
-### Vitest (unit/component)
-- `npm run test:dev` — interactive/watch
-- `npm run test:prod` — run once (one-shot)
-- `npm run test:cov` — coverage (enforces the thresholds above)
-
-**Single test file**
-- `npm run test:dev -- src/path/to/file.test.tsx`
-- `npx vitest src/path/to/file.test.tsx`
-
-**Single test by name**
-- `npx vitest -t "should do X"`
-- `npm run test:dev -- -t "should do X"`
-
-### Playwright (E2E)
-- `npm run test:e2e:dev` — UI mode
-- `npm run test:e2e:prod` — headless chromium + list reporter
-- `npm run test:all` — unit + e2e
-- `npm run test:e2e:show-trace` — view trace zip
-
-**Single E2E file**
-- `npx playwright test tests/e2e/example.spec.ts`
-
-**Single E2E test by name**
-- `npx playwright test -g "login works"`
-
-**Run a specific browser**
-- `npx playwright test --project=chromium`
-
-**Notes**
-- E2E tests live in `tests/e2e` (see `playwright.config.ts`).
-- Base URL uses `VITE_BASE_URL` or defaults to `http://localhost:3000`.
-- Playwright starts `npm run start:prod` via `webServer` in config.
-
-## Frontend observability for AI agents (READ THIS — you cannot see the browser)
-
-An AI agent has no eyes on a browser console. To **read what the frontend actually
-does at runtime** — `console.*`, uncaught errors, unhandled promise rejections, failed
-network requests — use the **agent log harness**, a Playwright spec that drives the app
-headlessly and dumps everything to files you can read.
+## Quick start
 
 ```bash
-npm run test:e2e:logs
+npm install                # postinstall installs the git hooks
+cp .env.example .env       # nothing creates this for you
+npm run start:dev          # Vite dev server with SSR + HMR
+npm run check              # the full quality gate — use this, always
 ```
 
-Then read the captured output (do NOT try to watch a live browser):
-- `test-results/frontend-logs.log` — human-readable, one line per event.
-- `test-results/frontend-logs.json` — same data, structured (parse this).
+Build & run: `npm run build:vite` → `.output/` (Nitro Node server +
+`.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
+`npm run build` = build + `check`. `docker compose up -d` serves `.output` on port
+3000 — the runtime image contains only `.output` and is self-contained.
 
-How it works (`tests/e2e/agent-logs.spec.ts`):
-- Walks the key routes (`/`, `/protected`, a 404), then exercises the theme + locale
-  switchers, capturing every console/error/network event along the way.
-- `/protected` renders because the harness sets `localStorage.isTestAuthenticated`
-  (mock-auth path, same as `tests/e2e/pages/account.spec.ts`).
-- react-scan render-profiling noise is filtered out so the log stays signal.
-- It is a **collector**, not a strict gate: plain console output never fails it, but a
-  **`pageerror` or a same-origin failed request DOES fail it** — those are real
-  breakages you must surface and fix.
+## Where to look
 
-**To debug a specific page/flow**, copy this spec, change the routes/interactions, and
-read the same output files. This is the canonical way for an agent to "look at" the UI.
+| Your task | Read |
+|---|---|
+| Add a page, route, slice, component, store, GraphQL operation | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
+| Touch routing, SSR, entry files or auth wiring | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
+| Write tests or stories, hit a coverage floor | [.agents/TESTING.md](./.agents/TESTING.md) |
+| "See" the running app, debug a symptom, check dark mode | [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md) |
+| Styling, theming, i18n strings, TS conventions | [.agents/STYLE.md](./.agents/STYLE.md) |
+| A gate is failing, env setup, dependencies, bundle size | [.agents/QUALITY-GATES.md](./.agents/QUALITY-GATES.md) |
+| How this side pairs with the backend | meta-repo `AGENTS.md` |
 
-### Seeing the UI (not just the logs)
+## Golden rules
 
-Logs tell you what the app *did*; they don't show what it *looks like*. For layout,
-spacing, and especially **theme** work, use the **screenshot harness** — it drives the
-app headlessly and writes a full-page PNG for every key route, in **both daisyUI themes**
-(`cmyk`/`dark`) at **desktop + mobile** widths:
+1. **`npm run check` is the gate.** Never run `lint` and `ts:check` separately — that
+   skips knip, steiger, the trio check and Biome's fixes, and the hook will fail on
+   what you thought you had run.
+2. **Every `shared/ui` component is a trio**: implementation + Ladle story + test. The
+   build fails without all three.
+3. **New logic is written test-first**, and coverage floors are machine-enforced. Never
+   lower a floor to go green — add the test.
+4. **Respect FSD boundaries.** Imports point downward only, and cross-slice access goes
+   through the slice's `index.ts`. Steiger enforces it, aliases included.
+5. **Style with daisyUI semantic tokens, never hardcoded palette colors** — hardcoded
+   colors ignore `data-theme` and break dark mode.
+6. **Never touch `window` during render.** This tree is server-rendered; read it in an
+   effect, an event handler, or behind `typeof window === "undefined"`.
+7. **All user-facing text goes through Paraglide** (`m.<key>()`), added to every message
+   file.
+8. **English-only in the repo** — code, comments, identifiers, commit messages, docs.
+   (Chat with the user in their language.)
 
-```bash
-npm run test:e2e:screens
-```
+## Don'ts
 
-Then **read the PNGs with the Read tool** (it renders images) — do NOT open a live browser:
-- `test-results/screenshots/<route>-<theme>-<viewport>.png`, e.g. `home-dark-mobile.png`.
-
-It's the same collector contract as the log harness (always writes; fails only on a real
-`pageerror`/same-origin failure). Comparing `*-cmyk-*` vs `*-dark-*` is how you catch the
-hardcoded-color dark-mode bug (see "Theming & i18n" below). Full triage workflow and a
-symptom → cause → fix matrix live in [docs/DEBUGGING.md](./docs/DEBUGGING.md).
-
-> Port note: Playwright reuses an already-running dev server on `:3000` when present
-> (`reuseExistingServer`), so logs may come from the dev build (react-scan, HMR). For a
-> clean prod capture, stop the dev server first so the harness builds + previews fresh.
-
-## Theming & i18n (how the switchers work — don't re-break them)
-
-**Theme (daisyUI).** Two themes are declared in `src/index.css`
-(`cmyk` = light/default, `dark`). The toggle (`src/features/theme`) is a zustand store
-that sets `document.documentElement[data-theme]` and persists to `localStorage`
-(`litefront-theme`), re-applied on rehydrate.
-- **The whole UI must be styled with daisyUI SEMANTIC tokens, not hardcoded Tailwind
-  palette colors.** Use `bg-base-100/200/300`, `text-base-content` (+ `/60` for muted),
-  `border-base-300`, `text-primary`, `text-error/success/info/warning`, `*-content` for
-  text on accent fills. **Never** use `bg-white`, `text-slate-900`, `text-indigo-600`,
-  `bg-red-50`, etc. — those ignore `data-theme` and stay light in dark mode (this exact
-  bug is why the theme appeared "broken"). Decorative gradient orbs are the only allowed
-  exception.
-
-**i18n (Paraglide JS).** Messages live in `messages/{en,ru}.json`; generated accessors in
-`src/generated/paraglide`. Switcher: `src/features/locale`. Strategy is set in
-`vite.config.ts`:
-```ts
-strategy: ["cookie", "localStorage", "preferredLanguage", "baseLocale"]
-```
-- **`cookie` is first** because it's the only writable strategy the SSR server can read
-  (Paraglide middleware in `src/server.ts`), so server render and client hydration agree on
-  the locale. `setLocale` writes BOTH cookie and localStorage, so an explicit user choice
-  persists and wins over the browser language on reload. Changing strategy requires a
-  **dev-server restart / rebuild** (it's compiled into `src/generated/paraglide/runtime.js`).
-- **Fallback (two layers, both automatic):**
-  1. *Locale detection* — `baseLocale` ("en") is the **last** strategy and is the guaranteed
-     fallback. Any unsupported/unknown locale (a French browser, a `PARAGLIDE_LOCALE` cookie
-     with a value not in `locales`) is validated away by `toLocale()` and resolution falls
-     through to `en`. **Never remove `baseLocale` from the strategy** — without it,
-     `getLocale()` can throw "No locale found".
-  2. *Missing message* — a key absent from a non-base locale compiles to an alias of the
-     baseLocale message (`const de_x = en_x`), so untranslated strings render in English
-     instead of breaking. en/ru are kept at full key parity regardless.
-- **Adding a language:** add the code to `locales` in `project.inlang/settings.json`, create
-  `messages/<locale>.json` (untranslated keys fall back to `en` automatically), and rebuild.
-  The `LocaleSwitcher` lists every locale in `locales` automatically (via `Intl.DisplayNames`).
-- Add strings via the `add-translation` skill; keep `en.json` and `ru.json` in sync.
-
-## Codegen / Routing
-- `npm run gen` — GraphQL codegen (reads `src/graphql/**/*.graphql`)
-- The route tree (`src/generated/routeTree.gen.ts`) is generated automatically by the
-  TanStack Start Vite plugin on dev/build — there is no separate `gen:routes` script.
-- Run `gen` after changing GraphQL schema or operations.
-- `gen` requires `VITE_GRAPHQL_API_URL` (see `.env` / `.env.example`).
-
-## Environment Setup
-- Copy `.env.example` to `.env` before running the app.
-- Required vars for auth/data: `VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
-  `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
-- Test base URL and routing use `VITE_BASE_URL` (defaults to `http://localhost:3000`).
-- Run `npx playwright install chromium` once after cloning — the pre-push hook runs the
-  E2E suite, which fails without the browser installed.
-
-## Code Style & Formatting (Biome + EditorConfig)
-- Write all code, comments, and identifiers in **English** (repo-wide rule — see root `AGENTS.md`).
-- Indent with 2 spaces, LF line endings, trim trailing whitespace.
-- Use Biome as the source of truth for formatting.
-- Quotes: Biome formats JS/TS with **double quotes**.
-- Imports are organized by Biome (`organizeImports: on`).
-- Unused imports/vars/params are **errors** (Biome + TS).
-- Prefer small, focused functions (< 50 lines) and explicit interfaces.
-
-## TypeScript Conventions
-- `strict: true` — avoid `any`; prefer typed interfaces and unions.
-- `noUnusedLocals` / `noUnusedParameters` enforced.
-- `useUnknownInCatchVariables` is false, but still narrow errors manually.
-- Prefer immutable updates and pure functions.
-- Use path aliases from `tsconfig.json`:
-  - `@shared/*`, `@entities/*`, `@features/*`, `@widgets/*`, `@pages/*`
-  - `@generated/*`, `@public/*`
-
-## Architecture (Feature-Sliced Design)
-- Layers: `shared`, `entities`, `features`, `widgets`, `pages`, `app`.
-- Respect FSD boundaries; Steiger enforces architectural rules.
-- Keep slices small and composable; avoid “god” modules.
-- Favor composition and explicit dependencies (DI) over hidden imports.
-
-## Error Handling
-- Validate inputs at boundaries; return structured errors when possible.
-- Avoid swallowing errors; log or rethrow where appropriate.
-- For UI failures, prefer error boundaries and explicit fallback states.
-
-## Styling
-- Tailwind CSS v4 + SCSS Modules are used.
-- Stylelint runs on `**/*.{css,scss}` and allows SCSS at-rules.
-- Prefer utility-first styling with Tailwind; keep module styles scoped.
-
-## Generated Code
-- `src/generated/**` is generated (GraphQL + route tree).
-- Do not edit generated files by hand; regenerate instead.
-- Biome/Knip ignore generated output.
-- This includes `src/generated/routeTree.gen.ts` and `src/generated/graphql.tsx`.
-
-## Storybook (Ladle)
-- `npm run storybook:serve` — start Ladle
-- `npm run storybook:build` — build static Ladle (output dir from `.ladle/config.mjs`)
-- `npm run storybook:preview` — preview the built storybook
-- Ladle config lives in `.ladle/` (its own minimal Vite config + a Tailwind entry that
-  re-scans `src/` so stories are styled). The build also runs in the pre-push gate
-  (`verify:push`) and is cleaned up afterwards.
-
-## Monitoring / DX
-- Sentry integration is configured via Vite plugin; set `VITE_SENTRY_*` vars for builds.
-- React Scan is available for performance debugging in development.
-
-## Git Hooks / Quality Gate
-Hooks are thin — all logic lives in npm scripts, so you can run the exact same gate by hand.
-There is **no CI**: these hooks are the whole quality guarantee.
-- **pre-commit → `npm run verify:commit`** — fast static checks (`check`) + secrets scan
-  (`secrets`, gitleaks). Expect auto-fixes from Biome during `check`.
-- **pre-push → `npm run verify:push`** — superset: `verify:commit` + `test:cov`
-  (unit + coverage floors) + `test:e2e:prod` (Playwright) + `storybook:build`
-  (then cleans up `storybook-build/`).
-- Run them yourself anytime: `npm run verify:commit` / `npm run verify:push`.
-- `--no-verify` skips hooks; since there is no CI to catch it, don't.
-
-## Skills
-
-Skills live in `.agents/skills/`. Each skill is a `SKILL.md` file that guides agents through a specific workflow.
-
-**All skill content must be written in English only.** This applies to descriptions, instructions, comments, and any other text inside SKILL.md files.
-
-## Cursor / Copilot Rules
-- No `.cursor/rules`, `.cursorrules`, or `.github/copilot-instructions.md` found.
+- Don't edit `src/generated/**` (GraphQL, route tree, Paraglide) — regenerate.
+- Don't use `--no-verify`; there is no CI behind these hooks.
+- Don't ship `VITE_MOCK_AUTH=true`, and don't put a secret in a `VITE_*` var — they are
+  inlined at build time and public.
+- Don't remove a package from `.ncurc.yml` without checking the reason recorded there.
+- Don't remove `baseLocale` from the Paraglide strategy, or move `cookie` off first.
+- Don't delete `src/app/strip-dangling-sourcemaps.plugin.ts` — the dev log fills with
+  false sourcemap errors without it.
+- Don't put page logic in `src/routes/*`; those files are route definitions, and that
+  directory is the one place Steiger cannot check.

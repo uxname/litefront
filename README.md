@@ -2,9 +2,9 @@
 
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 [![Knip](https://img.shields.io/badge/Maintained_with-Knip-blue?logo=knip)](https://knip.dev/)
-![Vite](https://img.shields.io/badge/Vite-7.x-blue?logo=vite&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.x-blue?logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue?logo=typescript)
 ![Playwright](https://img.shields.io/badge/Testing-Playwright-2EAD33?logo=playwright)
 ![Vitest](https://img.shields.io/badge/Testing-Vitest-6E9F18?logo=vitest)
 ![Zustand](https://img.shields.io/badge/State-Zustand-422f2f?logo=zustand)
@@ -92,7 +92,9 @@ The application requires the following environment variables to be set in `.env`
 | `VITE_OIDC_SCOPE`        | The scopes to request                                        | `openid profile offline_access`                 |
 | `VITE_OIDC_API_RESOURCE` | API resource indicator. Sent on both the authorize and token requests so the access token is a JWT whose `aud` equals the backend's `OIDC_AUDIENCE` | `http://localhost:4000` |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
-| `VITE_BASE_URL`          | Base URL of the application (used for E2E testing and routing) | `http://localhost:3000`                        |
+| `VITE_BASE_URL`          | Base URL of the application (E2E base URL, and used to build OIDC redirect targets — an empty value breaks sign-out) | `http://localhost:3000`                        |
+| `VITE_MOCK_AUTH`         | Bypasses real OIDC entirely (dev/E2E only — **never ship it enabled**) | `false`                        |
+| `VITE_APP_VERSION`       | Version string surfaced in the UI and Sentry releases | build metadata                        |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
 | `VITE_SENTRY_DSN`        | The DSN key for Sentry error tracking                        | `https://xxx@yyy.ingest.sentry.io/zzz`           |
 | `VITE_SENTRY_ORG`        | Sentry organization slug (used for source maps)             | `your-org`                                      |
@@ -129,14 +131,18 @@ To replace OIDC with your own logic:
 1. Open `src/features/auth/index.ts`.
 2. Remove `react-oidc-context` exports.
 3. Implement and export your own `AuthProvider` component and `useAuth` hook from this file.
-4. Update `src/app/providers/AppProviders.tsx` (the isomorphic auth + GraphQL `Wrap`) to mount your provider and drop the `getOidcConfig()` injection if your new provider doesn't need it.
+4. Update `src/app/bootstrap/AppProviders.tsx` (the isomorphic auth + GraphQL `Wrap`) to mount your provider and drop the `getOidcConfig()` injection if your new provider doesn't need it.
 
 ## Scripts Overview
 
 - `npm run start:dev`: Starts the development server with Hot Module Replacement.
 - `npm run build`: Bundles the application for production.
-- `npm run test:prod`: Runs all unit and end-to-end tests.
-- `npm run check`: Runs all code quality checks in parallel: `tsc`, `biome`, `stylelint`, `knip`, and `steiger`.
+- `npm run test:prod`: Runs the unit/component tests once (Vitest). End-to-end tests are
+  `npm run test:e2e:prod`; `npm run test:all` runs both.
+- `npm run check`: Runs all code quality checks in parallel: `tsc`, `biome` (in **write**
+  mode — it fixes rather than fails), `stylelint`, `knip`, `steiger`, and the component
+  trio check. This is the gate — never substitute `lint` + `ts:check`.
+- `npm run verify:commit` / `verify:push`: exactly what the git hooks run.
 - `npm run lint:fsd`: Manually runs FSD layer boundary checks with Steiger.
 - `npm run storybook:serve`: Starts the component playground (Ladle) for developing UI components.
 - `npm run storybook:build`: Builds the static storybook for deployment.
