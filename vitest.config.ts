@@ -46,7 +46,7 @@ export default defineConfig({
         "src/router.tsx",
         "src/start.ts",
         "src/routes/__root.tsx",
-        "src/app/providers/**",
+        "src/app/bootstrap/**",
         // Third-party library adapters and configs (no business logic)
         "src/shared/lib/sentry/**",
         "src/shared/config/**",

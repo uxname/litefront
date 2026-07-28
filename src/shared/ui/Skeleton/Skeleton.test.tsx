@@ -70,7 +70,9 @@ describe("Skeleton", () => {
   it("applies a string height verbatim in the inline style", () => {
     const { container } = render(<Skeleton height="2rem" />);
     const el = container.firstChild as HTMLElement;
-    expect(el).toHaveStyle({ height: "2rem" });
+    // Read the inline style directly: `toHaveStyle` compares *computed* values,
+    // and jsdom >= 30 resolves relative lengths (2rem -> 32px).
+    expect(el.style.height).toBe("2rem");
   });
 
   it("sets no width or height style when neither prop is provided", () => {

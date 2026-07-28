@@ -1,8 +1,8 @@
 import { NotFoundPage } from "@pages/404";
 import { PageLoader } from "@shared/ui/PageLoader";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
-import { AppProviders } from "./app/providers/AppProviders";
-import { setAppRouter } from "./app/providers/router-instance";
+import { AppProviders } from "./app/bootstrap/AppProviders";
+import { setAppRouter } from "./app/bootstrap/router-instance";
 import { routeTree } from "./generated/routeTree.gen";
 
 /**

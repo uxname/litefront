@@ -6,7 +6,8 @@
     "src/router.tsx!",
     "src/start.ts!",
     "src/routes/**/*.{ts,tsx}!",
-    "src/features/*/index.ts!"
+    "src/features/*/index.ts!",
+    "src/entities/*/index.ts!"
   ],
   "project": [
     "src/**/*.{ts,tsx}!",
@@ -33,6 +34,7 @@
     "@shared/*": ["./src/shared/*"],
     "@widgets/*": ["./src/widgets/*"],
     "@features/*": ["./src/features/*"],
+    "@entities/*": ["./src/entities/*"],
     "@public/*": ["./public/*"]
   }
 }

@@ -9,13 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./../routes/__root"
-import { Route as CallbackRouteImport } from "./../routes/callback"
-import { Route as AccountRouteImport } from "./../routes/account"
 import { Route as IndexRouteImport } from "./../routes/index"
+import { Route as AccountRouteImport } from "./../routes/account"
+import { Route as CallbackRouteImport } from "./../routes/callback"
 
-const CallbackRoute = CallbackRouteImport.update({
-  id: "/callback",
-  path: "/callback",
+const IndexRoute = IndexRouteImport.update({
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -23,9 +23,9 @@ const AccountRoute = AccountRouteImport.update({
   path: "/account",
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+const CallbackRoute = CallbackRouteImport.update({
+  id: "/callback",
+  path: "/callback",
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -61,11 +61,11 @@ export interface RootRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/callback": {
-      id: "/callback"
-      path: "/callback"
-      fullPath: "/callback"
-      preLoaderRoute: typeof CallbackRouteImport
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/account": {
@@ -75,11 +75,11 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
-      preLoaderRoute: typeof IndexRouteImport
+    "/callback": {
+      id: "/callback"
+      path: "/callback"
+      fullPath: "/callback"
+      preLoaderRoute: typeof CallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
