@@ -7,11 +7,12 @@ RUN apk add --no-cache git
 # Set the working directory
 WORKDIR /app
 
-# Copy source and install dependencies. .git is not in the build context
-# (see .dockerignore), so the `prepare` script (lefthook install) is made
+# Copy source and install the exact dependencies pinned in package-lock.json
+# (npm ci, not npm install). .git is not in the build context (see
+# .dockerignore), so the `prepare` script (lefthook install) is made
 # non-fatal without git in package.json.
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm ci --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . ./

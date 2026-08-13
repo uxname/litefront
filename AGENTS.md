@@ -20,6 +20,11 @@ Build & run: `npm run build:vite` → `.output/` (Nitro Node server +
 `.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
 `npm run build` = build + `check`. `docker compose up -d` serves `.output` on port
 3000 — the runtime image contains only `.output` and is self-contained.
+`VITE_*` values are baked into the bundle at **build** time, so one image = one
+environment — build per environment (in Dokploy the app is built at deploy time
+with that environment's variables). `npm run docker:build` / `docker:push` build
+and push `${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}`; the cross-project
+deploy guide is the meta repo's `docs/DEPLOY.md`.
 
 ## Where to look
 

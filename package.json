@@ -9,6 +9,8 @@
     "build:vite": "vite build",
     "start:dev": "vite",
     "start:prod": "node .output/server/index.mjs",
+    "docker:build": "docker build -t \"${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}\" .",
+    "docker:push": "if [ -z \"$IMAGE_REGISTRY\" ]; then echo 'set IMAGE_REGISTRY (e.g. ghcr.io/acme/) before pushing' >&2; exit 1; fi; docker push \"${IMAGE_REGISTRY}litefront:${IMAGE_TAG:-latest}\"",
     "____________________TESTING___________________________________________": "",
     "test:dev": "vitest",
     "test:prod": "vitest run",
@@ -49,6 +51,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",
+    "@sentry/node": "^10.68.0",
     "@sentry/react": "^10.68.0",
     "@tanstack/react-router": "^1.170.18",
     "@tanstack/react-start": "^1.168.32",

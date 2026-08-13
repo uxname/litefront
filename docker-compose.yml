@@ -1,5 +1,13 @@
 services:
   app:
+    # Stable, registry-ready name for local builds; set IMAGE_REGISTRY/IMAGE_TAG
+    # to retag for a registry.
+    image: "${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}"
+    # VITE_* values are baked into the bundle at build time, so the image must
+    # always match THIS checkout's .env — always rebuild instead of reusing
+    # whatever the tag points at (a stale/other-environment bundle). Running a
+    # pulled prebuilt image instead: `docker compose up -d --no-build`.
+    pull_policy: build
     build:
       context: .
     restart: unless-stopped
@@ -12,8 +20,13 @@ services:
           memory: 512M
     env_file:
       - .env
+    # The container always listens on 3000; PORT in .env only selects the HOST
+    # port via the "${PORT:-3000}:3000" mapping (environment overrides env_file).
+    environment:
+      PORT: 3000
+    # Published on loopback only — a host reverse proxy terminates TLS.
     ports:
-      - "${PORT:-3000}:3000"
+      - "127.0.0.1:${PORT:-3000}:3000"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
       interval: 30s

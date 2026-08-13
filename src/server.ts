@@ -1,3 +1,4 @@
+import { captureServerException } from "@shared/lib/sentry/server";
 import type { Register } from "@tanstack/react-router";
 import {
   createStartHandler,
@@ -29,8 +30,10 @@ const fetch: RequestHandler<Register> = (request, opts) =>
       } catch (error) {
         // A rejected SSR render would otherwise propagate to Nitro with no
         // app-level fallback (and lose the Set-Cookie below). Return a minimal
-        // 500 so the server stays responsive.
+        // 500 so the server stays responsive. The console line only reaches the
+        // container log, so the error is also sent to Sentry (no-op without a DSN).
         console.error("SSR render failed", error);
+        await captureServerException(error);
         return new Response("Internal Server Error", {
           status: 500,
           headers: { "Content-Type": "text/plain; charset=utf-8" },
