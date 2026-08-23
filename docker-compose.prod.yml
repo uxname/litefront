@@ -17,10 +17,11 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
-    env_file:
-      - .env
-    # The container always listens on 3000; PORT in .env only selects the HOST
-    # port via the "${PORT:-3000}:3000" mapping (environment overrides env_file).
+    # NO env_file on purpose: VITE_* are baked into the bundle at build time
+    # and the Nitro server reads nothing at runtime except PORT (pinned below),
+    # so the image runs WITHOUT any .env and build-time secrets never ride
+    # into the container. An optional project-dir .env (or exported shell vars)
+    # still feeds the ${PORT:-3000}/${IMAGE_*} interpolations below.
     environment:
       PORT: 3000
     # Published on loopback only — a host reverse proxy terminates TLS.
