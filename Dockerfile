@@ -43,9 +43,10 @@ EXPOSE 3000
 
 # Liveness probe baked into the image (also present in docker-compose) so the
 # container reports health under any orchestrator. busybox wget ships with the
-# alpine base.
+# alpine base. Probes the static /health.txt — same Node process, but no SSR
+# page render per probe (a full render every interval is needless load).
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD wget --spider -q http://localhost:3000/ || exit 1
+  CMD wget --spider -q http://localhost:3000/health.txt || exit 1
 
 # Start the Node SSR server (same entry as `npm run start:prod`).
 CMD ["node", ".output/server/index.mjs"]
