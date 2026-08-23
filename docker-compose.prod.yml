@@ -1,0 +1,48 @@
+# Production compose — a deploy artifact, deliberately NO build: block. Pulls
+# <IMAGE_REGISTRY>litefront:<IMAGE_TAG> from the registry; a failed pull fails
+# the deploy instead of silently rebuilding from whatever source sits on the
+# host. One image = one environment: VITE_* values are baked into the bundle at
+# BUILD time, so the tag must point at an image built with THIS environment's
+# .env (e.g. IMAGE_TAG=prod-v1.2.0) — never share a tag across environments.
+# Local dev / building on this host uses docker-compose.yml instead. Full
+# deploy guide: the meta repo's docs/DEPLOY.md.
+
+services:
+  app:
+    image: "${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}"
+    restart: unless-stopped
+    # Cap resources so a leak in the SSR process can't exhaust the host.
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 512M
+    env_file:
+      - .env
+    # The container always listens on 3000; PORT in .env only selects the HOST
+    # port via the "${PORT:-3000}:3000" mapping (environment overrides env_file).
+    environment:
+      PORT: 3000
+    # Published on loopback only — a host reverse proxy terminates TLS.
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"
+    # Dokploy/Traefik variant: drop the "ports:" block above and join the
+    # external proxy network instead (declare it at the bottom too):
+    # networks:
+    #   - dokploy-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+# Dokploy/Traefik variant (see the app service's networks comment):
+# networks:
+#   dokploy-network:
+#     external: true

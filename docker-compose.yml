@@ -5,8 +5,8 @@ services:
     image: "${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}"
     # VITE_* values are baked into the bundle at build time, so the image must
     # always match THIS checkout's .env — always rebuild instead of reusing
-    # whatever the tag points at (a stale/other-environment bundle). Running a
-    # pulled prebuilt image instead: `docker compose up -d --no-build`.
+    # whatever the tag points at (a stale/other-environment bundle). To run a
+    # pulled prebuilt image instead, use docker-compose.prod.yml.
     pull_policy: build
     build:
       context: .
