@@ -11,7 +11,7 @@
     "start:prod": "node .output/server/index.mjs",
     "docker:build": "docker build -t \"${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}\" .",
     "docker:push": "if [ -z \"$IMAGE_REGISTRY\" ]; then echo 'set IMAGE_REGISTRY (e.g. ghcr.io/acme/) before pushing' >&2; exit 1; fi; docker push \"${IMAGE_REGISTRY}litefront:${IMAGE_TAG:-latest}\"",
-    "compose:check": "docker compose -f docker-compose.prod.yml config -q",
+    "compose:check": "if command -v docker >/dev/null 2>&1; then docker compose -f docker-compose.prod.yml config -q; else echo 'docker not installed — skipping compose check'; fi",
     "____________________TESTING___________________________________________": "",
     "test:dev": "vitest",
     "test:prod": "vitest run",
