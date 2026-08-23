@@ -27,12 +27,8 @@ services:
     # Published on loopback only — a host reverse proxy terminates TLS.
     ports:
       - "127.0.0.1:${PORT:-3000}:3000"
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 5s
+    # No healthcheck here on purpose: the app's HEALTHCHECK lives in the
+    # Dockerfile — one source of truth, honored by any orchestrator.
     logging:
       driver: "json-file"
       options:
