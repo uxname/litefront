@@ -5,5 +5,5 @@ import { expect, test } from "@playwright/test";
 test("health asset responds ok", async ({ request }) => {
   const res = await request.get("/health.txt");
   expect(res.status()).toBe(200);
-  expect(await res.text()).toBe("ok");
+  expect((await res.text()).trim()).toBe("ok");
 });
