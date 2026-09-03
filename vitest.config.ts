@@ -34,9 +34,9 @@ export default defineConfig({
         statements: 82,
       },
       exclude: [
-        "node_modules/",
-        "src/generated/",
-        "tests/",
+        "node_modules/**",
+        "src/generated/**",
+        "tests/**",
         "**/*.d.ts",
         "**/*.config.*",
         "**/*.stories.*",

@@ -7,6 +7,10 @@ import { config } from "dotenv";
  */
 config({ quiet: true });
 
+/* The app port comes from `.env` (PORT), same value `npm run start:prod` binds.
+   Keeping both in one place stops baseURL and webServer.url drifting apart. */
+const port = Number(process.env.PORT) || 3000;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -28,7 +32,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.VITE_BASE_URL || "http://localhost:3000",
+    baseURL: process.env.VITE_BASE_URL || `http://localhost:${port}`,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -78,8 +82,12 @@ export default defineConfig({
 
   webServer: {
     command: "VITE_MOCK_AUTH=true npm run build:vite && npm run start:prod",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    url: `http://localhost:${port}`,
+    /* Never reuse. Same reasoning as `forbidOnly` above: with no CI this hook IS
+       the gate, and any unrelated process squatting on the port would silently
+       become the system under test — the whole suite then passes or fails
+       against the wrong app. */
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });
