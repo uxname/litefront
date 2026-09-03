@@ -59,10 +59,10 @@ npx playwright test tests/e2e/example.spec.ts   # one file
 npx playwright test -g "login works"            # one test by name
 ```
 
-- Specs live in `tests/e2e`; base URL is `VITE_BASE_URL` or `http://localhost:3000`.
-- Playwright starts `npm run start:prod` itself via `webServer`, and reuses an
-  already-running dev server on `:3000` when present — so output may come from the dev
-  build. Stop the dev server for a clean production capture.
+- Specs live in `tests/e2e`; base URL is `http://localhost:3100` (`E2E_PORT` to move it).
+- Playwright always builds and starts `npm run start:prod` itself via `webServer`, on
+  that dedicated port — it never reuses a running server, so the suite always measures
+  the production build, and your dev server on `:3000` can keep running.
 - **Run `npx playwright install chromium` once after cloning**, or the pre-push hook
   fails with missing browsers. A Playwright version bump needs it again.
 - E2E runs with `VITE_MOCK_AUTH=true`, so the real OIDC flow is never exercised here

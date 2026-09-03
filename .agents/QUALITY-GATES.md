@@ -49,8 +49,8 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
   put a secret in one.
 - Required for auth and data: `VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
   `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
-  `VITE_BASE_URL` drives the E2E base URL and is also used to build OIDC redirect
-  targets, so an empty value breaks sign-out and Account Center links.
+  `VITE_BASE_URL` builds the OIDC redirect targets, so an empty value breaks sign-out
+  and Account Center links. (E2E sets its own, matching the port it serves on.)
   `VITE_MOCK_AUTH=true` disables real authentication — never ship it enabled.
 - Cross-project pairs that must match the backend (audience, CORS origin, GraphQL URL)
   are documented in the meta-repo's `docs/ENV-CONTRACT.md` and checked by

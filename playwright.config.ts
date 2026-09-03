@@ -7,9 +7,12 @@ import { config } from "dotenv";
  */
 config({ quiet: true });
 
-/* The app port comes from `.env` (PORT), same value `npm run start:prod` binds.
-   Keeping both in one place stops baseURL and webServer.url drifting apart. */
-const port = Number(process.env.PORT) || 3000;
+/* E2E runs the app on a port of its own, never the dev port from `.env`. Two
+   failures come from sharing that port: whatever else is listening gets tested
+   instead of the app, or — once reuse is off — an ordinary `npm run start:dev`
+   blocks the pre-push gate. Override with E2E_PORT if 3100 is taken too. */
+const e2ePort = Number(process.env.E2E_PORT) || 3100;
+const e2eBaseURL = `http://localhost:${e2ePort}`;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -32,7 +35,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.VITE_BASE_URL || `http://localhost:${port}`,
+    baseURL: e2eBaseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -81,12 +84,13 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "VITE_MOCK_AUTH=true npm run build:vite && npm run start:prod",
-    url: `http://localhost:${port}`,
+    /* VITE_BASE_URL is baked into the bundle at build time (OIDC redirects read
+       it), so the build and the server have to agree on the E2E port. */
+    command: `VITE_MOCK_AUTH=true VITE_BASE_URL=${e2eBaseURL} npm run build:vite && PORT=${e2ePort} npm run start:prod`,
+    url: e2eBaseURL,
     /* Never reuse. Same reasoning as `forbidOnly` above: with no CI this hook IS
-       the gate, and any unrelated process squatting on the port would silently
-       become the system under test — the whole suite then passes or fails
-       against the wrong app. */
+       the gate, and a stranger on the port would silently become the system
+       under test — the suite then passes or fails against the wrong app. */
     reuseExistingServer: false,
     timeout: 120_000,
   },
