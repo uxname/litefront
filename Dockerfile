@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 # Install git for dependencies that require it
 RUN apk add --no-cache git
@@ -25,7 +25,7 @@ RUN npm run build:vite
 
 # Production stage — Node runtime serving the SSR server (replaces the previous
 # static Caddy host now that rendering happens on the server).
-FROM node:22-alpine AS runtime
+FROM node:24-alpine AS runtime
 
 WORKDIR /app
 

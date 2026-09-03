@@ -15,6 +15,15 @@ reject:
   # (reading 'some')" while generating. Unblocked when that plugin supports 17
   # (or when the client-preset replaces it).
   - graphql
-  # npm-check-updates 23 requires node ^22.22.2 || ^24.15.0 || >=26; this project
-  # builds on node:22-alpine and devs run 24.x. Unblocked on a node bump.
-  - npm-check-updates
+  # vitest 5 (and its coverage-v8 twin) break `npm run check`:
+  # @testing-library/jest-dom@7.0.1 still augments the vitest 4 `Assertion<T>`
+  # shape, so every jest-dom matcher fails to type-check. Unblocked when jest-dom
+  # ships the vitest 5 signature.
+  - vitest
+  - '@vitest/coverage-v8'
+  # vite 8.2.2 emits an SSR chunk that references `toast` without importing it —
+  # the sonner -> shared/ui/Toaster -> index.ts re-export chain loses the binding
+  # and the built server dies on boot with `ReferenceError: toast is not defined`.
+  # package.json pins ~8.1.5; this keeps `ncu -u` from undoing that pin.
+  # Unblocked when a vite 8.2.x build survives `npm run test:e2e:prod`.
+  - vite
