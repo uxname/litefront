@@ -37,6 +37,7 @@ deploy guide is the meta repo's `docs/DEPLOY.md`.
 | Styling, theming, i18n strings, TS conventions | [.agents/STYLE.md](./.agents/STYLE.md) |
 | A gate is failing, env setup, dependencies, bundle size | [.agents/QUALITY-GATES.md](./.agents/QUALITY-GATES.md) |
 | How this side pairs with the backend | meta-repo `AGENTS.md` |
+| The architecture diagram (LikeC4) | it lives in the LiteStack meta-repo (`docs/architecture/likec4/`) — update it there, never start a second model here |
 
 ## Golden rules
 
