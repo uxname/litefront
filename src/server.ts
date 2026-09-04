@@ -32,7 +32,17 @@ const fetch: RequestHandler<Register> = (request, opts) =>
         // app-level fallback (and lose the Set-Cookie below). Return a minimal
         // 500 so the server stays responsive. The console line only reaches the
         // container log, so the error is also sent to Sentry (no-op without a DSN).
-        console.error("SSR render failed", error);
+        //
+        // Method and path are on the line because they are the whole question a
+        // reader of this log has: "a 500 — on what?". Without them the container
+        // log says only that something, somewhere, failed to render. The
+        // frontend has no request id of its own; the URL is the correlation key.
+        console.error("ssr_render_failed", {
+          method: request.method,
+          // Path only: a query string can carry tokens and PII.
+          path: new URL(request.url).pathname,
+          error,
+        });
         await captureServerException(error);
         return new Response("Internal Server Error", {
           status: 500,

@@ -1,5 +1,5 @@
 import { env } from "@shared/config";
-import { captureException } from "@shared/lib/sentry";
+import { logError } from "@shared/lib/logger";
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { retryExchange } from "@urql/exchange-retry";
 import { Client, errorExchange, fetchExchange } from "urql";
@@ -23,16 +23,20 @@ export const createGraphQLClient = (accessToken?: string): Client => {
       }),
       errorExchange({
         onError: (error) => {
-          captureException(error, {
+          logError("graphql_error", error, {
             tags: { source: "graphql" },
             extra: {
               message: error.message,
-              // Send only the error messages and paths — never the full
-              // graphQLErrors objects, whose `extensions` can carry sensitive
-              // server detail.
+              // Never forward the whole `extensions` object — it can carry
+              // sensitive server detail — but do keep `requestId` and `code`.
+              // requestId is the key that joins this failure to the backend's
+              // logs (see backend/docs/DEBUGGING.md); dropping it left a
+              // user-reported error with no way back to the server side.
               graphQLErrors: error.graphQLErrors.map((e) => ({
                 message: e.message,
                 path: e.path,
+                code: e.extensions?.code,
+                requestId: e.extensions?.requestId,
               })),
               networkError: error.networkError
                 ? error.networkError.message

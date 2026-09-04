@@ -65,7 +65,8 @@ switch it to a semantic token and re-capture.
 | Auth redirect loop, or a protected page never resolves | OIDC env missing, or mock off; or a rejected `signinRedirect` that nothing catches | Set `VITE_OIDC_*`, or build with `VITE_MOCK_AUTH=true`; make sure the redirect's rejection path navigates somewhere |
 | Blank page / nothing renders | Uncaught error at boot | `npm run test:e2e:logs` → read `frontend-logs.log` for the `pageerror` + stack |
 | Browser CORS error, or subscriptions silently dead | SPA origin not in the backend's `CORS_ORIGIN` — it gates **both** CORS and the WebSocket handshake | Add `http://localhost:3000`, exactly, with no stray spaces |
-| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `SSR render failed`, and in Sentry when a DSN was baked in. Read the value in an effect or behind `typeof window === "undefined"` |
+| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `ssr_render_failed` (with the `method` and `path` that failed), and in Sentry when a DSN was baked in. Read the value in an effect or behind `typeof window === "undefined"` |
+| A user reports an error you cannot reproduce | — | Ask for the **Request** id under Details in the error screen, then filter the backend log by it (see below) |
 
 ## Quick reference
 
@@ -73,12 +74,48 @@ switch it to a semantic token and re-capture.
 - Screenshots: `npm run test:e2e:screens` → `test-results/screenshots/*.png`
 - Stories (human, interactive): `npm run storybook:serve`
 - Full quality gate: `npm run check`
+- Report every error with `logError` (`@shared/lib/logger`), never bare `captureException`.
 - Runtime errors in production go to Sentry (set `VITE_SENTRY_*`). Both sides are
   wired: the browser through `@sentry/react` (`src/shared/lib/sentry/config.ts`,
   initialised in `src/client.tsx`) and SSR through `@sentry/node`
   (`src/shared/lib/sentry/server.ts`, initialised on import by `src/server.ts`).
   With no `VITE_SENTRY_DSN` both are a no-op. The DSN is baked in at **build**
   time, so a container built without it reports nothing.
+
+## Production: what a running app tells you
+
+The harnesses above are *development* tools — they need a browser and a repo. In
+production the frontend leaves two trails, and both are opt-in-free (they work
+without Sentry):
+
+**1. The console / container log.** Every error path goes through `logError` in
+`@shared/lib/logger`, which always writes a console line **and** forwards to
+Sentry. `captureException` alone is a no-op when no DSN was baked in at build
+time, so calling it directly is how a crash ends up reported nowhere. Grep by the
+event slug, the way you would grep the backend's `msg` field:
+
+| Slug | When |
+|---|---|
+| `react_error_boundary` | a render threw and the fallback UI took over |
+| `uncaught_error` / `unhandled_rejection` | anything the window-level handlers caught |
+| `graphql_error` | a GraphQL request failed (after retries) |
+| `signin_redirect_failed` | the OIDC redirect was rejected |
+| `ssr_render_failed` | the **server** render threw; carries `method` and `path` |
+
+`ssr_render_failed` is the only one that lands in the container log rather than
+the browser (`docker compose logs -f app`). The frontend has no request id of its
+own, so its `path` is the correlation key.
+
+**2. The backend's `requestId`.** A failed GraphQL response carries
+`extensions.requestId`, and the backend stamps that same id on every log line of
+that request. It is preserved end to end: `errorExchange` keeps it in the Sentry
+report, and `ErrorFallback` shows it to the user under **Details → Request** (the
+copy button includes it). That id is what turns a screenshot into an
+investigation — hand it to `backend/docs/DEBUGGING.md`:
+
+```sh
+docker compose logs --no-log-prefix app | jq -c 'select(.request_id=="<ID>")'
+```
 
 ## Going to production: deeper visual checks (not built in)
 

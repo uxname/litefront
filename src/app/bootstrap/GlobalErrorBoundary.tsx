@@ -1,4 +1,4 @@
-import { captureException } from "@shared/lib/sentry";
+import { logError } from "@shared/lib/logger";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
 import { type ReactNode, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -6,11 +6,11 @@ import { ErrorBoundary } from "react-error-boundary";
 export const GlobalErrorBoundary = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const handleRejection = (event: PromiseRejectionEvent) => {
-      captureException(event.reason);
+      logError("unhandled_rejection", event.reason);
     };
 
     const handleError = (event: ErrorEvent) => {
-      captureException(event.error || event.message);
+      logError("uncaught_error", event.error || event.message);
     };
 
     window.addEventListener("unhandledrejection", handleRejection);
@@ -23,6 +23,13 @@ export const GlobalErrorBoundary = ({ children }: { children: ReactNode }) => {
 
   return (
     <ErrorBoundary
+      // A React render error is caught here and never reaches window.onerror,
+      // so without this hook it was reported nowhere at all.
+      onError={(error, info) =>
+        logError("react_error_boundary", error, {
+          extra: { componentStack: info.componentStack },
+        })
+      }
       FallbackComponent={({ error, resetErrorBoundary }) => (
         <ErrorFallback
           error={error}

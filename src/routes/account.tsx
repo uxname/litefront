@@ -1,7 +1,7 @@
 import { useAuth } from "@features/auth";
 import { m } from "@generated/paraglide/messages";
 import { AccountPage } from "@pages/account";
-import { captureException } from "@shared/lib/sentry";
+import { logError } from "@shared/lib/logger";
 import { PageLoader } from "@shared/ui/PageLoader";
 import { toast } from "@shared/ui/Toaster";
 import { createFileRoute } from "@tanstack/react-router";
@@ -47,7 +47,9 @@ const AccountRoute = () => {
       } catch (error) {
         // The IdP being unreachable must not strand the user on the loader
         // forever: report it and fall back to a page they can actually use.
-        captureException(error, { tags: { flow: "account-signin-redirect" } });
+        logError("signin_redirect_failed", error, {
+          tags: { flow: "account-signin-redirect" },
+        });
         if (!cancelled) {
           toast.error(m.error_unexpected());
           void navigate({ to: "/" });

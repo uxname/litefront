@@ -36,11 +36,21 @@ describe("SSR request handler", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    const response = await server.fetch(new Request("http://localhost/"));
+    const response = await server.fetch(
+      new Request("http://localhost/account?token=secret", {
+        method: "POST",
+      }),
+    );
 
     expect(response.status).toBe(500);
     expect(captureServerException).toHaveBeenCalledWith(error);
-    expect(consoleError).toHaveBeenCalled();
+    // The container log must say *what* failed: a bare "render failed" line
+    // leaves an operator with a 500 and no route.
+    expect(consoleError).toHaveBeenCalledWith("ssr_render_failed", {
+      method: "POST",
+      path: "/account",
+      error,
+    });
     consoleError.mockRestore();
   });
 

@@ -19,6 +19,7 @@ import {
 } from "react";
 import { detectErrorCategory } from "./detectErrorCategory";
 import { ERROR_CONFIG } from "./errorConfig";
+import { extractRequestId } from "./extractRequestId";
 import { normalizeError } from "./normalizeError";
 
 interface ErrorFallbackProps {
@@ -52,6 +53,9 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   );
 
   const normalizedError = useMemo(() => normalizeError(error), [error]);
+  // The backend stamps this id on every log line of the failed request, so it is
+  // what turns a user's screenshot into something the server logs can answer.
+  const requestId = useMemo(() => extractRequestId(error), [error]);
   const category = useMemo(
     () => detectErrorCategory(normalizedError),
     [normalizedError],
@@ -86,6 +90,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
       const debugInfo = [
         `Error: ${normalizedError.name}: ${normalizedError.message}`,
         `Location: ${window.location.href}`,
+        ...(requestId ? [`Request ID: ${requestId}`] : []),
         `Time: ${new Date().toISOString()}`,
         `Stack:`,
         normalizedError.stack,
@@ -99,7 +104,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
         console.error("Failed to copy", err);
       }
     }
-  }, [normalizedError]);
+  }, [normalizedError, requestId]);
 
   const IconComponent = config.icon;
 
@@ -169,6 +174,16 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
                   {pathname}
                 </span>
               </div>
+
+              {requestId && (
+                <div className="mb-3 flex items-center gap-2 text-xs text-base-content/70 font-mono">
+                  <ArrowRight className="h-3 w-3" />
+                  Request:{" "}
+                  <span className="text-base-content bg-base-300 px-1.5 py-0.5 rounded break-all">
+                    {requestId}
+                  </span>
+                </div>
+              )}
 
               <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/70 shadow-sm overflow-hidden">
                 <button

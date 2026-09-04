@@ -71,3 +71,7 @@ deploy guide is the meta repo's `docs/DEPLOY.md`.
   false sourcemap errors without it.
 - Don't put page logic in `src/routes/*`; those files are route definitions, and that
   directory is the one place Steiger cannot check.
+- Don't report an error through `captureException` alone — call `logError` from
+  `@shared/lib/logger`. Sentry's DSN is baked in at build time, so without one
+  `captureException` is a no-op and the failure disappears without a trace. See
+  [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md#production-what-a-running-app-tells-you).
