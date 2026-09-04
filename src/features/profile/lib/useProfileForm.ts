@@ -4,6 +4,7 @@ import {
 } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { logError } from "@shared/lib/logger";
 import { toast } from "@shared/ui/Toaster";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -71,7 +72,10 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     try {
       const url = await uploadAvatar(file, accessToken);
       setValue("avatarUrl", url, { shouldDirty: true, shouldValidate: true });
-    } catch {
+    } catch (error) {
+      // The upload is a plain fetch, not a urql operation, so nothing else
+      // reports it — without this the user got a toast and the log got nothing.
+      logError("avatar_upload_failed", error);
       toast.error(m.profile_avatar_upload_error());
     } finally {
       setUploading(false);

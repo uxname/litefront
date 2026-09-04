@@ -100,6 +100,8 @@ event slug, the way you would grep the backend's `msg` field:
 | `uncaught_error` / `unhandled_rejection` | anything the window-level handlers caught |
 | `graphql_error` | a GraphQL request failed (after retries) |
 | `signin_redirect_failed` | the OIDC redirect was rejected |
+| `auth_error` / `auth_silent_renew_failed` | `react-oidc-context` reported a failure — it never throws, so nothing else sees these |
+| `avatar_upload_failed` | the avatar upload (a plain fetch, not urql) failed |
 | `ssr_render_failed` | the **server** render threw; carries `method` and `path` |
 
 `ssr_render_failed` is the only one that lands in the container log rather than

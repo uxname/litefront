@@ -1,8 +1,9 @@
 import { Client } from "urql";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Sentry is a side-effecting dependency (network/transport). The error
-// exchange only references captureException, so a no-op spy is enough.
+// Sentry is a side-effecting dependency (network/transport). The error exchange
+// reports through `logError`, whose only side-effecting dependency is
+// captureException, so a no-op spy is enough.
 vi.mock("@shared/lib/sentry", () => ({
   captureException: vi.fn(),
 }));

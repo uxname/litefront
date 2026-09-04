@@ -4,7 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthObserver } from "./AuthObserver";
 
 // Sentry is a thin re-export of the SDK; a no-op spy is enough to assert the
-// observability wiring without pulling in the real client.
+// observability wiring without pulling in the real client. `logError` reports
+// through it, so spying here covers both the console line and the Sentry copy.
 const { setUser, captureException } = vi.hoisted(() => ({
   setUser: vi.fn(),
   captureException: vi.fn(),
@@ -54,14 +55,23 @@ describe("AuthObserver", () => {
     expect(setUser).toHaveBeenCalledWith(null);
   });
 
-  it("reports an OIDC error to Sentry", () => {
+  // react-oidc-context never throws these, so the global boundary cannot see
+  // them: this component is the only thing that reports them at all.
+  it("reports an OIDC error", () => {
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
     const error = new Error("oidc boom");
     mockedUseAuth.mockReturnValue({ ...baseAuth, error } as never);
+
     render(<AuthObserver />);
-    expect(captureException).toHaveBeenCalledWith(error);
+
+    expect(consoleError).toHaveBeenCalledWith("auth_error", {}, error);
+    expect(captureException).toHaveBeenCalledWith(error, undefined);
+    consoleError.mockRestore();
   });
 
-  it("subscribes to silent-renew errors and forwards them to Sentry", () => {
+  it("subscribes to silent-renew errors and reports them", () => {
     let registered: ((e: Error) => void) | undefined;
     const addSilentRenewError = vi.fn((cb: (e: Error) => void) => {
       registered = cb;
@@ -75,9 +85,18 @@ describe("AuthObserver", () => {
     const { unmount } = render(<AuthObserver />);
     expect(addSilentRenewError).toHaveBeenCalledOnce();
 
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
     const renewError = new Error("renew failed");
     registered?.(renewError);
-    expect(captureException).toHaveBeenCalledWith(renewError);
+    expect(consoleError).toHaveBeenCalledWith(
+      "auth_silent_renew_failed",
+      {},
+      renewError,
+    );
+    expect(captureException).toHaveBeenCalledWith(renewError, undefined);
+    consoleError.mockRestore();
 
     unmount();
     expect(removeSilentRenewError).toHaveBeenCalledOnce();

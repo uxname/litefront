@@ -1,14 +1,17 @@
 import { useAuth } from "@features/auth";
-import { captureException, setUser } from "@shared/lib/sentry";
+import { logError } from "@shared/lib/logger";
+import { setUser } from "@shared/lib/sentry";
 import { type FC, useEffect } from "react";
 
 /**
- * Headless, client-only observability bridge between the auth layer and Sentry.
+ * Headless, client-only observability bridge between the auth layer and the
+ * error sink.
  *
  * `react-oidc-context` surfaces auth failures through the hook's `error`
  * property and through `events` (silent-renew errors) — NOT by throwing — so the
  * window-level {@link GlobalErrorBoundary} never sees them. This component wires
- * those signals into Sentry and keeps the Sentry user identity in sync.
+ * those signals into `logError` (console always, Sentry when a DSN was baked in)
+ * and keeps the Sentry user identity in sync.
  *
  * Mounted inside `AuthBoundary` (so `useAuth()` is available). On the server the
  * {@link NeutralAuthProvider} makes every branch a safe no-op (`user`/`error` are
@@ -23,14 +26,14 @@ export const AuthObserver: FC = () => {
 
   useEffect(() => {
     if (auth.error) {
-      captureException(auth.error);
+      logError("auth_error", auth.error);
     }
   }, [auth.error]);
 
   useEffect(() => {
     if (!auth.events?.addSilentRenewError) return;
     const handler = (error: Error) => {
-      captureException(error);
+      logError("auth_silent_renew_failed", error);
     };
     auth.events.addSilentRenewError(handler);
     return () => {
