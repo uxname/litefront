@@ -35,7 +35,14 @@ npx vitest -t "should do X"                      # one test by name
 
 Notes that have bitten before:
 
-- Tests read the developer's real `.env` — `tests/setup.ts`'s
+- **The suite needs the five required `VITE_*` values to exist.** Nine files import
+  `shared/config`, which validates at import time, so with none of them set the run
+  ends in `Invalid environment variables: VITE_OIDC_AUTHORITY is required, …` and
+  those files report `(0 test)` — a message that looks like a broken import, not a
+  missing variable. Vitest loads `.env` itself, and exported variables work just as
+  well (`.env` is optional everywhere — see the meta repo's `docs/ENV-CONTRACT.md`),
+  but *something* has to supply them.
+- Tests read the developer's real environment — `tests/setup.ts`'s
   `vi.stubGlobal("import.meta", …)` does not take effect. Don't write a test whose
   expected value is computed from the same env var as the code under test: it passes
   no matter what the code does.

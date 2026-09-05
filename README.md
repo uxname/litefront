@@ -82,7 +82,7 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 
 ## Configuration
 
-The application requires the following environment variables to be set in `.env` for the OIDC authentication to work correctly.
+The application requires the following environment variables for the OIDC authentication to work correctly. Set them however you like — a `.env` file is one way, exported variables are another; the server reads them from its environment when it boots.
 
 | Variable                 | Description                                                  | Example                                         |
 |:-------------------------|:-------------------------------------------------------------|:------------------------------------------------|
