@@ -11,14 +11,14 @@ don't read them all.
 
 ```bash
 npm install                # postinstall installs the git hooks
-cp .env.example .env       # nothing creates this for you
+cp .env.example .env       # nothing creates it; exported env vars work instead
 npm run start:dev          # Vite dev server with SSR + HMR
 npm run check              # the full quality gate — use this, always
 ```
 
 `npm run gen` regenerates the GraphQL types from the **live** schema, so it needs
-`VITE_GRAPHQL_API_URL` in the environment (that is what `.env` is for) and the
-backend reachable at it. Unset, the address becomes the string `undefined` and the
+`VITE_GRAPHQL_API_URL` in the environment (`.env` is one way to put it there, an
+exported variable is another) and the backend reachable at it. Unset, the address becomes the string `undefined` and the
 error reads `Failed to load schema from undefined` — it never says "variable".
 
 Build & run: `npm run build:vite` → `.output/` (Nitro Node server +

@@ -14,7 +14,7 @@
     "start:prod": "node .output/server/index.mjs",
     "docker:build": "docker build -t \"${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}\" .",
     "docker:push": "if [ -z \"$IMAGE_REGISTRY\" ]; then echo 'set IMAGE_REGISTRY (e.g. ghcr.io/acme/) before pushing' >&2; exit 1; fi; docker push \"${IMAGE_REGISTRY}litefront:${IMAGE_TAG:-latest}\"",
-    "compose:check": "if ! command -v docker >/dev/null 2>&1; then echo 'docker not installed — skipping compose check'; else env VITE_OIDC_AUTHORITY=dummy VITE_OIDC_CLIENT_ID=dummy VITE_OIDC_REDIRECT_URI=dummy VITE_OIDC_SCOPE=dummy VITE_GRAPHQL_API_URL=dummy docker compose -f docker-compose.prod.yml config -q && { if [ -f .env ]; then docker compose -f docker-compose.yml config -q; else echo 'no .env — skipping dev-compose validation (requires .env by design)'; fi; }; fi",
+    "compose:check": "if ! command -v docker >/dev/null 2>&1; then echo 'docker not installed — skipping compose check'; else env VITE_OIDC_AUTHORITY=dummy VITE_OIDC_CLIENT_ID=dummy VITE_OIDC_REDIRECT_URI=dummy VITE_OIDC_SCOPE=dummy VITE_GRAPHQL_API_URL=dummy docker compose -f docker-compose.prod.yml config -q && env VITE_OIDC_AUTHORITY=dummy VITE_OIDC_CLIENT_ID=dummy VITE_OIDC_REDIRECT_URI=dummy VITE_OIDC_SCOPE=dummy VITE_GRAPHQL_API_URL=dummy docker compose -f docker-compose.yml config -q; fi",
     "____________________TESTING___________________________________________": "",
     "test:dev": "vitest",
     "test:prod": "vitest run",

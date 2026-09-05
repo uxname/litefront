@@ -43,10 +43,11 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 
 ## Environment
 
-- Copy `.env.example` → `.env` before running anything; nothing creates it for you.
-  `vite.config.ts` loads `.env` into `process.env` (`configDotenv`), and that is where
-  the config module reads it from — a container has no `.env` and supplies the variables
-  itself.
+- Configure before running anything: copy `.env.example` → `.env`, or export the same
+  variables. `.env` is optional — `vite.config.ts` loads it into `process.env`
+  (`configDotenv`) **without overriding** anything already exported, and the config module
+  reads `process.env`, so both routes end in the same place. A container has no `.env` and
+  supplies the variables itself.
 - The public `VITE_*` values are read from the environment when the **server boots** and
   are shipped to the browser in the SSR HTML, so every one of them is public — never put
   a secret in one. The list that reaches the browser is the `runtimeShape` literal in

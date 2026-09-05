@@ -7,8 +7,8 @@ services:
     # of starting whatever the tag currently points at (someone else's commit).
     # The image itself is environment-agnostic — the public VITE_* values are
     # read from the container's environment at boot, not baked in — so nothing
-    # here is bound to this .env. To run a pulled prebuilt image, use
-    # docker-compose.prod.yml.
+    # here is bound to one machine's configuration. To run a pulled prebuilt
+    # image, use docker-compose.prod.yml.
     pull_policy: build
     build:
       context: .
@@ -20,14 +20,32 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
-    # Dev convenience: the whole .env goes in, so the runtime config (VITE_OIDC_*,
-    # VITE_GRAPHQL_API_URL, …) is the same one `npm run start:dev` uses. The prod
-    # compose lists the keys explicitly instead — see the comment there.
+    # Config reaches the container two ways — pick per machine:
+    #   1. a .env NEXT TO THIS FILE (the usual local flow): loaded when present;
+    #   2. plain exported environment variables (no-.env machines): the explicit
+    #      mappings below pick them up via interpolation.
+    # Interpolation reads shell vars first, then the project-dir .env, so both
+    # sources feed the same ${VAR}; but only the keys listed here enter the
+    # container, so the build-time secret that may sit in that .env
+    # (VITE_SENTRY_AUTH_TOKEN) never rides along. Same list, same ":?" guards as
+    # docker-compose.prod.yml — src/shared/config/env.ts is the source of truth.
     env_file:
-      - .env
-    # The container always listens on 3000; PORT in .env only selects the HOST
-    # port via the "${PORT:-3000}:3000" mapping (environment overrides env_file).
+      - path: .env
+        required: false
     environment:
+      # Required — the app cannot authenticate or reach the API without them.
+      VITE_OIDC_AUTHORITY: ${VITE_OIDC_AUTHORITY:?set VITE_OIDC_AUTHORITY (OIDC issuer URL)}
+      VITE_OIDC_CLIENT_ID: ${VITE_OIDC_CLIENT_ID:?set VITE_OIDC_CLIENT_ID}
+      VITE_OIDC_REDIRECT_URI: ${VITE_OIDC_REDIRECT_URI:?set VITE_OIDC_REDIRECT_URI (this environment's /callback URL)}
+      VITE_OIDC_SCOPE: ${VITE_OIDC_SCOPE:?set VITE_OIDC_SCOPE (e.g. "openid profile offline_access")}
+      VITE_GRAPHQL_API_URL: ${VITE_GRAPHQL_API_URL:?set VITE_GRAPHQL_API_URL (backend /graphql endpoint)}
+      # Optional — empty is a valid, working configuration.
+      VITE_OIDC_API_RESOURCE: ${VITE_OIDC_API_RESOURCE:-}
+      VITE_BASE_URL: ${VITE_BASE_URL:-}
+      VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
+      VITE_APP_VERSION: ${VITE_APP_VERSION:-}
+      # The container always listens on 3000; PORT only selects the HOST port
+      # via the "${PORT:-3000}:3000" mapping below.
       PORT: 3000
     # Published on loopback only — a host reverse proxy terminates TLS.
     ports:
