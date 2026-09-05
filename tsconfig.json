@@ -28,9 +28,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "tests"],
-  "exclude": [
-    "src/app/vite-dotenv-checker.plugin.ts",
-    "src/app/strip-dangling-sourcemaps.plugin.ts"
-  ],
+  "exclude": ["src/app/strip-dangling-sourcemaps.plugin.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

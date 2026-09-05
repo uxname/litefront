@@ -20,7 +20,6 @@
   "ignore": [
     "src/generated/**",
     "src/vite-env.d.ts",
-    "src/app/vite-dotenv-checker.plugin.ts",
     "src/app/strip-dangling-sourcemaps.plugin.ts",
     "src/shared/config/**",
     "src/shared/lib/sentry/**"

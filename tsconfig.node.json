@@ -9,7 +9,6 @@
   "include": [
     "vite.config.ts",
     "vitest.config.ts",
-    "src/app/vite-dotenv-checker.plugin.ts",
     "src/app/strip-dangling-sourcemaps.plugin.ts"
   ]
 }
