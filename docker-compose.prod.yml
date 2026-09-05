@@ -44,9 +44,17 @@ services:
     # No published host port on purpose: every replica would fight for the same
     # one, so `docker compose up --scale app=N` could never start a second copy.
     # The reverse proxy reaches port 3000 over the shared external network below
-    # and load-balances across the replicas by service name.
+    # and load-balances across the replicas by name.
+    #
+    # That name is `litefront`, not the service's own `app`: the backend's prod
+    # compose also names its service `app`, so on ONE shared proxy network the
+    # bare `app` resolves to BOTH sides and a proxy asking for `app:3000` can be
+    # handed the backend container. The alias is per-side and unambiguous, while
+    # still returning every replica of THIS side under `--scale app=N`.
     networks:
-      - proxy
+      proxy:
+        aliases:
+          - litefront
     # No healthcheck here on purpose: the app's HEALTHCHECK lives in the
     # Dockerfile — one source of truth, honored by any orchestrator.
     logging:
