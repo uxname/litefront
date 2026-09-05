@@ -1,8 +1,13 @@
 .git
-# NOTE: .env is intentionally NOT ignored. Vite inlines `import.meta.env.VITE_*`
-# at BUILD time, so the build stage needs .env present. The VITE_* vars are
-# public (they ship to the browser anyway), and the multi-stage runtime image
-# copies only .output — .env never reaches the final image.
+# The image carries no environment: the public VITE_* values are read from the
+# container's environment at BOOT (src/shared/config/env.ts), not inlined by
+# Vite at build time, so the build has no reason to see a .env — and keeping it
+# out of the context is what makes one image runnable in any environment.
+# .env.example is the exception: it is the committed key list with sample values
+# only, so a build step that wants to read it still can.
+.env
+.env.*
+!.env.example
 node_modules/
 dist/
 .output/
@@ -11,7 +16,7 @@ dist/
 storybook-build/
 .idea
 .vscode
-docker-compose.yml
+docker-compose*.yml
 Dockerfile
 dev-dist/
 coverage/

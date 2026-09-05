@@ -21,6 +21,12 @@ ENV NODE_ENV=production
 
 # Build the SSR app. TanStack Start + the Nitro node-server preset emit a
 # standalone server bundle under .output (server + public assets).
+#
+# Deliberately NO VITE_* build args or ENV here, and no .env in the context (see
+# .dockerignore): the public config is read from the container's environment at
+# BOOT (src/shared/config/env.ts), so the bundle holds no authority, client id
+# or API URL. One built image runs in every environment — the tag says which
+# code, never which server.
 RUN npm run build:vite
 
 # Production stage — Node runtime serving the SSR server (replaces the previous
@@ -30,7 +36,13 @@ FROM node:24-alpine AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production
+# The container ALWAYS listens on 3000; the compose files map or proxy to it.
 ENV PORT=3000
+
+# The runtime environment is the whole configuration of this image: the server
+# refuses to boot (naming the variable) when a required one is unset. The list
+# lives in src/shared/config/env.ts and is passed by docker-compose.prod.yml —
+# not repeated here, so it cannot drift.
 
 # The Nitro output is fully self-contained (bundled deps + public assets), so we
 # copy only .output — no node_modules needed at runtime.

@@ -1,9 +1,10 @@
 # Production compose — a deploy artifact, deliberately NO build: block. Pulls
 # <IMAGE_REGISTRY>litefront:<IMAGE_TAG> from the registry; a failed pull fails
 # the deploy instead of silently rebuilding from whatever source sits on the
-# host. One image = one environment: VITE_* values are baked into the bundle at
-# BUILD time, so the tag must point at an image built with THIS environment's
-# .env (e.g. IMAGE_TAG=prod-v1.2.0) — never share a tag across environments.
+# host. ONE image runs in EVERY environment: the public VITE_* values are read
+# from the container's environment when the server boots (see
+# src/shared/config/env.ts), not baked into the bundle, so a tag names the code
+# and nothing else — the same tag is meant to be shared across environments.
 # Local dev / building on this host uses docker-compose.yml instead. Full
 # deploy guide: the meta repo's docs/DEPLOY.md.
 
@@ -17,20 +18,35 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
-    # NO env_file on purpose: VITE_* are baked into the bundle at build time
-    # and the Nitro server reads nothing at runtime except PORT (pinned below),
-    # so the image runs WITHOUT any .env and build-time secrets never ride
-    # into the container. An optional project-dir .env (or exported shell vars)
-    # still feeds the ${PORT:-3000}/${IMAGE_*} interpolations below.
+    # Config reaches the container through these explicit mappings only — no
+    # env_file on purpose. Interpolation reads exported shell vars first, then a
+    # .env NEXT TO THIS FILE, so both single-machine and no-.env hosts feed the
+    # same ${VAR}; but only the keys listed here enter the container, so a
+    # build-time secret sitting in that .env (VITE_SENTRY_AUTH_TOKEN) never
+    # rides along. The five required values use ":?" so a half-configured host
+    # fails at `docker compose config` — before deploy — naming the variable,
+    # instead of crash-looping the container at boot. Keep this list in sync
+    # with src/shared/config/env.ts, which is the source of truth.
     environment:
+      # Required — the app cannot authenticate or reach the API without them.
+      VITE_OIDC_AUTHORITY: ${VITE_OIDC_AUTHORITY:?set VITE_OIDC_AUTHORITY (OIDC issuer URL)}
+      VITE_OIDC_CLIENT_ID: ${VITE_OIDC_CLIENT_ID:?set VITE_OIDC_CLIENT_ID}
+      VITE_OIDC_REDIRECT_URI: ${VITE_OIDC_REDIRECT_URI:?set VITE_OIDC_REDIRECT_URI (this environment's /callback URL)}
+      VITE_OIDC_SCOPE: ${VITE_OIDC_SCOPE:?set VITE_OIDC_SCOPE (e.g. "openid profile offline_access")}
+      VITE_GRAPHQL_API_URL: ${VITE_GRAPHQL_API_URL:?set VITE_GRAPHQL_API_URL (backend /graphql endpoint)}
+      # Optional — empty is a valid, working configuration.
+      VITE_OIDC_API_RESOURCE: ${VITE_OIDC_API_RESOURCE:-}
+      VITE_BASE_URL: ${VITE_BASE_URL:-}
+      VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
+      VITE_APP_VERSION: ${VITE_APP_VERSION:-}
+      # The container ALWAYS listens on 3000 (mirrors the backend prod compose).
       PORT: 3000
-    # Published on loopback only — a host reverse proxy terminates TLS.
-    ports:
-      - "127.0.0.1:${PORT:-3000}:3000"
-    # Dokploy/Traefik variant: drop the "ports:" block above and join the
-    # external proxy network instead (declare it at the bottom too):
-    # networks:
-    #   - dokploy-network
+    # No published host port on purpose: every replica would fight for the same
+    # one, so `docker compose up --scale app=N` could never start a second copy.
+    # The reverse proxy reaches port 3000 over the shared external network below
+    # and load-balances across the replicas by service name.
+    networks:
+      - proxy
     # No healthcheck here on purpose: the app's HEALTHCHECK lives in the
     # Dockerfile — one source of truth, honored by any orchestrator.
     logging:
@@ -39,7 +55,11 @@ services:
         max-size: "50m"
         max-file: "5"
 
-# Dokploy/Traefik variant (see the app service's networks comment):
-# networks:
-#   dokploy-network:
-#     external: true
+# The proxy network is created and joined by the reverse proxy (Caddy, Traefik,
+# Dokploy's dokploy-network, …), not by this file — hence external. Its NAME is
+# a variable so nothing here is tied to one hosting product; set PROXY_NETWORK
+# to whatever the proxy on this host uses.
+networks:
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-dokploy-network}

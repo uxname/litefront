@@ -3,10 +3,12 @@ services:
     # Stable, registry-ready name for local builds; set IMAGE_REGISTRY/IMAGE_TAG
     # to retag for a registry.
     image: "${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}"
-    # VITE_* values are baked into the bundle at build time, so the image must
-    # always match THIS checkout's .env — always rebuild instead of reusing
-    # whatever the tag points at (a stale/other-environment bundle). To run a
-    # pulled prebuilt image instead, use docker-compose.prod.yml.
+    # This file exists to run THIS checkout's source, so always rebuild instead
+    # of starting whatever the tag currently points at (someone else's commit).
+    # The image itself is environment-agnostic — the public VITE_* values are
+    # read from the container's environment at boot, not baked in — so nothing
+    # here is bound to this .env. To run a pulled prebuilt image, use
+    # docker-compose.prod.yml.
     pull_policy: build
     build:
       context: .
@@ -18,6 +20,9 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
+    # Dev convenience: the whole .env goes in, so the runtime config (VITE_OIDC_*,
+    # VITE_GRAPHQL_API_URL, …) is the same one `npm run start:dev` uses. The prod
+    # compose lists the keys explicitly instead — see the comment there.
     env_file:
       - .env
     # The container always listens on 3000; PORT in .env only selects the HOST
