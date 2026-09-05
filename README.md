@@ -68,7 +68,7 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 ## Key Features
 
 - **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.
-- **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
+- **Protected Routes Example**: Includes a demo `/account` route that requires authentication and displays user profile data.
 - **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
 - **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
 - **Runtime Configuration**: The public `VITE_*` values are read from the environment when the server boots (`src/shared/config/env.ts`), so one built image runs in any environment. A missing required variable stops the server at startup with the variable's name, instead of breaking a page later.
