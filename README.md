@@ -71,7 +71,7 @@ This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.des
 - **Protected Routes Example**: Includes a demo `/protected` route that requires authentication and displays user profile data.
 - **🌍 Type-Safe I18n**: Built-in internationalization powered by **Paraglide JS**, offering full type safety, tree-shaking, and small bundle size.
 - **Automated Type Generation**: `npm run gen` generates TypeScript types from your GraphQL schema.
-- **Environment Consistency**: Custom Vite plugin ensures `.env` and `.env.example` are always in sync.
+- **Runtime Configuration**: The public `VITE_*` values are read from the environment when the server boots (`src/shared/config/env.ts`), so one built image runs in any environment. A missing required variable stops the server at startup with the variable's name, instead of breaking a page later.
 - **Server-Side Rendering**: Public pages are server-rendered via **TanStack Start** (Nitro `node-server`) for fast first paint and SEO; auth-only routes opt out with `ssr: false`.
 - **Production-Optimized**: Multi-stage Dockerfile producing a small, self-contained Node SSR image (`.output`).
 - **Image Optimization**: Automatic image optimization at build time with `vite-plugin-image-optimizer`.

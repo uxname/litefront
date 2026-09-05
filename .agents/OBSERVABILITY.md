@@ -65,7 +65,7 @@ switch it to a semantic token and re-capture.
 | Auth redirect loop, or a protected page never resolves | OIDC env missing, or mock off; or a rejected `signinRedirect` that nothing catches | Set `VITE_OIDC_*`, or build with `VITE_MOCK_AUTH=true`; make sure the redirect's rejection path navigates somewhere |
 | Blank page / nothing renders | Uncaught error at boot | `npm run test:e2e:logs` → read `frontend-logs.log` for the `pageerror` + stack |
 | Browser CORS error, or subscriptions silently dead | SPA origin not in the backend's `CORS_ORIGIN` — it gates **both** CORS and the WebSocket handshake | Add `http://localhost:3000`, exactly, with no stray spaces |
-| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `ssr_render_failed` (with the `method` and `path` that failed), and in Sentry when a DSN was baked in. Read the value in an effect or behind `typeof window === "undefined"` |
+| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `ssr_render_failed` (with the `method` and `path` that failed), and in Sentry when the container was started with a `VITE_SENTRY_DSN`. Read the value in an effect or behind `typeof window === "undefined"` |
 | A user reports an error you cannot reproduce | — | Ask for the **Request** id under Details in the error screen, then filter the backend log by it (see below) |
 
 ## Quick reference
@@ -79,8 +79,10 @@ switch it to a semantic token and re-capture.
   wired: the browser through `@sentry/react` (`src/shared/lib/sentry/config.ts`,
   initialised in `src/client.tsx`) and SSR through `@sentry/node`
   (`src/shared/lib/sentry/server.ts`, initialised on import by `src/server.ts`).
-  With no `VITE_SENTRY_DSN` both are a no-op. The DSN is baked in at **build**
-  time, so a container built without it reports nothing.
+  With no `VITE_SENTRY_DSN` both are a no-op. The DSN is read from the
+  container's environment when the server **boots**, so a container started
+  without it reports nothing — turning reporting on is a restart with the
+  variable set, never a rebuild.
 
 ## Production: what a running app tells you
 
@@ -90,9 +92,9 @@ without Sentry):
 
 **1. The console / container log.** Every error path goes through `logError` in
 `@shared/lib/logger`, which always writes a console line **and** forwards to
-Sentry. `captureException` alone is a no-op when no DSN was baked in at build
-time, so calling it directly is how a crash ends up reported nowhere. Grep by the
-event slug, the way you would grep the backend's `msg` field:
+Sentry. `captureException` alone is a no-op when the container was started
+without a DSN, so calling it directly is how a crash ends up reported nowhere.
+Grep by the event slug, the way you would grep the backend's `msg` field:
 
 | Slug | When |
 |---|---|

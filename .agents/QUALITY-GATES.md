@@ -43,10 +43,19 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 
 ## Environment
 
-- Copy `.env.example` → `.env` before running anything; nothing creates it for you, and
-  the dev-time env checker reads `.env` directly.
-- The frontend's `VITE_*` values are inlined at **build** time and are public — never
-  put a secret in one.
+- Copy `.env.example` → `.env` before running anything; nothing creates it for you.
+  `vite.config.ts` loads `.env` into `process.env` (`configDotenv`), and that is where
+  the config module reads it from — a container has no `.env` and supplies the variables
+  itself.
+- The public `VITE_*` values are read from the environment when the **server boots** and
+  are shipped to the browser in the SSR HTML, so every one of them is public — never put
+  a secret in one. The list that reaches the browser is the `runtimeShape` literal in
+  `src/shared/config/env.ts` and nothing else; `env.test.ts` asserts its exact contents,
+  so adding a key there fails the suite until the test is updated deliberately.
+  `VITE_MOCK_AUTH` and `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
+  `VITE_SENTRY_AUTH_TOKEN` are **build-time** instead: mock logins must not be
+  switchable on a running container, and the Sentry token is a real secret that only the
+  source-map upload needs.
 - Required for auth and data: `VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
   `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
   `VITE_BASE_URL` builds the OIDC redirect targets, so an empty value breaks sign-out
