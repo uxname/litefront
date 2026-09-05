@@ -16,15 +16,32 @@ npm run start:dev          # Vite dev server with SSR + HMR
 npm run check              # the full quality gate — use this, always
 ```
 
+`npm run gen` regenerates the GraphQL types from the **live** schema, so it needs
+`VITE_GRAPHQL_API_URL` in the environment (that is what `.env` is for) and the
+backend reachable at it. Unset, the address becomes the string `undefined` and the
+error reads `Failed to load schema from undefined` — it never says "variable".
+
 Build & run: `npm run build:vite` → `.output/` (Nitro Node server +
 `.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
 `npm run build` = build + `check`. `docker compose up -d` serves `.output` on port
 3000 — the runtime image contains only `.output` and is self-contained.
-`VITE_*` values are baked into the bundle at **build** time, so one image = one
-environment — build per environment (in Dokploy the app is built at deploy time
-with that environment's variables). `npm run docker:build` / `docker:push` build
-and push `${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}`; the cross-project
-deploy guide is the meta repo's `docs/DEPLOY.md`.
+
+**The image carries no environment.** The public values are read from the
+container's environment when the server boots, so the same image runs anywhere and
+a tag names the code only. `src/shared/config/env.ts` holds the one list of them;
+five are required (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
+`VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`) and the server
+refuses to boot without one, naming it. Four values belong to the **build**
+instead: `VITE_MOCK_AUTH`, and `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
+`VITE_SENTRY_AUTH_TOKEN` for source-map upload. `.env` is for local runs only — it
+is excluded from the build context, so it can never reach an image.
+`npm run docker:build` / `docker:push` build and push
+`${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}`; the cross-project deploy guide
+is the meta repo's `docs/DEPLOY.md`.
+
+Production runs several copies of this server behind one proxy, so keep it that
+way: no per-process state, nothing written to the container's filesystem, and
+nothing that assumes the next request lands on the same copy.
 
 ## Where to look
 
@@ -63,8 +80,11 @@ deploy guide is the meta repo's `docs/DEPLOY.md`.
 
 - Don't edit `src/generated/**` (GraphQL, route tree, Paraglide) — regenerate.
 - Don't use `--no-verify`; there is no CI behind these hooks.
-- Don't ship `VITE_MOCK_AUTH=true`, and don't put a secret in a `VITE_*` var — they are
-  inlined at build time and public.
+- Don't ship `VITE_MOCK_AUTH=true`, and don't put a secret in a `VITE_*` var — every one
+  of them is public. The list in `src/shared/config/env.ts` is delivered to the browser
+  verbatim; the rest are compiled into the JS bundle, which is just as readable. Adding a
+  key to that list publishes it, and a test asserts the exact set, so it cannot grow by
+  accident.
 - Don't remove a package from `.ncurc.yml` without checking the reason recorded there.
 - Don't remove `baseLocale` from the Paraglide strategy, or move `cookie` off first.
 - Don't delete `src/app/strip-dangling-sourcemaps.plugin.ts` — the dev log fills with
@@ -72,6 +92,6 @@ deploy guide is the meta repo's `docs/DEPLOY.md`.
 - Don't put page logic in `src/routes/*`; those files are route definitions, and that
   directory is the one place Steiger cannot check.
 - Don't report an error through `captureException` alone — call `logError` from
-  `@shared/lib/logger`. Sentry's DSN is baked in at build time, so without one
+  `@shared/lib/logger`. `VITE_SENTRY_DSN` is optional, and without it
   `captureException` is a no-op and the failure disappears without a trace. See
   [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md#production-what-a-running-app-tells-you).
