@@ -10,9 +10,12 @@ import { defineConfig, type UserConfig } from "vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { VitePWA } from "vite-plugin-pwa";
 import { stripDanglingSourcemaps } from "./src/app/strip-dangling-sourcemaps.plugin";
-import { viteDotenvChecker } from "./src/app/vite-dotenv-checker.plugin";
 
 export default defineConfig(async (): Promise<UserConfig> => {
+  // Load .env into `process.env`. Load-bearing for more than this file: the
+  // dev/preview SSR server runs in this very process, and `shared/config`
+  // reads the runtime values from `process.env` (a production container
+  // supplies them itself, with no .env in the image).
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT) || 3000;
@@ -60,6 +63,12 @@ export default defineConfig(async (): Promise<UserConfig> => {
       // proxy in production).
       nitroV2Plugin({
         preset: "node-server",
+        // Validate the container environment while the server starts, before
+        // the port is bound. It has to be a Nitro startup plugin: Nitro imports
+        // the SSR entry (src/server.ts) lazily on the first request, so putting
+        // the check there would let a misconfigured container come up healthy
+        // and fail per request instead.
+        plugins: ["./src/shared/config/nitro-boot-guard.ts"],
         // Pin the Nitro feature-flag baseline so a Nitro upgrade can't silently
         // change preset behavior. Without it Nitro falls back to an old implicit
         // date and warns on every build.
@@ -106,7 +115,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
           plugins: ["babel-plugin-react-compiler"],
         },
       }),
-      viteDotenvChecker(),
       VitePWA({
         disable: true, // enable when PWA is needed
         registerType: "autoUpdate",
