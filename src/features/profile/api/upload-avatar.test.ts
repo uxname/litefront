@@ -12,16 +12,20 @@ afterEach(() => {
 });
 
 describe("uploadAvatar", () => {
-  it("POSTs to <origin>/upload and returns the absolute file URL", async () => {
+  it("POSTs to <origin>/upload and returns the storage URL untouched", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => [{ filename: "a.png", path: "/files/a.png" }],
+      json: async () => [
+        { filename: "a.png", path: "http://storage.test:3900/uploads/a.png" },
+      ],
     });
     vi.stubGlobal("fetch", fetchMock);
 
     const url = await uploadAvatar(makeFile(), "tok");
 
-    expect(url).toBe(`${ORIGIN}/files/a.png`);
+    // `path` is already the object's absolute public URL — see the strict pair
+    // in tests/unit/features/profile/upload-avatar.test.ts.
+    expect(url).toBe("http://storage.test:3900/uploads/a.png");
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(calledUrl).toBe(`${ORIGIN}/upload`);
     expect(init.method).toBe("POST");
@@ -32,7 +36,9 @@ describe("uploadAvatar", () => {
   it("omits the Authorization header when no token is provided", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => [{ filename: "a.png", path: "/files/a.png" }],
+      json: async () => [
+        { filename: "a.png", path: "http://storage.test:3900/uploads/a.png" },
+      ],
     });
     vi.stubGlobal("fetch", fetchMock);
 

@@ -2,6 +2,7 @@ import { env } from "@shared/config";
 
 interface UploadedFile {
   filename: string;
+  /** Absolute public URL of the stored object — never a path to join onto. */
   path: string;
 }
 
@@ -55,5 +56,7 @@ export const uploadAvatar = async (
     throw new Error("Upload response did not contain a file path");
   }
 
-  return `${origin}${uploaded.path}`;
+  // Returned as-is: the file lives in object storage, not behind this API, so
+  // prefixing the API origin would build a dead "https://api/http://storage/…".
+  return uploaded.path;
 };
