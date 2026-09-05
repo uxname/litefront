@@ -16,20 +16,6 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// Mock environment variables
-vi.stubGlobal("import.meta", {
-  env: {
-    VITE_GRAPHQL_API_URL: "http://localhost:4000/graphql",
-    VITE_OIDC_AUTHORITY: "https://test.oidc.com",
-    VITE_OIDC_CLIENT_ID: "test-client",
-    VITE_OIDC_REDIRECT_URI: "http://localhost:3000/callback",
-    VITE_OIDC_SCOPE: "openid profile",
-    VITE_BASE_URL: "http://localhost:3000",
-    DEV: true,
-    PROD: false,
-  },
-});
-
 // Global mock: i18n messages — prevents missing-translation crashes in all component tests.
 // A Proxy returns a function echoing the key name for ANY message, so adding a new
 // Paraglide key never breaks tests that rely on this global mock. Tests needing specific
