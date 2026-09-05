@@ -92,3 +92,47 @@ it("C4: refuses to load when the server's own environment is incomplete", async 
 
   await expect(loadConfig()).rejects.toThrow(/VITE_OIDC_CLIENT_ID is required/);
 });
+
+it("C4: refuses to load when a required value is nothing but whitespace", async () => {
+  // A single space used to pass `min(1)`: the server booted green and died
+  // later inside `new URL`, far from the variable that was actually wrong.
+  await expect(
+    loadConfig({ ...validConfig, VITE_GRAPHQL_API_URL: " " }),
+  ).rejects.toThrow(/VITE_GRAPHQL_API_URL is required/);
+});
+
+it("C1: PROD and DEV arriving as strings do not stop the boot", async () => {
+  // The Nitro server chunk compiles `import.meta.env` down to `process.env`, so
+  // a container variable named PROD or DEV reaches this schema as a string. It
+  // must not be able to keep the server from starting. The schema is fed
+  // directly because Vitest's `import.meta.env` is a Proxy that coerces these
+  // two to booleans, so the module can never see a string under test.
+  const { buildTimeSchema } = await loadConfig(validConfig);
+
+  const parsed = buildTimeSchema.safeParse({
+    VITE_MOCK_AUTH: "",
+    MODE: "production",
+    PROD: "true",
+    DEV: "false",
+  });
+
+  expect(parsed.error).toBeUndefined();
+  expect(parsed.data).toMatchObject({ PROD: true, DEV: false });
+});
+
+it("C1: a build-time flag that is neither `true` nor a string is false", async () => {
+  const { buildTimeSchema } = await loadConfig(validConfig);
+
+  // `{}` is the unset case (nothing named PROD/DEV in the environment), `1` is
+  // the shape a `PROD=1` container variable takes after any coercion layer.
+  expect(buildTimeSchema.safeParse({}).data).toMatchObject({
+    PROD: false,
+    DEV: false,
+  });
+  expect(buildTimeSchema.safeParse({ PROD: 1, DEV: "yes" }).data).toMatchObject(
+    {
+      PROD: false,
+      DEV: false,
+    },
+  );
+});

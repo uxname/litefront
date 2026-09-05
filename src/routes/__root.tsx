@@ -50,11 +50,14 @@ const RootDocument: React.FC = () => {
     // persisted choice. `suppressHydrationWarning` covers the script-set attribute.
     <html lang={getLocale()} suppressHydrationWarning>
       <head>
-        {/* Runtime config, first thing in <head>: the bundle carries no
-            environment values any more, so this script must run before any
-            application module (they all load from the end of <body>). Same
-            string on both sides — the client rebuilds it from the object this
-            script itself defined — so hydration matches. */}
+        {/* Runtime config: the bundle carries no environment values any
+            more, so this script must run before any application module — and
+            it does, because those all load from the end of <body>. It is not
+            the first tag in the rendered <head>: React hoists what
+            <HeadContent /> emits (title, meta, stylesheet, modulepreload)
+            above it, and none of that executes application code. Same string
+            on both sides — the client rebuilds it from the object this script
+            itself defined — so hydration matches. */}
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: server-built config payload, `<` escaped in shared/config */}
         <script dangerouslySetInnerHTML={{ __html: runtimeConfigScript }} />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: trusted static FOUC-prevention script */}

@@ -10,8 +10,14 @@ const RUNTIME_CONFIG_GLOBAL = "__LITEFRONT_RUNTIME_CONFIG__";
 // below, which puts it in the log for EVERY failure kind. Spelling it in the
 // message instead misses the most likely one: an unset variable arrives as
 // `undefined` and zod reports its own "expected string, received undefined".
+//
+// `.trim()` runs before `.min(1)`, so a value of pure whitespace fails here
+// instead of passing the length check and blowing up later inside `new URL`.
+// The trimmed value is what everything downstream (and the browser payload)
+// gets, so a stray newline in a deployment manifest cannot reach a fetch.
 const requiredString = z
   .string({ error: "is required" })
+  .trim()
   .min(1, { error: "is required" });
 
 // Optional vars default to "" (not undefined) so consumers keep a plain string
@@ -47,11 +53,33 @@ const RUNTIME_KEYS = Object.keys(runtimeShape) as (keyof typeof runtimeShape)[];
 // Build-time values stay inlined by Vite on purpose: VITE_MOCK_AUTH must not be
 // flippable on a running production container, and MODE/PROD/DEV describe the
 // bundle itself, not the environment it is deployed into.
-const buildTimeSchema = z.object({
+//
+// PROD/DEV are parsed tolerantly rather than as plain booleans, because the two
+// bundles disagree on their type. Vite inlines them as real booleans in the
+// browser bundle, but the Nitro server chunk keeps the access and compiles
+// `import.meta.env` down to `process.env` (`.output/server/index.mjs` opens with
+// `globalThis._importMeta_={..., env: process.env}`) — so a container that
+// happens to carry a variable named PROD or DEV hands them over as STRINGS, and
+// a `z.boolean()` here would refuse to boot the whole server over a name that
+// is not even ours. `true` in either shape is true, anything else (including a
+// missing value) is false. MODE and VITE_MOCK_AUTH need no such care: both
+// sources deliver them as strings, and `.default("")` covers an unset one.
+const buildTimeFlag = z
+  .unknown()
+  .optional()
+  .transform((value) => value === true || value === "true");
+
+// Exported for its test only. A test cannot push a string through
+// `import.meta.env` — under Vitest that object is a Proxy whose getter returns
+// `!!process.env[key]` for PROD/DEV/SSR (`createImportMetaEnvProxy`), so the
+// flags are booleans there no matter what the environment holds. That is
+// precisely why this defect reached a built image, and why its test feeds this
+// schema directly instead of going through the module.
+export const buildTimeSchema = z.object({
   VITE_MOCK_AUTH: optionalString,
   MODE: optionalString,
-  PROD: z.boolean().default(false),
-  DEV: z.boolean().default(false),
+  PROD: buildTimeFlag,
+  DEV: buildTimeFlag,
 });
 
 type Env = z.infer<typeof runtimeSchema> & z.infer<typeof buildTimeSchema>;
