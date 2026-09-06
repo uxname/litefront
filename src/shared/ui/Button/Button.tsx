@@ -2,7 +2,7 @@ import { cn } from "@shared/lib/cn";
 import { Loader2 } from "lucide-react";
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "ghost" | "danger";
+type ButtonVariant = "primary" | "ghost" | "danger" | "danger-solid";
 type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,6 +18,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
   ghost:
     "bg-base-100 text-base-content border border-base-300 hover:bg-base-200",
   danger: "bg-base-100 text-error border border-error hover:bg-error/10",
+  // The loud one: a filled red button for an action that breaks something.
+  // `danger` above is its quiet sibling — an outline, not a fill.
+  "danger-solid": "bg-error text-error-content hover:bg-error/90 shadow-sm",
 };
 
 // Everything that a call site may want to override lives here, never in the

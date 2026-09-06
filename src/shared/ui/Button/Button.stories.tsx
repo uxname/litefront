@@ -8,6 +8,10 @@ export const Ghost: Story = () => <Button variant="ghost">Ghost</Button>;
 
 export const Danger: Story = () => <Button variant="danger">Delete</Button>;
 
+export const DangerSolid: Story = () => (
+  <Button variant="danger-solid">Crash the app</Button>
+);
+
 export const Sizes: Story = () => (
   <div className="flex items-center gap-3">
     <Button size="sm">Small</Button>

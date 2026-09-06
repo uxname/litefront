@@ -116,4 +116,18 @@ describe("Button", () => {
       buttonClasses({ size: "lg" }),
     );
   });
+  it("danger-solid is a filled red button", () => {
+    render(<Button variant="danger-solid">Crash</Button>);
+    expect(screen.getByRole("button")).toHaveClass(
+      "bg-error",
+      "text-error-content",
+    );
+  });
+
+  it("the old danger variant is untouched: outlined, not filled", () => {
+    render(<Button variant="danger">Delete</Button>);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass("bg-base-100", "border-error");
+    expect(btn).not.toHaveClass("bg-error");
+  });
 });
