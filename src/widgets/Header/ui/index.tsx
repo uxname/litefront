@@ -1,3 +1,4 @@
+import { m } from "@generated/paraglide/messages";
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 import { HeaderControls } from "./HeaderControls";
@@ -13,7 +14,7 @@ export const Header: FC<HeaderProps> = ({ title }) => {
       <div className="flex min-w-0 items-center gap-3">
         <Link
           to="/"
-          aria-label="LiteFront — home"
+          aria-label={m.header_home_aria()}
           className="flex shrink-0 items-center gap-2 rounded-lg transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-black text-primary-content shadow-sm">

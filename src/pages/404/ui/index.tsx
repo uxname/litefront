@@ -34,7 +34,7 @@ export const NotFoundPage: React.FC = () => {
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-content text-xs font-black uppercase tracking-[0.2em] mb-4">
             <Search className="w-3 h-3" />
-            Error Code: 404
+            {m.not_found_code()}
           </div>
 
           <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-base-content">

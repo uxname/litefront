@@ -55,13 +55,13 @@ beforeEach(() => {
 describe("Header", () => {
   it("renders the brand link to home", async () => {
     renderHeader();
-    const home = await screen.findByRole("link", { name: "LiteFront — home" });
+    const home = await screen.findByRole("link", { name: "header_home_aria" });
     expect(home).toHaveAttribute("href", "/");
   });
 
   it("does not render a page title when none is given", async () => {
     renderHeader();
-    await screen.findByRole("link", { name: "LiteFront — home" });
+    await screen.findByRole("link", { name: "header_home_aria" });
     expect(screen.queryByText("Dashboard")).not.toBeInTheDocument();
   });
 
