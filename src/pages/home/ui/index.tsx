@@ -1,5 +1,6 @@
 import { Counter } from "@entities/counter";
 import { m } from "@generated/paraglide/messages";
+import { Button, buttonClasses } from "@shared/ui/Button";
 import { Link } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
 import {
@@ -85,21 +86,25 @@ export const HomePage: FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            <button
-              type="button"
+            <Button
+              size="lg"
               onClick={copyInstallCommand}
-              className="cursor-pointer group relative flex items-center gap-3 px-6 py-3.5 bg-primary text-primary-content rounded-xl font-mono text-sm shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all duration-300 border-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="group relative cursor-pointer font-mono shadow-xl duration-300 hover:scale-[1.01] hover:shadow-2xl"
             >
               <span className="text-primary-content">$</span>
               <span>{INSTALL_COMMAND}</span>
               <div className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 <CheckCircle2 className="w-4 h-4 text-success" />
               </div>
-            </button>
+            </Button>
 
             <Link
               to="/account"
-              className="flex items-center gap-2 px-8 py-3.5 bg-base-100 text-base-content border border-base-300 rounded-xl font-bold hover:bg-base-200 hover:border-base-300 transition-all shadow-sm hover:shadow-md active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className={buttonClasses({
+                variant: "ghost",
+                size: "lg",
+                className: "shadow-sm hover:shadow-md",
+              })}
             >
               {m.home_cta_live_demo()}
               <ArrowRight className="w-4 h-4" />

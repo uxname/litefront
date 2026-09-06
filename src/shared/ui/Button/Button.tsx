@@ -29,6 +29,28 @@ const SIZES: Record<ButtonSize, string> = {
   lg: "gap-3 rounded-2xl px-8 py-4 text-base font-bold",
 };
 
+/**
+ * The button's class string, for the places that cannot render a <button>:
+ * a router <Link> is an <a>, and a <button> inside an <a> is invalid HTML.
+ * The component itself uses this too, so both paths always look the same.
+ */
+export const buttonClasses = ({
+  variant = "primary",
+  size = "md",
+  className,
+}: {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+} = {}): string =>
+  cn(
+    "inline-flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    VARIANTS[variant],
+    SIZES[size],
+    className,
+  );
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -49,13 +71,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       type={type}
       disabled={disabled || loading}
-      className={cn(
-        "inline-flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-        VARIANTS[variant],
-        SIZES[size],
-        className,
-      )}
+      className={buttonClasses({ variant, size, className })}
       {...rest}
     >
       {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : leftIcon}

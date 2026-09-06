@@ -2,7 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createRef } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Button } from "./Button";
+import { Button, buttonClasses } from "./Button";
 
 afterEach(cleanup);
 
@@ -103,5 +103,17 @@ describe("Button", () => {
   it("keeps collision-prone classes in the size table only, so size=lg carries no rounded-xl", () => {
     render(<Button size="lg">Big</Button>);
     expect(screen.getByRole("button")).not.toHaveClass("rounded-xl");
+  });
+  it("exposes the same class string to non-button call sites", () => {
+    const classes = buttonClasses({ size: "lg" });
+    expect(classes).toContain("px-8");
+    expect(classes).toContain("rounded-2xl");
+  });
+
+  it("builds its own classes with buttonClasses (one implementation, two callers)", () => {
+    render(<Button size="lg">Big</Button>);
+    expect(screen.getByRole("button").className).toBe(
+      buttonClasses({ size: "lg" }),
+    );
   });
 });

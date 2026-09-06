@@ -1,4 +1,5 @@
 import { m } from "@generated/paraglide/messages";
+import { Button, buttonClasses } from "@shared/ui/Button";
 import { Link } from "@tanstack/react-router";
 import { Ghost, Home, MoveLeft, Search } from "lucide-react";
 import React from "react";
@@ -48,18 +49,26 @@ export const NotFoundPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
-          <button
+          <Button
+            variant="ghost"
+            size="lg"
             onClick={handleGoBack}
-            className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-base-100 text-base-content font-bold border border-base-300 hover:border-base-300 hover:bg-base-200 transition-all shadow-sm active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="group w-full shadow-sm sm:w-auto"
+            leftIcon={
+              <MoveLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
+            }
           >
-            <MoveLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
             {m.go_back()}
-          </button>
+          </Button>
 
           <Link
             to="/"
             preload="viewport"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-primary text-primary-content font-bold hover:bg-primary/90 transition-all shadow-xl hover:shadow-2xl active:scale-95 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className={buttonClasses({
+              size: "lg",
+              className:
+                "w-full shadow-xl hover:-translate-y-0.5 hover:shadow-2xl sm:w-auto",
+            })}
           >
             <Home className="h-5 w-5" />
             {m.back_to_home()}
