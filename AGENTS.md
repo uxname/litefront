@@ -51,7 +51,8 @@ nothing that assumes the next request lands on the same copy.
 | Touch routing, SSR, entry files or auth wiring | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
 | Write tests or stories, hit a coverage floor | [.agents/TESTING.md](./.agents/TESTING.md) |
 | "See" the running app, debug a symptom, check dark mode | [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md) |
-| Styling, theming, i18n strings, TS conventions | [.agents/STYLE.md](./.agents/STYLE.md) |
+| How a screen should look: components, layout, states, UI copy | [.agents/DESIGN.md](./.agents/DESIGN.md) |
+| Code style, TypeScript conventions, generated code, locale wiring | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
 | A gate is failing, env setup, dependencies, bundle size | [.agents/QUALITY-GATES.md](./.agents/QUALITY-GATES.md) |
 | How this side pairs with the backend | meta-repo `AGENTS.md` |
 | The architecture diagram (LikeC4) | it lives in the LiteStack meta-repo (`docs/architecture/likec4/`) — update it there, never start a second model here |
@@ -68,7 +69,8 @@ nothing that assumes the next request lands on the same copy.
 4. **Respect FSD boundaries.** Imports point downward only, and cross-slice access goes
    through the slice's `index.ts`. Steiger enforces it, aliases included.
 5. **Style with daisyUI semantic tokens, never hardcoded palette colors** — hardcoded
-   colors ignore `data-theme` and break dark mode.
+   colors ignore `data-theme` and break dark mode. The rest of the UI rules are in
+   [.agents/DESIGN.md](./.agents/DESIGN.md).
 6. **Never touch `window` during render.** This tree is server-rendered; read it in an
    effect, an event handler, or behind `typeof window === "undefined"`.
 7. **All user-facing text goes through Paraglide** (`m.<key>()`), added to every message

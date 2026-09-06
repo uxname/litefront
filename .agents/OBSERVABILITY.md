@@ -37,14 +37,15 @@ Plain console noise never fails them, so the full record always reaches you.
 an error fallback), copy `tests/e2e/agent-screens.spec.ts` or add a temporary route,
 capture it the same way, read the PNG, then remove the throwaway.
 
-> Port note: Playwright reuses an already-running dev server on `:3000`
-> (`reuseExistingServer`), so output may come from the dev build (react-scan, HMR).
-> Stop the dev server first for a clean production capture.
+> Port note: Playwright never reuses a running server (`reuseExistingServer: false`).
+> It builds and starts its own production server on `:3100` (override with `E2E_PORT`),
+> so a capture always comes from the production build — but the run fails if something
+> else already holds that port. A dev server on `:3000` does not interfere.
 
 ## The dark-theme check (the bug that keeps coming back)
 
 The whole UI must use daisyUI **semantic tokens**, never hardcoded Tailwind palette
-colors — see [STYLE.md](./STYLE.md). Hardcoded colors ignore `data-theme` and stay
+colors — see [DESIGN.md](./DESIGN.md). Hardcoded colors ignore `data-theme` and stay
 light in dark mode.
 
 **How to catch it:** open the `*-cmyk-*` and `*-dark-*` screenshots of the same route
