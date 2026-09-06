@@ -73,4 +73,35 @@ describe("Button", () => {
     render(<Button ref={ref}>Ref</Button>);
     expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
+  it("renders a right icon after the children (left icon stays before)", () => {
+    render(
+      <Button leftIcon={<span>L</span>} rightIcon={<span>R</span>}>
+        mid
+      </Button>,
+    );
+    expect(screen.getByRole("button").textContent).toBe("LmidR");
+  });
+
+  it("size=lg is a large CTA: px-8, py-4 and a rounder corner", () => {
+    render(<Button size="lg">Big</Button>);
+    expect(screen.getByRole("button")).toHaveClass(
+      "px-8",
+      "py-4",
+      "rounded-2xl",
+    );
+  });
+
+  it("size=md keeps its old classes (no existing call site changes)", () => {
+    render(<Button size="md">Medium</Button>);
+    expect(screen.getByRole("button")).toHaveClass(
+      "px-5",
+      "py-2.5",
+      "rounded-xl",
+    );
+  });
+
+  it("keeps collision-prone classes in the size table only, so size=lg carries no rounded-xl", () => {
+    render(<Button size="lg">Big</Button>);
+    expect(screen.getByRole("button")).not.toHaveClass("rounded-xl");
+  });
 });
