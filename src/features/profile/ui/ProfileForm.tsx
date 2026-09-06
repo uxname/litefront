@@ -101,6 +101,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ profile, accessToken }) => {
       <div className="flex justify-end">
         <Button
           type="submit"
+          className="shadow-sm"
           loading={isSubmitting}
           disabled={!isDirty || uploading}
         >

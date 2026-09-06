@@ -130,4 +130,19 @@ describe("Button", () => {
     expect(btn).toHaveClass("bg-base-100", "border-error");
     expect(btn).not.toHaveClass("bg-error");
   });
+  it("the focus ring follows the variant's meaning, not the base string", () => {
+    const solid = buttonClasses({ variant: "danger-solid" });
+    expect(solid).toContain("focus-visible:outline-error");
+    expect(solid).not.toContain("focus-visible:outline-primary");
+    expect(buttonClasses({ variant: "primary" })).toContain(
+      "focus-visible:outline-primary",
+    );
+  });
+
+  it("pins no shadow, so a call site can ask for a bigger one", () => {
+    // shadow-lg is emitted BEFORE shadow-sm in the compiled stylesheet, so a
+    // built-in shadow-sm would silently beat className="shadow-lg".
+    expect(buttonClasses({ variant: "primary" })).not.toContain("shadow");
+    expect(buttonClasses({ variant: "danger-solid" })).not.toContain("shadow");
+  });
 });

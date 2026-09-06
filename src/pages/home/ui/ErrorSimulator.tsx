@@ -32,7 +32,7 @@ export const ErrorSimulator: FC = () => {
           )
         }
         variant="danger-solid"
-        className="group relative w-full max-w-[200px] shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus-visible:outline-error"
+        className="group relative w-full max-w-[200px] shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
         leftIcon={<Zap className="h-4 w-4 fill-current" />}
       >
         {m.home_crash_app()}

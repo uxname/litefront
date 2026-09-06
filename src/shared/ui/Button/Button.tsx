@@ -13,14 +13,23 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
 }
 
+// The focus ring's colour belongs to the variant, not to the base string: a
+// red button needs a red ring, and `focus-visible:outline-error` written at a
+// call site would lose — it is emitted BEFORE outline-primary, and cn() only
+// joins. Shadows are deliberately absent: shadow-sm is emitted between
+// shadow-lg and shadow-xl, so a built-in one would beat className="shadow-lg".
+// The page decides how much a button lifts off the surface.
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: "bg-primary text-primary-content hover:bg-primary/90 shadow-sm",
+  primary:
+    "bg-primary text-primary-content hover:bg-primary/90 focus-visible:outline-primary",
   ghost:
-    "bg-base-100 text-base-content border border-base-300 hover:bg-base-200",
-  danger: "bg-base-100 text-error border border-error hover:bg-error/10",
+    "bg-base-100 text-base-content border border-base-300 hover:bg-base-200 focus-visible:outline-primary",
+  danger:
+    "bg-base-100 text-error border border-error hover:bg-error/10 focus-visible:outline-error",
   // The loud one: a filled red button for an action that breaks something.
   // `danger` above is its quiet sibling — an outline, not a fill.
-  "danger-solid": "bg-error text-error-content hover:bg-error/90 shadow-sm",
+  "danger-solid":
+    "bg-error text-error-content hover:bg-error/90 focus-visible:outline-error",
 };
 
 // Everything that a call site may want to override lives here, never in the
@@ -48,7 +57,7 @@ export const buttonClasses = ({
 } = {}): string =>
   cn(
     "inline-flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    "focus-visible:outline-2 focus-visible:outline-offset-2",
     VARIANTS[variant],
     SIZES[size],
     className,
