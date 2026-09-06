@@ -234,20 +234,30 @@ The short list of things that go wrong here, in the order they go wrong:
    first, and their stories.
 2. **A hardcoded colour.** It looks right in light mode and breaks dark mode.
    Tokens only.
-3. **A new spacing or radius scale.** Use the framework's steps and the shell
+3. **Assuming `className` wins.** The helper that joins class names only
+   joins them — it does not resolve conflicts. When two classes set the same
+   CSS property, the winner is whichever the stylesheet lists later, and that
+   order is not the order you wrote and not the order of the numbers:
+   `shadow-2xl` is emitted before `shadow-sm`, and `rounded-2xl` before
+   `rounded-xl`. So a component must keep every class a caller may override in
+   its variant or size table, never in its shared base string — and a caller
+   that "overrides" something and sees no change is looking at this, not at a
+   typo. Both times this bit, the wrong result looked perfectly fine in the
+   markup.
+4. **A new spacing or radius scale.** Use the framework's steps and the shell
    numbers above; a one-off `p-[13px]` is how a UI stops looking made by one
    person.
-4. **A one-off button.** If you are writing an accent fill (`bg-primary`,
+5. **A one-off button.** If you are writing an accent fill (`bg-primary`,
    `bg-error`) and a corner radius on a clickable thing, you are
    re-implementing `Button`. There is no button left
    in this tree that does that, and the next one should not be the first: use
    the component, pick the variant, and pass `className` only for what the page
    legitimately varies — a width, a shadow, a hover flourish.
-5. **A removed focus outline.** See *Accessibility*.
-6. **Hardcoded English in the markup.** See *Copy*.
-7. **A control changed without its story and test.** All three move together —
+6. **A removed focus outline.** See *Accessibility*.
+7. **Hardcoded English in the markup.** See *Copy*.
+8. **A control changed without its story and test.** All three move together —
    see [TESTING.md](./TESTING.md).
-8. **A rule invented for a pattern this app does not have.** There is no rule
+9. **A rule invented for a pattern this app does not have.** There is no rule
    for a data grid, a paged list, a side navigation, an overlay dialog or a
    slide-out panel, because none of those exist in this code — the only
    pop-up is the header's profile menu, built from a native disclosure element.

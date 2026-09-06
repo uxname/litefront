@@ -2,14 +2,18 @@ import type { Story } from "@ladle/react";
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "./Button";
 
-export const Primary: Story = () => <Button>Primary action</Button>;
+export const Primary: Story = () => (
+  <Button className="shadow-sm">Primary action</Button>
+);
 
 export const Ghost: Story = () => <Button variant="ghost">Ghost</Button>;
 
 export const Danger: Story = () => <Button variant="danger">Delete</Button>;
 
 export const DangerSolid: Story = () => (
-  <Button variant="danger-solid">Crash the app</Button>
+  <Button variant="danger-solid" className="shadow-sm">
+    Crash the app
+  </Button>
 );
 
 export const Sizes: Story = () => (
