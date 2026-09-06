@@ -82,7 +82,7 @@ Every one of them is a trio — implementation, story, test — see
 
 | Component | What it is for |
 |---|---|
-| `Button` | every clickable action. `variant` primary / ghost / danger, `size` sm / md / lg, plus `loading`, `leftIcon`, `rightIcon`. Its exported class builder dresses a router link as a button, because a link is an `<a>` and may not contain a `<button>` |
+| `Button` | every clickable action. `variant` primary (filled accent) / ghost (outlined) / danger (outlined red, for a delete confirmation) / danger-solid (filled red, for an action that breaks something), `size` sm / md / lg, plus `loading`, `leftIcon`, `rightIcon`. Its exported class builder dresses a router link as a button, because a link is an `<a>` and may not contain a `<button>` |
 | `Card` | a titled block with optional description and header actions. The default container for applied content |
 | `FormField` | label + control + hint or error, with the aria wiring already done |
 | `Input` | single-line text control, with an `invalid` state |
@@ -237,9 +237,11 @@ The short list of things that go wrong here, in the order they go wrong:
 3. **A new spacing or radius scale.** Use the framework's steps and the shell
    numbers above; a one-off `p-[13px]` is how a UI stops looking made by one
    person.
-4. **A one-off button.** If you are writing `bg-primary` and a corner radius on
-   a clickable thing, you are re-implementing `Button`. Use it, and pass
-   `className` for the marketing skin.
+4. **A one-off button.** If you are writing a fill and a corner radius on a
+   clickable thing, you are re-implementing `Button`. There is no button left
+   in this tree that does that, and the next one should not be the first: use
+   the component, pick the variant, and pass `className` only for what the page
+   legitimately varies — a width, a shadow, a hover flourish.
 5. **A removed focus outline.** See *Accessibility*.
 6. **Hardcoded English in the markup.** See *Copy*.
 7. **A control changed without its story and test.** All three move together —
