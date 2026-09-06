@@ -134,14 +134,14 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={handleRetry}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-content font-medium hover:bg-primary/90 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-content font-medium hover:bg-primary/90 transition-colors shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <RotateCcw className="h-4 w-4" />
               {m.action_retry()}
             </button>
             <button
               onClick={handleReload}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-base-100 text-base-content border border-base-300 font-medium hover:bg-base-200 hover:text-base-content transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-base-300"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-base-100 text-base-content border border-base-300 font-medium hover:bg-base-200 hover:text-base-content transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <RefreshCcw className="h-4 w-4" />
               {m.action_reload()}
@@ -152,7 +152,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
         <div className="border-t border-base-300 bg-base-200/50">
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/70 hover:text-base-content hover:bg-base-200 transition-colors focus:outline-none"
+            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/70 hover:text-base-content hover:bg-base-200 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span className="flex items-center gap-2">
               <Terminal className="h-4 w-4" />
