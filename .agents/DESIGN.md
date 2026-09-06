@@ -188,8 +188,13 @@ Not optional, and cheap if you do it as you go:
 
 - **Focus must always be visible**, and it is one style everywhere:
   `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`.
-  Never remove an outline without putting an equally visible one back. On an
-  invalid control the outline turns `outline-error` instead.
+  Never remove an outline without putting an equally visible one back. Two
+  variations belong to the rule rather than breaking it: the **colour follows
+  the control's meaning**, so an invalid field and a destructive action use
+  `outline-error` instead of `outline-primary`; and a control whose container
+  clips the ring uses `-outline-offset-2`, drawing the ring just inside its own
+  edge instead of losing it. Everything else — a different width, a removed
+  outline, a hand-picked colour — is a bug.
 - Every icon-only control gets an `aria-label`; that label is UI text, so it
   goes through the message files like any other string.
 - Decorative marks are hidden from assistive tech (`aria-hidden`), and

@@ -31,7 +31,7 @@ export const Counter: FC<CounterProps> = ({ title }) => {
 
       <button
         onClick={onClick}
-        className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-content shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+        className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-content shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
         {m.counter_increment()}

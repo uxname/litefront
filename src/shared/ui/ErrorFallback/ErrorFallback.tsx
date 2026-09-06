@@ -188,7 +188,7 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
               <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/70 shadow-sm overflow-hidden">
                 <button
                   onClick={handleCopyStack}
-                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/70 hover:text-primary hover:bg-primary/10 transition-colors"
+                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/70 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   title={copied ? "Copied" : "Copy Stack Trace"}
                 >
                   <Copy className="h-3.5 w-3.5" />
