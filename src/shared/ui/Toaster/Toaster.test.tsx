@@ -71,7 +71,10 @@ describe("Toaster", () => {
     expect(list).toHaveAttribute("data-x-position", "center");
   });
 
-  it("uses the light theme by default", async () => {
+  // The component pins no theme of its own: with nothing passed, sonner's own
+  // default ("light") shows through. The app supplies the real one from the
+  // theme store in routes/__root.tsx.
+  it("leaves the theme to its caller, so an unset theme stays light", async () => {
     const { container } = render(<Toaster />);
     toast("Themed");
     await screen.findByText("Themed");

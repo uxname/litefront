@@ -1,3 +1,4 @@
+import { useThemeStore } from "@features/theme";
 import { getLocale } from "@generated/paraglide/runtime";
 import { runtimeConfigScript } from "@shared/config";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
@@ -42,6 +43,11 @@ try {
 
 const RootDocument: React.FC = () => {
   const isDevelopment = import.meta.env.MODE === "development";
+  // Toasts live in shared/ui, which may not import a feature store, so the
+  // theme is read one floor up and handed down. Before rehydration this is the
+  // default "cmyk" on both server and client — harmless, since no toast can
+  // exist that early.
+  const theme = useThemeStore((s) => s.theme);
 
   return (
     // `data-theme` is intentionally NOT a JSX prop: it's owned entirely by the
@@ -66,7 +72,7 @@ const RootDocument: React.FC = () => {
       </head>
       <body>
         <Outlet />
-        <Toaster closeButton />
+        <Toaster closeButton theme={theme === "dark" ? "dark" : "light"} />
         <Scripts />
         {isDevelopment && (
           <React.Suspense fallback={null}>
