@@ -89,3 +89,22 @@
   --depth: 1;
   --noise: 0;
 }
+
+/*
+ * Honour the OS "reduce motion" setting for the whole app in one place.
+ * The animations are spread over more than a dozen components and also come
+ * from third-party UI (toasts, icons), so one global rule covers today's code,
+ * tomorrow's code and other people's code alike. Durations are cut to
+ * near-zero rather than to zero so that transitionend/animationend listeners
+ * still fire.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
