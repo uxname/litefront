@@ -1,4 +1,5 @@
 import { m } from "@generated/paraglide/messages";
+import { Button } from "@shared/ui/Button";
 import { toast } from "@shared/ui/Toaster";
 import { Plus } from "lucide-react";
 import { FC } from "react";
@@ -29,13 +30,15 @@ export const Counter: FC<CounterProps> = ({ title }) => {
         </div>
       </div>
 
-      <button
+      <Button
         onClick={onClick}
-        className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-content shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="group relative w-full shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+        leftIcon={
+          <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
+        }
       >
-        <Plus className="h-4 w-4 transition-transform group-hover:rotate-90" />
         {m.counter_increment()}
-      </button>
+      </Button>
     </div>
   );
 };

@@ -17,6 +17,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Button } from "../Button";
 import { detectErrorCategory } from "./detectErrorCategory";
 import { ERROR_CONFIG } from "./errorConfig";
 import { extractRequestId } from "./extractRequestId";
@@ -132,20 +133,21 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
+            <Button
               onClick={handleRetry}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-content font-medium hover:bg-primary/90 transition-colors shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="w-full shadow-sm sm:w-auto"
+              leftIcon={<RotateCcw className="h-4 w-4" />}
             >
-              <RotateCcw className="h-4 w-4" />
               {m.action_retry()}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={handleReload}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-base-100 text-base-content border border-base-300 font-medium hover:bg-base-200 hover:text-base-content transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="w-full sm:w-auto"
+              leftIcon={<RefreshCcw className="h-4 w-4" />}
             >
-              <RefreshCcw className="h-4 w-4" />
               {m.action_reload()}
-            </button>
+            </Button>
           </div>
         </div>
 

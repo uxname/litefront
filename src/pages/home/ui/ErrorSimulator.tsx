@@ -1,4 +1,5 @@
 import { m } from "@generated/paraglide/messages";
+import { Button } from "@shared/ui/Button";
 import { Bug, Zap } from "lucide-react";
 import type { FC } from "react";
 import { useErrorBoundary } from "react-error-boundary";
@@ -22,7 +23,7 @@ export const ErrorSimulator: FC = () => {
         </div>
       </div>
 
-      <button
+      <Button
         onClick={() =>
           showBoundary(
             new Error(
@@ -30,11 +31,12 @@ export const ErrorSimulator: FC = () => {
             ),
           )
         }
-        className="group relative flex w-full max-w-[200px] items-center justify-center gap-2 rounded-xl bg-error px-4 py-3 text-sm font-semibold text-error-content shadow-lg transition-all hover:bg-error/90 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-error"
+        variant="danger-solid"
+        className="group relative w-full max-w-[200px] shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus-visible:outline-error"
+        leftIcon={<Zap className="h-4 w-4 fill-current" />}
       >
-        <Zap className="h-4 w-4 fill-current" />
         {m.home_crash_app()}
-      </button>
+      </Button>
 
       <p className="text-xs text-base-content/70 mt-4 text-center max-w-[220px]">
         {m.home_error_sim_hint()}

@@ -3,6 +3,7 @@ import { LocaleSwitcher } from "@features/locale";
 import { ThemeToggle } from "@features/theme";
 import { m } from "@generated/paraglide/messages";
 import { captureMessage } from "@shared/lib/sentry";
+import { Button } from "@shared/ui/Button";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, LogIn, LogOut, Settings, User } from "lucide-react";
 import { FC, useCallback } from "react";
@@ -76,14 +77,14 @@ export const HeaderControls: FC = () => {
           </ul>
         </details>
       ) : (
-        <button
-          type="button"
+        <Button
+          size="sm"
           onClick={handleSignIn}
-          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-content shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="shadow-sm hover:-translate-y-0.5"
+          leftIcon={<LogIn className="h-4 w-4" />}
         >
-          <LogIn className="h-4 w-4" />
           {m.auth_sign_in()}
-        </button>
+        </Button>
       )}
     </div>
   );
