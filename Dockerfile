@@ -1,9 +1,6 @@
 # Build stage
 FROM node:24-alpine AS build
 
-# Install git for dependencies that require it
-RUN apk add --no-cache git
-
 # Set the working directory
 WORKDIR /app
 
