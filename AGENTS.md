@@ -16,10 +16,8 @@ npm run start:dev          # Vite dev server with SSR + HMR
 npm run check              # the full quality gate — use this, always
 ```
 
-`npm run gen` regenerates the GraphQL types from the **live** schema, so it needs
-`VITE_GRAPHQL_API_URL` in the environment (`.env` is one way to put it there, an
-exported variable is another) and the backend reachable at it. Unset, the address becomes the string `undefined` and the
-error reads `Failed to load schema from undefined` — it never says "variable".
+`npm run gen` regenerates the GraphQL types from the **live** schema; it tells you which
+of the two is missing — the variable or the running backend.
 
 Build & run: `npm run build` → `.output/` (Nitro Node server +
 `.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
