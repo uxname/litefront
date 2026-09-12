@@ -20,15 +20,8 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
-    # Config reaches the container two ways — pick per machine:
-    #   1. a .env NEXT TO THIS FILE (the usual local flow): loaded when present;
-    #   2. plain exported environment variables (no-.env machines): the explicit
-    #      mappings below pick them up via interpolation.
-    # Interpolation reads shell vars first, then the project-dir .env, so both
-    # sources feed the same ${VAR}; but only the keys listed here enter the
-    # container, so the build-time secret that may sit in that .env
-    # (VITE_SENTRY_AUTH_TOKEN) never rides along. Same list, same ":?" guards as
-    # docker-compose.prod.yml — src/shared/config/env.ts is the source of truth.
+    # The `VITE_*` + `PORT` list below must match the neighbouring compose file and
+    # `src/shared/config/env.ts`; `npm run compose:check` fails when they drift.
     env_file:
       - path: .env
         required: false

@@ -18,15 +18,8 @@ services:
         limits:
           cpus: "1.5"
           memory: 512M
-    # Config reaches the container through these explicit mappings only — no
-    # env_file on purpose. Interpolation reads exported shell vars first, then a
-    # .env NEXT TO THIS FILE, so both single-machine and no-.env hosts feed the
-    # same ${VAR}; but only the keys listed here enter the container, so a
-    # build-time secret sitting in that .env (VITE_SENTRY_AUTH_TOKEN) never
-    # rides along. The five required values use ":?" so a half-configured host
-    # fails at `docker compose config` — before deploy — naming the variable,
-    # instead of crash-looping the container at boot. Keep this list in sync
-    # with src/shared/config/env.ts, which is the source of truth.
+    # The `VITE_*` + `PORT` list below must match the neighbouring compose file and
+    # `src/shared/config/env.ts`; `npm run compose:check` fails when they drift.
     environment:
       # Required — the app cannot authenticate or reach the API without them.
       VITE_OIDC_AUTHORITY: ${VITE_OIDC_AUTHORITY:?set VITE_OIDC_AUTHORITY (OIDC issuer URL)}
