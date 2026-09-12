@@ -1,35 +1,15 @@
 # ![Logo](./.github/logo.png)
 
-[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![Knip](https://img.shields.io/badge/Maintained_with-Knip-blue?logo=knip)](https://knip.dev/)
 ![Vite](https://img.shields.io/badge/Vite-8.x-blue?logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue?logo=typescript)
-![Playwright](https://img.shields.io/badge/Testing-Playwright-2EAD33?logo=playwright)
-![Vitest](https://img.shields.io/badge/Testing-Vitest-6E9F18?logo=vitest)
-![Zustand](https://img.shields.io/badge/State-Zustand-422f2f?logo=zustand)
-![FSD](https://img.shields.io/badge/Architecture-FSD-3D3D3D?logo=feature-sliced-design)
-![GitHub Stars](https://img.shields.io/github/stars/uxname/litefront)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
+This is the **frontend half of [LiteStack](https://github.com/uxname/LiteStack)** — the backend
+half is [LiteEnd-Go](https://github.com/uxname/LiteEnd-Go), and the whole stack comes up
+from the meta-repo (see its README). It also runs on its own — see "Standalone use" below.
+
 A modern, scalable, and developer-friendly frontend boilerplate powered by **Vite, React 19, GraphQL, and TypeScript**. Built with the **[Feature-Sliced Design](https://feature-sliced.design)** methodology and pre-configured **OIDC Authentication**.
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Key Features](#key-features)
-- [Configuration](#configuration)
-- [Custom Authentication](#custom-authentication)
-- [Scripts Overview](#scripts-overview)
-- [Perfect Pairing with LiteEnd](#perfect-pairing-with-liteend)
-- [Get Started](#get-started)
-- [Types Generation](#types-generation)
-- [Testing](#testing)
-- [Error Monitoring](#error-monitoring)
-- [License](#license)
-- [Contributing](#contributing)
 
 ## Overview
 
@@ -93,13 +73,13 @@ The application requires the following environment variables for the OIDC authen
 | `VITE_OIDC_API_RESOURCE` | API resource indicator. Sent on both the authorize and token requests so the access token is a JWT whose `aud` equals the backend's `OIDC_AUDIENCE` | `http://localhost:4000` |
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
 | `VITE_BASE_URL`          | Base URL of the application (E2E base URL, and used to build OIDC redirect targets — an empty value breaks sign-out) | `http://localhost:3000`                        |
-| `VITE_MOCK_AUTH`         | Bypasses real OIDC entirely (dev/E2E only — **never ship it enabled**) | `false`                        |
+| `VITE_MOCK_AUTH`         | **Build-time.** Bypasses real OIDC entirely (dev/E2E only — **never ship it enabled**) | `false`                        |
 | `VITE_APP_VERSION`       | Version string surfaced in the UI and Sentry releases | build metadata                        |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
-| `VITE_SENTRY_DSN`        | The DSN key for Sentry error tracking                        | `https://xxx@yyy.ingest.sentry.io/zzz`           |
-| `VITE_SENTRY_ORG`        | Sentry organization slug (used for source maps)             | `your-org`                                      |
-| `VITE_SENTRY_PROJECT`    | Sentry project name (used for source maps)                    | `your-project`                                  |
-| `VITE_SENTRY_AUTH_TOKEN` | Build-time token for uploading source maps                   | `sntrys_...`                                    |
+| `VITE_SENTRY_DSN`        | **Runtime.** The DSN key for Sentry error tracking            | `https://xxx@yyy.ingest.sentry.io/zzz`           |
+| `VITE_SENTRY_ORG`        | **Build-time.** Sentry organization slug (source maps)        | `your-org`                                      |
+| `VITE_SENTRY_PROJECT`    | **Build-time.** Sentry project name (source maps)             | `your-project`                                  |
+| `VITE_SENTRY_AUTH_TOKEN` | **Build-time.** Token for uploading source maps               | `sntrys_...`                                    |
 
 ### Logto Provider Setup
 
@@ -148,42 +128,30 @@ To replace OIDC with your own logic:
 - `npm run storybook:build`: Builds the static storybook for deployment.
 - `npm run gen`: Generates TypeScript types for GraphQL operations.
 
-## Perfect Pairing with [LiteEnd](https://github.com/uxname/liteend)
+## Perfect Pairing with [LiteEnd](https://github.com/uxname/LiteEnd-Go)
 
-This LiteFront boilerplate is best suited for use with [LiteEnd](https://github.com/uxname/liteend), as they are
+This LiteFront boilerplate is best suited for use with [LiteEnd](https://github.com/uxname/LiteEnd-Go), as they are
 designed to work seamlessly together. LiteEnd provides a backend that integrates smoothly with LiteFront via GraphQL and
 TypeScript, enabling a cohesive full-stack development experience.
 
 ## Get Started
 
-### One-Liner
+Inside LiteStack, `scripts/setup.sh` at the meta root does all of this. On its own —
+**everything in Docker**, nothing to install but Docker:
 
 ```bash
-npx degit uxname/litefront my-app && cd my-app && git init && git add . && git commit -m "Initial commit" && npm install && cp .env.example .env && npm run gen && npm run start:dev
+cp -n .env.example .env && docker compose up -d
 ```
 
-### Step-by-Step
+**From source:**
 
-1. **Clone the repository**
-
-    ```bash
-    npx degit uxname/litefront my-app
-    cd my-app
-    ```
-
-2. **Initialize Git**
-
-    ```bash
-    git init && git add . && git commit -m "Initial commit"
-    ```
-
-3. **Install dependencies**
+1. **Install dependencies**
 
     ```bash
     npm install
     ```
 
-4. **Setup environment variables**
+2. **Setup environment variables**
 
     ```bash
     cp .env.example .env
@@ -191,9 +159,9 @@ npx degit uxname/litefront my-app && cd my-app && git init && git add . && git c
 
     **Important:** Open `.env` and fill in your OIDC provider details (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`, etc.) or the app will not be able to authenticate users.
 
-5. **GraphQL types** are already generated and committed in `src/generated/` — run `npm run gen` only after the backend schema changes.
+3. **GraphQL types** are already generated and committed in `src/generated/` — run `npm run gen` only after the backend schema changes.
 
-6. **Run the development server**
+4. **Run the development server**
 
     ```bash
     npm run start:dev
@@ -243,7 +211,15 @@ VITE_SENTRY_PROJECT=your-sentry-project
 VITE_SENTRY_AUTH_TOKEN=your-auth-token # Required only at build time
 ```
 
-*(Note: `VITE_SENTRY_AUTH_TOKEN` should be kept secret and configured in your CI/CD pipeline, not committed to the repository).*
+*(Note: `VITE_SENTRY_AUTH_TOKEN` is a secret — set it in the build environment, never commit it.)*
+
+## Standalone use
+
+Outside LiteStack this repo stands alone. Inside it does **not** — `frontend/` is a submodule pinned to a commit, so start from the meta-repo.
+
+```bash
+npx degit uxname/litefront my-app && cd my-app && npm install && cp .env.example .env && npm run start:dev
+```
 
 ## License
 
