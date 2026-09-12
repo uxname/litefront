@@ -45,6 +45,10 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 
 This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.design)**, a methodology for structuring frontend applications. It helps to keep the codebase clean, scalable, and easy to navigate by organizing code into layers (`shared`, `entities`, `features`, `widgets`, `pages`, `app`).
 
+Three directories under `src/` are deliberately outside the layers: `generated/` (codegen
+output), `graphql/` (the query documents it reads), and `routes/` (file-based routing). The
+seven files in `src/` itself are entry points — client, server, router, start and typings.
+
 ## Key Features
 
 - **Secure Authentication**: Fully integrated OIDC/OAuth 2.0 flow with PKCE, automatic token renewal, and `AuthGuard` for protected routes.

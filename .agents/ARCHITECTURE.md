@@ -86,6 +86,8 @@ Two things it does *not* cover, so watch them by hand:
 - **`src/routes/` is not an FSD layer.** It is the one place that may reference every
   layer, and it is unchecked. Keep route files to `createFileRoute` + `head()` +
   a component imported from `pages/` or a feature slice — nothing else.
+  (`src/generated/` and `src/graphql/` are outside the layers too, but they are
+  generated output and query documents — nothing to structure.)
 - Segment names must describe **purpose**, not contents. `providers`, `hooks`,
   `utils`, `helpers`, `types` are rejected by the FSD plugin — that is why the app
   layer's segment is `bootstrap`, not `providers`.
