@@ -10,7 +10,7 @@
 // Runs against the built output, so `npm run storybook:build` has to come first
 // (verify:push does exactly that).
 import { spawn } from "node:child_process";
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 
 const PORT = 61234;
 const BASE = `http://localhost:${PORT}`;
