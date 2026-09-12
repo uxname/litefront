@@ -9,7 +9,7 @@ WORKDIR /app
 # .dockerignore), so the `prepare` script (lefthook install) is made
 # non-fatal without git in package.json.
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . ./
