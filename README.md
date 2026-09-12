@@ -45,9 +45,9 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 
 This boilerplate uses **[Feature-Sliced Design (FSD)](https://feature-sliced.design)**, a methodology for structuring frontend applications. It helps to keep the codebase clean, scalable, and easy to navigate by organizing code into layers (`shared`, `entities`, `features`, `widgets`, `pages`, `app`).
 
-Three directories under `src/` are deliberately outside the layers: `generated/` (codegen
-output), `graphql/` (the query documents it reads), and `routes/` (file-based routing). The
-seven files in `src/` itself are entry points — client, server, router, start and typings.
+Three directories under `src/` sit outside the layers on purpose — `generated/` (codegen
+output), `graphql/` (its query documents) and `routes/` (file-based routing); the seven
+files in `src/` itself are entry points.
 
 ## Key Features
 
@@ -131,12 +131,6 @@ To replace OIDC with your own logic:
 - `npm run storybook:serve`: Starts the component playground (Ladle) for developing UI components.
 - `npm run storybook:build`: Builds the static storybook for deployment.
 - `npm run gen`: Generates TypeScript types for GraphQL operations.
-
-## Perfect Pairing with [LiteEnd](https://github.com/uxname/LiteEnd-Go)
-
-This LiteFront boilerplate is best suited for use with [LiteEnd](https://github.com/uxname/LiteEnd-Go), as they are
-designed to work seamlessly together. LiteEnd provides a backend that integrates smoothly with LiteFront via GraphQL and
-TypeScript, enabling a cohesive full-stack development experience.
 
 ## Get Started
 
