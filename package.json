@@ -53,7 +53,6 @@
     "@sentry/react": "^10.68.0",
     "@tanstack/react-router": "^1.170.18",
     "@tanstack/react-start": "^1.168.32",
-    "@tanstack/router-devtools": "^1.167.0",
     "@urql/exchange-graphcache": "^9.0.1",
     "@urql/exchange-retry": "^2.0.0",
     "lucide-react": "^1.27.0",
@@ -63,13 +62,14 @@
     "react-error-boundary": "^6.1.2",
     "react-hook-form": "^7.83.0",
     "react-oidc-context": "^3.3.1",
-    "react-scan": "^0.5.7",
     "sonner": "^2.0.7",
     "urql": "^5.0.3",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@tanstack/router-devtools": "^1.167.0",
+    "react-scan": "^0.5.7",
     "@biomejs/biome": "2.5.12",
     "@graphql-codegen/cli": "^7.2.0",
     "@graphql-codegen/schema-ast": "^6.1.0",
