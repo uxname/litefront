@@ -11,7 +11,7 @@
   "prHourlyLimit": 2,
   "packageRules": [
     {
-      "description": "Flag major updates for manual review — they may carry breaking changes the CI gate is meant to catch.",
+      "description": "Flag major updates for manual review — there is no CI (meta ADR-0001), so run `task check` / `npm run check` locally before merging one.",
       "matchUpdateTypes": ["major"],
       "addLabels": ["major-update"]
     }

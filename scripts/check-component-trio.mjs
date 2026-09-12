@@ -4,10 +4,10 @@
 // <Name>.stories.tsx (a Ladle story) and <Name>.test.tsx (a Vitest test).
 //
 // This makes the "every component has a story + test" rule mechanically
-// non-bypassable: it runs inside `npm run check`, which the pre-commit hook and
-// CI both invoke. A component is never merged without its trio. (Feature/entity
-// components are governed by the coverage gate in vite.config.ts instead, where
-// a uniform file-name convention does not hold.)
+// non-bypassable: it runs inside `npm run check`, which the pre-commit hook invokes
+// (there is no CI — meta ADR-0001). Feature/entity components are governed by the
+// coverage thresholds in vitest.config.ts instead, where a uniform file-name
+// convention does not hold.
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
