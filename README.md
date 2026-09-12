@@ -191,11 +191,7 @@ npx degit uxname/litefront my-app && cd my-app && git init && git add . && git c
 
     **Important:** Open `.env` and fill in your OIDC provider details (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`, etc.) or the app will not be able to authenticate users.
 
-5. **Generate GraphQL types**
-
-    ```bash
-    npm run gen
-    ```
+5. **GraphQL types** are already generated and committed in `src/generated/` — run `npm run gen` only after the backend schema changes.
 
 6. **Run the development server**
 
