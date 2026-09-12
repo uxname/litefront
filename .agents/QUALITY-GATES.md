@@ -3,11 +3,13 @@
 ## The one rule
 
 **Always use `npm run check` for the full gate. Never run `npm run lint && npm run
-ts:check` separately** — that skips knip, steiger, the trio check and Biome's
-auto-fix, and the pre-commit hook will then fail on things you thought you had run.
+ts:check` separately** — that skips knip, steiger and the trio check, and the
+pre-commit hook will then fail on things you thought you had run. `check` fixes
+nothing on its own: when it goes red on formatting, run `npm run lint:fix` and
+commit the result.
 
 ```bash
-npm run check          # stylelint + tsc + biome (write) + knip + steiger + trio
+npm run check          # stylelint + tsc + biome (check) + knip + steiger + trio
 npm run verify:commit  # check + gitleaks           (what pre-commit runs)
 npm run verify:push    # verify:commit + test:cov + E2E + Ladle build (pre-push)
 ```
@@ -16,11 +18,8 @@ Hooks are thin — all logic is in npm scripts, so the hook and your terminal ru
 exactly the same thing. There is **no CI**: these hooks are the whole guarantee, and
 `--no-verify` has nothing behind it.
 
-> Two honest caveats. `check` runs Biome in **write** mode, so it *fixes* rather than
-> fails, and lefthook does not re-stage — what you commit can differ from what was
-> checked, so re-check `git diff` after a `check` that changed files. And `secrets`
-> silently succeeds when gitleaks is not installed, so a green run on a machine
-> without it proves nothing.
+> One honest caveat: `secrets` silently succeeds when gitleaks is not installed, so
+> a green run on a machine without it proves nothing.
 
 ## Fixing failures — use the right tool
 

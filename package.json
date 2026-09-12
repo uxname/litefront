@@ -40,7 +40,7 @@
     "lint:style": "stylelint \"**/*.{css,scss}\"",
     "lint:style:fix": "npm run lint:style -- --fix",
     "ts:check": "tsc --noEmit",
-    "check": "npm run compose:check && npx run-p lint:style ts:check lint:fix knip lint:fsd trio",
+    "check": "npm run compose:check && npx run-p lint:style ts:check lint knip lint:fsd trio",
     "trio": "node scripts/check-component-trio.mjs",
     "stories:check": "node scripts/check-stories.mjs",
     "knip": "knip --production",
