@@ -2,10 +2,13 @@ import { buildAccountCenterUrl, useAuth } from "@features/auth";
 import { ProfileForm } from "@features/profile";
 import { useMeQuery } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
+import { logError } from "@shared/lib/logger";
 import { Button } from "@shared/ui/Button";
 import { Card } from "@shared/ui/Card";
+import { PageLoader } from "@shared/ui/PageLoader";
 import { Skeleton } from "@shared/ui/Skeleton";
-import { Link } from "@tanstack/react-router";
+import { toast } from "@shared/ui/Toaster";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Header } from "@widgets/Header";
 import {
   ArrowLeft,
@@ -14,7 +17,7 @@ import {
   Mail,
   User as UserIcon,
 } from "lucide-react";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import {
   buildSecurityActions,
   formatMemberSince,
@@ -25,7 +28,78 @@ import {
   roleLabel,
 } from "../lib/account";
 
-export const AccountPage: FC = () => {
+interface AccountPageProps {
+  /** Set by Logto Account Center on a successful action (via `show_success`). */
+  showSuccess?: boolean;
+}
+
+/**
+ * The page's auth gate. It lives here and not in `src/routes/account.tsx`
+ * because route files are not an FSD layer and no gate checks them, so logic
+ * put there is logic nothing reviews.
+ *
+ * The gate wraps rather than merges: AccountView must not mount — and must not
+ * fire its `me` query — until the user is actually authenticated.
+ */
+export const AccountPage: FC<AccountPageProps> = ({ showSuccess }) => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (showSuccess) {
+      toast.success(m.change_password_success());
+      // Drop the one-shot flag so a refresh doesn't re-trigger the toast.
+      void navigate({ to: "/account", search: {}, replace: true });
+    }
+  }, [showSuccess, navigate]);
+
+  // Client-side auth gate. The route is `ssr: false`, so the guard runs only in
+  // the browser where the real OIDC context is live. (Previously this lived in
+  // `beforeLoad` via router context; the router no longer carries auth.)
+  useEffect(() => {
+    if (auth.isLoading || auth.isAuthenticated) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        // Kick off sign-in, remembering where the user was headed so the callback
+        // returns them here. `returnTo` is consumed by `history.replace()` in
+        // AppProviders, which takes a router path — an absolute URL would be
+        // parsed as the pathname itself and land on a 404. Same shape as
+        // HeaderControls.
+        await auth.signinRedirect({
+          state: {
+            returnTo: window.location.pathname + window.location.search,
+          },
+        });
+      } catch (error) {
+        // The IdP being unreachable must not strand the user on the loader
+        // forever: report it and fall back to a page they can actually use.
+        logError("signin_redirect_failed", error, {
+          tags: { flow: "account-signin-redirect" },
+        });
+        if (!cancelled) {
+          toast.error(m.error_unexpected());
+          void navigate({ to: "/" });
+        }
+        return;
+      }
+      // Fallback for the mock-auth provider (signinRedirect is a no-op there):
+      // send the user home instead of leaving them on a blocked page.
+      if (!cancelled) void navigate({ to: "/" });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [auth.isLoading, auth.isAuthenticated, auth.signinRedirect, navigate]);
+
+  if (auth.isLoading || !auth.isAuthenticated) {
+    return <PageLoader />;
+  }
+
+  return <AccountView />;
+};
+
+const AccountView: FC = () => {
   const auth = useAuth();
   const claims = auth.user?.profile;
   const [{ data, fetching, error }, refetchMe] = useMeQuery();

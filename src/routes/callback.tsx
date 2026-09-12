@@ -1,27 +1,11 @@
-import { captureMessage } from "@shared/lib/sentry";
+import { CallbackHandler } from "@features/auth";
 import { createFileRoute } from "@tanstack/react-router";
-import { FC, useEffect } from "react";
 
 interface CallbackSearch {
   code?: string;
   state?: string;
   iss?: string;
 }
-
-const CallbackComponent: FC = () => {
-  useEffect(() => {
-    captureMessage("Auth callback received", { level: "info" });
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Authenticating...</h2>
-        <span className="loading loading-spinner loading-lg text-primary"></span>
-      </div>
-    </div>
-  );
-};
 
 export const Route = createFileRoute("/callback")({
   // OIDC redirect handling is browser-only; don't render on the server.
@@ -31,5 +15,5 @@ export const Route = createFileRoute("/callback")({
     state: typeof search.state === "string" ? search.state : undefined,
     iss: typeof search.iss === "string" ? search.iss : undefined,
   }),
-  component: CallbackComponent,
+  component: CallbackHandler,
 });

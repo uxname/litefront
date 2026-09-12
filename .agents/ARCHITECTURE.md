@@ -85,8 +85,7 @@ Two things it does *not* cover, so watch them by hand:
 
 - **`src/routes/` is not an FSD layer.** It is the one place that may reference every
   layer, and it is unchecked. Keep route files to `createFileRoute` + `head()` +
-  a component imported from `pages/`; today `account.tsx` and `callback.tsx` hold page
-  logic, which is the pattern *not* to copy.
+  a component imported from `pages/` or a feature slice — nothing else.
 - Segment names must describe **purpose**, not contents. `providers`, `hooks`,
   `utils`, `helpers`, `types` are rejected by the FSD plugin — that is why the app
   layer's segment is `bootstrap`, not `providers`.

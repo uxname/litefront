@@ -1,76 +1,10 @@
-import { useAuth } from "@features/auth";
-import { m } from "@generated/paraglide/messages";
 import { AccountPage } from "@pages/account";
-import { logError } from "@shared/lib/logger";
-import { PageLoader } from "@shared/ui/PageLoader";
-import { toast } from "@shared/ui/Toaster";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
 
 interface AccountSearch {
   /** Set by Logto Account Center on a successful action (via `show_success`). */
   show_success?: boolean;
 }
-
-const AccountRoute = () => {
-  const auth = useAuth();
-  const { show_success } = Route.useSearch();
-  const navigate = Route.useNavigate();
-
-  useEffect(() => {
-    if (show_success) {
-      toast.success(m.change_password_success());
-      // Drop the one-shot flag so a refresh doesn't re-trigger the toast.
-      void navigate({ search: {}, replace: true });
-    }
-  }, [show_success, navigate]);
-
-  // Client-side auth gate. This route is `ssr: false`, so the guard runs only in
-  // the browser where the real OIDC context is live. (Previously this lived in
-  // `beforeLoad` via router context; the router no longer carries auth, so the
-  // gate moved into the component.)
-  useEffect(() => {
-    if (auth.isLoading || auth.isAuthenticated) return;
-    let cancelled = false;
-    void (async () => {
-      try {
-        // Kick off sign-in, remembering where the user was headed so the callback
-        // returns them here. `returnTo` is consumed by `history.replace()` in
-        // AppProviders, which takes a router path — an absolute URL would be
-        // parsed as the pathname itself and land on a 404. Same shape as
-        // HeaderControls.
-        await auth.signinRedirect({
-          state: {
-            returnTo: window.location.pathname + window.location.search,
-          },
-        });
-      } catch (error) {
-        // The IdP being unreachable must not strand the user on the loader
-        // forever: report it and fall back to a page they can actually use.
-        logError("signin_redirect_failed", error, {
-          tags: { flow: "account-signin-redirect" },
-        });
-        if (!cancelled) {
-          toast.error(m.error_unexpected());
-          void navigate({ to: "/" });
-        }
-        return;
-      }
-      // Fallback for the mock-auth provider (signinRedirect is a no-op there):
-      // send the user home instead of leaving them on a blocked page.
-      if (!cancelled) void navigate({ to: "/" });
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [auth.isLoading, auth.isAuthenticated, auth.signinRedirect, navigate]);
-
-  if (auth.isLoading || !auth.isAuthenticated) {
-    return <PageLoader />;
-  }
-
-  return <AccountPage />;
-};
 
 export const Route = createFileRoute("/account")({
   // Auth is browser-only (OIDC + window); never render this on the server.
@@ -95,5 +29,5 @@ export const Route = createFileRoute("/account")({
       },
     ],
   }),
-  component: AccountRoute,
+  component: () => <AccountPage showSuccess={Route.useSearch().show_success} />,
 });
