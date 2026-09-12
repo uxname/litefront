@@ -141,9 +141,9 @@ list — add new aliases to both or knip reports phantom dead code.
   quotes** and organizes imports (`organizeImports: on`).
 - Unused imports, variables and parameters are **errors** (Biome + TS).
 - Prefer small focused functions and explicit interfaces over clever generics.
-- **Tailwind CSS v4** (+ SCSS modules if ever needed). Utility-first; keep any module
-  styles scoped.
-- Stylelint runs on `**/*.{css,scss}` and allows SCSS at-rules.
+- **Tailwind CSS v4**, utility-first; keep any module styles scoped. There is no Sass
+  preprocessor — add `sass` back if a derived product wants one.
+- Stylelint runs on `**/*.css` and allows Tailwind at-rules.
 
 ## TypeScript
 

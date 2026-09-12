@@ -158,7 +158,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
     ].filter(Boolean),
     css: {
       modules: {
-        // Enable CSS Modules for all .scss files
+        // Applies to *.module.css (the project has none today).
         localsConvention: "camelCaseOnly",
       },
     },
