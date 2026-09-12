@@ -21,9 +21,9 @@ npm run check              # the full quality gate — use this, always
 exported variable is another) and the backend reachable at it. Unset, the address becomes the string `undefined` and the
 error reads `Failed to load schema from undefined` — it never says "variable".
 
-Build & run: `npm run build:vite` → `.output/` (Nitro Node server +
+Build & run: `npm run build` → `.output/` (Nitro Node server +
 `.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
-`npm run build` = build + `check`. `docker compose up -d` serves `.output` on port
+the build runs no checks — the gate is a separate `npm run check`. `docker compose up -d` serves `.output` on port
 3000 — the runtime image contains only `.output` and is self-contained.
 
 **The image carries no environment.** The public values are read from the

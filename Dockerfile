@@ -27,7 +27,7 @@ ENV NODE_ENV=production
 # BOOT (src/shared/config/env.ts), so the bundle holds no authority, client id
 # or API URL. One built image runs in every environment — the tag says which
 # code, never which server.
-RUN npm run build:vite
+RUN npm run build
 
 # Production stage — Node runtime serving the SSR server (replaces the previous
 # static Caddy host now that rendering happens on the server).

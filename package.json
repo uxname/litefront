@@ -8,8 +8,7 @@
   },
   "scripts": {
     "____________________BUILD AND RUN______________________________________": "",
-    "build": "npm run build:vite && npx run-p check",
-    "build:vite": "vite build",
+    "build": "vite build",
     "start:dev": "vite",
     "start:prod": "node .output/server/index.mjs",
     "docker:build": "docker build -t \"${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}\" .",

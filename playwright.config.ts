@@ -86,12 +86,12 @@ export default defineConfig({
   webServer: {
     /* Build once, then run that build — the deployment values go to the SERVER,
        never to the build, the same way a container gets them. VITE_MOCK_AUTH is
-       the one variable still passed to `build:vite`, and it is not a deployment
+       the one variable still passed to `npm run build`, and it is not a deployment
        value: it swaps the real OIDC provider for the mock one inside the bundle
        (see shared/config), which is precisely what must not be flippable on a
        running container. tests/e2e/runtime-config.spec.ts reuses this build to
        prove the rest of the values are read at startup. */
-    command: `VITE_MOCK_AUTH=true npm run build:vite && PORT=${e2ePort} VITE_BASE_URL=${e2eBaseURL} npm run start:prod`,
+    command: `VITE_MOCK_AUTH=true npm run build && PORT=${e2ePort} VITE_BASE_URL=${e2eBaseURL} npm run start:prod`,
     url: e2eBaseURL,
     /* Never reuse. Same reasoning as `forbidOnly` above: with no CI this hook IS
        the gate, and a stranger on the port would silently become the system

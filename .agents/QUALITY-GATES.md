@@ -85,7 +85,7 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 
 ## Bundle size
 
-`npm run build:vite` writes a treemap next to the build output; open it to see what
+`npm run build` writes a treemap next to the build output; open it to see what
 grew. Usual offenders, in the order they usually pay off:
 
 1. A heavy library pulled into the **root** route's preload — the cost lands on every
