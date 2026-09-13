@@ -37,9 +37,10 @@ export const initSentry = () => {
   });
 
   // Session Replay loads in its own chunk (see ./replay), so the first screen
-  // never pays for it. The sample rates above are already in effect, so a
-  // sampled session starts recording as soon as the chunk lands — no reload. If
-  // the chunk cannot be fetched at all, the app carries on without replays.
+  // never pays for it. The trade is that recording starts when the chunk lands,
+  // not at page load: a sampled session is missing the first few hundred
+  // milliseconds, which is the window an early boot error happens in. If the
+  // chunk cannot be fetched at all, the app carries on without replays.
   void import("./replay")
     .then(({ addReplayIntegration }) => {
       addReplayIntegration();
