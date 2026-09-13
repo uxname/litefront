@@ -12,20 +12,23 @@ afterEach(() => {
 });
 
 describe("uploadAvatar", () => {
-  it("POSTs to <origin>/upload and returns the storage URL untouched", async () => {
+  it("POSTs to <origin>/upload and returns the signed link untouched", async () => {
+    const signed =
+      "http://storage.test:3900/uploads/a.png?X-Amz-Expires=900&X-Amz-Signature=abc";
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => [
-        { filename: "a.png", path: "http://storage.test:3900/uploads/a.png" },
+        { filename: "a.png", key: "2026/01/02/03-04/a.png", path: signed },
       ],
     });
     vi.stubGlobal("fetch", fetchMock);
 
     const url = await uploadAvatar(makeFile(), "tok");
 
-    // `path` is already the object's absolute public URL — see the strict pair
-    // in tests/unit/features/profile/upload-avatar.test.ts.
-    expect(url).toBe("http://storage.test:3900/uploads/a.png");
+    // `path` is the ready-to-use link, signature included: passed through
+    // verbatim, because the backend reads the object out of it when the form is
+    // saved and signs a new one on every read.
+    expect(url).toBe(signed);
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(calledUrl).toBe(`${ORIGIN}/upload`);
     expect(init.method).toBe("POST");
@@ -37,7 +40,11 @@ describe("uploadAvatar", () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => [
-        { filename: "a.png", path: "http://storage.test:3900/uploads/a.png" },
+        {
+          filename: "a.png",
+          key: "2026/01/02/03-04/a.png",
+          path: "http://storage.test:3900/uploads/a.png?X-Amz-Signature=abc",
+        },
       ],
     });
     vi.stubGlobal("fetch", fetchMock);

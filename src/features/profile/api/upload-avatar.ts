@@ -2,8 +2,15 @@ import { env } from "@shared/config";
 
 interface UploadedFile {
   filename: string;
-  /** Absolute public URL of the stored object — never a path to join onto. */
+  /**
+   * Absolute URL the browser downloads the object from — never a path to join
+   * onto. Unless the backend runs in public file mode it is a SIGNED link that
+   * expires (`FILE_LINK_TTL_MINUTES`), so it is for showing the file now, not
+   * for keeping.
+   */
   path: string;
+  /** The object's permanent name in storage — what a signed link is signed for. */
+  key: string;
 }
 
 /** Backend REST error envelope (`internal/httperr`): `{ statusCode, message }`. */
@@ -17,10 +24,13 @@ const UPLOAD_TIMEOUT_MS = 30_000;
 
 /**
  * Upload an avatar image to the backend REST endpoint (`POST /upload`) and
- * return the absolute, publicly-servable URL of the stored file.
+ * return the URL the browser can load it from right now.
  *
  * The GraphQL server has no upload mutation, so this talks to the same origin
- * as the GraphQL endpoint. The returned URL is then saved via `updateProfile`.
+ * as the GraphQL endpoint. The returned link is handed straight back to
+ * `updateProfile`: the backend recognises its own link, stores the permanent
+ * object behind it, and signs a fresh link on every read — which is why nothing
+ * here has to care that this one expires.
  */
 export const uploadAvatar = async (
   file: File,
@@ -58,5 +68,6 @@ export const uploadAvatar = async (
 
   // Returned as-is: the file lives in object storage, not behind this API, so
   // prefixing the API origin would build a dead "https://api/http://storage/…".
+  // Signature and all — the backend strips what it must before storing it.
   return uploaded.path;
 };
