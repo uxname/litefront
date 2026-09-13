@@ -85,6 +85,37 @@ switch it to a semantic token and re-capture.
   without it reports nothing — turning reporting on is a restart with the
   variable set, never a rebuild.
 
+## Session Replay: privacy, and where its code lives
+
+Session Replay records what a visitor saw. Two things about it are settled here,
+and both stay settled unless a derived product decides otherwise in writing.
+
+**Privacy.** Recordings are masked: `maskAllText` and `blockAllMedia` are on
+(`src/shared/lib/sentry/replay.ts`), so text a visitor typed or read — emails,
+tokens, profile data — is replaced by blocks, and images and video never leave
+the browser. This is Sentry's own default and **this template does not turn it
+off**; turning it off records real user input, so it is a product decision with a
+privacy consequence, not a config tweak. How long recordings are kept and who in
+the organisation can open them are **not** settled here either: they follow the
+retention and the member list of whatever Sentry plan the derived product's
+operator signs up for.
+
+**Where the code lives.** The recorder (rrweb, ~120 kB raw) is not in the first
+download. `initSentry` starts it with a dynamic `import("./replay")` right after
+`Sentry.init`, so the bundler gives it a chunk of its own; a sampled session
+still records from its start — the chunk lands in the same tick, with no page
+reload — and if it cannot be fetched at all (Sentry blocked, ad blocker, offline)
+the `.catch` leaves the app running without replays. Check it after a build:
+
+```sh
+npm run build
+grep -rl rrweb .output/public/assets/*.js   # expect exactly one: assets/replay-*.js
+```
+
+Any other file in that list means replay has been pulled back into the entry
+bundle — the usual cause is calling `Sentry.replayIntegration()` from
+`config.ts` again instead of from the lazily-imported module.
+
 ## Production: what a running app tells you
 
 The harnesses above are *development* tools — they need a browser and a repo. In

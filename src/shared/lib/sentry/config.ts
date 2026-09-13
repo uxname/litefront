@@ -14,15 +14,7 @@ export const initSentry = () => {
     environment: env.MODE,
     release: env.VITE_APP_VERSION || "development",
 
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      // Mask all text and block media in session replays so PII and secrets
-      // visible in the DOM (emails, tokens, profile data) are never recorded.
-      Sentry.replayIntegration({
-        maskAllText: true,
-        blockAllMedia: true,
-      }),
-    ],
+    integrations: [Sentry.browserTracingIntegration()],
 
     tracesSampleRate: env.PROD ? 0.1 : 1.0,
     replaysSessionSampleRate: 0.1,
@@ -43,6 +35,18 @@ export const initSentry = () => {
       return event;
     },
   });
+
+  // Session Replay loads in its own chunk (see ./replay), so the first screen
+  // never pays for it. The sample rates above are already in effect, so a
+  // sampled session starts recording as soon as the chunk lands — no reload. If
+  // the chunk cannot be fetched at all, the app carries on without replays.
+  void import("./replay")
+    .then(({ addReplayIntegration }) => {
+      addReplayIntegration();
+    })
+    .catch(() => {
+      // A missing replay recorder must never take the app down with it.
+    });
 };
 
 export const captureException = Sentry.captureException;
