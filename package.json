@@ -76,7 +76,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@tanstack/router-devtools": "^1.167.0",
+    "@tanstack/react-router-devtools": "^1.167.0",
     "react-scan": "^0.5.7",
     "@biomejs/biome": "2.5.12",
     "@graphql-codegen/cli": "^7.2.0",
