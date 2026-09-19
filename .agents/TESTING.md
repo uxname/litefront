@@ -51,9 +51,9 @@ Notes that have bitten before:
 - Assert on the DOM contract you actually care about. `toHaveStyle` compares
   *computed* values (jsdom ≥ 30 resolves `2rem` → `32px`); to assert a value is passed
   through verbatim, read `el.style.<prop>`.
-- There are duplicated test pairs (`src/**` next to `tests/unit|component/**`) covering
-  the same units at different strictness. When you change a contract, grep for **both**
-  — a stale duplicate is how limits drift silently.
+- A unit or component test lives **next to the file it tests** (`src/**/<name>.test.*`),
+  and that is the only place. `tests/` holds `setup.ts` and the Playwright suite,
+  nothing else — a second tree of tests for the same units is how limits drift silently.
 
 ## Playwright (E2E)
 

@@ -53,4 +53,3 @@ export const initSentry = () => {
 export const captureException = Sentry.captureException;
 export const captureMessage = Sentry.captureMessage;
 export const setUser = Sentry.setUser;
-export const withScope = Sentry.withScope;

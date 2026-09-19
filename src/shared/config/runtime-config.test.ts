@@ -40,7 +40,8 @@ const injectedConfig = Object.fromEntries(
 const loadScript = async (): Promise<string> => {
   vi.resetModules();
   vi.stubGlobal(RUNTIME_CONFIG_GLOBAL, injectedConfig);
-  const { runtimeConfigScript } = await import("@shared/config");
+  // Through the slice's public entry — the same import the app itself uses.
+  const { runtimeConfigScript } = await import("./index");
   return runtimeConfigScript;
 };
 

@@ -8,9 +8,9 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
-    // E2E (Playwright) lives under tests/e2e and is excluded here; everything
-    // else — co-located src/**/*.test.*, tests/unit/**, tests/component/** —
-    // is picked up by Vitest's defaults.
+    // E2E (Playwright) lives under tests/e2e and is excluded here; the unit and
+    // component tests are co-located (src/**/*.test.*) and picked up by Vitest's
+    // defaults.
     exclude: ["tests/e2e", "node_modules", "dist", ".output", ".opencode"],
     testTimeout: 30_000,
     hookTimeout: 30_000,

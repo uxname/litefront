@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { Client, type CombinedError } from "urql";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Sentry is a side-effecting dependency (network/transport). The error exchange
@@ -11,6 +11,12 @@ vi.mock("@shared/lib/sentry", () => ({
 // Spy on urql's Client constructor while keeping the real implementation, so
 // `instanceof Client` still holds AND we can inspect the config it was built with.
 const clientSpy = vi.fn();
+// The error exchange keeps its onError in a closure; catch it on the way in so
+// the tests can fire an error at it. vi.hoisted: the mock factory below runs
+// before this file's own statements.
+const exchange = vi.hoisted(() => ({
+  onError: undefined as ((error: CombinedError) => void) | undefined,
+}));
 vi.mock("urql", async (importOriginal) => {
   const actual = await importOriginal<typeof import("urql")>();
   class SpiedClient extends actual.Client {
@@ -19,9 +25,17 @@ vi.mock("urql", async (importOriginal) => {
       super(args);
     }
   }
-  return { ...actual, Client: SpiedClient };
+  return {
+    ...actual,
+    Client: SpiedClient,
+    errorExchange: (options: { onError: (error: CombinedError) => void }) => {
+      exchange.onError = options.onError;
+      return actual.errorExchange(options);
+    },
+  };
 });
 
+import { captureException } from "@shared/lib/sentry";
 import { createGraphQLClient } from "./graphql-client";
 
 afterEach(() => {
@@ -75,5 +89,43 @@ describe("createGraphQLClient", () => {
     createGraphQLClient();
     const args = clientSpy.mock.calls[0][0];
     expect(args.fetchOptions().headers).toEqual({});
+  });
+
+  it("reports a GraphQL error with the graphql source tag", () => {
+    createGraphQLClient();
+    const error = {
+      message: "GraphQL Error",
+      graphQLErrors: [{ message: "Some graphql error" }],
+      networkError: undefined,
+    } as unknown as CombinedError;
+
+    exchange.onError?.(error);
+
+    expect(captureException).toHaveBeenCalledWith(error, {
+      tags: { source: "graphql" },
+      extra: {
+        message: "GraphQL Error",
+        graphQLErrors: [{ message: "Some graphql error" }],
+        networkError: undefined,
+      },
+    });
+  });
+
+  it("reports a network error by its message", () => {
+    createGraphQLClient();
+    const error = {
+      message: "Network failure",
+      graphQLErrors: [],
+      networkError: new Error("Failed to fetch"),
+    } as unknown as CombinedError;
+
+    exchange.onError?.(error);
+
+    expect(captureException).toHaveBeenCalledWith(
+      error,
+      expect.objectContaining({
+        extra: expect.objectContaining({ networkError: "Failed to fetch" }),
+      }),
+    );
   });
 });

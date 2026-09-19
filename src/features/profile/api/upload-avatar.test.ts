@@ -29,6 +29,8 @@ describe("uploadAvatar", () => {
     // verbatim, because the backend reads the object out of it when the form is
     // saved and signs a new one on every read.
     expect(url).toBe(signed);
+    // Prefixing the API origin would yield "http://localhost:4000/http://…" — dead.
+    expect(url).not.toContain(ORIGIN);
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(calledUrl).toBe(`${ORIGIN}/upload`);
     expect(init.method).toBe("POST");

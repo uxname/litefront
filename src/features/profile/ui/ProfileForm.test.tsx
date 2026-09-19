@@ -1,12 +1,30 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProfileForm } from "./ProfileForm";
+
+// vi.mock factories run before this file's own statements, so the spies they
+// hand out have to be created in vi.hoisted.
+const { executeMutation, toastSuccess, toastError } = vi.hoisted(() => ({
+  executeMutation: vi.fn(
+    async (): Promise<{ error?: Error; data?: unknown }> => ({
+      error: undefined,
+      data: {},
+    }),
+  ),
+  toastSuccess: vi.fn(),
+  toastError: vi.fn(),
+}));
 
 // The component reads `useUpdateProfileMutation` from the generated GraphQL
 // module; mock it so the test runs without a urql provider. The hook returns
 // the urql tuple [result, executeMutation].
 vi.mock("@generated/graphql", () => ({
-  useUpdateProfileMutation: () => [{}, vi.fn()],
+  useUpdateProfileMutation: () => [{ fetching: false }, executeMutation],
+}));
+
+vi.mock("@shared/ui/Toaster", () => ({
+  toast: { success: toastSuccess, error: toastError },
 }));
 
 // Avatar upload talks to a REST endpoint; stub it so nothing hits the network.
@@ -75,5 +93,32 @@ describe("ProfileForm", () => {
 
     expect(screen.getByLabelText("profile_display_name")).toHaveValue("");
     expect(screen.getByLabelText("profile_bio")).toHaveValue("");
+  });
+
+  const emptyProfile = { avatarUrl: null, displayName: null, bio: null };
+
+  it("submits only changed fields via updateProfile", async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm profile={emptyProfile} />);
+
+    await user.type(screen.getByLabelText("profile_display_name"), "Ann");
+    await user.click(screen.getByRole("button", { name: "profile_save" }));
+
+    await waitFor(() => expect(executeMutation).toHaveBeenCalledTimes(1));
+    expect(executeMutation).toHaveBeenCalledWith({
+      input: { displayName: "Ann" },
+    });
+    expect(toastSuccess).toHaveBeenCalled();
+  });
+
+  it("shows an error toast when the mutation fails", async () => {
+    executeMutation.mockResolvedValueOnce({ error: new Error("boom") });
+    const user = userEvent.setup();
+    render(<ProfileForm profile={emptyProfile} />);
+
+    await user.type(screen.getByLabelText("profile_display_name"), "Bob");
+    await user.click(screen.getByRole("button", { name: "profile_save" }));
+
+    await waitFor(() => expect(toastError).toHaveBeenCalled());
   });
 });

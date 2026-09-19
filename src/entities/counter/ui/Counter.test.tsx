@@ -1,6 +1,7 @@
-import { Counter, useCounterStore } from "@entities/counter";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useCounterStore } from "../model/store";
+import { Counter } from "./Counter";
 
 // Mock the toast
 vi.mock("@shared/ui/Toaster", () => ({

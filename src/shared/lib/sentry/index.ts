@@ -3,5 +3,4 @@ export {
   captureMessage,
   initSentry,
   setUser,
-  withScope,
 } from "./config";

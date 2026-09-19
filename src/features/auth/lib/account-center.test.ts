@@ -1,5 +1,5 @@
-import { buildAccountCenterUrl } from "@features/auth";
 import { describe, expect, it, vi } from "vitest";
+import { buildAccountCenterUrl } from "./account-center";
 
 // getLocale lives in the paraglide runtime; pin it so URLs are deterministic.
 vi.mock("@generated/paraglide/runtime", () => ({

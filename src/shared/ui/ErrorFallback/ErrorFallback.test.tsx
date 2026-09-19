@@ -41,6 +41,51 @@ describe("ErrorFallback", () => {
 
     expect(onRetry).toHaveBeenCalledOnce();
   });
+
+  // The category → title mapping as the user sees it. detectErrorCategory.test.ts
+  // covers the classifier; this covers the wiring from a category to a heading.
+  it.each([
+    ["Forbidden 403", "error_access_denied"],
+    ["Network Error (Failed to fetch)", "error_network"],
+    ["Internal Server Error 500", "error_server"],
+    ["Failed to fetch .well-known/openid-configuration", "error_auth_config"],
+    ["Some strange bug", "error_unexpected"],
+  ])("titles %j as %s", (message, title) => {
+    render(<ErrorFallback error={new Error(message)} />);
+    expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+  });
+
+  it("shows the error message once the developer details are open", async () => {
+    const user = userEvent.setup();
+    render(<ErrorFallback error={new Error("Test error message")} />);
+
+    await user.click(screen.getByRole("button", { name: /dev_details/ }));
+
+    expect(
+      screen.getAllByText(/test error message/i).length,
+    ).toBeGreaterThanOrEqual(1);
+  });
+
+  it("invokes reset when the retry button is pressed", async () => {
+    const user = userEvent.setup();
+    const reset = vi.fn();
+    render(<ErrorFallback error={new Error("boom")} reset={reset} />);
+
+    await user.click(screen.getByRole("button", { name: /action_retry/ }));
+
+    expect(reset).toHaveBeenCalled();
+  });
+
+  it("offers both a retry and a reload button", () => {
+    render(<ErrorFallback error={new Error("boom")} reset={vi.fn()} />);
+
+    expect(
+      screen.getByRole("button", { name: /action_retry/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /action_reload/ }),
+    ).toBeInTheDocument();
+  });
 });
 
 describe("ErrorFallback without an explicit pathname", () => {
