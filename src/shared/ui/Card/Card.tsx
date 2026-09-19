@@ -20,7 +20,12 @@ export const Card: FC<CardProps> = ({
 }) => (
   <section
     className={cn(
-      "overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm",
+      // `card` gives the box its radius from the theme (`--radius-box`). Only the
+      // container is daisyUI's: `card-body` would add a flex gap between children
+      // and `bodyClassName` has to be able to REPLACE the padding; the divided
+      // header has no daisyUI counterpart at all. The border stays a utility —
+      // `card-border` draws base-200, fainter than the base-300 the themes use.
+      "card overflow-hidden border border-base-300 bg-base-100 shadow-sm",
       className,
     )}
   >

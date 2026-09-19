@@ -89,11 +89,20 @@ describe("Card", () => {
     expect(screen.getByTestId("node-desc")).toBeInTheDocument();
   });
 
+  // The border stays a utility on purpose: daisyUI's `card-border` draws it in
+  // base-200, and the themes darkened base-300 precisely so borders are visible.
+  it("keeps the visible base-300 border rather than daisyUI's card-border", () => {
+    const { container } = render(<Card>body</Card>);
+    const section = container.querySelector("section");
+    expect(section).toHaveClass("border", "border-base-300");
+    expect(section).not.toHaveClass("card-border");
+  });
+
   it("merges a custom className onto the section element", () => {
     const { container } = render(<Card className="custom-card">body</Card>);
     expect(container.querySelector("section")).toHaveClass("custom-card");
     // base styles still applied alongside the custom class
-    expect(container.querySelector("section")).toHaveClass("rounded-2xl");
+    expect(container.querySelector("section")).toHaveClass("card");
   });
 
   it("applies the default body padding when no bodyClassName is given", () => {

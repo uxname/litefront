@@ -13,14 +13,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows={rows}
       aria-invalid={invalid || undefined}
       className={cn(
-        "w-full resize-y rounded-xl border bg-base-100 px-3.5 py-2.5 text-sm text-base-content placeholder:text-base-content/70 transition-colors",
-        // The outline colour lives in the invalid/valid branch below, not
-        // here: cn() only joins, so two outline-* classes in one string are
-        // resolved by stylesheet order rather than by the order written.
-        "focus-visible:outline-2 focus-visible:outline-offset-2",
-        "disabled:cursor-not-allowed disabled:bg-base-200 disabled:text-base-content/70",
+        "textarea w-full resize-y placeholder:text-base-content/70",
+        // Size, radius, disabled state and the 2px ring are daisyUI's. An invalid
+        // field is daisyUI's `textarea-error` — red border and red ring in one class. A
+        // valid one keeps two utilities daisyUI does not decide our way: its
+        // default border is fainter than the `base-300` the themes were tuned
+        // for, and its ring is the text colour where the design rule says accent.
         invalid
-          ? "border-error focus-visible:outline-error"
+          ? "textarea-error"
           : "border-base-300 focus-visible:outline-primary",
         className,
       )}

@@ -12,7 +12,13 @@
  *     `primary-content` switched to white so primary buttons stay legible.
  *   - `error` darkened so inline form-error text clears AA on white.
  *   - `base-300` darkened a touch so borders/dividers are actually visible.
- * Everything else mirrors the DaisyUI `cmyk` defaults.
+ * Everything else mirrors the DaisyUI `cmyk` defaults — except the shape tokens,
+ * which are the SAME in both themes on purpose. `shared/ui` takes its corners
+ * from them (`btn`, `input`, `textarea` read --radius-field; `card`, `skeleton`
+ * read --radius-box), and a control must not change shape when the theme does:
+ * 0.75rem and 1rem are the `rounded-xl` / `rounded-2xl` this UI has always had.
+ * `--depth: 0` in both keeps daisyUI from adding a bevel and a drop shadow to
+ * buttons and fields — how far a button lifts is the page's call (DESIGN.md).
  */
 @plugin "daisyui/theme" {
   name: "cmyk";
@@ -40,7 +46,7 @@
   --color-error: oklch(55% 0.21 28.717deg);
   --color-error-content: oklch(98% 0 0deg);
   --radius-selector: 1rem;
-  --radius-field: 0.5rem;
+  --radius-field: 0.75rem;
   --radius-box: 1rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
@@ -81,12 +87,12 @@
   --color-error: oklch(71% 0.194 13.428deg);
   --color-error-content: oklch(27% 0.105 12.094deg);
   --radius-selector: 0.5rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
-  --depth: 1;
+  --depth: 0;
   --noise: 0;
 }
 

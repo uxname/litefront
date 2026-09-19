@@ -42,6 +42,17 @@ describe("Textarea", () => {
     expect(screen.getByRole("textbox")).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("is a daisyUI textarea, red through textarea-error when invalid", () => {
+    const { rerender } = render(<Textarea aria-label="Bio" />);
+    const field = screen.getByRole("textbox");
+    expect(field).toHaveClass("textarea", "border-base-300");
+    expect(field).not.toHaveClass("textarea-error");
+
+    rerender(<Textarea aria-label="Bio" invalid />);
+    expect(field).toHaveClass("textarea-error");
+    expect(field).not.toHaveClass("focus-visible:outline-primary");
+  });
+
   it("accepts typed input", async () => {
     const user = userEvent.setup();
     render(<Textarea aria-label="Editable" />);

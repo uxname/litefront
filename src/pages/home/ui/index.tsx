@@ -89,7 +89,10 @@ export const HomePage: FC = () => {
             <Button
               size="lg"
               onClick={copyInstallCommand}
-              className="group relative cursor-pointer font-mono shadow-xl duration-300 hover:scale-[1.01] hover:shadow-2xl"
+              // `h-auto` + padding: a daisyUI button has a fixed height, and
+              // this one holds a long monospace command that wraps to two lines
+              // on a phone — it has to grow with its text.
+              className="group relative h-auto cursor-pointer px-8 py-4 font-mono shadow-xl duration-300 hover:scale-[1.01] hover:shadow-2xl"
             >
               <span className="text-primary-content">$</span>
               <span>{INSTALL_COMMAND}</span>

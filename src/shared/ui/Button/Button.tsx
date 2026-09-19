@@ -13,32 +13,31 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
 }
 
-// The focus ring's colour belongs to the variant, not to the base string: a
-// red button needs a red ring, and `focus-visible:outline-error` written at a
-// call site would lose — it is emitted BEFORE outline-primary, and cn() only
-// joins. Shadows are deliberately absent: shadow-sm is emitted between
-// shadow-lg and shadow-xl, so a built-in one would beat className="shadow-lg".
-// The page decides how much a button lifts off the surface.
+// Shape, size, fill, hover, disabled and the 2px focus ring are daisyUI's `btn`.
+// What stays a utility of ours is what daisyUI does not decide:
+//  - the ring COLOUR — daisyUI draws the ring but falls back to the text colour,
+//    and the design rule is "accent, or red for a destructive action";
+//  - the `ghost` look, which has no daisyUI counterpart: `btn-ghost` is
+//    borderless and `btn-outline` is dark, this one is a bordered button on the
+//    page surface.
+// A variant pins no shadow: two shadow utilities on one element are resolved by
+// stylesheet order, so a built-in one could beat a call site's. The page decides
+// how much a button lifts off the surface.
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary:
-    "bg-primary text-primary-content hover:bg-primary/90 focus-visible:outline-primary",
+  primary: "btn-primary focus-visible:outline-primary",
   ghost:
-    "bg-base-100 text-base-content border border-base-300 hover:bg-base-200 focus-visible:outline-primary",
-  danger:
-    "bg-base-100 text-error border border-error hover:bg-error/10 focus-visible:outline-error",
+    "bg-base-100 border-base-300 hover:bg-base-200 focus-visible:outline-primary",
+  danger: "btn-outline btn-error focus-visible:outline-error",
   // The loud one: a filled red button for an action that breaks something.
   // `danger` above is its quiet sibling — an outline, not a fill.
-  "danger-solid":
-    "bg-error text-error-content hover:bg-error/90 focus-visible:outline-error",
+  "danger-solid": "btn-error focus-visible:outline-error",
 };
 
-// Everything that a call site may want to override lives here, never in the
-// base string: cn() is a plain join, so the winner of `rounded-xl rounded-2xl`
-// is decided by the stylesheet order, not by the order in this string.
+// md is daisyUI's default size, so it needs no modifier.
 const SIZES: Record<ButtonSize, string> = {
-  sm: "gap-2 rounded-xl px-3 py-1.5 text-sm font-semibold",
-  md: "gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold",
-  lg: "gap-3 rounded-2xl px-8 py-4 text-base font-bold",
+  sm: "btn-sm",
+  md: "",
+  lg: "btn-lg",
 };
 
 /**
@@ -56,8 +55,10 @@ export const buttonClasses = ({
   className?: string;
 } = {}): string =>
   cn(
-    "inline-flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60",
-    "focus-visible:outline-2 focus-visible:outline-offset-2",
+    // `transition-all`, not daisyUI's own list: that one leaves out `scale` and
+    // `translate`, so the press feedback here and the hover lifts call sites add
+    // (`hover:-translate-y-0.5`, `hover:scale-[1.01]`) would snap instead of ease.
+    "btn transition-all active:scale-95",
     VARIANTS[variant],
     SIZES[size],
     className,

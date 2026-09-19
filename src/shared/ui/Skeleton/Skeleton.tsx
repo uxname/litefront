@@ -30,11 +30,9 @@ export const Skeleton: FC<SkeletonProps> = ({
     <div
       aria-hidden="true"
       style={style}
-      className={cn(
-        "animate-pulse bg-base-300/70",
-        VARIANTS[variant],
-        className,
-      )}
+      // `skeleton` is daisyUI's fill and shimmer. It has no shape variants, so
+      // the three shapes stay utilities — which outrank its default radius.
+      className={cn("skeleton", VARIANTS[variant], className)}
     />
   );
 };

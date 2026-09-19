@@ -80,6 +80,13 @@ and these are the places to look before you write anything:
 Every one of them is a trio — implementation, story, test — see
 [TESTING.md](./TESTING.md). Use them; do not re-create them.
 
+`Button`, `Input`, `Textarea`, `Card` and `Skeleton` are thin wrappers over
+daisyUI's own component classes (`btn`, `input`, `textarea`, `card`,
+`skeleton`): size, fill, hover, disabled state and the 2px focus ring are
+daisyUI's. A wrapper adds only what daisyUI does not decide our way — the ring's
+colour, the visible `border-base-300`, the `ghost` look — and says why in a
+comment next to it. Reach for the daisyUI class first in a new control too.
+
 | Component | What it is for |
 |---|---|
 | `Button` | every clickable action. `variant` primary (filled accent) / ghost (outlined) / danger (outlined red, for a delete confirmation) / danger-solid (filled red, for an action that breaks something), `size` sm / md / lg, plus `loading`, `leftIcon`, `rightIcon`. It pins no shadow — how much a button lifts off the surface is the page's call, passed through `className`. Its exported class builder dresses a router link as a button, because a link is an `<a>` and may not contain a `<button>` |
@@ -102,6 +109,12 @@ it is rather than where it is used.
 Two themes are declared in `src/index.css`: **`cmyk`** (light, the default) and
 **`dark`**. Both were tuned for WCAG AA contrast, so their values are not the
 stock palette — do not "restore" them.
+
+The **shape tokens are identical in both themes** on purpose: `--radius-field`
+(0.75rem — buttons, inputs, textareas), `--radius-box` (1rem — cards, skeletons)
+and `--depth: 0`. The shared components take their corners from them, and a
+control must not change shape when the theme does. `--depth: 0` keeps daisyUI
+from adding a bevel and a drop shadow of its own to buttons and fields.
 
 **Use daisyUI semantic tokens, never hardcoded palette colors.** Use
 `bg-base-100/200/300`, `text-base-content` (`/60` for muted), `border-base-300`,
@@ -234,16 +247,18 @@ The short list of things that go wrong here, in the order they go wrong:
    first, and their stories.
 2. **A hardcoded colour.** It looks right in light mode and breaks dark mode.
    Tokens only.
-3. **Assuming `className` wins.** The helper that joins class names only
-   joins them — it does not resolve conflicts. When two classes set the same
-   CSS property, the winner is whichever the stylesheet lists later, and that
-   order is not the order you wrote and not the order of the numbers:
-   `shadow-2xl` is emitted before `shadow-sm`, and `rounded-2xl` before
-   `rounded-xl`. So a component must keep every class a caller may override in
-   its variant or size table, never in its shared base string — and a caller
-   that "overrides" something and sees no change is looking at this, not at a
-   typo. Both times this bit, the wrong result looked perfectly fine in the
-   markup.
+3. **Assuming `className` wins over another utility.** Against a daisyUI
+   component class it always does: daisyUI ships its rules in a nested cascade
+   layer, and a plain utility outranks that layer wherever it sits in the file —
+   so `className="h-auto px-8"` on a `Button` really overrides `btn`'s height
+   and padding. Utility against utility is a different matter. The helper that
+   joins class names only joins them; when two utilities set the same CSS
+   property the winner is whichever the stylesheet lists later, and that order
+   is not the order you wrote and not the order of the numbers: `shadow-2xl` is
+   emitted before `shadow-sm`. That is why `Button` pins no shadow utility and
+   why each variant names exactly one ring colour — and why a caller that
+   "overrides" a utility and sees no change is looking at this, not at a typo.
+   Both times this bit, the wrong result looked perfectly fine in the markup.
 4. **A new spacing or radius scale.** Use the framework's steps and the shell
    numbers above; a one-off `p-[13px]` is how a UI stops looking made by one
    person.

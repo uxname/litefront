@@ -45,14 +45,26 @@ describe("Input", () => {
     expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-invalid");
   });
 
-  it("applies the error border class when invalid", () => {
-    render(<Input invalid />);
-    expect(screen.getByRole("textbox")).toHaveClass("border-error");
+  it("is a daisyUI input", () => {
+    render(<Input />);
+    expect(screen.getByRole("textbox")).toHaveClass("input");
   });
 
-  it("applies the default border class when valid", () => {
+  it("turns red through daisyUI's input-error when invalid, ring included", () => {
+    render(<Input invalid />);
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveClass("input-error");
+    expect(input).not.toHaveClass("focus-visible:outline-primary");
+  });
+
+  it("keeps the visible border and the accent ring when valid", () => {
     render(<Input />);
-    expect(screen.getByRole("textbox")).toHaveClass("border-base-300");
+    const input = screen.getByRole("textbox");
+    expect(input).not.toHaveClass("input-error");
+    expect(input).toHaveClass(
+      "border-base-300",
+      "focus-visible:outline-primary",
+    );
   });
 
   it("accepts typed input from the user", async () => {

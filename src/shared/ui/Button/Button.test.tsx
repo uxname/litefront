@@ -82,32 +82,39 @@ describe("Button", () => {
     expect(screen.getByRole("button").textContent).toBe("LmidR");
   });
 
-  it("size=lg is a large CTA: px-8, py-4 and a rounder corner", () => {
-    render(<Button size="lg">Big</Button>);
-    expect(screen.getByRole("button")).toHaveClass(
-      "px-8",
-      "py-4",
-      "rounded-2xl",
-    );
+  // Size, fill and radius come from daisyUI's `btn` classes, not from utilities
+  // of ours: a call site's own utility then always wins (a utility outranks a
+  // daisyUI component class), which is what makes className a real override.
+  it("every button is a daisyUI btn", () => {
+    render(<Button>Any</Button>);
+    expect(screen.getByRole("button")).toHaveClass("btn");
   });
 
-  it("size=md keeps its old classes (no existing call site changes)", () => {
+  it.each([
+    ["sm", "btn-sm"],
+    ["lg", "btn-lg"],
+  ] as const)("size=%s is daisyUI's %s", (size, cls) => {
+    render(<Button size={size}>Sized</Button>);
+    expect(screen.getByRole("button")).toHaveClass(cls);
+  });
+
+  it("size=md is the plain btn — no size modifier at all", () => {
     render(<Button size="md">Medium</Button>);
-    expect(screen.getByRole("button")).toHaveClass(
-      "px-5",
-      "py-2.5",
-      "rounded-xl",
-    );
+    const btn = screen.getByRole("button");
+    expect(btn).not.toHaveClass("btn-sm");
+    expect(btn).not.toHaveClass("btn-lg");
   });
 
-  it("keeps collision-prone classes in the size table only, so size=lg carries no rounded-xl", () => {
-    render(<Button size="lg">Big</Button>);
-    expect(screen.getByRole("button")).not.toHaveClass("rounded-xl");
+  it("carries no padding or radius utilities of its own", () => {
+    for (const size of ["sm", "md", "lg"] as const) {
+      expect(buttonClasses({ size })).not.toMatch(/\b(px|py|rounded)-/);
+    }
   });
+
   it("exposes the same class string to non-button call sites", () => {
     const classes = buttonClasses({ size: "lg" });
-    expect(classes).toContain("px-8");
-    expect(classes).toContain("rounded-2xl");
+    expect(classes).toContain("btn");
+    expect(classes).toContain("btn-lg");
   });
 
   it("builds its own classes with buttonClasses (one implementation, two callers)", () => {
@@ -116,33 +123,56 @@ describe("Button", () => {
       buttonClasses({ size: "lg" }),
     );
   });
+  it("primary is daisyUI's filled accent button", () => {
+    render(<Button>Go</Button>);
+    expect(screen.getByRole("button")).toHaveClass("btn-primary");
+  });
+
   it("danger-solid is a filled red button", () => {
     render(<Button variant="danger-solid">Crash</Button>);
-    expect(screen.getByRole("button")).toHaveClass(
-      "bg-error",
-      "text-error-content",
-    );
-  });
-
-  it("the old danger variant is untouched: outlined, not filled", () => {
-    render(<Button variant="danger">Delete</Button>);
     const btn = screen.getByRole("button");
-    expect(btn).toHaveClass("bg-base-100", "border-error");
-    expect(btn).not.toHaveClass("bg-error");
-  });
-  it("the focus ring follows the variant's meaning, not the base string", () => {
-    const solid = buttonClasses({ variant: "danger-solid" });
-    expect(solid).toContain("focus-visible:outline-error");
-    expect(solid).not.toContain("focus-visible:outline-primary");
-    expect(buttonClasses({ variant: "primary" })).toContain(
-      "focus-visible:outline-primary",
-    );
+    expect(btn).toHaveClass("btn-error");
+    expect(btn).not.toHaveClass("btn-outline");
   });
 
-  it("pins no shadow, so a call site can ask for a bigger one", () => {
-    // shadow-lg is emitted BEFORE shadow-sm in the compiled stylesheet, so a
-    // built-in shadow-sm would silently beat className="shadow-lg".
-    expect(buttonClasses({ variant: "primary" })).not.toContain("shadow");
-    expect(buttonClasses({ variant: "danger-solid" })).not.toContain("shadow");
+  it("danger is its quiet sibling: outlined, not filled", () => {
+    render(<Button variant="danger">Delete</Button>);
+    expect(screen.getByRole("button")).toHaveClass("btn-outline", "btn-error");
+  });
+
+  it("ghost is a bordered button on the page surface, with no accent fill", () => {
+    render(<Button variant="ghost">Back</Button>);
+    const btn = screen.getByRole("button");
+    expect(btn).toHaveClass("bg-base-100", "border-base-300");
+    expect(btn).not.toHaveClass("btn-primary");
+    expect(btn).not.toHaveClass("btn-error");
+  });
+
+  // daisyUI draws the ring (2px, offset 2px) but leaves its colour to the
+  // variant, so every variant names exactly one: the accent, or red for a
+  // destructive action (DESIGN.md, "Focus must always be visible").
+  it.each([
+    ["primary", "focus-visible:outline-primary"],
+    ["ghost", "focus-visible:outline-primary"],
+    ["danger", "focus-visible:outline-error"],
+    ["danger-solid", "focus-visible:outline-error"],
+  ] as const)("variant=%s has exactly one ring colour: %s", (variant, ring) => {
+    const rings = buttonClasses({ variant })
+      .split(" ")
+      .filter((c) => /^focus-visible:outline-(primary|error)$/.test(c));
+    expect(rings).toEqual([ring]);
+  });
+
+  it("pins no shadow utility, so the page decides how far a button lifts", () => {
+    // Two shadow utilities on one element are resolved by stylesheet order, not
+    // by the order written — a built-in shadow-sm could beat className="shadow-lg".
+    for (const variant of [
+      "primary",
+      "ghost",
+      "danger",
+      "danger-solid",
+    ] as const) {
+      expect(buttonClasses({ variant })).not.toContain("shadow");
+    }
   });
 });

@@ -17,11 +17,11 @@ describe("Skeleton", () => {
     expect(el).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("always applies the pulsing placeholder classes", () => {
+  it("is always a daisyUI skeleton — its fill and shimmer, not ours", () => {
     const { container } = render(<Skeleton />);
     const el = container.firstChild as HTMLElement;
-    expect(el).toHaveClass("animate-pulse");
-    expect(el).toHaveClass("bg-base-300/70");
+    expect(el).toHaveClass("skeleton");
+    expect(el).not.toHaveClass("animate-pulse");
   });
 
   it("defaults to the line variant", () => {
@@ -86,6 +86,6 @@ describe("Skeleton", () => {
     const { container } = render(<Skeleton className="custom-x" />);
     const el = container.firstChild as HTMLElement;
     expect(el).toHaveClass("custom-x");
-    expect(el).toHaveClass("animate-pulse");
+    expect(el).toHaveClass("skeleton");
   });
 });
