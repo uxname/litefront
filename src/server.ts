@@ -5,11 +5,8 @@ import {
   defaultStreamHandler,
   type RequestHandler,
 } from "@tanstack/react-start/server";
-import { cookieName } from "./generated/paraglide/runtime";
+import { cookieMaxAge, cookieName } from "./generated/paraglide/runtime";
 import { paraglideMiddleware } from "./generated/paraglide/server";
-
-// Long-lived locale cookie (1 year) — the user's resolved locale rarely changes.
-const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 // Custom SSR entry: wrap Start's request handler in Paraglide's server
 // middleware so the server resolves the locale from the request (PARAGLIDE_LOCALE
@@ -55,14 +52,16 @@ const fetch: RequestHandler<Register> = (request, opts) =>
       // on the client, so hydration reads back the exact locale the server rendered
       // with — preventing a mismatch when the request's Accept-Language and the
       // browser's navigator.language disagree. A user's explicit choice (which
-      // already sets the cookie via setLocale) is never overwritten.
+      // already sets the cookie via setLocale) is never overwritten. The lifetime
+      // is Paraglide's own `cookieMaxAge` — the one setLocale writes in the
+      // browser — so the two ways this cookie is set agree on when it expires.
       const hasLocaleCookie = request.headers
         .get("cookie")
         ?.includes(`${cookieName}=`);
       if (!hasLocaleCookie) {
         response.headers.append(
           "Set-Cookie",
-          `${cookieName}=${locale}; Path=/; Max-Age=${LOCALE_COOKIE_MAX_AGE}; SameSite=Lax`,
+          `${cookieName}=${locale}; Path=/; Max-Age=${cookieMaxAge}; SameSite=Lax`,
         );
       }
       return response;

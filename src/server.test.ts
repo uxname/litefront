@@ -16,8 +16,12 @@ vi.mock("@tanstack/react-start/server", () => ({
   defaultStreamHandler: {},
 }));
 
+// `cookieMaxAge` is deliberately not Paraglide's real number: the assertion below
+// proves the server takes the lifetime FROM the runtime, so the cookie it sets and
+// the one `setLocale` writes in the browser can never disagree again.
 vi.mock("./generated/paraglide/runtime", () => ({
   cookieName: "PARAGLIDE_LOCALE",
+  cookieMaxAge: 1234,
 }));
 vi.mock("./generated/paraglide/server", () => ({
   paraglideMiddleware: (
@@ -61,5 +65,27 @@ describe("SSR request handler", () => {
 
     expect(response.status).toBe(200);
     expect(captureServerException).not.toHaveBeenCalled();
+  });
+
+  it("persists the resolved locale on a first visit, for as long as Paraglide does", async () => {
+    render.mockResolvedValueOnce(new Response("<html></html>"));
+
+    const response = await server.fetch(new Request("http://localhost/"));
+
+    expect(response.headers.get("Set-Cookie")).toBe(
+      "PARAGLIDE_LOCALE=en; Path=/; Max-Age=1234; SameSite=Lax",
+    );
+  });
+
+  it("leaves an existing locale cookie alone", async () => {
+    render.mockResolvedValueOnce(new Response("<html></html>"));
+
+    const response = await server.fetch(
+      new Request("http://localhost/", {
+        headers: { cookie: "PARAGLIDE_LOCALE=ru" },
+      }),
+    );
+
+    expect(response.headers.get("Set-Cookie")).toBeNull();
   });
 });
