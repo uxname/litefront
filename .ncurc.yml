@@ -5,11 +5,6 @@
 # update. Each hold is blocked by a THIRD-PARTY incompatibility, not by our code:
 # re-check them when the linked cause is resolved, then drop the entry.
 reject:
-  # typescript 7 type-checks @ladle/react's shipped .tsx sources: its types entry
-  # re-exports ./src/ui, and TS resolves .tsx before the sibling .d.ts, so
-  # skipLibCheck does not apply and `tsc --noEmit` fails inside node_modules.
-  # Unblocked when @ladle/react ships types that don't route through .tsx.
-  - typescript
   # vitest 5 (and its coverage-v8 twin) break `npm run check`:
   # @testing-library/jest-dom@7.0.1 still augments the vitest 4 `Assertion<T>`
   # shape, so every jest-dom matcher fails to type-check. Unblocked when jest-dom
