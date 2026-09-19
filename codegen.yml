@@ -2,19 +2,24 @@ overwrite: true
 schema: ${VITE_GRAPHQL_API_URL}
 documents: "./src/graphql/**/*.graphql"
 generates:
-  src/generated/graphql.tsx:
+  src/generated/graphql.ts:
     plugins:
       # NOTE: the standalone `typescript` plugin is intentionally omitted.
       # typescript-operations v6 self-declares the enum/input types its
       # operations use, so including `typescript` produces duplicate
       # declarations. The full schema SDL is emitted to schema.graphql below.
       - "typescript-operations"
-      - "typescript-urql"
+      # One typed `*Document` constant per operation — no generated hooks. urql's
+      # own `useQuery` / `useMutation` infer data and variables from the document,
+      # so the generator is not tied to a client (the urql-specific plugin this
+      # replaced was what held `graphql` back a major version).
+      - "typed-document-node"
     config:
       skipTypename: false
-      withHooks: true
-      withHOC: false
-      withComponent: false
+      useTypeImports: true
+      # The document type comes from urql, which re-exports it — no extra
+      # dependency just to name a type.
+      documentNodeImport: "urql#TypedDocumentNode"
       # liteend-go (gqlgen) exposes custom scalars. Map them to the TS types the UI
       # actually uses so fields stay strongly typed instead of falling back to `any`.
       scalars:

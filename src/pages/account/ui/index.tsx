@@ -1,6 +1,6 @@
 import { buildAccountCenterUrl, useAuth } from "@features/auth";
 import { ProfileForm } from "@features/profile";
-import { useMeQuery } from "@generated/graphql";
+import { MeDocument } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
 import { logError } from "@shared/lib/logger";
 import { Button } from "@shared/ui/Button";
@@ -18,6 +18,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { type FC, useEffect } from "react";
+import { useQuery } from "urql";
 import {
   buildSecurityActions,
   formatMemberSince,
@@ -102,7 +103,9 @@ export const AccountPage: FC<AccountPageProps> = ({ showSuccess }) => {
 const AccountView: FC = () => {
   const auth = useAuth();
   const claims = auth.user?.profile;
-  const [{ data, fetching, error }, refetchMe] = useMeQuery();
+  const [{ data, fetching, error }, refetchMe] = useQuery({
+    query: MeDocument,
+  });
   const me = data?.me;
 
   const securityActions = buildSecurityActions();

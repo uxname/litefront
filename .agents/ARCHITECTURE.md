@@ -99,7 +99,7 @@ src/<layer>/<slice>/
   index.ts        # public API — the ONLY entry other slices import
   ui/             # components
   model/          # store, types, business logic
-  api/            # data access (generated GraphQL hooks live behind this)
+  api/            # data access (GraphQL documents + urql hooks live behind this)
   lib/            # slice-local helpers
 ```
 
@@ -128,8 +128,11 @@ list — add new aliases to both or knip reports phantom dead code.
   unrelated updates don't re-render. Persisted stores must re-apply their side
   effects on rehydrate.
 - **A GraphQL operation** → write it in `src/graphql/**/*.graphql`, run `npm run gen`
-  (needs the backend running — see the meta-repo's cross-project notes), then consume
-  the generated hook from the slice's `api/` segment, never directly in `ui/`.
+  (needs the backend running — see the meta-repo's cross-project notes). The codegen
+  emits one typed `<Name>Document` per operation and **no hooks**: pass the document
+  to urql's own `useQuery({ query: MeDocument })` / `useMutation(UpdateProfileDocument)`
+  and data and variables are inferred from it. Do that from the slice's `api/` or
+  `lib/` segment, never directly in `ui/`.
 - **A new dependency** → check the stdlib and what's already installed first; the
   project is deliberately small.
 

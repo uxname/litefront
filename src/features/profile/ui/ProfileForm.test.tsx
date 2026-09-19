@@ -1,3 +1,4 @@
+import { UpdateProfileDocument } from "@generated/graphql";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -5,22 +6,30 @@ import { ProfileForm } from "./ProfileForm";
 
 // vi.mock factories run before this file's own statements, so the spies they
 // hand out have to be created in vi.hoisted.
-const { executeMutation, toastSuccess, toastError } = vi.hoisted(() => ({
-  executeMutation: vi.fn(
-    async (): Promise<{ error?: Error; data?: unknown }> => ({
-      error: undefined,
-      data: {},
-    }),
-  ),
-  toastSuccess: vi.fn(),
-  toastError: vi.fn(),
-}));
+const { executeMutation, useMutation, toastSuccess, toastError } = vi.hoisted(
+  () => {
+    const executeMutation = vi.fn(
+      async (): Promise<{ error?: Error; data?: unknown }> => ({
+        error: undefined,
+        data: {},
+      }),
+    );
+    return {
+      executeMutation,
+      // urql's hook returns the tuple [result, executeMutation].
+      useMutation: vi.fn(() => [{ fetching: false }, executeMutation]),
+      toastSuccess: vi.fn(),
+      toastError: vi.fn(),
+    };
+  },
+);
 
-// The component reads `useUpdateProfileMutation` from the generated GraphQL
-// module; mock it so the test runs without a urql provider. The hook returns
-// the urql tuple [result, executeMutation].
-vi.mock("@generated/graphql", () => ({
-  useUpdateProfileMutation: () => [{ fetching: false }, executeMutation],
+// The form runs its mutation through urql's `useMutation`; replace just that
+// hook so the test needs no urql provider. The generated module stays real, so
+// the document the form hands to urql is the one the codegen produced.
+vi.mock("urql", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("urql")>()),
+  useMutation,
 }));
 
 vi.mock("@shared/ui/Toaster", () => ({
@@ -108,6 +117,8 @@ describe("ProfileForm", () => {
     expect(executeMutation).toHaveBeenCalledWith({
       input: { displayName: "Ann" },
     });
+    // The operation is the generated document, not a hand-written query string.
+    expect(useMutation).toHaveBeenCalledWith(UpdateProfileDocument);
     expect(toastSuccess).toHaveBeenCalled();
   });
 

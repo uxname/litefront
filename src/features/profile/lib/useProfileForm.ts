@@ -1,6 +1,6 @@
 import {
   type ProfileUpdateInput,
-  useUpdateProfileMutation,
+  UpdateProfileDocument,
 } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,7 @@ import { logError } from "@shared/lib/logger";
 import { toast } from "@shared/ui/Toaster";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "urql";
 import { uploadAvatar } from "../api/upload-avatar";
 import { type ProfileFormValues, profileFormSchema } from "../model/schema";
 import type { ProfileFormProps } from "../ui/ProfileForm";
@@ -30,7 +31,7 @@ const ALLOWED_AVATAR_TYPES = [
  * component is a pure render of this hook's return value.
  */
 export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
-  const [, updateProfile] = useUpdateProfileMutation();
+  const [, updateProfile] = useMutation(UpdateProfileDocument);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
