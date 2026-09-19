@@ -37,7 +37,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev), [Steiger](https://github.com/nicokant/steiger)               |
 | **Git Hooks**            | [Lefthook](https://github.com/evilmartians/lefthook)                                                    |
 | **Testing**              | [Vitest](https://vitest.dev) (Unit), [Playwright](https://playwright.dev) (E2E)                         |
-| **Component Dev**        | [Ladle](https://ladle.dev) (Storybook alternative)                                                      |
+| **Component Dev**        | [Storybook](https://storybook.js.org)                                                                   |
 | **Performance / DX**      | [React Scan](https://react-scan.com) (Performance debugging)                                            |
 | **Deployment**           | [Docker](https://www.docker.com) — Node SSR server ([Nitro](https://nitro.build) `node-server`)         |
 
@@ -128,7 +128,7 @@ To replace OIDC with your own logic:
   trio check. This is the gate — never substitute `lint` + `ts:check`.
 - `npm run verify:commit` / `verify:push`: exactly what the git hooks run.
 - `npm run lint:fsd`: Manually runs FSD layer boundary checks with Steiger.
-- `npm run storybook:serve`: Starts the component playground (Ladle) for developing UI components.
+- `npm run storybook:serve`: Starts the component playground (Storybook) for developing UI components.
 - `npm run storybook:build`: Builds the static storybook for deployment.
 - `npm run gen`: Generates TypeScript types for GraphQL operations.
 

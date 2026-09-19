@@ -1,7 +1,9 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { FormField } from "./FormField";
 
-export const Default: Story = () => (
+export default { component: FormField } satisfies Meta<typeof FormField>;
+
+export const Default: StoryFn = () => (
   <FormField htmlFor="email" label="Email">
     <input
       id="email"
@@ -12,7 +14,7 @@ export const Default: Story = () => (
   </FormField>
 );
 
-export const WithHint: Story = () => (
+export const WithHint: StoryFn = () => (
   <FormField
     htmlFor="username"
     label="Username"
@@ -25,7 +27,7 @@ export const WithHint: Story = () => (
   </FormField>
 );
 
-export const Required: Story = () => (
+export const Required: StoryFn = () => (
   <FormField htmlFor="password" label="Password" required>
     <input
       id="password"
@@ -35,7 +37,7 @@ export const Required: Story = () => (
   </FormField>
 );
 
-export const WithError: Story = () => (
+export const WithError: StoryFn = () => (
   <FormField
     htmlFor="email-err"
     label="Email"
@@ -50,7 +52,7 @@ export const WithError: Story = () => (
   </FormField>
 );
 
-export const ErrorOverridesHint: Story = () => (
+export const ErrorOverridesHint: StoryFn = () => (
   <FormField
     htmlFor="phone"
     label="Phone"
@@ -66,7 +68,7 @@ export const ErrorOverridesHint: Story = () => (
   </FormField>
 );
 
-export const RequiredWithHint: Story = () => (
+export const RequiredWithHint: StoryFn = () => (
   <FormField
     htmlFor="full-name"
     label="Full name"
@@ -80,7 +82,7 @@ export const RequiredWithHint: Story = () => (
   </FormField>
 );
 
-export const WithTextarea: Story = () => (
+export const WithTextarea: StoryFn = () => (
   <FormField htmlFor="bio" label="Bio" hint="Tell us about yourself">
     <textarea
       id="bio"

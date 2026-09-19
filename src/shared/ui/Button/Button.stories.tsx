@@ -1,22 +1,24 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "./Button";
 
-export const Primary: Story = () => (
+export default { component: Button } satisfies Meta<typeof Button>;
+
+export const Primary: StoryFn = () => (
   <Button className="shadow-sm">Primary action</Button>
 );
 
-export const Ghost: Story = () => <Button variant="ghost">Ghost</Button>;
+export const Ghost: StoryFn = () => <Button variant="ghost">Ghost</Button>;
 
-export const Danger: Story = () => <Button variant="danger">Delete</Button>;
+export const Danger: StoryFn = () => <Button variant="danger">Delete</Button>;
 
-export const DangerSolid: Story = () => (
+export const DangerSolid: StoryFn = () => (
   <Button variant="danger-solid" className="shadow-sm">
     Crash the app
   </Button>
 );
 
-export const Sizes: Story = () => (
+export const Sizes: StoryFn = () => (
   <div className="flex items-center gap-3">
     <Button size="sm">Small</Button>
     <Button size="md">Medium</Button>
@@ -24,14 +26,14 @@ export const Sizes: Story = () => (
   </div>
 );
 
-export const Loading: Story = () => <Button loading>Saving…</Button>;
+export const Loading: StoryFn = () => <Button loading>Saving…</Button>;
 
-export const WithLeftIcon: Story = () => (
+export const WithLeftIcon: StoryFn = () => (
   <Button leftIcon={<Mail className="h-4 w-4" />}>Email</Button>
 );
 
-export const WithRightIcon: Story = () => (
+export const WithRightIcon: StoryFn = () => (
   <Button rightIcon={<ArrowRight className="h-4 w-4" />}>Continue</Button>
 );
 
-export const Disabled: Story = () => <Button disabled>Unavailable</Button>;
+export const Disabled: StoryFn = () => <Button disabled>Unavailable</Button>;

@@ -1,24 +1,26 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { Input } from "./Input";
 
-export const Default: Story = () => <Input placeholder="Enter your name" />;
+export default { component: Input } satisfies Meta<typeof Input>;
 
-export const WithValue: Story = () => (
+export const Default: StoryFn = () => <Input placeholder="Enter your name" />;
+
+export const WithValue: StoryFn = () => (
   <Input defaultValue="hello@example.com" />
 );
 
-export const Invalid: Story = () => (
+export const Invalid: StoryFn = () => (
   <Input invalid defaultValue="not-an-email" placeholder="Email" />
 );
 
-export const Disabled: Story = () => (
+export const Disabled: StoryFn = () => (
   <Input disabled placeholder="Unavailable" />
 );
 
-export const Password: Story = () => (
+export const Password: StoryFn = () => (
   <Input type="password" placeholder="Password" />
 );
 
-export const Email: Story = () => (
+export const Email: StoryFn = () => (
   <Input type="email" placeholder="you@example.com" />
 );

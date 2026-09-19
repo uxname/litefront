@@ -1,8 +1,10 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { Button } from "../Button";
 import { Card } from "./Card";
 
-export const Basic: Story = () => (
+export default { component: Card } satisfies Meta<typeof Card>;
+
+export const Basic: StoryFn = () => (
   <Card title="Account settings">
     <p className="text-sm text-base-content/70">
       Manage how your account behaves across the app.
@@ -10,7 +12,7 @@ export const Basic: Story = () => (
   </Card>
 );
 
-export const WithDescription: Story = () => (
+export const WithDescription: StoryFn = () => (
   <Card
     title="Billing"
     description="Update your payment method and review invoices."
@@ -19,7 +21,7 @@ export const WithDescription: Story = () => (
   </Card>
 );
 
-export const WithActions: Story = () => (
+export const WithActions: StoryFn = () => (
   <Card
     title="Team members"
     description="People with access to this workspace."
@@ -29,7 +31,7 @@ export const WithActions: Story = () => (
   </Card>
 );
 
-export const BodyOnly: Story = () => (
+export const BodyOnly: StoryFn = () => (
   <Card>
     <p className="text-sm text-base-content/70">
       A card with no header — just body content.
@@ -37,7 +39,7 @@ export const BodyOnly: Story = () => (
   </Card>
 );
 
-export const ActionsWithoutTitle: Story = () => (
+export const ActionsWithoutTitle: StoryFn = () => (
   <Card actions={<Button size="sm">Refresh</Button>}>
     <p className="text-sm text-base-content/70">
       Header shows because actions are present.
@@ -45,7 +47,7 @@ export const ActionsWithoutTitle: Story = () => (
   </Card>
 );
 
-export const CustomBodyClassName: Story = () => (
+export const CustomBodyClassName: StoryFn = () => (
   <Card title="Edge to edge">
     <div className="bg-base-200 p-8 text-center text-sm">
       Custom body padding via bodyClassName.

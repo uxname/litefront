@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Enforces the "component trio" for the shared design system: every
 // src/shared/ui/<Name>/ that ships an implementation <Name>.tsx MUST also ship
-// <Name>.stories.tsx (a Ladle story) and <Name>.test.tsx (a Vitest test).
+// <Name>.stories.tsx (a Storybook story) and <Name>.test.tsx (a Vitest test).
 //
 // This makes the "every component has a story + test" rule mechanically
 // non-bypassable: it runs inside `npm run check`, which the pre-commit hook invokes
@@ -37,7 +37,7 @@ for (const name of readdirSync(UI_DIR)) {
 
 if (problems.length > 0) {
   console.error(
-    "\n✖ Component trio check failed — every src/shared/ui/<Name>/ must ship a Ladle story and a Vitest test:\n",
+    "\n✖ Component trio check failed — every src/shared/ui/<Name>/ must ship a Storybook story and a Vitest test:\n",
   );
   for (const p of problems) {
     console.error(`  ${p.dir}/ is missing: ${p.missing.join(", ")}`);

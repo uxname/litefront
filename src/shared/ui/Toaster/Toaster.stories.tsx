@@ -1,5 +1,7 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { Toaster, toast } from "./Toaster";
+
+export default { component: Toaster } satisfies Meta<typeof Toaster>;
 
 const TriggerRow = () => (
   <div className="flex flex-wrap gap-3">
@@ -41,7 +43,7 @@ const TriggerRow = () => (
   </div>
 );
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <>
     <button
       type="button"
@@ -54,14 +56,14 @@ export const Default: Story = () => (
   </>
 );
 
-export const AllTypes: Story = () => (
+export const AllTypes: StoryFn = () => (
   <>
     <TriggerRow />
     <Toaster />
   </>
 );
 
-export const WithDescription: Story = () => (
+export const WithDescription: StoryFn = () => (
   <>
     <button
       type="button"
@@ -78,7 +80,7 @@ export const WithDescription: Story = () => (
   </>
 );
 
-export const WithAction: Story = () => (
+export const WithAction: StoryFn = () => (
   <>
     <button
       type="button"
@@ -98,7 +100,7 @@ export const WithAction: Story = () => (
   </>
 );
 
-export const TopCenterPosition: Story = () => (
+export const TopCenterPosition: StoryFn = () => (
   <>
     <button
       type="button"
@@ -111,14 +113,14 @@ export const TopCenterPosition: Story = () => (
   </>
 );
 
-export const RichColors: Story = () => (
+export const RichColors: StoryFn = () => (
   <>
     <TriggerRow />
     <Toaster richColors />
   </>
 );
 
-export const WithCloseButton: Story = () => (
+export const WithCloseButton: StoryFn = () => (
   <>
     <button
       type="button"

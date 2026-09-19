@@ -11,7 +11,7 @@ commit the result.
 ```bash
 npm run check          # stylelint + tsc + biome (check) + knip + steiger + trio
 npm run verify:commit  # check + gitleaks           (what pre-commit runs)
-npm run verify:push    # verify:commit + test:cov + E2E + Ladle build (pre-push)
+npm run verify:push    # verify:commit + test:cov + E2E + Storybook build + story render check (pre-push)
 ```
 
 Hooks are thin — all logic is in npm scripts, so the hook and your terminal run

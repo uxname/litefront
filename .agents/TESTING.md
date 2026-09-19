@@ -6,7 +6,7 @@ drift.
 ## The trio rule
 
 **Every `shared/ui` component is a trio**: `<Name>.tsx` (implementation) +
-`<Name>.stories.tsx` (Ladle story) + `<Name>.test.tsx` (Vitest), with a thin
+`<Name>.stories.tsx` (Storybook story) + `<Name>.test.tsx` (Vitest), with a thin
 `index.ts` re-export. The `trio` step in `npm run check`
 (`scripts/check-component-trio.mjs`) **fails the build** for any `shared/ui`
 component missing its story or test.
@@ -77,13 +77,33 @@ npx playwright test -g "login works"            # one test by name
 - `forbidOnly` is always on: a leftover `test.only` fails the run instead of quietly
   shrinking the suite to one test.
 
-## Stories (Ladle)
+## Stories (Storybook)
 
 ```bash
-npm run storybook:serve     # develop stories
+npm run storybook:serve     # develop stories (http://localhost:61000)
 npm run storybook:build     # also part of the pre-push gate, then cleaned up
+npm run stories:check       # opens every built story headlessly; fails on a throw,
+                            # a console error or an empty canvas
 ```
 
+A story file is plain CSF: a default export naming the component, then one named
+export per state. No args, no controls, no addons — a story here is a function
+that returns the component in that state.
+
+```tsx
+import type { Meta, StoryFn } from "@storybook/react-vite";
+import { Button } from "./Button";
+
+export default { component: Button } satisfies Meta<typeof Button>;
+
+export const Primary: StoryFn = () => <Button>Primary action</Button>;
+```
+
+Storybook runs on its own minimal Vite config (`.storybook/vite.config.ts`), not
+the production one, and `.storybook/preview.ts` supplies the runtime config
+`@shared/config` needs — so a component that imports the config renders in a
+story without any setup of its own.
+
 A story is the component's visual contract: cover each meaningful variant and state,
-including loading and error. Agents can't see Ladle — verify visually through the
+including loading and error. Agents can't see Storybook — verify visually through the
 screenshot harness instead ([OBSERVABILITY.md](./OBSERVABILITY.md)).

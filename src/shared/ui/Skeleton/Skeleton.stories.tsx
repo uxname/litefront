@@ -1,19 +1,21 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { Skeleton } from "./Skeleton";
 
-export const Line: Story = () => <Skeleton variant="line" />;
+export default { component: Skeleton } satisfies Meta<typeof Skeleton>;
 
-export const Circle: Story = () => (
+export const Line: StoryFn = () => <Skeleton variant="line" />;
+
+export const Circle: StoryFn = () => (
   <Skeleton variant="circle" width={48} height={48} />
 );
 
-export const Rect: Story = () => <Skeleton variant="rect" height={120} />;
+export const Rect: StoryFn = () => <Skeleton variant="rect" height={120} />;
 
-export const CustomSize: Story = () => (
+export const CustomSize: StoryFn = () => (
   <Skeleton variant="line" width="50%" height={24} />
 );
 
-export const TextBlock: Story = () => (
+export const TextBlock: StoryFn = () => (
   <div className="flex w-64 flex-col gap-2">
     <Skeleton variant="line" width="80%" />
     <Skeleton variant="line" />
@@ -21,7 +23,7 @@ export const TextBlock: Story = () => (
   </div>
 );
 
-export const Avatar: Story = () => (
+export const Avatar: StoryFn = () => (
   <div className="flex items-center gap-3">
     <Skeleton variant="circle" width={40} height={40} />
     <div className="flex flex-1 flex-col gap-2">
@@ -31,7 +33,7 @@ export const Avatar: Story = () => (
   </div>
 );
 
-export const Card: Story = () => (
+export const Card: StoryFn = () => (
   <div className="flex w-72 flex-col gap-3">
     <Skeleton variant="rect" height={160} />
     <Skeleton variant="line" width="90%" />

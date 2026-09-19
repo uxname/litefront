@@ -60,7 +60,7 @@ nothing that assumes the next request lands on the same copy.
 1. **`npm run check` is the gate.** Never run `lint` and `ts:check` separately — that
    skips knip, steiger, the trio check and Biome's fixes, and the hook will fail on
    what you thought you had run.
-2. **Every `shared/ui` component is a trio**: implementation + Ladle story + test. The
+2. **Every `shared/ui` component is a trio**: implementation + Storybook story + test. The
    build fails without all three.
 3. **New logic is written test-first**, and coverage floors are machine-enforced. Never
    lower a floor to go green — add the test.

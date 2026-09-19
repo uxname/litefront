@@ -1,49 +1,61 @@
 #!/usr/bin/env node
-// Opens every Ladle story in a headless browser and fails if any of them throws
-// while rendering.
+// Opens every Storybook story in a headless browser and fails if any of them
+// throws while rendering.
 //
-// `ladle build` is not this check: it only bundles. A story whose module throws
-// on import — say a config module that expects values the workshop has no way to
-// supply — builds perfectly green and is blank when you open it. That failure
-// mode has already shipped once, and nothing in the repo could see it.
+// `storybook build` is not this check: it only bundles. A story whose module
+// throws on import — say a config module that expects values the workshop has no
+// way to supply — builds perfectly green and is blank when you open it. That
+// failure mode has already shipped once, and nothing in the repo could see it.
 //
 // Runs against the built output, so `npm run storybook:build` has to come first
-// (verify:push does exactly that).
-import { spawn } from "node:child_process";
+// (verify:push does exactly that). No server is started: the browser's requests
+// are answered straight from the build directory.
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { join, normalize, resolve } from "node:path";
 import { chromium } from "@playwright/test";
 
-const PORT = 61234;
-const BASE = `http://localhost:${PORT}`;
-const BOOT_TIMEOUT_MS = 60_000;
+const BUILD_DIR = resolve("storybook-build");
+// Never listened on — every request to this origin is fulfilled from disk below.
+const BASE = "http://localhost:61234";
 
-// `ladle preview` serves storybook-build; --port keeps it off the dev port.
-const server = spawn("npx", ["ladle", "preview", "--port", String(PORT)], {
-  stdio: "ignore",
-});
-const stopServer = () => server.kill("SIGTERM");
-process.on("exit", stopServer);
+if (!existsSync(join(BUILD_DIR, "index.json"))) {
+  console.error(
+    `✖ ${BUILD_DIR}/index.json not found — run 'npm run storybook:build' first.`,
+  );
+  process.exit(1);
+}
 
-/** Polls meta.json until the preview server answers, then returns the story ids. */
-const storyIds = async () => {
-  const deadline = Date.now() + BOOT_TIMEOUT_MS;
-  for (;;) {
-    try {
-      const meta = await (await fetch(`${BASE}/meta.json`)).json();
-      return Object.keys(meta.stories);
-    } catch (error) {
-      if (Date.now() > deadline) {
-        throw new Error(
-          `ladle preview did not answer on ${BASE}: ${error.message}`,
-        );
-      }
-      await new Promise((resolve) => setTimeout(resolve, 250));
-    }
-  }
-};
+// index.json is Storybook's own list of what it built; docs entries have no canvas.
+const { entries } = JSON.parse(
+  readFileSync(join(BUILD_DIR, "index.json"), "utf8"),
+);
+const ids = Object.values(entries)
+  .filter((entry) => entry.type === "story")
+  .map((entry) => entry.id);
 
-const ids = await storyIds();
+// A build that found no stories renders nothing and would otherwise pass: a
+// broken `stories` glob must not look like a clean run.
+if (ids.length === 0) {
+  console.error("✖ The Storybook build contains no stories.");
+  process.exit(1);
+}
+
 const browser = await chromium.launch();
 const page = await browser.newPage();
+
+await page.route(`${BASE}/**`, (route) => {
+  const { pathname } = new URL(route.request().url());
+  const file = normalize(join(BUILD_DIR, decodeURIComponent(pathname)));
+  // Stay inside the build directory, and answer only for real files.
+  if (
+    !file.startsWith(BUILD_DIR) ||
+    !existsSync(file) ||
+    !statSync(file).isFile()
+  ) {
+    return route.fulfill({ status: 404, body: "not found" });
+  }
+  return route.fulfill({ path: file });
+});
 
 const broken = [];
 for (const id of ids) {
@@ -57,12 +69,16 @@ for (const id of ids) {
   };
   page.on("pageerror", onPageError);
   page.on("console", onConsole);
-  await page.goto(`${BASE}/?story=${id}&mode=preview`, {
+  await page.goto(`${BASE}/iframe.html?id=${id}&viewMode=story`, {
     waitUntil: "networkidle",
   });
-  // An empty canvas is a failure too: a story can render nothing without throwing.
+  // An empty canvas is a failure too: a story can render nothing without
+  // throwing. So is Storybook's own error screen, which it shows INSTEAD of
+  // throwing when a story fails — the body class is how it says so.
   const rendered = await page.evaluate(
-    () => (document.querySelector("#ladle-root")?.children.length ?? 0) > 0,
+    () =>
+      (document.querySelector("#storybook-root")?.children.length ?? 0) > 0 &&
+      !document.body.classList.contains("sb-show-errordisplay"),
   );
   page.off("pageerror", onPageError);
   page.off("console", onConsole);
@@ -72,7 +88,6 @@ for (const id of ids) {
 }
 
 await browser.close();
-stopServer();
 
 if (broken.length > 0) {
   console.error(`✖ ${broken.length} of ${ids.length} stories do not render:\n`);

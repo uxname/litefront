@@ -69,7 +69,7 @@ and these are the places to look before you write anything:
 |---|---|
 | What colours exist? | the two theme blocks in `src/index.css` |
 | What controls exist? | the nine directories in `src/shared/ui` |
-| What does a control look like in every state? | its Ladle story — `npm run storybook:serve` |
+| What does a control look like in every state? | its Storybook story — `npm run storybook:serve` |
 | How is a page shell built? | `src/pages/account` (applied), `src/pages/home` (marketing) |
 | How is a form built? | `src/features/profile` |
 | What text exists, and in which languages? | `messages/en.json`, `messages/ru.json` |

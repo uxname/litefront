@@ -1,4 +1,6 @@
-import type { Story } from "@ladle/react";
+import type { Meta, StoryFn } from "@storybook/react-vite";
 import { PageLoader } from "./PageLoader";
 
-export const Default: Story = () => <PageLoader />;
+export default { component: PageLoader } satisfies Meta<typeof PageLoader>;
+
+export const Default: StoryFn = () => <PageLoader />;
