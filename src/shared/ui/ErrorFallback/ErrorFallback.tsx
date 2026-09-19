@@ -42,9 +42,8 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
-  const retryCountRef = useRef(0);
-  // Track pending timers so they are cancelled on unmount (no state updates or
-  // retries fire after the component is gone).
+  // Track pending timers so they are cancelled on unmount (no state update
+  // fires after the component is gone).
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(
     () => () => {
@@ -63,22 +62,16 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   );
   const config = ERROR_CONFIG[category];
 
+  // Retries at once, every time. A person pressing the button IS the backoff;
+  // transient network failures are already retried, with a real exponential
+  // delay, by urql's retryExchange before an error ever reaches this screen.
   const handleRetry = useCallback(() => {
-    const attempt = retryCountRef.current++;
-    const delay = Math.min(1000 * 2 ** attempt, 30000);
-    const doRetry = () => {
-      if (onRetry) {
-        onRetry();
-      } else if (reset) {
-        reset();
-      } else {
-        window.location.reload();
-      }
-    };
-    if (delay <= 1000) {
-      doRetry();
+    if (onRetry) {
+      onRetry();
+    } else if (reset) {
+      reset();
     } else {
-      timeoutsRef.current.push(setTimeout(doRetry, delay));
+      window.location.reload();
     }
   }, [reset, onRetry]);
 

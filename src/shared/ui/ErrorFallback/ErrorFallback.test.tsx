@@ -42,6 +42,21 @@ describe("ErrorFallback", () => {
     expect(onRetry).toHaveBeenCalledOnce();
   });
 
+  // Every press retries at once. The button used to hold the second press back
+  // for two seconds and the third for four, with nothing on screen saying so.
+  it("retries immediately on every press, not only the first", async () => {
+    const user = userEvent.setup();
+    const onRetry = vi.fn();
+    render(<ErrorFallback error={new Error("boom")} onRetry={onRetry} />);
+
+    const retry = screen.getByRole("button", { name: /action_retry/ });
+    await user.click(retry);
+    await user.click(retry);
+    await user.click(retry);
+
+    expect(onRetry).toHaveBeenCalledTimes(3);
+  });
+
   // The category → title mapping as the user sees it. detectErrorCategory.test.ts
   // covers the classifier; this covers the wiring from a category to a heading.
   it.each([
