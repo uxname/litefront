@@ -131,12 +131,16 @@ Grep by the event slug, the way you would grep the backend's `msg` field:
 | Slug | When |
 |---|---|
 | `react_error_boundary` | a render threw and the fallback UI took over |
-| `uncaught_error` / `unhandled_rejection` | anything the window-level handlers caught |
 | `graphql_error` | a GraphQL request failed (after retries) |
 | `signin_redirect_failed` | the OIDC redirect was rejected |
 | `auth_error` / `auth_silent_renew_failed` | `react-oidc-context` reported a failure — it never throws, so nothing else sees these |
 | `avatar_upload_failed` | the avatar upload (a plain fetch, not urql) failed |
 | `ssr_render_failed` | the **server** render threw; carries `method` and `path` |
+
+An uncaught error or an unhandled promise rejection has **no slug of ours**, and
+needs none: the browser prints both to the console by itself, Sentry's default
+GlobalHandlers integration captures both when a DSN is set, and the e2e log
+harness records them as `pageerror`. Look for the browser's own `Uncaught …` line.
 
 `ssr_render_failed` is the only one that lands in the container log rather than
 the browser (`docker compose logs -f app`). The frontend has no request id of its
