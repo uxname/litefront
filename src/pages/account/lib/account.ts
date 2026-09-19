@@ -80,25 +80,21 @@ export const resolveEmailVerified = (
     : undefined;
 
 /**
- * Format the backend `createdAt` timestamp as a locale date string, or
+ * Format the backend `createdAt` timestamp as a `YYYY-MM-DD` string, or
  * `undefined` when there is no value to format.
+ *
+ * `toISOString` is always UTC and always this shape, so the server and the
+ * client render the same text whatever their locale and timezone are — a
+ * locale-aware formatter would mismatch on hydration.
  */
 export const formatMemberSince = (
   createdAt: Me["createdAt"] | null | undefined,
 ): string | undefined => {
   if (!createdAt) return undefined;
   const date = new Date(String(createdAt));
-  // Guard against an unparseable timestamp.
+  // Guard against an unparseable timestamp (toISOString would throw on it).
   if (Number.isNaN(date.getTime())) return undefined;
-  // Format in UTC with a fixed locale so the server and client always produce
-  // the same string (toLocaleDateString uses the runtime locale/timezone and
-  // would mismatch on hydration). "en-CA" yields a stable YYYY-MM-DD.
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "UTC",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
+  return date.toISOString().slice(0, 10);
 };
 
 /** Map a profile role to its localized label. */
