@@ -9,8 +9,8 @@ export default defineConfig({
   },
   test: {
     // E2E (Playwright) lives under tests/e2e and is excluded here; everything
-    // else — co-located src/**/*.test.*, tests/unit/**, tests/component/**,
-    // tests/sum.test.ts — is picked up by Vitest's defaults.
+    // else — co-located src/**/*.test.*, tests/unit/**, tests/component/** —
+    // is picked up by Vitest's defaults.
     exclude: ["tests/e2e", "node_modules", "dist", ".output", ".opencode"],
     testTimeout: 30_000,
     hookTimeout: 30_000,
