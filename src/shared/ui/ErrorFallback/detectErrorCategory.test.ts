@@ -90,4 +90,101 @@ describe("detectErrorCategory", () => {
       expect(detectErrorCategory(new Error(""))).toBe(ErrorCategory.UNKNOWN);
     });
   });
+
+  // The backend stamps a machine-readable `extensions.code` on every GraphQL
+  // error, and urql hands those over on `graphQLErrors`. A plain Error with the
+  // fields bolted on stands in for urql's CombinedError (which IS an Error), the
+  // same duck typing extractRequestId.test.ts uses.
+  describe("structured GraphQL errors", () => {
+    const gqlError = (
+      message: string,
+      extra: { graphQLErrors?: unknown; networkError?: unknown },
+    ): Error => Object.assign(new Error(message), extra);
+
+    it.each([
+      ["UNAUTHENTICATED", ErrorCategory.AUTH],
+      ["FORBIDDEN", ErrorCategory.ACCESS],
+      ["INTERNAL_SERVER_ERROR", ErrorCategory.SERVER],
+    ])("maps the backend code %s", (code, category) => {
+      expect(
+        detectErrorCategory(
+          gqlError("[GraphQL] whatever", {
+            graphQLErrors: [{ extensions: { code } }],
+          }),
+        ),
+      ).toBe(category);
+    });
+
+    it("trusts the code over a message that reads like something else", () => {
+      // "fetch" and "500" are both in the text; the code says what happened.
+      expect(
+        detectErrorCategory(
+          gqlError("[GraphQL] Failed to fetch 500 items", {
+            graphQLErrors: [{ extensions: { code: "FORBIDDEN" } }],
+          }),
+        ),
+      ).toBe(ErrorCategory.ACCESS);
+    });
+
+    it("skips errors without a known code and uses the first one that has it", () => {
+      expect(
+        detectErrorCategory(
+          gqlError("[GraphQL] two errors", {
+            graphQLErrors: [
+              { message: "no extensions" },
+              { extensions: { code: "BAD_USER_INPUT" } },
+              { extensions: { code: "UNAUTHENTICATED" } },
+            ],
+          }),
+        ),
+      ).toBe(ErrorCategory.AUTH);
+    });
+
+    it("falls back to the message when no code is known", () => {
+      expect(
+        detectErrorCategory(
+          gqlError("[GraphQL] displayName must be at most 100 characters", {
+            graphQLErrors: [{ extensions: { code: "BAD_USER_INPUT" } }],
+          }),
+        ),
+      ).toBe(ErrorCategory.UNKNOWN);
+    });
+
+    // No special case for `networkError`: urql prefixes such a message with
+    // "[Network]", which the message rules below already read — and reading the
+    // message first is what keeps a network-level 401 in AUTH.
+    it("classifies a urql network failure by its message", () => {
+      expect(
+        detectErrorCategory(
+          gqlError("[Network] Connection reset", {
+            networkError: new Error("Connection reset"),
+          }),
+        ),
+      ).toBe(ErrorCategory.NETWORK);
+      expect(
+        detectErrorCategory(
+          gqlError("[Network] Unauthorized", {
+            networkError: new Error("Unauthorized"),
+          }),
+        ),
+      ).toBe(ErrorCategory.AUTH);
+    });
+
+    it("does not throw on malformed fields", () => {
+      expect(
+        detectErrorCategory(
+          gqlError("Something odd happened", {
+            graphQLErrors: "not an array",
+          }),
+        ),
+      ).toBe(ErrorCategory.UNKNOWN);
+      expect(
+        detectErrorCategory(
+          gqlError("Something odd happened", {
+            graphQLErrors: [null, 42, { extensions: { code: 7 } }],
+          }),
+        ),
+      ).toBe(ErrorCategory.UNKNOWN);
+    });
+  });
 });
