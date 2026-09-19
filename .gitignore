@@ -12,7 +12,6 @@ storybook-build/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-.husky
 dev-dist/
 coverage
 # Ladle (Storybook) config in .ladle/ is hand-written source and IS tracked.
