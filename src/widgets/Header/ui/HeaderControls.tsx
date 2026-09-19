@@ -6,7 +6,7 @@ import { captureMessage } from "@shared/lib/sentry";
 import { Button } from "@shared/ui/Button";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, LogIn, LogOut, Settings, User } from "lucide-react";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 
 /**
  * Right-hand control cluster of the {@link Header}: locale switcher, theme
@@ -21,17 +21,20 @@ import { FC, useCallback } from "react";
 export const HeaderControls: FC = () => {
   const auth = useAuth();
 
-  const handleSignIn = useCallback(() => {
+  // Plain functions on purpose: `auth` is a new object on every context change,
+  // so useCallback(…, [auth]) never reused anything — and the React Compiler
+  // (vite.config.ts) memoizes handlers on its own.
+  const handleSignIn = () => {
     // Remember the current location so the post-login callback returns here.
     void auth.signinRedirect({
       state: { returnTo: window.location.pathname + window.location.search },
     });
-  }, [auth]);
+  };
 
-  const handleSignOut = useCallback(() => {
+  const handleSignOut = () => {
     captureMessage("Auth: sign-out initiated", { level: "info" });
     void auth.signoutRedirect();
-  }, [auth]);
+  };
 
   return (
     <div className="flex items-center gap-1.5">
