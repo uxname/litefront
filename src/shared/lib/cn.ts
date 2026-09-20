@@ -1,4 +1,5 @@
-/** Join truthy class name parts into a single string. */
-export const cn = (
-  ...parts: Array<string | false | null | undefined>
-): string => parts.filter(Boolean).join(" ");
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/** Join class name parts into a single string, last conflicting Tailwind utility wins. */
+export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));

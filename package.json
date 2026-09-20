@@ -63,6 +63,7 @@
     "@tanstack/react-start": "^1.168.32",
     "@urql/exchange-graphcache": "^9.0.1",
     "@urql/exchange-retry": "^2.0.0",
+    "clsx": "^2.1.1",
     "lucide-react": "^1.27.0",
     "oidc-client-ts": "^3.5.0",
     "react": "^19.2.8",
@@ -71,6 +72,7 @@
     "react-hook-form": "^7.83.0",
     "react-oidc-context": "^3.3.1",
     "sonner": "^2.0.7",
+    "tailwind-merge": "^3.7.0",
     "urql": "^5.0.3",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"

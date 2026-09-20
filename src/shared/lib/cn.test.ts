@@ -29,4 +29,24 @@ describe("cn", () => {
       "base visible",
     );
   });
+
+  it("resolves conflicting Tailwind spacing utilities in favour of the last one", () => {
+    expect(cn("p-2", "p-4")).toBe("p-4");
+  });
+
+  it("resolves conflicting Tailwind colour utilities in favour of the last one", () => {
+    expect(cn("text-red-500", "text-blue-500")).toBe("text-blue-500");
+  });
+
+  it("accepts the object syntax and keeps only the enabled keys", () => {
+    expect(cn("base", { active: true, disabled: false })).toBe("base active");
+  });
+
+  it("accepts nested arrays", () => {
+    expect(cn(["a", ["b", false]], "c")).toBe("a b c");
+  });
+
+  it("keeps daisyUI component classes that look alike but do not conflict", () => {
+    expect(cn("btn", "btn-primary", "btn-lg")).toBe("btn btn-primary btn-lg");
+  });
 });
