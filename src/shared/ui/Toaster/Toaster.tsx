@@ -25,11 +25,23 @@ export const Toaster = ({ ...props }: ToasterProps) => {
           // (flex-direction: column). That class also brought position: fixed
           // and width: max-content along, so it is gone — and the column it was
           // accidentally providing is now stated on purpose.
+          // The last selector dims the contents of every toast behind the front
+          // one while the stack is collapsed. sonner did that, under
+          // [data-styled]; without it the text of the toasts underneath shows
+          // through the translucent front card and along its exposed edge.
           toast:
-            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-500",
+            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-500 [&[data-expanded=false][data-front=false]>*]:opacity-0",
           content: "flex min-w-0 flex-1 flex-col gap-0.5",
           title: "text-base-content font-bold text-sm leading-tight",
-          description: "text-base-content/70 text-xs mt-1 leading-relaxed",
+          // The one "!" left in this file, and it is load-bearing. sonner hard-codes
+          // a description colour for its dark theme OUTSIDE [data-styled], so
+          // unstyled does not switch it off:
+          //   [data-sonner-toaster][data-sonner-theme='dark'] [data-description]
+          // Tailwind's utilities live in @layer utilities, and any unlayered rule
+          // beats a layered one whatever the specificity — so raising ours cannot
+          // win, only importance can. Drop this and the description turns
+          // sonner's grey in dark mode instead of the daisyUI token.
+          description: "text-base-content/70! text-xs mt-1 leading-relaxed",
           actionButton:
             "inline-flex shrink-0 cursor-pointer items-center border-0 ms-[var(--toast-button-margin-start)] me-[var(--toast-button-margin-end)] bg-primary text-primary-content font-bold text-xs h-6 px-4 rounded-xl transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
           cancelButton:

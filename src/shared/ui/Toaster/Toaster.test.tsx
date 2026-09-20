@@ -60,6 +60,27 @@ describe("Toaster", () => {
     expect(el?.className).not.toMatch(/!/);
   });
 
+  // Two rules sonner applied itself and unstyled took away. Both are invisible
+  // in a single-toast story and in a light-theme screenshot, which is exactly
+  // how they were missed the first time round.
+  it("keeps the two rules unstyled takes away: the dimming and the description colour", async () => {
+    const { container } = render(<Toaster />);
+    toast("Stacked", { description: "and described" });
+    await screen.findByText("Stacked");
+
+    const el = container.querySelector<HTMLElement>("[data-sonner-toast]");
+    expect(el).toHaveClass(
+      "[&[data-expanded=false][data-front=false]>*]:opacity-0",
+    );
+
+    // sonner hard-codes the dark-theme description colour outside [data-styled],
+    // and an unlayered rule beats any Tailwind utility — so ours must be important.
+    const description =
+      container.querySelector<HTMLElement>("[data-description]");
+    expect(description).not.toBeNull();
+    expect(description?.className).toMatch(/text-base-content\/70!/);
+  });
+
   it("applies the toaster className to the list once a toast appears", async () => {
     const { container } = render(<Toaster />);
     toast("Hello");
