@@ -30,8 +30,11 @@ export const Toaster = ({ ...props }: ToasterProps) => {
           // [data-styled]; without it the text of the toasts underneath shows
           // through the translucent front card and along its exposed edge.
           toast:
-            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-500 [&[data-expanded=false][data-front=false]>*]:opacity-0",
+            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl [&[data-expanded=false][data-front=false]>*]:opacity-0",
           content: "flex min-w-0 flex-1 flex-col gap-0.5",
+          // sonner marked a disabled action with a not-allowed cursor; unstyled
+          // dropped that along with the rest of [data-styled].
+          default: "[&_[data-disabled=true]]:cursor-not-allowed",
           title: "text-base-content font-bold text-sm leading-tight",
           // The one "!" left in this file, and it is load-bearing. sonner hard-codes
           // a description colour for its dark theme OUTSIDE [data-styled], so
@@ -56,7 +59,7 @@ export const Toaster = ({ ...props }: ToasterProps) => {
           // offsets and the transform are sonner's own variables, so it lands
           // where it always did and follows the toast's position.
           closeButton:
-            "absolute top-0 left-[var(--toast-close-button-start)] right-[var(--toast-close-button-end)] z-[1] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-base-300/60 bg-base-100 p-0 text-base-content [transform:var(--toast-close-button-transform)] transition-colors hover:bg-base-200",
+            "absolute top-0 left-[var(--toast-close-button-start)] right-[var(--toast-close-button-end)] z-[1] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border border-base-300/60 bg-base-100 p-0 text-base-content [transform:var(--toast-close-button-transform)] transition-colors hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
 
           success: "border-l-4 border-l-success bg-success/10",
           error: "border-l-4 border-l-error bg-error/10",
@@ -65,7 +68,7 @@ export const Toaster = ({ ...props }: ToasterProps) => {
 
           // [&>*]:shrink-0 keeps the glyph at its own size: the box is 16px
           // and a flex child without it gets squeezed to 12.
-          icon: "relative flex h-4 w-4 shrink-0 [&>*]:shrink-0 items-center justify-start ms-[var(--toast-icon-margin-start)] me-[var(--toast-icon-margin-end)] group-data-[type=success]:text-success group-data-[type=error]:text-error group-data-[type=warning]:text-warning group-data-[type=info]:text-info",
+          icon: "relative flex h-4 w-4 shrink-0 [&>*]:shrink-0 [&_svg]:ms-[var(--toast-svg-margin-start)] [&_svg]:me-[var(--toast-svg-margin-end)] items-center justify-start ms-[var(--toast-icon-margin-start)] me-[var(--toast-icon-margin-end)] group-data-[type=success]:text-success group-data-[type=error]:text-error group-data-[type=warning]:text-warning group-data-[type=info]:text-info",
         },
       }}
       {...props}
