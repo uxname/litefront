@@ -44,6 +44,22 @@ describe("Toaster", () => {
     expect(await screen.findByText("Saved your changes")).toBeInTheDocument();
   });
 
+  // sonner's own stylesheet is switched off, so the toast carries no
+  // data-styled="true" and every rule it used to provide has to come from the
+  // classNames below. The width is the one that bites: without it the toast
+  // collapses to the width of its text, and daisyUI's own .toast component
+  // class (width: max-content) is right there waiting to do exactly that.
+  it("renders unstyled, carrying its own width instead of sonner's", async () => {
+    const { container } = render(<Toaster />);
+    toast("Unstyled");
+    await screen.findByText("Unstyled");
+    const el = container.querySelector<HTMLElement>("[data-sonner-toast]");
+    expect(el).not.toBeNull();
+    expect(el).not.toHaveAttribute("data-styled", "true");
+    expect(el).toHaveClass("w-[var(--width)]");
+    expect(el?.className).not.toMatch(/!/);
+  });
+
   it("applies the toaster className to the list once a toast appears", async () => {
     const { container } = render(<Toaster />);
     toast("Hello");
