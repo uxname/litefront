@@ -100,9 +100,14 @@ export const Primary: StoryFn = () => <Button>Primary action</Button>;
 ```
 
 Storybook runs on its own minimal Vite config (`.storybook/vite.config.ts`), not
-the production one, and `.storybook/preview.ts` supplies the runtime config
+the production one, and `.storybook/preview.tsx` supplies the runtime config
 `@shared/config` needs — so a component that imports the config renders in a
-story without any setup of its own.
+story without any setup of its own. The same file adds the **Theme** toolbar
+(daisyUI `cmyk` / `dark`): it sets `data-theme` on the story's `<html>`, so a
+component that only misbehaves in the dark theme can be caught by eye. A
+component that takes the theme as a prop instead of reading `data-theme` — the
+`Toaster` does — must be handed it in the story too, or the toolbar will restyle
+everything around it and leave the component itself light.
 
 A story is the component's visual contract: cover each meaningful variant and state,
 including loading and error. Agents can't see Storybook — verify visually through the
