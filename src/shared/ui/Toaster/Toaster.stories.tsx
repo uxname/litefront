@@ -3,6 +3,14 @@ import { Toaster, toast } from "./Toaster";
 
 export default { component: Toaster } satisfies Meta<typeof Toaster>;
 
+// sonner does not read daisyUI's data-theme: it keeps its own `theme` prop and
+// hard-codes a few colours per theme. The app passes it in __root.tsx, so the
+// stories pass it too — from the toolbar's theme. Without this the toolbar
+// would restyle everything around the toast and leave the toast itself light.
+type ToasterTheme = React.ComponentProps<typeof Toaster>["theme"];
+const themeOf = (globals: Record<string, unknown>): ToasterTheme =>
+  globals.theme === "dark" ? "dark" : "light";
+
 const TriggerRow = () => (
   <div className="flex flex-wrap gap-3">
     <button
@@ -43,7 +51,7 @@ const TriggerRow = () => (
   </div>
 );
 
-export const Default: StoryFn = () => (
+export const Default: StoryFn = (_args, { globals }) => (
   <>
     <button
       type="button"
@@ -52,18 +60,18 @@ export const Default: StoryFn = () => (
     >
       Show toast
     </button>
-    <Toaster />
+    <Toaster theme={themeOf(globals)} />
   </>
 );
 
-export const AllTypes: StoryFn = () => (
+export const AllTypes: StoryFn = (_args, { globals }) => (
   <>
     <TriggerRow />
-    <Toaster />
+    <Toaster theme={themeOf(globals)} />
   </>
 );
 
-export const WithDescription: StoryFn = () => (
+export const WithDescription: StoryFn = (_args, { globals }) => (
   <>
     <button
       type="button"
@@ -76,11 +84,11 @@ export const WithDescription: StoryFn = () => (
     >
       Show toast with description
     </button>
-    <Toaster />
+    <Toaster theme={themeOf(globals)} />
   </>
 );
 
-export const WithAction: StoryFn = () => (
+export const WithAction: StoryFn = (_args, { globals }) => (
   <>
     <button
       type="button"
@@ -96,11 +104,11 @@ export const WithAction: StoryFn = () => (
     >
       Show toast with action
     </button>
-    <Toaster />
+    <Toaster theme={themeOf(globals)} />
   </>
 );
 
-export const TopCenterPosition: StoryFn = () => (
+export const TopCenterPosition: StoryFn = (_args, { globals }) => (
   <>
     <button
       type="button"
@@ -109,18 +117,11 @@ export const TopCenterPosition: StoryFn = () => (
     >
       Show top-center toast
     </button>
-    <Toaster position="top-center" />
+    <Toaster position="top-center" theme={themeOf(globals)} />
   </>
 );
 
-export const RichColors: StoryFn = () => (
-  <>
-    <TriggerRow />
-    <Toaster richColors />
-  </>
-);
-
-export const WithCloseButton: StoryFn = () => (
+export const WithCloseButton: StoryFn = (_args, { globals }) => (
   <>
     <button
       type="button"
@@ -129,6 +130,6 @@ export const WithCloseButton: StoryFn = () => (
     >
       Show closable toast
     </button>
-    <Toaster closeButton />
+    <Toaster closeButton theme={themeOf(globals)} />
   </>
 );

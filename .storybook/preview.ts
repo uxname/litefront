@@ -25,6 +25,36 @@ Object.assign(globalThis, {
   },
 });
 
-const preview: Preview = {};
+// daisyUI switches theme on the `data-theme` attribute of <html> (see the two
+// `@plugin "daisyui/theme"` blocks in src/index.css: "cmyk" is the light one and
+// the default, "dark" is the other). The app sets that attribute itself; a story
+// has nobody to set it, so without this toolbar every screenshot is a light one
+// — and a component that only misbehaves in the dark theme goes unnoticed.
+const preview: Preview = {
+  globalTypes: {
+    theme: {
+      description: "daisyUI theme",
+      toolbar: {
+        title: "Theme",
+        icon: "paintbrush",
+        items: [
+          { value: "cmyk", title: "Light" },
+          { value: "dark", title: "Dark" },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: { theme: "cmyk" },
+  decorators: [
+    (Story, context) => {
+      document.documentElement.setAttribute(
+        "data-theme",
+        context.globals.theme,
+      );
+      return Story();
+    },
+  ],
+};
 
 export default preview;
