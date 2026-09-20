@@ -1,4 +1,9 @@
 import type { Preview } from "@storybook/react-vite";
+import { useEffect } from "react";
+
+// The same two names the app uses, from the same place — a third spelling here
+// would silently produce a theme daisyUI has never heard of.
+import type { Theme } from "../src/features/theme/model/store";
 
 // The app's global stylesheet (Tailwind + the daisyUI themes), so a story renders
 // with exactly the styling the real app has.
@@ -38,21 +43,26 @@ const preview: Preview = {
         title: "Theme",
         icon: "paintbrush",
         items: [
-          { value: "cmyk", title: "Light" },
-          { value: "dark", title: "Dark" },
+          { value: "cmyk" satisfies Theme, title: "Light" },
+          { value: "dark" satisfies Theme, title: "Dark" },
         ],
         dynamicTitle: true,
       },
     },
   },
-  initialGlobals: { theme: "cmyk" },
+  initialGlobals: { theme: "cmyk" satisfies Theme },
   decorators: [
     (Story, context) => {
-      document.documentElement.setAttribute(
-        "data-theme",
-        context.globals.theme,
-      );
-      return Story();
+      // In an effect, not during render: writing to the document while React is
+      // rendering is a side effect in the wrong place, and on the docs page
+      // every story on it shares this one <html>.
+      useEffect(() => {
+        document.documentElement.setAttribute(
+          "data-theme",
+          context.globals.theme,
+        );
+      }, [context.globals.theme]);
+      return <Story />;
     },
   ],
 };
