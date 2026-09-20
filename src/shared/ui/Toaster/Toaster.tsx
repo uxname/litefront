@@ -2,13 +2,17 @@ import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
-// sonner ships its own stylesheet under [data-styled="true"]; unstyled turns it
-// off so the look comes from daisyUI tokens alone, with no "!" overrides
-// fighting a stylesheet that is no longer there. What that stylesheet used to
-// provide — the toast width, the content column, the icon box, the close
-// button, the focus ring — is restored explicitly below. Positioning, stacking
-// and the swipe/exit animations do NOT live under [data-styled], so they are
-// still sonner's and are left alone.
+// sonner ships its own stylesheet; unstyled switches off the part of it that
+// sits under [data-styled="true"], so the look comes from daisyUI tokens
+// instead of twenty "!" overrides fighting a stylesheet that is still there.
+// What that part used to provide — the toast width, the content column, the
+// icon box and its svg margins, the close button, the focus rings, the dimming
+// of a collapsed stack — is restored explicitly below.
+//
+// Two things unstyled does NOT switch off, because they sit outside
+// [data-styled]: positioning with the swipe/exit animations (left to sonner on
+// purpose) and a handful of hard-coded colours, of which the dark-theme
+// description colour still has to be beaten — see the one "!" below.
 export const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
@@ -25,16 +29,16 @@ export const Toaster = ({ ...props }: ToasterProps) => {
           // (flex-direction: column). That class also brought position: fixed
           // and width: max-content along, so it is gone — and the column it was
           // accidentally providing is now stated on purpose.
-          // The last selector dims the contents of every toast behind the front
-          // one while the stack is collapsed. sonner did that, under
+          // The dimming selector hides the contents of every toast behind the
+          // front one while the stack is collapsed. sonner did that, under
           // [data-styled]; without it the text of the toasts underneath shows
           // through the translucent front card and along its exposed edge.
+          // The not-allowed cursor belongs here rather than in classNames.default:
+          // sonner resolves that key as `toastType ?? "default"`, so it would
+          // reach plain toasts only and miss every success/error/warning one.
           toast:
-            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl [&[data-expanded=false][data-front=false]>*]:opacity-0",
+            "group w-[var(--width)] font-sans text-[13px] flex flex-col items-start gap-4 rounded-2xl border border-base-300/60 bg-base-100/80 p-4 shadow-2xl backdrop-blur-xl [&[data-expanded=false][data-front=false]>*]:opacity-0 [&_[data-disabled=true]]:cursor-not-allowed",
           content: "flex min-w-0 flex-1 flex-col gap-0.5",
-          // sonner marked a disabled action with a not-allowed cursor; unstyled
-          // dropped that along with the rest of [data-styled].
-          default: "[&_[data-disabled=true]]:cursor-not-allowed",
           title: "text-base-content font-bold text-sm leading-tight",
           // The one "!" left in this file, and it is load-bearing. sonner hard-codes
           // a description colour for its dark theme OUTSIDE [data-styled], so
