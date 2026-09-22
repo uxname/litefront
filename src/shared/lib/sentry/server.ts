@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { env } from "@shared/config";
+import { scrubEvent } from "./scrub";
 
 // Server-side counterpart of ./config.ts: that one initialises the browser SDK
 // from src/client.tsx, so it never runs during SSR and a failed render went
@@ -14,6 +15,8 @@ if (isEnabled) {
     dsn: env.VITE_SENTRY_DSN,
     environment: env.MODE,
     release: env.VITE_APP_VERSION || "development",
+    // Same rule as the browser: no query string or fragment leaves.
+    beforeSend: scrubEvent,
   });
 }
 

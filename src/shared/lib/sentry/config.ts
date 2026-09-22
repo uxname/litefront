@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/react";
 import { env } from "@shared/config";
+import { scrubEvent } from "./scrub";
 
 export const initSentry = () => {
   if (!env.VITE_SENTRY_DSN) {
@@ -20,20 +21,9 @@ export const initSentry = () => {
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
 
-    beforeSend: (event) => {
-      if (event.exception) {
-        event.exception.values?.forEach((value) => {
-          if (value.stacktrace) {
-            value.stacktrace.frames?.forEach((frame) => {
-              if (frame.filename) {
-                frame.filename = frame.filename.split("?")[0];
-              }
-            });
-          }
-        });
-      }
-      return event;
-    },
+    // Query strings and fragments (OIDC code/state, tokens) never leave.
+    beforeSend: scrubEvent,
+    beforeSendTransaction: scrubEvent,
   });
 
   // Session Replay loads in its own chunk (see ./replay), so the first screen
