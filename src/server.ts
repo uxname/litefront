@@ -65,6 +65,11 @@ const fetch: RequestHandler<Register> = (request, opts) =>
       }
 
       response.headers.set(CSP_HEADER, buildCsp(nonce, env));
+      // Unique per request (the nonce) and varying by locale cookie and
+      // Accept-Language: no shared cache may store or replay a page. Hashed
+      // /assets/** keep their immutable caching (vite.config.ts routeRules).
+      response.headers.set("Cache-Control", "no-store");
+      response.headers.set("Vary", "Cookie, Accept-Language");
 
       // Persist the server-resolved locale into the PARAGLIDE_LOCALE cookie on the
       // first visit (when no cookie is present yet). `cookie` is the first strategy

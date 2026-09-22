@@ -116,4 +116,15 @@ describe("SSR request handler", () => {
     expect(seen[0]).not.toBe(seen[1]);
     render.mockReset();
   });
+
+  // Every SSR page is unique per request (its CSP nonce) and varies by locale
+  // cookie and Accept-Language; a shared cache must never store or replay it.
+  it("keeps server-rendered pages out of shared caches", async () => {
+    render.mockResolvedValueOnce(new Response("<html></html>"));
+
+    const response = await server.fetch(new Request("http://localhost/"));
+
+    expect(response.headers.get("Cache-Control")).toBe("no-store");
+    expect(response.headers.get("Vary")).toBe("Cookie, Accept-Language");
+  });
 });
