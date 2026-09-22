@@ -8,6 +8,8 @@ storybook-build/
 .idea
 .vscode
 .env
+.env.*
+!.env.example
 /test-results/
 /playwright-report/
 /blob-report/
