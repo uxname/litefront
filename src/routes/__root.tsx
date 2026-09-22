@@ -48,6 +48,10 @@ const RootDocument: React.FC = () => {
   // default "cmyk" on both server and client — harmless, since no toast can
   // exist that early.
   const theme = useThemeStore((s) => s.theme);
+  // The request's CSP nonce (router.tsx). The browser hides a nonce attribute
+  // once parsed, so hydration would always see it differ — hence
+  // suppressHydrationWarning on both scripts.
+  const nonce = useRouter().options.ssr?.nonce;
 
   return (
     // `data-theme` is intentionally NOT a JSX prop: it's owned entirely by the
@@ -64,10 +68,18 @@ const RootDocument: React.FC = () => {
             above it, and none of that executes application code. Same string
             on both sides — the client rebuilds it from the object this script
             itself defined — so hydration matches. */}
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: server-built config payload, `<` escaped in shared/config */}
-        <script dangerouslySetInnerHTML={{ __html: runtimeConfigScript }} />
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: trusted static FOUC-prevention script */}
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: server-built config payload, `<` escaped in shared/config
+          dangerouslySetInnerHTML={{ __html: runtimeConfigScript }}
+        />
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted static FOUC-prevention script
+          dangerouslySetInnerHTML={{ __html: themeBootstrapScript }}
+        />
         <HeadContent />
       </head>
       <body>

@@ -77,7 +77,10 @@ export default defineConfig(async (): Promise<UserConfig> => {
         routeRules: {
           "/**": {
             headers: {
-              "X-Frame-Options": "DENY",
+              // SAMEORIGIN, not DENY: oidc-client-ts renews tokens in a hidden
+              // iframe on /callback when there is no refresh token. The CSP's
+              // frame-ancestors 'self' says the same to modern browsers.
+              "X-Frame-Options": "SAMEORIGIN",
               "X-Content-Type-Options": "nosniff",
               // Don't leak full URLs (which may carry tokens/ids) to other origins.
               "Referrer-Policy": "strict-origin-when-cross-origin",

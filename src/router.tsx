@@ -1,6 +1,9 @@
 import { NotFoundPage } from "@pages/404";
+import { CSP_NONCE_HEADER } from "@shared/config";
 import { PageLoader } from "@shared/ui/PageLoader";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHeader } from "@tanstack/react-start/server";
 import { AppProviders } from "./app/bootstrap/AppProviders";
 import { setAppRouter } from "./app/bootstrap/router-instance";
 import { routeTree } from "./generated/routeTree.gen";
@@ -16,9 +19,18 @@ import { routeTree } from "./generated/routeTree.gen";
  *   RouterProvider, since Start owns RouterProvider and we can't wrap it in the
  *   entry files.
  */
+// The CSP nonce of the request being rendered, set by the SSR entry
+// (src/server.ts). TanStack stamps it on every inline script it emits and
+// publishes it in <meta property="csp-nonce">, which the client router reads
+// back — so the browser has nothing to pass here.
+const requestNonce = createIsomorphicFn()
+  .server(() => getRequestHeader(CSP_NONCE_HEADER))
+  .client(() => undefined);
+
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
+    ssr: { nonce: requestNonce() },
     defaultNotFoundComponent: NotFoundPage,
     defaultPendingComponent: PageLoader,
     scrollRestoration: true,

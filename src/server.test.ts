@@ -88,4 +88,32 @@ describe("SSR request handler", () => {
 
     expect(response.headers.get("Set-Cookie")).toBeNull();
   });
+
+  // The policy's nonce must be the one the render stamps on its inline
+  // scripts: the server hands it to the render on an internal request header,
+  // which a client can never set for itself.
+  it("serves a per-request nonce policy and hands the same nonce to the render", async () => {
+    const seen: (string | null)[] = [];
+    render.mockImplementation(async (req: Request) => {
+      seen.push(req.headers.get("x-litefront-csp-nonce"));
+      return new Response("<html></html>");
+    });
+    const policyOf = (r: Response) =>
+      r.headers.get("Content-Security-Policy") ??
+      r.headers.get("Content-Security-Policy-Report-Only") ??
+      "";
+
+    const first = await server.fetch(
+      new Request("http://localhost/", {
+        headers: { "x-litefront-csp-nonce": "chosen-by-attacker" },
+      }),
+    );
+    const second = await server.fetch(new Request("http://localhost/"));
+
+    expect(seen[0]).not.toBe("chosen-by-attacker");
+    expect(policyOf(first)).toContain(`'nonce-${seen[0]}'`);
+    expect(policyOf(second)).toContain(`'nonce-${seen[1]}'`);
+    expect(seen[0]).not.toBe(seen[1]);
+    render.mockReset();
+  });
 });

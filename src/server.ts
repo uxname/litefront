@@ -1,3 +1,4 @@
+import { buildCsp, CSP_NONCE_HEADER, env, newCspNonce } from "@shared/config";
 import { captureServerException } from "@shared/lib/sentry/server";
 import type { Register } from "@tanstack/react-router";
 import {
@@ -15,15 +16,31 @@ import { paraglideMiddleware } from "./generated/paraglide/server";
 // `baseLocale` ("en"), which mismatches a ru client on hydration.
 const handler = createStartHandler(defaultStreamHandler);
 
+// Enforced in built images; report-only under `vite dev`, whose HMR client and
+// devtools inject scripts no nonce covers.
+const CSP_HEADER = import.meta.env.DEV
+  ? "Content-Security-Policy-Report-Only"
+  : "Content-Security-Policy";
+
 const fetch: RequestHandler<Register> = (request, opts) =>
   paraglideMiddleware(
     request,
     async ({ request: localizedRequest, locale }) => {
+      // One nonce per response. The render reads it from this header (see
+      // router.tsx) to stamp every inline script it emits; the header is set,
+      // not appended, so a client-sent value never survives.
+      const nonce = newCspNonce();
+      const headers = new Headers(localizedRequest.headers);
+      headers.set(CSP_NONCE_HEADER, nonce);
+
       // `opts` is `undefined` in practice (no required RequestOptions), but is
       // forwarded to honor the handler signature.
       let response: Response;
       try {
-        response = await handler(localizedRequest, opts as never);
+        response = await handler(
+          new Request(localizedRequest, { headers }),
+          opts as never,
+        );
       } catch (error) {
         // A rejected SSR render would otherwise propagate to Nitro with no
         // app-level fallback (and lose the Set-Cookie below). Return a minimal
@@ -46,6 +63,8 @@ const fetch: RequestHandler<Register> = (request, opts) =>
           headers: { "Content-Type": "text/plain; charset=utf-8" },
         });
       }
+
+      response.headers.set(CSP_HEADER, buildCsp(nonce, env));
 
       // Persist the server-resolved locale into the PARAGLIDE_LOCALE cookie on the
       // first visit (when no cookie is present yet). `cookie` is the first strategy
