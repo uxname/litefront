@@ -32,6 +32,15 @@ export const MockAuthProvider: FC<MockAuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     setIsAuthenticated(localStorage.getItem("isTestAuthenticated") === "true");
+    // Like the real provider's session, the flag is shared by every tab:
+    // follow another tab signing in or out.
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "isTestAuthenticated") {
+        setIsAuthenticated(e.newValue === "true");
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   // Reuse the shared stub and override only what the mock changes: the auth

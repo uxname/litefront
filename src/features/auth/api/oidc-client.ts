@@ -27,6 +27,9 @@ export const getOidcConfig = (): AuthProviderProps => ({
       }
     : {}),
   automaticSilentRenew: true,
+  // Sign-out revokes the tokens at the IdP too: removing them locally left the
+  // refresh token (offline_access) valid for as long as the IdP allows.
+  revokeTokensOnSignout: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
 });
 

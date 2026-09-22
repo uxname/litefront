@@ -41,6 +41,20 @@ export const AuthObserver: FC = () => {
     };
   }, [auth.events]);
 
+  // The user and its tokens live in localStorage, shared by every tab. When
+  // another tab signs out it removes them; drop this tab's in-memory copy too,
+  // instead of calling the API with it until it expires.
+  useEffect(() => {
+    if (!auth.user) return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key?.startsWith("oidc.user:") && e.newValue === null) {
+        void auth.removeUser();
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [auth.user, auth.removeUser]);
+
   useEffect(() => {
     if (auth.user) {
       // Identify by the opaque subject only — never send email/username PII to

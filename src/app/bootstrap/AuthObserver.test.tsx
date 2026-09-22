@@ -101,4 +101,30 @@ describe("AuthObserver", () => {
     unmount();
     expect(removeSilentRenewError).toHaveBeenCalledOnce();
   });
+
+  // Tokens live in localStorage, shared by every tab: signing out in one tab
+  // removes them, and every other tab must drop its in-memory copy too
+  // instead of calling the API with it until it expires.
+  it("signs this tab out when another tab removes the stored user", () => {
+    const removeUser = vi.fn();
+    mockedUseAuth.mockReturnValue({
+      ...baseAuth,
+      user: { profile: { sub: "user-1" } },
+      removeUser,
+    } as never);
+    render(<AuthObserver />);
+
+    window.dispatchEvent(
+      new StorageEvent("storage", { key: "some-other-key", newValue: null }),
+    );
+    expect(removeUser).not.toHaveBeenCalled();
+
+    window.dispatchEvent(
+      new StorageEvent("storage", {
+        key: "oidc.user:https://auth.test/oidc:test-client",
+        newValue: null,
+      }),
+    );
+    expect(removeUser).toHaveBeenCalledOnce();
+  });
 });

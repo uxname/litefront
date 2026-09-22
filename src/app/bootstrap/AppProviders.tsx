@@ -3,6 +3,7 @@ import {
   getOidcConfig,
   MockAuthProvider,
   NeutralAuthProvider,
+  safeReturnTo,
   useAuth,
 } from "@features/auth";
 import { createGraphQLClient, GraphQLProvider } from "@shared/api";
@@ -24,15 +25,13 @@ const isMockAuth = env.VITE_MOCK_AUTH === "true";
 const onSigninCallback = (user: User | void): void => {
   captureMessage("Auth: sign-in completed", { level: "info" });
   // `state.returnTo` is the path the user was on before sign-in (set by
-  // signinRedirect). Bring them back there; fall back to home.
+  // signinRedirect). Bring them back there — only ever to an in-app path.
   const state = user?.state;
-  const returnTo =
-    state &&
-    typeof state === "object" &&
-    "returnTo" in state &&
-    typeof (state as { returnTo?: unknown }).returnTo === "string"
-      ? (state as { returnTo: string }).returnTo
-      : "/";
+  const returnTo = safeReturnTo(
+    state && typeof state === "object" && "returnTo" in state
+      ? (state as { returnTo?: unknown }).returnTo
+      : undefined,
+  );
   // Replace so the OIDC callback URL (with code/state) drops out of history.
   getAppRouter()?.history.replace(returnTo);
 };
