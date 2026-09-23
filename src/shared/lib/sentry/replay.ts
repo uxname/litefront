@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/react";
+import { scrubEvent, scrubRecordingEvent } from "./scrub";
 
 /**
  * Session Replay, kept out of the entry bundle.
@@ -11,12 +12,20 @@ import * as Sentry from "@sentry/react";
  * Masking mirrors what `initSentry` used to pass inline: all text is masked and
  * media blocked, so PII and secrets visible in the DOM (emails, tokens, profile
  * data) are never recorded.
+ *
+ * Replay events and recordings skip `beforeSend`, so they get the same URL
+ * scrubbing here: the OIDC `/callback?code=…&state=…` and urql's GET query
+ * strings stay out of them too.
  */
 export const addReplayIntegration = () => {
+  Sentry.addEventProcessor((event) =>
+    event.type === "replay_event" ? scrubEvent(event) : event,
+  );
   Sentry.addIntegration(
     Sentry.replayIntegration({
       maskAllText: true,
       blockAllMedia: true,
+      beforeAddRecordingEvent: scrubRecordingEvent,
     }),
   );
 };

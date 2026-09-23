@@ -1,6 +1,6 @@
 import type { Event } from "@sentry/react";
 import { describe, expect, it } from "vitest";
-import { scrubEvent, scrubUrl } from "./scrub";
+import { scrubEvent, scrubRecordingEvent, scrubUrl } from "./scrub";
 
 const callback = "https://app.example/callback?code=SECRET&state=STATE#frag";
 
@@ -61,5 +61,50 @@ describe("scrubEvent", () => {
   it("leaves an event without URLs alone", () => {
     const event: Event = { message: "hi" };
     expect(scrubEvent(event)).toEqual({ message: "hi" });
+  });
+});
+
+// Session Replay bypasses beforeSend: the replay event lists every page URL,
+// and the recording carries the page href plus one span per navigation and
+// request (urql GET queries included).
+describe("Session Replay", () => {
+  it("strips the replay event's page URLs", () => {
+    const event = { type: "replay_event", urls: [callback] } as Event;
+
+    expect(JSON.stringify(scrubEvent(event))).not.toContain("SECRET");
+  });
+
+  it("strips URLs from recording events", () => {
+    const events = [
+      { type: 4, timestamp: 0, data: { href: callback, width: 1, height: 1 } },
+      {
+        type: 5,
+        timestamp: 0,
+        data: {
+          tag: "performanceSpan",
+          payload: {
+            op: "resource.fetch",
+            description: "https://api.example/graphql?variables=SECRET",
+            data: {},
+          },
+        },
+      },
+      {
+        type: 5,
+        timestamp: 0,
+        data: {
+          tag: "breadcrumb",
+          payload: {
+            category: "navigation",
+            data: { from: "/", to: callback },
+          },
+        },
+      },
+    ];
+
+    const out = JSON.stringify(events.map(scrubRecordingEvent));
+
+    expect(out).not.toContain("SECRET");
+    expect(out).toContain("https://api.example/graphql");
   });
 });

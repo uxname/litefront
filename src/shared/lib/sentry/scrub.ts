@@ -27,6 +27,13 @@ export const scrubEvent = <T extends Event>(event: T): T => {
     delete event.request.query_string;
   }
   if (event.transaction) event.transaction = scrubUrl(event.transaction);
+  // A replay event (it skips beforeSend; see replay.ts) lists every page URL.
+  const replay = event as { urls?: unknown };
+  if (Array.isArray(replay.urls)) {
+    replay.urls = replay.urls.map((u) =>
+      typeof u === "string" ? scrubUrl(u) : u,
+    );
+  }
   for (const crumb of event.breadcrumbs ?? []) scrubData(crumb.data);
   for (const span of event.spans ?? []) {
     scrubData(span.data as Record<string, unknown> | undefined);
@@ -35,6 +42,26 @@ export const scrubEvent = <T extends Event>(event: T): T => {
     for (const frame of value.stacktrace?.frames ?? []) {
       if (frame.filename) frame.filename = scrubUrl(frame.filename);
     }
+  }
+  return event;
+};
+
+/**
+ * Removes query strings from a Session Replay recording event: the page href
+ * (meta event) and the navigation/request spans and breadcrumbs it records.
+ */
+export const scrubRecordingEvent = <T extends { data?: unknown }>(
+  event: T,
+): T => {
+  const data = event.data as Record<string, unknown> | undefined;
+  if (!data) return event;
+  if (typeof data.href === "string") data.href = scrubUrl(data.href);
+  const payload = data.payload as Record<string, unknown> | undefined;
+  if (payload && typeof payload === "object") {
+    if (typeof payload.description === "string") {
+      payload.description = scrubUrl(payload.description);
+    }
+    scrubData(payload.data as Record<string, unknown> | undefined);
   }
   return event;
 };
