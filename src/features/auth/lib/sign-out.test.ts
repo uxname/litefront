@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { signOut } from "./sign-out";
+import { REVOKE_TIMEOUT_MS, signOut } from "./sign-out";
 
 const authWith = (revoke: () => Promise<void>) => ({
   user: { id_token: "id-tok" },
@@ -43,5 +43,22 @@ describe("signOut", () => {
     await signOut(auth as never);
 
     expect(order).toEqual(["revoke", "remove", "redirect"]);
+  });
+
+  // A hung revocation request (IdP stalled, no fetch timeout) kept the tokens
+  // stored until the browser gave up on it.
+  it("stops waiting for a hung revocation", async () => {
+    vi.useFakeTimers();
+    try {
+      const auth = authWith(() => new Promise<void>(() => {}));
+
+      const done = signOut(auth as never);
+      await vi.advanceTimersByTimeAsync(REVOKE_TIMEOUT_MS);
+      await done;
+
+      expect(auth.removeUser).toHaveBeenCalledOnce();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
