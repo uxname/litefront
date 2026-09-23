@@ -16,6 +16,9 @@ describe("safeReturnTo", () => {
     "javascript:alert(1)",
     "account",
     "",
+    // The URL parser drops tabs and newlines, so these become //evil.example.
+    "/\t/evil.example",
+    "/\n/evil.example",
   ])("sends %j home instead", (value) => {
     expect(safeReturnTo(value)).toBe("/");
   });

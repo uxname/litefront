@@ -12,6 +12,8 @@ export const scrubUrl = (url: string): string => url.split(/[?#]/, 1)[0];
 
 const scrubData = (data: Record<string, unknown> | undefined) => {
   if (!data) return;
+  // A query string on its own (urql sends queries as GET: it is the variables).
+  delete data["http.query"];
   for (const key of ["url", "from", "to", "http.url"]) {
     const value = data[key];
     if (typeof value === "string") data[key] = scrubUrl(value);

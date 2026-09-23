@@ -31,7 +31,12 @@ describe("scrubEvent", () => {
           span_id: "1",
           trace_id: "t",
           start_timestamp: 0,
-          data: { "http.url": callback, url: callback },
+          data: {
+            "http.url": callback,
+            url: callback,
+            // urql sends queries as GET, so the query string is the variables.
+            "http.query": "?query=q&variables=SECRET",
+          },
         },
       ],
       exception: {
