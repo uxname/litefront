@@ -1,4 +1,4 @@
-import { useAuth } from "@features/auth";
+import { signOut, useAuth } from "@features/auth";
 import { LocaleSwitcher } from "@features/locale";
 import { ThemeToggle } from "@features/theme";
 import { m } from "@generated/paraglide/messages";
@@ -33,7 +33,7 @@ export const HeaderControls: FC = () => {
 
   const handleSignOut = () => {
     captureMessage("Auth: sign-out initiated", { level: "info" });
-    void auth.signoutRedirect();
+    void signOut(auth);
   };
 
   return (

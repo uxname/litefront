@@ -6,7 +6,13 @@ import {
   Outlet,
   RouterProvider,
 } from "@tanstack/react-router";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useAuth } from "react-oidc-context";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -22,6 +28,8 @@ const baseAuth = {
   user: null,
   signinRedirect: vi.fn(),
   signoutRedirect: vi.fn(),
+  revokeTokens: vi.fn(async () => {}),
+  removeUser: vi.fn(async () => {}),
 };
 
 /**
@@ -127,19 +135,22 @@ describe("Header", () => {
     expect(await screen.findByText("User")).toBeInTheDocument();
   });
 
-  it("calls signoutRedirect when the logout item is clicked", async () => {
+  it("removes the local session and ends the IdP session on logout", async () => {
     const user = userEvent.setup();
     const signoutRedirect = vi.fn();
+    const removeUser = vi.fn(async () => {});
     mockedUseAuth.mockReturnValue({
       ...baseAuth,
       isAuthenticated: true,
-      user: { profile: { email: "jane@example.com" } },
+      user: { profile: { email: "jane@example.com" }, id_token: "id-tok" },
       signoutRedirect,
+      removeUser,
     } as never);
     renderHeader();
     const menu = await screen.findByText("auth_logout");
     await user.click(menu);
-    expect(signoutRedirect).toHaveBeenCalledOnce();
+    await waitFor(() => expect(signoutRedirect).toHaveBeenCalledOnce());
+    expect(removeUser).toHaveBeenCalledOnce();
   });
 
   it("links to the account page from the profile dropdown", async () => {
