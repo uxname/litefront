@@ -26,6 +26,10 @@ beforeEach(() => {
 
 afterEach(() => localStorage.clear());
 
+// Read, not spelled out: the meta-repo's rename script rewrites the key in the
+// store, and a literal here would be one more place to keep in step.
+const STORAGE_KEY = useThemeStore.persist.getOptions().name ?? "";
+
 describe("useThemeStore", () => {
   it("starts on the system theme", () => {
     expect(useThemeStore.getState().theme).toBe("system");
@@ -39,7 +43,7 @@ describe("useThemeStore", () => {
 
   it("migrates the pre-shadcn 'cmyk' value to light", async () => {
     localStorage.setItem(
-      "litefront-theme",
+      STORAGE_KEY,
       JSON.stringify({ state: { theme: "cmyk" }, version: 0 }),
     );
     await useThemeStore.persist.rehydrate();
@@ -49,7 +53,7 @@ describe("useThemeStore", () => {
 
   it("keeps a persisted dark choice through the migration", async () => {
     localStorage.setItem(
-      "litefront-theme",
+      STORAGE_KEY,
       JSON.stringify({ state: { theme: "dark" }, version: 0 }),
     );
     await useThemeStore.persist.rehydrate();

@@ -93,6 +93,9 @@ const openContext = async (
 ): Promise<BrowserContext> => {
   const context = await browser.newContext({
     viewport: { width: viewport.width, height: viewport.height },
+    // Entrance animations would be caught mid-fade; index.css cuts them all
+    // under reduced motion, so every shot shows the settled page.
+    reducedMotion: "reduce",
   });
   await context.addInitScript(
     ([t]) => {

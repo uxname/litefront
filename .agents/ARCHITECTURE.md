@@ -28,10 +28,10 @@ This app runs **server-side rendered** via TanStack Start (Vite plugin + Nitro
   the *resolved* theme (`light`/`dark` — the choice may also be `system`, which
   follows the OS) to `data-theme` on the document element, persisting the choice and re-applying it on
   rehydrate; the locale is resolved server-side from the `PARAGLIDE_LOCALE` cookie,
-  so `<html lang>` and messages agree on hydration. The theme key exists in **three**
-  places — the store, that inline script, and the screenshot harness
-  (`tests/e2e/agent-screens.spec.ts`) — keep them identical.
-  (`scripts/rename-project.sh` in the meta-repo renames all three.)
+  so `<html lang>` and messages agree on hydration. The theme key exists in **four**
+  places — the store, that inline script, and the two e2e specs that seed it
+  (`tests/e2e/agent-screens.spec.ts`, `tests/e2e/a11y.spec.ts`) — keep them
+  identical. (`scripts/rename-project.sh` in the meta-repo renames all four.)
 - **Security/caching headers** are Nitro `routeRules` in `vite.config.ts` (not a web
   server). `robots.txt` is a static file in `public/`. There is no sitemap plugin.
 - **Dev console noise**: `src/app/strip-dangling-sourcemaps.plugin.ts` suppresses
