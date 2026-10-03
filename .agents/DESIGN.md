@@ -23,9 +23,10 @@ Three screens and one shared bar:
   header, an edit form, and a list of security actions that link out to the
   identity provider.
 - **The not-found page** (`src/pages/404`) — a friendly dead end with a way back.
-- **The header** (`src/widgets/Header`) — brand link, optional page title, and
-  the right-hand cluster: locale switcher, theme toggle, and either a profile
-  menu or a sign-in button.
+- **The frame** (`src/widgets/AppShell`) — every page sits in it: a skip link,
+  the sticky header (brand link; locale menu, theme menu, and either the profile
+  menu or a sign-in button), the decorative background, `<main>` and the footer.
+  A page renders only its own content, width and padding included.
 
 If your project grew past this, update this section. It describes what is on
 screen right now, not what was once planned.
@@ -68,74 +69,106 @@ and these are the places to look before you write anything:
 | Question | Where the answer already is |
 |---|---|
 | What colours exist? | the two theme blocks in `src/index.css` |
-| What controls exist? | the nine directories in `src/shared/ui` |
+| What controls exist? | the files in `src/shared/ui` (list below) |
 | What does a control look like in every state? | its Storybook story — `npm run storybook:serve` |
 | How is a page shell built? | `src/pages/account` (applied), `src/pages/home` (marketing) |
 | How is a form built? | `src/features/profile` |
 | What text exists, and in which languages? | `messages/en.json`, `messages/ru.json` |
 | How do I see the real thing? | [OBSERVABILITY.md](./OBSERVABILITY.md) |
 
-### The nine shared components
+### The shared components
 
-Every one of them is a trio — implementation, story, test — see
-[TESTING.md](./TESTING.md). Use them; do not re-create them.
-
-`Button`, `Input`, `Textarea`, `Card` and `Skeleton` are thin wrappers over
-daisyUI's own component classes (`btn`, `input`, `textarea`, `card`,
-`skeleton`): size, fill, hover, disabled state and the 2px focus ring are
-daisyUI's. A wrapper adds only what daisyUI does not decide our way — the ring's
-colour, the visible `border-base-300`, the `ghost` look — and says why in a
-comment next to it. Reach for the daisyUI class first in a new control too.
+The primitives are **shadcn/ui** — source copied into the repo, built on Radix,
+styled with Tailwind and the tokens below. They are ours to read, and we leave
+them as the registry wrote them: every local change is a commented exception, so
+the next `npx shadcn add` or update stays a clean diff. Every file is a trio —
+implementation, story, test; see [TESTING.md](./TESTING.md). Use them; do not
+re-create them.
 
 | Component | What it is for |
 |---|---|
-| `Button` | every clickable action. `variant` primary (filled accent) / ghost (outlined) / danger (outlined red, for a delete confirmation) / danger-solid (filled red, for an action that breaks something), `size` sm / md / lg, plus `loading`, `leftIcon`, `rightIcon`. It pins no shadow — how much a button lifts off the surface is the page's call, passed through `className`. Its exported class builder dresses a router link as a button, because a link is an `<a>` and may not contain a `<button>` |
-| `Card` | a titled block with optional description and header actions. The default container for applied content |
-| `FormField` | label + control + hint or error, with the aria wiring already done |
-| `Input` | single-line text control, with an `invalid` state |
-| `Textarea` | multi-line text control, same `invalid` state |
-| `Skeleton` | placeholder while a piece of a page loads. `variant` line / circle / rect |
-| `PageLoader` | full-screen spinner while a whole page loads |
-| `ErrorFallback` | the screen a crash lands on: category, message, request id, retry |
-| `Toaster` | the toast host. Mounted once, at the root; the theme is handed to it from there |
+| `button` | every clickable action. `variant` default (filled accent) / outline / secondary / ghost / destructive / link, `size` xs / sm / default / lg / icon…. Icons go in as children, sized by the button. A link that looks like a button is `<Button asChild><Link/></Button>` — never a `<button>` inside an `<a>`. **Local change:** defaults to `type="button"`, so a stray button in a form cannot submit it |
+| `card` | the default container for applied content: `Card` › `CardHeader` (`CardTitle`, `CardDescription`, `CardAction`) › `CardContent` › `CardFooter`. A divided header is `<CardHeader className="border-b">` |
+| `field`, `label` | a form row: `Field` › `FieldLabel` + control + `FieldDescription` or `FieldError` (`role="alert"`, renders nothing without a message). `data-invalid` on `Field`, `aria-invalid` on the control |
+| `input`, `textarea` | text controls. Invalid state is `aria-invalid`, styled from it |
+| `dropdown-menu` | every pop-up menu (profile, language, theme). Items, radio groups for a choice, a `destructive` item. Arrow keys, Escape and outside clicks work |
+| `tooltip` | a hint on hover/focus, replacing `title=`. Needs `TooltipProvider` — mounted once in `AppProviders`; `ErrorFallback` carries its own |
+| `alert` | a message about something that failed or needs attention, inline in the page |
+| `avatar` | a picture with a fallback (initials or an icon) while it loads or when it is missing |
+| `badge` | a small label: a role, a status, a hero pill |
+| `separator` | a rule between items; decorative unless told otherwise |
+| `collapsible` | show/hide a block, like the error screen's debug details |
+| `skeleton` | placeholder while a piece of a page loads; the caller gives the shape (`size-16 rounded-full`, `h-4 w-2/5`) |
+| `spinner` | an inline busy mark with a `status` role and a localized label |
+| `page-loader` | ours: full-screen spinner while a whole page loads, with an optional visible label |
+| `sonner` | the toast host. Mounted once, at the root; the theme is handed to it from there |
+| `ErrorFallback/` | ours: the screen a crash lands on — category, message, request id, retry, copyable debug info |
 
 Need something that is not on this list? Check the list again, then check
-whether a combination of `Card`, `FormField` and `Button` already does it. Only
-then write a new one — as a trio, in `src/shared/ui`, with a name that says what
-it is rather than where it is used.
+whether a combination already does it. Then look in the
+[shadcn/ui registry](https://ui.shadcn.com/docs/components) before writing one:
+
+```bash
+npx shadcn@latest add <name>
+```
+
+The CLI needs two fixes after every run — both are known bugs with this
+project's aliases, and both are easy to miss:
+
+1. **Imports.** It writes `import { cn } from "cn"` instead of
+   `"@shared/lib/cn"` (whatever `components.json` says). Fix the import.
+2. **`package.json`.** It installs a bogus `cn` package (and `next-themes` for
+   `sonner`), and rewrites the file — re-sorting dependencies and escaping
+   non-ASCII characters in the `gen` script. Restore the file from git and add
+   the dependencies the component really needs by hand, then `npm install`.
+
+Then write its story and test (the trio check fails until you do), and run
+`npm run check` — Biome reformats the generated code.
 
 ## Colour and tokens
 
-Two themes are declared in `src/index.css`: **`cmyk`** (light, the default) and
-**`dark`**. Both were tuned for WCAG AA contrast, so their values are not the
-stock palette — do not "restore" them.
+The tokens are shadcn/ui's, declared in `src/index.css`: one block for light
+(`:root`) and one for dark (`[data-theme="dark"]`), mapped to Tailwind colours in
+`@theme inline`. The values are this app's own palette, tuned for WCAG AA and
+checked by axe in both themes (`tests/e2e/a11y.spec.ts`, `npm run stories:check`)
+— do not "restore" them to the stock shadcn ones.
 
-The **shape tokens are identical in both themes** on purpose: `--radius-field`
-(0.75rem — buttons, inputs, textareas), `--radius-box` (1rem — cards, skeletons)
-and `--depth: 0`. The shared components take their corners from them, and a
-control must not change shape when the theme does. `--depth: 0` keeps daisyUI
-from adding a bevel and a drop shadow of its own to buttons and fields.
+The theme the user picks is `light`, `dark` or `system` (the default, which
+follows the OS); `data-theme` always holds the resolved `light` or `dark`, and
+the `dark:` variant keys off it.
 
-**Use daisyUI semantic tokens, never hardcoded palette colors.** Use
-`bg-base-100/200/300`, `text-base-content` (`/60` for muted), `border-base-300`,
-`text-primary`, `text-error/success/info/warning`, and `*-content` for text on accent
-fills. **Never** `bg-white`, `text-slate-900`, `text-indigo-600`, `bg-red-50` — those
-ignore `data-theme` and stay light in dark mode. This exact mistake is why the theme
-once looked broken. Decorative gradient orbs are the only allowed exception.
+The **radii are identical in both themes** on purpose: `--radius` (0.75rem) is
+fields and buttons (`rounded-md`), cards are `rounded-xl` (1rem). A control must
+not change shape when the theme does.
+
+**Use the semantic tokens, never hardcoded palette colors.** Never `bg-white`,
+`text-slate-900`, `text-indigo-600`, `bg-red-50` — those ignore `data-theme` and
+stay light in dark mode. This exact mistake is why the theme once looked broken.
+Decorative gradients and orbs are the only allowed exception.
 
 Which token for what:
 
-- page background `bg-base-200`, raised surfaces `bg-base-100`, hover fills
-  `bg-base-200` / `bg-base-300`;
-- borders and dividers `border-base-300`;
-- primary text `text-base-content`, secondary `text-base-content/70`;
-- the accent is `primary`; `success`, `warning`, `error` and `info` carry
-  meaning, so do not use them for decoration;
-- text sitting on an accent fill uses the matching `*-content` token, never a
-  hand-picked white or black.
+| Use | Token |
+|---|---|
+| page background | `bg-muted` (the `AppShell` sets it) |
+| raised surface | `bg-card` / `bg-background`; menus and toasts `bg-popover` |
+| hover fill | `bg-accent` (+ `text-accent-foreground`) |
+| borders, dividers | `border` alone (the base layer colours it `border-border`), `divide-y` |
+| primary text | default (`text-foreground` on `body`) |
+| secondary text | `text-muted-foreground` |
+| the accent | `primary`; text on it `primary-foreground` |
+| meaning | `destructive`, `success`, `warning`, `info` — not for decoration |
 
-Semi-transparent tints (`bg-primary/10`, `selection:bg-primary/10`) are how this
-UI gets tinted surfaces without new colours. Prefer them over a new token.
+Text sitting on a filled colour uses the matching `*-foreground` token, never a
+hand-picked white or black. Semi-transparent tints (`bg-primary/10`,
+`selection:bg-primary/10`) are how this UI gets tinted surfaces without new
+colours. Prefer them over a new token — and know that `text-primary` on
+`bg-primary/10` is the lowest-contrast pair in use, which is why `primary` sits
+at L 52%.
+
+`secondary` and `accent` are **neutral** in shadcn (a quiet button fill, a
+hover), not brand colours — the pink in the hero gradient is a palette class on
+purpose.
 
 Switching the theme is not your job on a page: it is wired once, pre-paint, and
 the mechanics are described in [ARCHITECTURE.md](./ARCHITECTURE.md).
@@ -168,11 +201,12 @@ case. The existing answers:
 
 | State | What to render |
 |---|---|
-| loading a piece of a page | `Skeleton` in the shape of the content it replaces |
-| loading a whole page | `PageLoader` |
-| a submit in flight | the same `Button`, with `loading` — it disables itself, which is also the protection against a double submit |
-| nothing to show yet | a short line of `text-base-content/70` explaining what would appear here, inside the `Card` that will hold it |
-| the request failed | a message next to the thing that failed, plus a retry where retrying makes sense |
+| loading a piece of a page | `Skeleton` in the shape of the content it replaces, its container `aria-busy`, with a screen-reader-only `role="status"` line |
+| loading a whole page | `PageLoader` (pass `label` when the wait has a reason worth saying) |
+| a submit in flight | the same `Button`, `disabled` while in flight with a `Spinner` in front of the label — disabling is also the protection against a double submit |
+| nothing to show yet | a short line of `text-muted-foreground` explaining what would appear here |
+| the request failed | an `Alert variant="destructive"` next to the thing that failed, plus a retry where retrying makes sense |
+| waiting on something outside our control (the sign-in callback) | a loader with a timeout — then the failure and a way to start over, never a spinner forever |
 | the render crashed | `ErrorFallback` — it already shows the category, the message and the request id |
 | an action finished | a toast: `toast.success` / `toast.error`. One per outcome, never for a state you can see on screen |
 
@@ -180,8 +214,13 @@ The form reference is `src/features/profile`, and it settles the questions that
 come up every time:
 
 - validation lives in a schema next to the form, not in the markup;
-- an invalid field shows its message right under itself, through `FormField`,
-  and the control gets the `invalid` prop so the border and focus ring turn red;
+- an invalid field shows its message right under itself, through `FieldError`;
+  the control gets `aria-invalid` (border and ring turn red) and points
+  `aria-describedby` at the error — only while the error exists;
+- a rejected file (wrong type, too big) says why under its control, not in a
+  toast that disappears;
+- a field the user empties is sent as `""` — that is how a value gets cleared;
+- leaving with unsaved changes asks first (`useBlocker`);
 - submit stays disabled until something actually changed, and while an upload is
   in flight;
 - a toast reports the outcome; the typed values are never thrown away on
@@ -199,15 +238,19 @@ whole app honours the system "reduce motion" setting from one rule in
 
 Not optional, and cheap if you do it as you go:
 
-- **Focus must always be visible**, and it is one style everywhere:
-  `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`.
-  Never remove an outline without putting an equally visible one back. Two
+- **Focus must always be visible**, and it is shadcn's one style everywhere:
+  `outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50` (the
+  primitives already carry it; copy it onto a hand-written link). Two
   variations belong to the rule rather than breaking it: the **colour follows
   the control's meaning**, so an invalid field and a destructive action use
-  `outline-error` instead of `outline-primary`; and a control whose container
-  clips the ring uses `-outline-offset-2`, drawing the ring just inside its own
-  edge instead of losing it. Everything else — a different width, a removed
-  outline, a hand-picked colour — is a bug.
+  `ring-destructive/20`; and a control whose container clips the ring uses
+  `focus-visible:ring-inset`. Everything else — a removed ring, a different
+  width, a hand-picked colour — is a bug.
+- Every page starts with a **skip link** to `#content` — the `AppShell` has it.
+  One `<header>`, one `<main>`, one `<footer>` per page; the shell provides all
+  three.
+- Meaning never rides on colour or an icon alone: the "email verified" mark has
+  a label (and a tooltip saying it).
 - Every icon-only control gets an `aria-label`; that label is UI text, so it
   goes through the message files like any other string.
 - Decorative marks are hidden from assistive tech (`aria-hidden`), and
@@ -243,40 +286,39 @@ never a stack trace or an error code the reader cannot use.
 
 The short list of things that go wrong here, in the order they go wrong:
 
-1. **A new component that already exists.** Check the nine in `src/shared/ui`
-   first, and their stories.
+1. **A new component that already exists.** Check `src/shared/ui` and its
+   stories first, then the shadcn/ui registry.
 2. **A hardcoded colour.** It looks right in light mode and breaks dark mode.
    Tokens only.
-3. **Assuming `className` wins over another utility.** Against a daisyUI
-   component class it always does: daisyUI ships its rules in a nested cascade
-   layer, and a plain utility outranks that layer wherever it sits in the file —
-   so `className="h-auto px-8"` on a `Button` really overrides `btn`'s height
-   and padding. Utility against utility is a different matter. The helper that
-   joins class names only joins them; when two utilities set the same CSS
-   property the winner is whichever the stylesheet lists later, and that order
-   is not the order you wrote and not the order of the numbers: `shadow-2xl` is
-   emitted before `shadow-sm`. That is why `Button` pins no shadow utility and
-   why each variant names exactly one ring colour — and why a caller that
-   "overrides" a utility and sees no change is looking at this, not at a typo.
-   Both times this bit, the wrong result looked perfectly fine in the markup.
+3. **Assuming `className` wins.** On a primitive it usually does: `cn` runs
+   `tailwind-merge`, which drops the component's own utility when yours sets
+   the same property — `className="h-auto px-8"` on a `Button` replaces its
+   height and padding. It only knows Tailwind's own scales, though: two
+   arbitrary or custom classes for one property both survive, and then the
+   winner is whichever the stylesheet lists later — not the order you wrote.
+   A caller that "overrides" a class and sees no change is looking at this,
+   not at a typo.
 4. **A new spacing or radius scale.** Use the framework's steps and the shell
    numbers above; a one-off `p-[13px]` is how a UI stops looking made by one
    person.
 5. **A one-off button.** If you are writing an accent fill (`bg-primary`,
-   `bg-error`) and a corner radius on a clickable thing, you are
+   `bg-destructive`) and a corner radius on a clickable thing, you are
    re-implementing `Button`. There is no button left
    in this tree that does that, and the next one should not be the first: use
    the component, pick the variant, and pass `className` only for what the page
    legitimately varies — a width, a shadow, a hover flourish.
-6. **A removed focus outline.** See *Accessibility*.
+6. **A removed focus ring.** See *Accessibility*.
 7. **Hardcoded English in the markup.** See *Copy*.
 8. **A control changed without its story and test.** All three move together —
    see [TESTING.md](./TESTING.md).
-9. **A rule invented for a pattern this app does not have.** There is no rule
-   for a data grid, a paged list, a side navigation, an overlay dialog or a
-   slide-out panel, because none of those exist in this code — the only
-   pop-up is the header's profile menu, built from a native disclosure element.
-   Write the rule when you write the pattern, not before.
+9. **A hand-rolled overlay.** Menus, tooltips and anything that floats above
+   the page come from shadcn/ui (Radix underneath): focus management, Escape,
+   outside clicks and the ARIA roles are already right there, and a
+   `<details>` or a `useState` popover gets every one of them wrong. Need a
+   dialog or a sheet? `npx shadcn add dialog` — there is none yet.
+10. **A rule invented for a pattern this app does not have.** There is no rule
+   for a data grid, a paged list or a side navigation, because none of those
+   exist in this code. Write the rule when you write the pattern, not before.
 
 ## Known deviations
 

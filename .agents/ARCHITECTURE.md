@@ -23,9 +23,10 @@ This app runs **server-side rendered** via TanStack Start (Vite plugin + Nitro
   `isLoading` (see `HeaderControls`) so the first client paint matches the server's
   neutral render. `MockAuthProvider` defers its `localStorage` read to an effect for
   the same reason.
-- **FOUC**: the daisyUI theme is applied pre-paint by a blocking inline script in
+- **FOUC**: the theme is applied pre-paint by a blocking inline script in
   `__root.tsx`; after hydration the store in `src/features/theme` owns it, writing
-  `data-theme` on the document element, persisting the choice and re-applying it on
+  the *resolved* theme (`light`/`dark` — the choice may also be `system`, which
+  follows the OS) to `data-theme` on the document element, persisting the choice and re-applying it on
   rehydrate; the locale is resolved server-side from the `PARAGLIDE_LOCALE` cookie,
   so `<html lang>` and messages agree on hydration. The theme key exists in **three**
   places — the store, that inline script, and the screenshot harness
@@ -120,9 +121,13 @@ list — add new aliases to both or knip reports phantom dead code.
   component** with `useAuth()`. There is no server session and no `context.auth` on
   the router; `beforeLoad` + `context.auth` was removed. Remember the return
   location as `pathname + search` (an absolute URL breaks `history.replace`).
-- **A shared UI component** → `src/shared/ui/<Name>/` as a **trio** (see
-  [TESTING.md](./TESTING.md)); style with daisyUI semantic tokens only (see
-  [DESIGN.md](./DESIGN.md)).
+- **A shared UI component** → `npx shadcn add <name>` writes `src/shared/ui/<name>.tsx`;
+  add `<name>.stories.tsx` + `<name>.test.tsx` next to it (the **trio**, see
+  [TESTING.md](./TESTING.md)). A component of our own with helper files gets a
+  directory, `src/shared/ui/<Name>/<Name>.tsx`, like `ErrorFallback`. Tokens and
+  the CLI's quirks: [DESIGN.md](./DESIGN.md).
+- **The page frame** → every page renders inside `AppShell` (`src/widgets/AppShell`:
+  skip link, header, `<main>`, footer); a page supplies only its own content.
 - **A store** → Zustand in `src/<layer>/<slice>/model/store.ts`, exported from the
   slice's `index.ts`; subscribe with a **selector** (`useX(s => s.field)`) so
   unrelated updates don't re-render. Persisted stores must re-apply their side

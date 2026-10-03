@@ -31,7 +31,7 @@ LiteFront is a lightweight and performant frontend boilerplate designed for buil
 | **Data Fetching**        | [GraphQL](https://graphql.org) with [URQL Client](https://formidable.com/open-source/urql)              |
 | **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                                            |
 | **Styling**              | [Tailwind CSS v4](https://tailwindcss.com) + [SCSS Modules](https://github.com/css-modules/css-modules)    |
-| **UI Components**        | [daisyUI](https://daisyui.com/) (for Tailwind CSS)                                                      |
+| **UI Components**        | [shadcn/ui](https://ui.shadcn.com/) on [Radix](https://www.radix-ui.com/) (copied into `src/shared/ui`)   |
 | **Internationalization** | [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs) (Type-safe)                    |
 | **Code Generation**      | [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)                                         |
 | **Linting/Formatting**   | [Biome](https://biomejs.dev), [Stylelint](https://stylelint.io), [Knip](https://knip.dev), [Steiger](https://github.com/nicokant/steiger)               |

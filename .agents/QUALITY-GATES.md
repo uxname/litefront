@@ -78,14 +78,15 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 - After updating, re-run the **full** `verify:push`: major bumps of test tooling,
   linters and the FSD plugin change *rules*, not just code, and only the wide gate
   catches that.
-- `overrides` in `package.json` force transitive versions, normally to close a
-  vulnerability upstream hasn't. Review them after each update: remove one, `npm
-  install`, `npm audit` — if the vulnerability stays gone the override is obsolete.
-  `npm ls <package>` shows which parent still pulls the old version.
+- To force a transitive version (usually to close a vulnerability upstream
+  hasn't), add an `overrides` block to `package.json` — there is none today.
+  Review any you add after each update: remove it, `npm install`, `npm audit` — if
+  the vulnerability stays gone the override is obsolete. `npm ls <package>` shows
+  which parent still pulls the old version.
 
 ## Bundle size
 
-`npm run build` writes a treemap next to the build output; open it to see what
+`ANALYZE=true npm run build` writes a treemap next to the build output; open it to see what
 grew. Usual offenders, in the order they usually pay off:
 
 1. A heavy library pulled into the **root** route's preload — the cost lands on every

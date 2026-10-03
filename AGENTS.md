@@ -1,6 +1,6 @@
 # AGENTS.md — litefront (frontend)
 
-Vite · React 19 · TanStack Start (SSR) · URQL · Zustand · Tailwind v4 + daisyUI ·
+Vite · React 19 · TanStack Start (SSR) · URQL · Zustand · Tailwind v4 + shadcn/ui (Radix) ·
 Paraglide · Feature-Sliced Design.
 
 **This file is the entry point, not the whole manual:** it holds the rules you must not
@@ -66,8 +66,10 @@ nothing that assumes the next request lands on the same copy.
    lower a floor to go green — add the test.
 4. **Respect FSD boundaries.** Imports point downward only, and cross-slice access goes
    through the slice's `index.ts`. Steiger enforces it, aliases included.
-5. **Style with daisyUI semantic tokens, never hardcoded palette colors** — hardcoded
-   colors ignore `data-theme` and break dark mode. The rest of the UI rules are in
+5. **Style with the shadcn/ui semantic tokens, never hardcoded palette colors** —
+   hardcoded colors ignore `data-theme` and break dark mode. A new primitive comes
+   from `npx shadcn add`, not by hand — and the CLI needs two fixes afterwards
+   (DESIGN.md says which). The rest of the UI rules are in
    [.agents/DESIGN.md](./.agents/DESIGN.md).
 6. **Never touch `window` during render.** This tree is server-rendered; read it in an
    effect, an event handler, or behind `typeof window === "undefined"`.

@@ -5,11 +5,19 @@ drift.
 
 ## The trio rule
 
-**Every `shared/ui` component is a trio**: `<Name>.tsx` (implementation) +
-`<Name>.stories.tsx` (Storybook story) + `<Name>.test.tsx` (Vitest), with a thin
-`index.ts` re-export. The `trio` step in `npm run check`
-(`scripts/check-component-trio.mjs`) **fails the build** for any `shared/ui`
-component missing its story or test.
+**Every `shared/ui` component is a trio**: implementation + story + test, side by
+side. A shadcn/ui primitive is flat — `button.tsx`, `button.stories.tsx`,
+`button.test.tsx`; a component of our own with helper files is a directory —
+`ErrorFallback/ErrorFallback.tsx` with its `.stories.tsx`, `.test.tsx` and an
+`index.ts`. The `trio` step in `npm run check`
+(`scripts/check-component-trio.mjs`) **fails the build** for either shape missing
+its story or test — so `npx shadcn add` is not done until you add both.
+
+A primitive's test checks behaviour through roles and ARIA (`getByRole`,
+`toBeDisabled`, `toBeInvalid`, a menu closing on Escape), never its class names:
+the classes are shadcn's and change with every update of the registry. jsdom
+lacks the pointer, scroll and resize APIs Radix calls; `tests/setup.ts` stubs
+them, so an overlay opens in a test like it does in a browser.
 
 ## TDD
 
@@ -74,6 +82,10 @@ npx playwright test -g "login works"            # one test by name
   fails with missing browsers. A Playwright version bump needs it again.
 - E2E runs with `VITE_MOCK_AUTH=true`, so the real OIDC flow is never exercised here
   either.
+- `tests/e2e/a11y.spec.ts` runs axe on every route in both themes and fails on a
+  serious or critical violation — contrast included, which is how a palette change
+  that breaks AA gets caught. It emulates reduced motion so entrance animations
+  are not measured mid-fade; a new route goes into its `ROUTES` list.
 - `forbidOnly` is always on: a leftover `test.only` fails the run instead of quietly
   shrinking the suite to one test.
 
@@ -82,31 +94,38 @@ npx playwright test -g "login works"            # one test by name
 ```bash
 npm run storybook:serve     # develop stories (http://localhost:61000)
 npm run storybook:build     # also part of the pre-push gate, then cleaned up
-npm run stories:check       # opens every built story headlessly; fails on a throw,
-                            # a console error or an empty canvas
+npm run stories:check       # opens every built story headlessly, in both themes;
+                            # fails on a throw, a console error, an empty canvas
+                            # or a serious/critical axe (a11y) violation
 ```
 
 A story file is plain CSF: a default export naming the component, then one named
-export per state. No args, no controls, no addons — a story here is a function
-that returns the component in that state.
+export per state. No args, no controls — a story here is a function that returns
+the component in that state. The one addon is `@storybook/addon-a11y`: its
+Accessibility panel shows the same axe findings `stories:check` fails on.
+
+`@storybook/addon-vitest` (stories as Vitest tests) was tried and dropped: its
+test file decides whether it is "running from this file" by comparing paths with
+only `%20` decoded, so in any checkout whose path has non-ASCII characters every
+story file reports "No test suite found". Axe runs in `stories:check` instead.
 
 ```tsx
 import type { Meta, StoryFn } from "@storybook/react-vite";
-import { Button } from "./Button";
+import { Button } from "./button";
 
 export default { component: Button } satisfies Meta<typeof Button>;
 
-export const Primary: StoryFn = () => <Button>Primary action</Button>;
+export const Default: StoryFn = () => <Button>Primary action</Button>;
 ```
 
 Storybook runs on its own minimal Vite config (`.storybook/vite.config.ts`), not
 the production one, and `.storybook/preview.tsx` supplies the runtime config
 `@shared/config` needs — so a component that imports the config renders in a
 story without any setup of its own. The same file adds the **Theme** toolbar
-(daisyUI `cmyk` / `dark`): it sets `data-theme` on the story's `<html>`, so a
+(`light` / `dark`): it sets `data-theme` on the story's `<html>`, so a
 component that only misbehaves in the dark theme can be caught by eye. A
 component that takes the theme as a prop instead of reading `data-theme` — the
-`Toaster` does — must be handed it in the story too, or the toolbar will restyle
+`Toaster` (`sonner.tsx`) does — must be handed it in the story too, or the toolbar will restyle
 everything around it and leave the component itself light.
 
 A story is the component's visual contract: cover each meaningful variant and state,
