@@ -1,6 +1,6 @@
 import { m } from "@generated/paraglide/messages";
 import { logError } from "@shared/lib/logger";
-import { toast } from "@shared/ui/Toaster";
+import { toast } from "@shared/ui/sonner";
 
 /**
  * The scaffolding command shown in the hero section and copied to the

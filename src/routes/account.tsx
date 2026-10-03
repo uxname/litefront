@@ -1,3 +1,4 @@
+import { m } from "@generated/paraglide/messages";
 import { AccountPage } from "@pages/account";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -16,13 +17,8 @@ export const Route = createFileRoute("/account")({
       : {},
   head: () => ({
     meta: [
-      {
-        title: "Profile | LiteFront",
-      },
-      {
-        name: "description",
-        content: "Manage your profile, identity and security settings.",
-      },
+      { title: m.meta_account_title() },
+      { name: "description", content: m.meta_account_description() },
       {
         name: "robots",
         content: "noindex, nofollow",

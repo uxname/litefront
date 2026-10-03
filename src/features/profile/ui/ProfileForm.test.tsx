@@ -1,5 +1,11 @@
 import { UpdateProfileDocument } from "@generated/graphql";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProfileForm } from "./ProfileForm";
@@ -32,16 +38,22 @@ vi.mock("urql", async (importOriginal) => ({
   useMutation,
 }));
 
-vi.mock("@shared/ui/Toaster", () => ({
+vi.mock("@shared/ui/sonner", () => ({
   toast: { success: toastSuccess, error: toastError },
 }));
+
+// The unsaved-changes guard needs a router; the form is tested without one.
+vi.mock("@tanstack/react-router", () => ({ useBlocker: vi.fn() }));
 
 // Avatar upload talks to a REST endpoint; stub it so nothing hits the network.
 vi.mock("../api/upload-avatar", () => ({
   uploadAvatar: vi.fn(),
 }));
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 
 const sampleProfile = {
   avatarUrl: "https://example.com/avatar.png",
@@ -73,6 +85,17 @@ describe("ProfileForm", () => {
   });
 
   it("renders the avatar image when the profile has an avatarUrl", () => {
+    // Radix shows the <img> only once the browser reports it loaded; jsdom
+    // never loads images, so stand in an already-loaded one.
+    vi.stubGlobal(
+      "Image",
+      class {
+        complete = true;
+        naturalWidth = 1;
+        addEventListener() {}
+        removeEventListener() {}
+      },
+    );
     render(<ProfileForm profile={sampleProfile} />);
 
     const img = screen.getByRole("img", { name: "profile_avatar" });
@@ -120,6 +143,39 @@ describe("ProfileForm", () => {
     // The operation is the generated document, not a hand-written query string.
     expect(useMutation).toHaveBeenCalledWith(UpdateProfileDocument);
     expect(toastSuccess).toHaveBeenCalled();
+  });
+
+  it("sends an emptied field as an empty string so it gets cleared", async () => {
+    const user = userEvent.setup();
+    render(<ProfileForm profile={sampleProfile} />);
+
+    await user.clear(screen.getByLabelText("profile_display_name"));
+    await user.click(screen.getByRole("button", { name: "profile_save" }));
+
+    await waitFor(() =>
+      expect(executeMutation).toHaveBeenCalledWith({
+        input: { displayName: "" },
+      }),
+    );
+  });
+
+  it("explains under the control why a picked file was rejected", async () => {
+    const { container } = render(<ProfileForm profile={sampleProfile} />);
+    const fileInput = container.querySelector('input[type="file"]')!;
+
+    fireEvent.change(fileInput, {
+      target: { files: [new File(["x"], "notes.txt", { type: "text/plain" })] },
+    });
+    expect(
+      await screen.findByText("profile_avatar_invalid_type"),
+    ).toBeInTheDocument();
+
+    const huge = new File(["x"], "big.png", { type: "image/png" });
+    Object.defineProperty(huge, "size", { value: 6 * 1024 * 1024 });
+    fireEvent.change(fileInput, { target: { files: [huge] } });
+    expect(
+      await screen.findByText("profile_avatar_too_large"),
+    ).toBeInTheDocument();
   });
 
   it("shows an error toast when the mutation fails", async () => {

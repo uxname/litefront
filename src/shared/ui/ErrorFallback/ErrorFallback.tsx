@@ -1,23 +1,27 @@
 import { m } from "@generated/paraglide/messages";
 import { env } from "@shared/config";
+import { cn } from "@shared/lib/cn";
 import {
   ArrowRight,
   ChevronDown,
-  ChevronUp,
   Copy,
   RefreshCcw,
   RotateCcw,
   Terminal,
 } from "lucide-react";
+import { type FC, useEffect, useState } from "react";
+import { Button } from "../button";
 import {
-  type FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Button } from "../Button";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../tooltip";
 import { detectErrorCategory } from "./detectErrorCategory";
 import { ERROR_CONFIG } from "./errorConfig";
 import { extractRequestId } from "./extractRequestId";
@@ -40,32 +44,26 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
   pathname = typeof window === "undefined" ? "" : window.location.pathname,
   onRetry,
 }) => {
-  const [showDetails, setShowDetails] = useState(false);
   const [copied, setCopied] = useState(false);
-  // Track pending timers so they are cancelled on unmount (no state update
-  // fires after the component is gone).
-  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  useEffect(
-    () => () => {
-      for (const id of timeoutsRef.current) clearTimeout(id);
-    },
-    [],
-  );
 
-  const normalizedError = useMemo(() => normalizeError(error), [error]);
+  // One pending "Copied" reset at most; cancelled on unmount so no state update
+  // fires after the component is gone.
+  useEffect(() => {
+    if (!copied) return;
+    const id = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(id);
+  }, [copied]);
+
+  const normalizedError = normalizeError(error);
   // The backend stamps this id on every log line of the failed request, so it is
   // what turns a user's screenshot into something the server logs can answer.
-  const requestId = useMemo(() => extractRequestId(error), [error]);
-  const category = useMemo(
-    () => detectErrorCategory(normalizedError),
-    [normalizedError],
-  );
-  const config = ERROR_CONFIG[category];
+  const requestId = extractRequestId(error);
+  const config = ERROR_CONFIG[detectErrorCategory(normalizedError)];
 
   // Retries at once, every time. A person pressing the button IS the backoff;
   // transient network failures are already retried, with a real exponential
   // delay, by urql's retryExchange before an error ever reaches this screen.
-  const handleRetry = useCallback(() => {
+  const handleRetry = () => {
     if (onRetry) {
       onRetry();
     } else if (reset) {
@@ -73,13 +71,9 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
     } else {
       window.location.reload();
     }
-  }, [reset, onRetry]);
+  };
 
-  const handleReload = useCallback(() => {
-    window.location.reload();
-  }, []);
-
-  const handleCopyStack = useCallback(async () => {
+  const handleCopyStack = async () => {
     try {
       const debugInfo = [
         `Error: ${normalizedError.name}: ${normalizedError.message}`,
@@ -92,118 +86,134 @@ export const ErrorFallback: FC<ErrorFallbackProps> = ({
 
       await navigator.clipboard.writeText(debugInfo);
       setCopied(true);
-      timeoutsRef.current.push(setTimeout(() => setCopied(false), 2000));
     } catch (err) {
       if (env.DEV) {
         console.error("Failed to copy", err);
       }
     }
-  }, [normalizedError, requestId]);
+  };
 
   const IconComponent = config.icon;
+  const copyLabel = copied ? m.action_copied() : m.action_copy_stack();
 
   return (
-    <div className="min-h-screen w-full bg-base-200 flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-lg bg-base-100 rounded-2xl border border-base-300 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-300">
-        <div className="p-8 sm:p-10 text-center">
+    <main className="flex min-h-screen w-full items-center justify-center bg-muted p-4">
+      <div className="w-full max-w-lg overflow-hidden rounded-xl border bg-card shadow-xl animate-in fade-in zoom-in duration-300">
+        <div className="p-8 text-center sm:p-10">
           <div
-            className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl ${config.style.wrapper} ring-1 ${config.style.ring}`}
+            aria-hidden="true"
+            className={cn(
+              "mx-auto mb-6 flex size-20 items-center justify-center rounded-2xl ring-1",
+              config.style.wrapper,
+              config.style.ring,
+            )}
           >
             <IconComponent
-              className={`h-10 w-10 ${config.style.icon} ${config.animate ? "animate-pulse" : ""}`}
+              className={cn(
+                "size-10",
+                config.style.icon,
+                config.animate && "animate-pulse",
+              )}
               strokeWidth={1.5}
             />
           </div>
 
-          <p className="text-xs font-bold leading-7 text-base-content/70 uppercase tracking-widest mb-1">
-            {m.error_generic_title?.() ?? "System Issue"}
+          <p className="mb-1 text-xs leading-7 font-bold tracking-widest text-muted-foreground uppercase">
+            {m.error_generic_title()}
           </p>
-          <h2 className="text-3xl font-extrabold tracking-tight text-base-content sm:text-4xl mb-3">
+          <h1 className="mb-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
             {config.getTitle()}
-          </h2>
-          <p className="text-base-content/70 text-lg leading-relaxed mb-8">
+          </h1>
+          <p className="mb-8 text-lg leading-relaxed text-muted-foreground">
             {config.getDesc()}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
               onClick={handleRetry}
               className="w-full shadow-sm sm:w-auto"
-              leftIcon={<RotateCcw className="h-4 w-4" />}
             >
+              <RotateCcw />
               {m.action_retry()}
             </Button>
             <Button
-              variant="ghost"
-              onClick={handleReload}
+              variant="outline"
+              onClick={() => window.location.reload()}
               className="w-full sm:w-auto"
-              leftIcon={<RefreshCcw className="h-4 w-4" />}
             >
+              <RefreshCcw />
               {m.action_reload()}
             </Button>
           </div>
         </div>
 
-        <div className="border-t border-base-300 bg-base-200/50">
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium uppercase tracking-wider text-base-content/70 hover:text-base-content hover:bg-base-200 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
+        <Collapsible className="group/details border-t bg-muted/50">
+          <CollapsibleTrigger className="flex w-full items-center justify-between px-8 py-4 text-xs font-medium tracking-wider text-muted-foreground uppercase outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-inset">
             <span className="flex items-center gap-2">
-              <Terminal className="h-4 w-4" />
+              <Terminal className="size-4" />
               {m.dev_details()}
             </span>
-            {showDetails ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </button>
+            <ChevronDown className="size-4 transition-transform group-data-[state=open]/details:rotate-180" />
+          </CollapsibleTrigger>
 
-          {showDetails && (
-            <div className="px-8 pb-8 pt-2 animate-in slide-in-from-top-2 duration-200">
-              <div className="mb-3 flex items-center gap-2 text-xs text-base-content/70 font-mono">
-                <ArrowRight className="h-3 w-3" />
-                Path:{" "}
-                <span className="text-base-content bg-base-300 px-1.5 py-0.5 rounded">
+          <CollapsibleContent className="px-8 pt-2 pb-8">
+            <dl className="mb-3 space-y-3 font-mono text-xs text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <ArrowRight className="size-3" aria-hidden="true" />
+                <dt>{m.error_debug_path()}:</dt>
+                <dd className="rounded bg-accent px-1.5 py-0.5 text-foreground">
                   {pathname}
-                </span>
+                </dd>
               </div>
-
               {requestId && (
-                <div className="mb-3 flex items-center gap-2 text-xs text-base-content/70 font-mono">
-                  <ArrowRight className="h-3 w-3" />
-                  Request:{" "}
-                  <span className="text-base-content bg-base-300 px-1.5 py-0.5 rounded break-all">
+                <div className="flex items-center gap-2">
+                  <ArrowRight className="size-3" aria-hidden="true" />
+                  <dt>{m.error_debug_request()}:</dt>
+                  <dd className="rounded bg-accent px-1.5 py-0.5 break-all text-foreground">
                     {requestId}
-                  </span>
+                  </dd>
                 </div>
               )}
+            </dl>
 
-              <div className="relative rounded-lg border border-base-300 bg-base-100 p-4 font-mono text-[11px] leading-relaxed text-base-content/70 shadow-sm overflow-hidden">
-                <button
-                  onClick={handleCopyStack}
-                  className="absolute right-2 top-2 rounded-md bg-base-200 p-1.5 text-base-content/70 hover:text-primary hover:bg-primary/10 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  title={copied ? "Copied" : "Copy Stack Trace"}
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                </button>
+            <div className="relative overflow-hidden rounded-lg border bg-card p-4 font-mono text-xs leading-relaxed text-muted-foreground shadow-sm">
+              {/* Own provider: this screen renders when something already
+                  broke, possibly above the app's providers. */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="secondary"
+                      size="icon-sm"
+                      className="absolute top-2 right-2"
+                      aria-label={copyLabel}
+                      onClick={handleCopyStack}
+                    >
+                      <Copy />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{copyLabel}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              {/* Announces the copy to screen readers; the tooltip may be closed. */}
+              <span aria-live="polite" className="sr-only">
+                {copied ? m.action_copied() : ""}
+              </span>
 
-                <div className="max-h-48 overflow-auto pr-8 custom-scrollbar">
-                  <span className="block text-error font-bold mb-2 break-words">
-                    {normalizedError.name}: {normalizedError.message}
-                  </span>
-                  {env.DEV && (
-                    <div className="whitespace-pre-wrap break-words opacity-80">
-                      {normalizedError.stack || "No stack trace available"}
-                    </div>
-                  )}
-                </div>
+              <div className="max-h-48 overflow-auto pr-8">
+                <span className="mb-2 block font-bold break-words text-destructive">
+                  {normalizedError.name}: {normalizedError.message}
+                </span>
+                {env.DEV && (
+                  <div className="break-words whitespace-pre-wrap opacity-80">
+                    {normalizedError.stack || m.error_no_stack()}
+                  </div>
+                )}
               </div>
             </div>
-          )}
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
-    </div>
+    </main>
   );
 };

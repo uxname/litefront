@@ -1,6 +1,14 @@
 import { m } from "@generated/paraglide/messages";
 import { getLocale, locales, setLocale } from "@generated/paraglide/runtime";
-import { Check, Languages } from "lucide-react";
+import { Button } from "@shared/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@shared/ui/dropdown-menu";
+import { Languages } from "lucide-react";
 import { type FC } from "react";
 
 type Locale = (typeof locales)[number];
@@ -29,40 +37,30 @@ const localeName = (loc: string): string => {
 export const LocaleSwitcher: FC = () => {
   const current = getLocale();
 
-  const select = (target: Locale) => {
-    if (target !== current) setLocale(target);
+  const select = (target: string) => {
+    if (target !== current) setLocale(target as Locale);
   };
 
   return (
-    <details className="dropdown dropdown-end">
-      <summary
-        aria-label={m.locale_label()}
-        title={m.locale_label()}
-        className="flex h-9 cursor-pointer list-none items-center gap-1.5 rounded-lg px-2.5 text-base-content/70 transition-colors hover:bg-base-200 hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden"
-      >
-        <Languages className="h-4 w-4" />
-        <span className="text-xs font-bold uppercase">{current}</span>
-      </summary>
-
-      <ul className="dropdown-content menu z-[60] mt-2 w-44 rounded-xl border border-base-300 bg-base-100 p-1.5 shadow-lg">
-        {locales.map((loc) => (
-          <li key={loc}>
-            <button
-              type="button"
-              onClick={() => select(loc)}
-              className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <span>
-                {localeName(loc)}
-                <span className="ml-1.5 text-xs uppercase text-base-content/70">
-                  {loc}
-                </span>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" aria-label={m.locale_label()}>
+          <Languages />
+          <span className="text-xs font-bold uppercase">{current}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuRadioGroup value={current} onValueChange={select}>
+          {locales.map((loc) => (
+            <DropdownMenuRadioItem key={loc} value={loc}>
+              {localeName(loc)}
+              <span className="ml-auto text-xs uppercase text-muted-foreground">
+                {loc}
               </span>
-              {loc === current && <Check className="h-4 w-4 text-primary" />}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </details>
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

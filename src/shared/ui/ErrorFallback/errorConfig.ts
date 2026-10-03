@@ -39,9 +39,9 @@ export const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.AUTH_CONFIG]: {
     icon: ShieldBan,
     style: {
-      wrapper: "bg-error/10",
-      icon: "text-error",
-      ring: "ring-error",
+      wrapper: "bg-destructive/10",
+      icon: "text-destructive",
+      ring: "ring-destructive",
     },
     getTitle: () => m.error_auth_config(),
     getDesc: () => m.error_auth_config_desc(),
@@ -49,9 +49,9 @@ export const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.ACCESS]: {
     icon: ShieldBan,
     style: {
-      wrapper: "bg-error/10",
-      icon: "text-error",
-      ring: "ring-error",
+      wrapper: "bg-destructive/10",
+      icon: "text-destructive",
+      ring: "ring-destructive",
     },
     getTitle: () => m.error_access_denied(),
     getDesc: () => m.error_access_desc(),
@@ -70,9 +70,9 @@ export const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.SERVER]: {
     icon: ServerCrash,
     style: {
-      wrapper: "bg-error/10",
-      icon: "text-error",
-      ring: "ring-error",
+      wrapper: "bg-destructive/10",
+      icon: "text-destructive",
+      ring: "ring-destructive",
     },
     getTitle: () => m.error_server(),
     getDesc: () => m.error_server_desc(),
@@ -80,9 +80,9 @@ export const ERROR_CONFIG: Record<ErrorCategory, ErrorConfig> = {
   [ErrorCategory.UNKNOWN]: {
     icon: CircleAlert,
     style: {
-      wrapper: "bg-base-200",
-      icon: "text-base-content/70",
-      ring: "ring-base-300",
+      wrapper: "bg-muted",
+      icon: "text-muted-foreground",
+      ring: "ring-border",
     },
     getTitle: () => m.error_unexpected(),
     getDesc: () => m.error_unexpected_desc(),

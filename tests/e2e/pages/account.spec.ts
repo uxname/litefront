@@ -60,8 +60,9 @@ test.describe("Account/Profile Page", () => {
     ).toBeVisible();
     await expect(page.getByText("Ada Test").first()).toBeVisible();
     await expect(page.getByText("User").first()).toBeVisible();
+    // A real link out to the identity provider, not a button.
     await expect(
-      page.getByRole("button", { name: /change password/i }),
+      page.getByRole("link", { name: /change password/i }),
     ).toBeVisible();
   });
 

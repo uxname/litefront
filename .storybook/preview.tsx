@@ -1,11 +1,12 @@
 import type { Preview } from "@storybook/react-vite";
 import { useEffect } from "react";
 
-// The same two names the app uses, from the same place — a third spelling here
-// would silently produce a theme daisyUI has never heard of.
+// The app's own theme names, from the same place — a third spelling here would
+// silently produce a theme the stylesheet has never heard of. "system" is a
+// user choice, not a paint, so the toolbar offers only the two resolved ones.
 import type { Theme } from "../src/features/theme/model/store";
 
-// The app's global stylesheet (Tailwind + the daisyUI themes), so a story renders
+// The app's global stylesheet (Tailwind + the shadcn/ui tokens), so a story renders
 // with exactly the styling the real app has.
 import "../src/index.css";
 
@@ -30,27 +31,25 @@ Object.assign(globalThis, {
   },
 });
 
-// daisyUI switches theme on the `data-theme` attribute of <html> (see the two
-// `@plugin "daisyui/theme"` blocks in src/index.css: "cmyk" is the light one and
-// the default, "dark" is the other). The app sets that attribute itself; a story
+// The dark tokens in src/index.css hang off the `data-theme` attribute of <html>. The app sets that attribute itself; a story
 // has nobody to set it, so without this toolbar every screenshot is a light one
 // — and a component that only misbehaves in the dark theme goes unnoticed.
 const preview: Preview = {
   globalTypes: {
     theme: {
-      description: "daisyUI theme",
+      description: "Colour theme",
       toolbar: {
         title: "Theme",
         icon: "paintbrush",
         items: [
-          { value: "cmyk" satisfies Theme, title: "Light" },
+          { value: "light" satisfies Theme, title: "Light" },
           { value: "dark" satisfies Theme, title: "Dark" },
         ],
         dynamicTitle: true,
       },
     },
   },
-  initialGlobals: { theme: "cmyk" satisfies Theme },
+  initialGlobals: { theme: "light" satisfies Theme },
   decorators: [
     (Story, context) => {
       // In an effect, not during render: writing to the document while React is

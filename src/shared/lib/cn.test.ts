@@ -46,7 +46,9 @@ describe("cn", () => {
     expect(cn(["a", ["b", false]], "c")).toBe("a b c");
   });
 
-  it("keeps daisyUI component classes that look alike but do not conflict", () => {
-    expect(cn("btn", "btn-primary", "btn-lg")).toBe("btn btn-primary btn-lg");
+  it("keeps custom classes that look alike but do not conflict", () => {
+    expect(cn("toaster", "toaster-group", "group")).toBe(
+      "toaster toaster-group group",
+    );
   });
 });

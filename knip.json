@@ -24,7 +24,6 @@
     "src/shared/config/**",
     "src/shared/lib/sentry/**"
   ],
-  "ignoreDependencies": ["daisyui"],
   "ignoreBinaries": [],
   "ignoreExportsUsedInFile": true,
   "paths": {
@@ -35,5 +34,9 @@
     "@features/*": ["./src/features/*"],
     "@entities/*": ["./src/entities/*"],
     "@public/*": ["./public/*"]
+  },
+  "ignoreDependencies": ["tw-animate-css"],
+  "ignoreIssues": {
+    "src/shared/ui/*.tsx": ["exports"]
   }
 }

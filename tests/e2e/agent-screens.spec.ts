@@ -15,7 +15,7 @@ import {
  * The log harness (agent-logs.spec.ts) makes the frontend observable as text
  * (console/errors/network). This one makes it observable as pixels: it drives
  * the app headlessly and writes a full-page PNG for every key route, in BOTH
- * daisyUI themes and at desktop + mobile widths, to `test-results/screenshots/`.
+ * themes (light, dark) and at desktop + mobile widths, to `test-results/screenshots/`.
  * An agent then READS those PNGs (the Read tool renders images) instead of
  * needing eyes on a live browser.
  *
@@ -23,8 +23,8 @@ import {
  * Read after:   test-results/screenshots/<route>-<theme>-<viewport>.png
  *
  * Why both themes: the dark theme regressed once because components used
- * hardcoded Tailwind palette colors instead of daisyUI SEMANTIC tokens, so they
- * stayed light under `data-theme="dark"`. Comparing `*-cmyk-*` vs `*-dark-*`
+ * hardcoded Tailwind palette colors instead of the SEMANTIC shadcn/ui tokens, so they
+ * stayed light under `data-theme="dark"`. Comparing `*-light-*` vs `*-dark-*`
  * makes that class of bug visible at a glance.
  *
  * Like the log harness it is a COLLECTOR, not a strict gate: it captures the
@@ -35,7 +35,7 @@ import {
 
 const OUT_DIR = resolve("test-results/screenshots");
 
-type Theme = "cmyk" | "dark";
+type Theme = "light" | "dark";
 type Viewport = { name: string; width: number; height: number };
 
 const ROUTES: { path: string; label: string }[] = [
@@ -44,7 +44,7 @@ const ROUTES: { path: string; label: string }[] = [
   { path: "/non-existent-page", label: "404" },
 ];
 
-const THEMES: Theme[] = ["cmyk", "dark"];
+const THEMES: Theme[] = ["light", "dark"];
 
 const VIEWPORTS: Viewport[] = [
   { name: "desktop", width: 1280, height: 800 },
@@ -99,7 +99,7 @@ const openContext = async (
       localStorage.setItem("isTestAuthenticated", "true");
       localStorage.setItem(
         "litefront-theme",
-        JSON.stringify({ state: { theme: t }, version: 0 }),
+        JSON.stringify({ state: { theme: t }, version: 1 }),
       );
     },
     [theme],

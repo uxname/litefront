@@ -2,6 +2,9 @@ import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
+  // axe in the Accessibility panel while you work. The same check fails the
+  // gate from scripts/check-stories.mjs, which runs axe on every built story.
+  addons: ["@storybook/addon-a11y"],
   framework: {
     name: "@storybook/react-vite",
     options: {

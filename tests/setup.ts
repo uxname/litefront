@@ -42,3 +42,14 @@ vi.mock("react-oidc-context", () => ({
   AuthProvider: ({ children }: { children: unknown }) => children,
   AuthContext: { Provider: ({ children }: { children: unknown }) => children },
 }));
+
+// jsdom lacks the pointer-capture, scrolling and resize APIs Radix (under every
+// shadcn/ui overlay: menus, tooltips) calls while opening; no-ops are enough.
+Element.prototype.hasPointerCapture ??= () => false;
+Element.prototype.releasePointerCapture ??= () => {};
+Element.prototype.scrollIntoView ??= () => {};
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};

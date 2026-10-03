@@ -127,11 +127,12 @@ describe("resolveEmailVerified", () => {
 });
 
 describe("formatMemberSince", () => {
-  it("formats a timestamp as a stable UTC YYYY-MM-DD string", () => {
-    // Deterministic across runtime locale/timezone (no hydration mismatch).
-    expect(formatMemberSince("2024-01-15T00:00:00.000Z")).toBe("2024-01-15");
-    // A late-evening UTC instant still maps to the same UTC calendar day.
-    expect(formatMemberSince("2024-01-15T23:30:00.000Z")).toBe("2024-01-15");
+  it("formats a timestamp as the UTC calendar day in the current locale", () => {
+    // No locale is set in jsdom, so paraglide falls back to its base locale, "en".
+    expect(formatMemberSince("2024-01-15T00:00:00.000Z")).toBe("Jan 15, 2024");
+    // A late-evening UTC instant still maps to the same UTC calendar day,
+    // whatever the runner's timezone.
+    expect(formatMemberSince("2024-01-15T23:30:00.000Z")).toBe("Jan 15, 2024");
   });
 
   it("returns undefined for an empty, missing or invalid value", () => {

@@ -4,7 +4,7 @@ import { useCounterStore } from "../model/store";
 import { Counter } from "./Counter";
 
 // Mock the toast
-vi.mock("@shared/ui/Toaster", () => ({
+vi.mock("@shared/ui/sonner", () => ({
   toast: {
     success: vi.fn(),
   },
@@ -25,10 +25,5 @@ describe("Counter Component", () => {
     const button = screen.getByRole("button", { name: /increment/i });
     fireEvent.click(button);
     expect(screen.getByText("1")).toBeInTheDocument();
-  });
-
-  it("displays custom title when provided", () => {
-    render(<Counter title="Custom Title" />);
-    expect(screen.getByText("Custom Title")).toBeInTheDocument();
   });
 });

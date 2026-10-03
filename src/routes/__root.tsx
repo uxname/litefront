@@ -1,8 +1,9 @@
 import { useThemeStore } from "@features/theme";
+import { m } from "@generated/paraglide/messages";
 import { getLocale } from "@generated/paraglide/runtime";
 import { runtimeConfigScript } from "@shared/config";
 import { ErrorFallback } from "@shared/ui/ErrorFallback";
-import { Toaster } from "@shared/ui/Toaster";
+import { Toaster } from "@shared/ui/sonner";
 import {
   createRootRoute,
   HeadContent,
@@ -12,7 +13,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import React from "react";
-// Global stylesheet (Tailwind v4 + daisyUI entry). Imported as a URL and linked
+// Global stylesheet (Tailwind v4 + the shadcn/ui tokens). Imported as a URL and linked
 // via head() below, so the <link rel="stylesheet"> is emitted in the SSR <head>
 // (no flash of unstyled content). (Previously a side-effect import in main.tsx.)
 import appCssUrl from "../index.css?url";
@@ -25,19 +26,23 @@ const TanStackRouterDevtools = import.meta.env.DEV
     )
   : () => null;
 
-// Blocking inline script: set the daisyUI theme from persisted storage BEFORE
-// first paint, so an SSR page doesn't flash the default theme for a dark-mode
-// user (FOUC) and doesn't mismatch on hydration. Reads the zustand-persist blob
-// ("litefront-theme"); falls back to the default "cmyk". The store + ThemeToggle
-// reconcile data-theme after hydration, so React must not manage it here
-// (hence suppressHydrationWarning on <html>).
+// Blocking inline script: paint the persisted theme BEFORE first paint, so an
+// SSR page doesn't flash the light theme for a dark-mode user (FOUC) and doesn't
+// mismatch on hydration. Reads the zustand-persist blob ("litefront-theme"):
+// "light"/"dark" are painted as is, "system" (the default) and anything unknown
+// follow the OS setting, and "cmyk" is the light theme's name from before the
+// shadcn/ui migration. The store + ThemeToggle reconcile data-theme after
+// hydration, so React must not manage it here (hence suppressHydrationWarning on
+// <html>).
 const themeBootstrapScript = `
 try {
   var raw = localStorage.getItem('litefront-theme');
-  var theme = raw ? JSON.parse(raw).state.theme : 'cmyk';
-  if (theme === 'dark' || theme === 'cmyk') {
-    document.documentElement.dataset.theme = theme;
+  var theme = raw ? JSON.parse(raw).state.theme : 'system';
+  if (theme === 'cmyk') theme = 'light';
+  if (theme !== 'light' && theme !== 'dark') {
+    theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
+  document.documentElement.dataset.theme = theme;
 } catch (_) {}
 `;
 
@@ -45,7 +50,7 @@ const RootDocument: React.FC = () => {
   const isDevelopment = import.meta.env.MODE === "development";
   // Toasts live in shared/ui, which may not import a feature store, so the
   // theme is read one floor up and handed down. Before rehydration this is the
-  // default "cmyk" on both server and client — harmless, since no toast can
+  // default "system" on both server and client — harmless, since no toast can
   // exist that early.
   const theme = useThemeStore((s) => s.theme);
   // The request's CSP nonce (router.tsx). The browser hides a nonce attribute
@@ -84,7 +89,7 @@ const RootDocument: React.FC = () => {
       </head>
       <body>
         <Outlet />
-        <Toaster closeButton theme={theme === "dark" ? "dark" : "light"} />
+        <Toaster closeButton theme={theme} />
         <Scripts />
         {isDevelopment && (
           <React.Suspense fallback={null}>
@@ -103,17 +108,15 @@ export const Route = createRootRoute({
     const routerState = useRouterState();
 
     return (
-      <div className="p-4 flex justify-center w-full">
-        <ErrorFallback
-          error={error}
-          reset={reset}
-          pathname={routerState.location.pathname}
-          onRetry={() => {
-            reset();
-            router.invalidate();
-          }}
-        />
-      </div>
+      <ErrorFallback
+        error={error}
+        reset={reset}
+        pathname={routerState.location.pathname}
+        onRetry={() => {
+          reset();
+          router.invalidate();
+        }}
+      />
     );
   },
   head: () => ({
@@ -127,11 +130,11 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "LiteFront",
+        title: m.app_name(),
       },
       {
         name: "description",
-        content: "Modern Enterprise Boilerplate with React 19, GraphQL and FSD",
+        content: m.app_description(),
       },
       {
         property: "og:type",
@@ -139,7 +142,7 @@ export const Route = createRootRoute({
       },
       {
         property: "og:site_name",
-        content: "LiteFront App",
+        content: m.app_name(),
       },
     ],
   }),

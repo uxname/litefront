@@ -1,3 +1,3 @@
-export type { Theme, ThemeStore } from "./model/store";
-export { applyTheme, useThemeStore } from "./model/store";
+export type { Theme } from "./model/store";
+export { useThemeStore } from "./model/store";
 export { ThemeToggle } from "./ui/ThemeToggle";

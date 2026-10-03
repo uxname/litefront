@@ -9,6 +9,7 @@ import {
 import { createGraphQLClient, GraphQLProvider } from "@shared/api";
 import { env } from "@shared/config";
 import { captureMessage } from "@shared/lib/sentry";
+import { TooltipProvider } from "@shared/ui/tooltip";
 import type { User } from "oidc-client-ts";
 import { type FC, type ReactNode, useMemo } from "react";
 import { AuthObserver } from "./AuthObserver";
@@ -78,11 +79,14 @@ const GraphQLBridge: FC<{ children: ReactNode }> = ({ children }) => {
  * above `RouterProvider` and is shared by every route on both server and client.
  */
 export const AppProviders: FC<{ children: ReactNode }> = ({ children }) => (
-  <GlobalErrorBoundary>
-    <AuthBoundary>
-      {/* Headless: wires auth errors / user identity into Sentry. */}
-      <AuthObserver />
-      <GraphQLBridge>{children}</GraphQLBridge>
-    </AuthBoundary>
-  </GlobalErrorBoundary>
+  // Outermost so the error screens below (they use tooltips) are covered too.
+  <TooltipProvider>
+    <GlobalErrorBoundary>
+      <AuthBoundary>
+        {/* Headless: wires auth errors / user identity into Sentry. */}
+        <AuthObserver />
+        <GraphQLBridge>{children}</GraphQLBridge>
+      </AuthBoundary>
+    </GlobalErrorBoundary>
+  </TooltipProvider>
 );

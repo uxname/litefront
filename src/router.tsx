@@ -1,6 +1,6 @@
 import { NotFoundPage } from "@pages/404";
 import { CSP_NONCE_HEADER } from "@shared/config";
-import { PageLoader } from "@shared/ui/PageLoader";
+import { PageLoader } from "@shared/ui/page-loader";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";

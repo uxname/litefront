@@ -5,7 +5,8 @@ import {
 import { m } from "@generated/paraglide/messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { logError } from "@shared/lib/logger";
-import { toast } from "@shared/ui/Toaster";
+import { toast } from "@shared/ui/sonner";
+import { useBlocker } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "urql";
@@ -33,6 +34,7 @@ const ALLOWED_AVATAR_TYPES = [
 export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
   const [, updateProfile] = useMutation(UpdateProfileDocument);
   const [uploading, setUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -61,14 +63,18 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     event.target.value = ""; // allow re-selecting the same file
     if (!file) return;
 
-    if (
-      !ALLOWED_AVATAR_TYPES.includes(file.type) ||
-      file.size > MAX_AVATAR_SIZE
-    ) {
-      toast.error(m.profile_avatar_upload_error());
+    // A rejected file is the user's to fix, so the reason sits under the
+    // control instead of in a toast that disappears.
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      setAvatarError(m.profile_avatar_invalid_type());
+      return;
+    }
+    if (file.size > MAX_AVATAR_SIZE) {
+      setAvatarError(m.profile_avatar_too_large());
       return;
     }
 
+    setAvatarError(undefined);
     setUploading(true);
     try {
       const url = await uploadAvatar(file, accessToken);
@@ -84,15 +90,17 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
   };
 
   const onSubmit = handleSubmit(async (values) => {
+    // Only changed fields go out (omitted = unchanged on the backend). A field
+    // the user emptied goes out as "" — that is how it gets cleared.
     const input: ProfileUpdateInput = {};
-    if (dirtyFields.displayName && values.displayName?.trim()) {
-      input.displayName = values.displayName.trim();
+    if (dirtyFields.displayName) {
+      input.displayName = values.displayName?.trim() ?? "";
     }
     if (dirtyFields.bio) {
       input.bio = values.bio?.trim() ?? "";
     }
-    if (dirtyFields.avatarUrl && values.avatarUrl?.trim()) {
-      input.avatarUrl = values.avatarUrl.trim();
+    if (dirtyFields.avatarUrl) {
+      input.avatarUrl = values.avatarUrl?.trim() ?? "";
     }
 
     if (Object.keys(input).length === 0) return;
@@ -106,13 +114,23 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     reset(values); // clear dirty state, keep current values
   });
 
+  // Leaving with unsaved edits asks first — in-app navigation through the
+  // router, a reload or a closed tab through the browser's own prompt.
+  useBlocker({
+    shouldBlockFn: () => !window.confirm(m.profile_unsaved_confirm()),
+    enableBeforeUnload: isDirty,
+    disabled: !isDirty,
+  });
+
   return {
     register,
     errors,
     isDirty,
     isSubmitting,
     uploading,
+    avatarError,
     avatarUrl,
+    avatarPending: !!dirtyFields.avatarUrl,
     fileInputRef,
     handleFileSelect,
     onSubmit,

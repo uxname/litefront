@@ -1,6 +1,7 @@
 import type { AccountAction } from "@features/auth";
 import type { MeQuery, ProfileRole } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
+import { getLocale } from "@generated/paraglide/runtime";
 import {
   KeyRound,
   Lock,
@@ -94,7 +95,11 @@ export const formatMemberSince = (
   const date = new Date(String(createdAt));
   // Guard against an unparseable timestamp (toISOString would throw on it).
   if (Number.isNaN(date.getTime())) return undefined;
-  return date.toISOString().slice(0, 10);
+  // UTC: the stored instant's calendar day, the same for every viewer.
+  return new Intl.DateTimeFormat(getLocale(), {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  }).format(date);
 };
 
 /** Map a profile role to its localized label. */

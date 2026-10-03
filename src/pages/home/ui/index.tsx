@@ -1,13 +1,15 @@
 import { Counter } from "@entities/counter";
 import { m } from "@generated/paraglide/messages";
-import { Button, buttonClasses } from "@shared/ui/Button";
+import { Badge } from "@shared/ui/badge";
+import { Button } from "@shared/ui/button";
+import { Card, CardContent } from "@shared/ui/card";
+import { Separator } from "@shared/ui/separator";
 import { Link } from "@tanstack/react-router";
-import { Header } from "@widgets/Header";
+import { AppShell } from "@widgets/AppShell";
 import {
   ArrowRight,
   Box,
   CheckCircle2,
-  Code2,
   Database,
   Layers,
   LayoutTemplate,
@@ -23,172 +25,128 @@ export const HomePage: FC = () => {
       icon: LayoutTemplate,
       title: m.home_feature_fsd_title(),
       desc: m.home_feature_fsd_desc(),
-      color: "text-info",
-      bg: "bg-info/10",
+      tint: "bg-info/10 text-info",
     },
     {
       icon: Zap,
       title: m.home_feature_vite_title(),
       desc: m.home_feature_vite_desc(),
-      color: "text-warning",
-      bg: "bg-warning/10",
+      tint: "bg-warning/10 text-warning",
     },
     {
       icon: Database,
       title: m.home_feature_graphql_title(),
       desc: m.home_feature_graphql_desc(),
-      color: "text-secondary",
-      bg: "bg-secondary/10",
+      tint: "bg-primary/10 text-primary",
     },
     {
       icon: Layers,
       title: m.home_feature_typing_title(),
       desc: m.home_feature_typing_desc(),
-      color: "text-success",
-      bg: "bg-success/10",
+      tint: "bg-success/10 text-success",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-base-200 font-sans selection:bg-primary/10 selection:text-primary">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-info/10 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="sticky top-0 z-50 border-b border-base-300/60 bg-base-100/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Header />
-          </div>
-        </div>
-      </div>
-
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 flex flex-col gap-24">
-        <section className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary text-primary text-xs font-bold uppercase tracking-wide mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+    <AppShell>
+      <div className="mx-auto flex max-w-7xl flex-col gap-24 px-4 py-12 sm:px-6 lg:px-8 lg:py-20">
+        <section className="mx-auto max-w-4xl text-center">
+          <Badge
+            variant="outline"
+            className="mb-8 gap-2 border-primary bg-primary/10 px-3 py-1 font-bold tracking-wide text-primary uppercase animate-in fade-in slide-in-from-bottom-4 duration-700"
+          >
+            <span aria-hidden="true" className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-primary" />
             </span>
             {m.home_badge_available()}
-          </div>
+          </Badge>
 
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-base-content mb-6 leading-[1.1] animate-in fade-in zoom-in duration-700 delay-100">
+          <h1 className="mb-6 text-5xl leading-[1.1] font-black tracking-tight animate-in fade-in zoom-in delay-100 duration-700 sm:text-7xl">
             {m.home_hero_title_lead()} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-info">
+            <span className="bg-gradient-to-r from-primary via-pink-500 to-info bg-clip-text text-transparent">
               {m.home_hero_title_accent()}
             </span>
           </h1>
 
-          <p className="text-xl text-base-content/70 mb-10 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+          <p className="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-muted-foreground animate-in fade-in slide-in-from-bottom-4 delay-200 duration-700">
             {m.home_hero_subtitle()}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+          <div className="flex flex-col items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-4 delay-300 duration-700 sm:flex-row">
             <Button
               size="lg"
               onClick={copyInstallCommand}
-              // `h-auto` + padding: a daisyUI button has a fixed height, and
-              // this one holds a long monospace command that wraps to two lines
-              // on a phone — it has to grow with its text.
-              className="group relative h-auto cursor-pointer px-8 py-4 font-mono shadow-xl duration-300 hover:scale-[1.01] hover:shadow-2xl"
+              // `h-auto` + padding + wrapping: the button holds a long monospace
+              // command that wraps to two lines on a phone — it has to grow
+              // with its text.
+              className="group relative h-auto px-8 py-4 font-mono text-lg whitespace-normal shadow-xl duration-300 hover:scale-[1.01] hover:shadow-2xl"
             >
-              <span className="text-primary-content">$</span>
+              <span aria-hidden="true">$</span>
               <span>{INSTALL_COMMAND}</span>
-              <div className="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <CheckCircle2 className="w-4 h-4 text-success" />
-              </div>
+              <CheckCircle2 className="absolute right-3 text-success opacity-0 transition-opacity group-hover:opacity-100" />
             </Button>
 
-            <Link
-              to="/account"
-              className={buttonClasses({
-                variant: "ghost",
-                size: "lg",
-                className: "shadow-sm hover:shadow-md",
-              })}
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 px-5 text-lg shadow-sm hover:shadow-md"
             >
-              {m.home_cta_live_demo()}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              <Link to="/account">
+                {m.home_cta_live_demo()}
+                <ArrowRight />
+              </Link>
+            </Button>
           </div>
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, idx) => (
-            <div
+        <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => (
+            <Card
               key={feature.title}
-              className="group p-6 bg-base-100 rounded-2xl border border-base-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              style={{ animationDelay: `${idx * 100}ms` }}
+              className="transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div
-                className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${feature.bg} ${feature.color}`}
-              >
-                <feature.icon className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg font-bold text-base-content mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-base-content/70 leading-relaxed">
-                {feature.desc}
-              </p>
-            </div>
+              <CardContent>
+                <div
+                  className={`mb-4 flex size-12 items-center justify-center rounded-xl ${feature.tint}`}
+                >
+                  <feature.icon className="size-6" aria-hidden="true" />
+                </div>
+                <h2 className="mb-2 text-lg font-bold">{feature.title}</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {feature.desc}
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </section>
 
-        <section className="relative">
-          <div className="flex items-center gap-4 mb-8">
-            <h2 className="text-3xl font-bold text-base-content">
-              {m.home_playground_title()}
-            </h2>
-            <div className="h-px flex-1 bg-base-300"></div>
+        <section>
+          <div className="mb-8 flex items-center gap-4">
+            <h2 className="text-3xl font-bold">{m.home_playground_title()}</h2>
+            <Separator className="flex-1" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-8 flex flex-col items-center justify-center min-h-[300px] relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-info to-primary"></div>
-              <div className="mb-6 flex items-center gap-2 text-primary bg-primary/10 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                <Box className="w-3 h-3" /> {m.home_client_state_badge()}
-              </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Card className="relative min-h-[300px] items-center justify-center overflow-hidden px-8 py-8">
+              <div
+                aria-hidden="true"
+                className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-info to-primary"
+              />
+              <Badge className="bg-primary/10 font-bold text-primary uppercase">
+                <Box /> {m.home_client_state_badge()}
+              </Badge>
               <Counter />
-              <p className="text-xs text-base-content/70 mt-6 text-center max-w-[200px]">
+              <p className="max-w-[200px] text-center text-xs text-muted-foreground">
                 {m.home_counter_hint()}
               </p>
-            </div>
+            </Card>
 
             <ErrorSimulator />
           </div>
         </section>
-
-        <footer className="border-t border-base-300 pt-10 pb-20 flex flex-col md:flex-row justify-between items-center gap-6 text-base-content/70 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-content font-bold">
-              L
-            </div>
-            <span className="font-semibold text-base-content">LiteFront</span>
-            <span>© {new Date().getFullYear()}</span>
-          </div>
-          <div className="flex gap-6">
-            <a
-              href="https://github.com/uxname/litefront"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 rounded-md transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <Code2 className="w-4 h-4" /> GitHub
-            </a>
-            <a
-              href="https://feature-sliced.design/"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 rounded-md transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <Layers className="w-4 h-4" /> {m.home_footer_docs()}
-            </a>
-          </div>
-        </footer>
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 };

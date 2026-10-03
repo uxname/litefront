@@ -1,3 +1,4 @@
+import { m } from "@generated/paraglide/messages";
 import { HomePage } from "@pages/home";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -8,23 +9,10 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      {
-        title: "Home | LiteFront",
-      },
-      {
-        name: "description",
-        content:
-          "Explore the capabilities of LiteFront: GraphQL data fetching, Feature-Sliced Design, and strict TypeScript integration.",
-      },
-      {
-        property: "og:title",
-        content: "Home | LiteFront",
-      },
-      {
-        property: "og:description",
-        content:
-          "Explore the capabilities of LiteFront: GraphQL data fetching, Feature-Sliced Design, and strict TypeScript integration.",
-      },
+      { title: m.meta_home_title() },
+      { name: "description", content: m.meta_home_description() },
+      { property: "og:title", content: m.meta_home_title() },
+      { property: "og:description", content: m.meta_home_description() },
     ],
   }),
 });

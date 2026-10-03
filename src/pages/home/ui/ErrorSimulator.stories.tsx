@@ -1,3 +1,4 @@
+import { Button } from "@shared/ui/button";
 import type { Meta, StoryFn } from "@storybook/react-vite";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorSimulator } from "./ErrorSimulator";
@@ -11,17 +12,13 @@ export default { component: ErrorSimulator } satisfies Meta<
 export const Default: StoryFn = () => (
   <ErrorBoundary
     fallbackRender={({ error, resetErrorBoundary }) => (
-      <div className="bg-base-100 rounded-2xl border border-error p-8 text-center">
-        <p className="text-error font-bold mb-4">
+      <div className="rounded-xl border border-destructive bg-card p-8 text-center">
+        <p className="mb-4 font-bold text-destructive">
           {error instanceof Error ? error.message : String(error)}
         </p>
-        <button
-          type="button"
-          onClick={resetErrorBoundary}
-          className="px-4 py-2 rounded-xl bg-base-200 text-base-content font-semibold"
-        >
+        <Button variant="secondary" onClick={resetErrorBoundary}>
           Reset
-        </button>
+        </Button>
       </div>
     )}
   >

@@ -32,6 +32,25 @@ describe("ErrorFallback", () => {
     expect(screen.getByText("/dashboard/settings")).toBeInTheDocument();
   });
 
+  it("copies the debug info, with the request id, and announces it", async () => {
+    const user = userEvent.setup();
+    const writeText = vi.spyOn(navigator.clipboard, "writeText");
+    const error = Object.assign(new Error("boom"), {
+      response: { headers: { get: () => "req-123" } },
+    });
+    render(<ErrorFallback error={error} pathname="/x" />);
+    await user.click(screen.getByRole("button", { name: /dev_details/ }));
+    await user.click(screen.getByRole("button", { name: "action_copy_stack" }));
+
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Error: Error: boom"),
+    );
+    // The button's name flips, and a live region says it out loud.
+    expect(
+      await screen.findByRole("button", { name: "action_copied" }),
+    ).toBeInTheDocument();
+  });
+
   it("invokes onRetry when the retry button is pressed", async () => {
     const user = userEvent.setup();
     const onRetry = vi.fn();

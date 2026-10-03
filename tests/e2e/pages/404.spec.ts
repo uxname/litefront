@@ -10,7 +10,9 @@ test.describe("404 Page", () => {
 
   test("has link back to home", async ({ page }) => {
     await page.goto("/non-existent-page");
-    const homeLink = page.getByRole("link", { name: /home|back/i });
-    await expect(homeLink).toBeVisible();
+    const homeLink = page
+      .getByRole("main")
+      .getByRole("link", { name: /back to home/i });
+    await expect(homeLink).toHaveAttribute("href", "/");
   });
 });

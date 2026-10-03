@@ -120,7 +120,11 @@ test("agent log harness: capture frontend console + errors + network", async ({
   // so any runtime error they throw lands in the log.
   await visit("/", "home (interaction)");
   await page
-    .getByRole("button", { name: /toggle theme|переключить тему/i })
+    .getByRole("button", { name: /^(theme|тема)$/i })
+    .click()
+    .catch(() => {});
+  await page
+    .getByRole("menuitemradio", { name: /dark|тёмная/i })
     .click()
     .catch(() => {});
   await page.waitForTimeout(200);
@@ -131,7 +135,7 @@ test("agent log harness: capture frontend console + errors + network", async ({
     .catch(() => {});
   await page.waitForTimeout(200);
   await page
-    .getByRole("button", { name: /русский|english/i })
+    .getByRole("menuitemradio", { name: /русский|english/i })
     .first()
     .click()
     .catch(() => {});

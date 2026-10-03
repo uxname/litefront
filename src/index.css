@@ -2,98 +2,134 @@
 
 /* https://github.com/tailwindlabs/tailwindcss/issues/17724 */
 @import "tailwindcss";
-
-@plugin "daisyui";
+@import "tw-animate-css";
 
 /*
- * Custom light theme. Based on DaisyUI's built-in `cmyk` palette, but tuned for
- * WCAG AA contrast without changing the visual identity:
- *   - `primary` darkened (L 71.8% -> 55%) so `text-primary` clears 4.5:1 on white;
- *     `primary-content` switched to white so primary buttons stay legible.
- *   - `error` darkened so inline form-error text clears AA on white.
- *   - `base-300` darkened a touch so borders/dividers are actually visible.
- * Everything else mirrors the DaisyUI `cmyk` defaults — except the shape tokens,
- * which are the SAME in both themes on purpose. `shared/ui` takes its corners
- * from them (`btn`, `input`, `textarea` read --radius-field; `card`, `skeleton`
- * read --radius-box), and a control must not change shape when the theme does:
- * 0.75rem and 1rem are the `rounded-xl` / `rounded-2xl` this UI has always had.
- * `--depth: 0` in both keeps daisyUI from adding a bevel and a drop shadow to
- * buttons and fields — how far a button lifts is the page's call (DESIGN.md).
+ * Dark mode follows the `data-theme` attribute on <html>, not a class: the
+ * pre-paint script in src/routes/__root.tsx and the theme store set it to the
+ * RESOLVED theme ("light" | "dark" — "system" is resolved before it gets here).
  */
-@plugin "daisyui/theme" {
-  name: "cmyk";
-  default: true;
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * The shadcn/ui token set (https://ui.shadcn.com/docs/theming), filled with the
+ * palette this app already had, tuned for WCAG AA:
+ *   - `primary` (L 52%) clears 4.5:1 as text on white and on its own 10% tint,
+ *     and with pure white text on it (axe-checked: tests/e2e/a11y.spec.ts).
+ *   - `destructive` is dark enough for inline form-error text on white.
+ *   - `border` is a touch darker than stock so borders are actually visible.
+ *   - `muted-foreground` is the old "70% text" made opaque — AA on `background`
+ *     and on `muted`.
+ *   - `success` / `warning` / `info` are ours, shadcn has no status colours.
+ * Surfaces: `background` (= `card`, `popover`) is the raised surface, `muted`
+ * is the page under it, `accent` is the hover fill.
+ */
+:root {
   color-scheme: light;
 
-  --color-base-100: oklch(100% 0 0deg);
-  --color-base-200: oklch(95% 0 0deg);
-  --color-base-300: oklch(87% 0 0deg);
-  --color-base-content: oklch(20% 0 0deg);
-  --color-primary: oklch(55% 0.15 239.443deg);
-  --color-primary-content: oklch(98% 0 0deg);
-  --color-secondary: oklch(64.476% 0.202 359.339deg);
-  --color-secondary-content: oklch(12.895% 0.04 359.339deg);
-  --color-accent: oklch(94.228% 0.189 105.306deg);
-  --color-accent-content: oklch(18.845% 0.037 105.306deg);
-  --color-neutral: oklch(21.778% 0 0deg);
-  --color-neutral-content: oklch(84.355% 0 0deg);
-  --color-info: oklch(68.475% 0.094 217.284deg);
-  --color-info-content: oklch(13.695% 0.018 217.284deg);
-  --color-success: oklch(46.949% 0.162 321.406deg);
-  --color-success-content: oklch(89.389% 0.032 321.406deg);
-  --color-warning: oklch(71.236% 0.159 52.023deg);
-  --color-warning-content: oklch(14.247% 0.031 52.023deg);
-  --color-error: oklch(55% 0.21 28.717deg);
-  --color-error-content: oklch(98% 0 0deg);
-  --radius-selector: 1rem;
-  --radius-field: 0.75rem;
-  --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-  --border: 1px;
-  --depth: 0;
-  --noise: 0;
+  --radius: 0.75rem;
+  --background: oklch(100% 0 0deg);
+  --foreground: oklch(20% 0 0deg);
+  --card: oklch(100% 0 0deg);
+  --card-foreground: oklch(20% 0 0deg);
+  --popover: oklch(100% 0 0deg);
+  --popover-foreground: oklch(20% 0 0deg);
+  --primary: oklch(52% 0.15 239.443deg);
+  --primary-foreground: oklch(100% 0 0deg);
+  --secondary: oklch(95% 0 0deg);
+  --secondary-foreground: oklch(20% 0 0deg);
+  --muted: oklch(95% 0 0deg);
+  --muted-foreground: oklch(44% 0 0deg);
+  --accent: oklch(95% 0 0deg);
+  --accent-foreground: oklch(20% 0 0deg);
+  --destructive: oklch(55% 0.21 28.717deg);
+  --destructive-foreground: oklch(98% 0 0deg);
+  --success: oklch(50% 0.13 150deg);
+  --success-foreground: oklch(98% 0 0deg);
+  --warning: oklch(71.236% 0.159 52.023deg);
+  --warning-foreground: oklch(14.247% 0.031 52.023deg);
+  --info: oklch(68.475% 0.094 217.284deg);
+  --info-foreground: oklch(13.695% 0.018 217.284deg);
+  --border: oklch(87% 0 0deg);
+  --input: oklch(87% 0 0deg);
+  --ring: oklch(52% 0.15 239.443deg);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: oklch(25.33% 0.016 252.42deg);
+  --foreground: oklch(97.807% 0.029 256.847deg);
+  --card: oklch(25.33% 0.016 252.42deg);
+  --card-foreground: oklch(97.807% 0.029 256.847deg);
+  --popover: oklch(25.33% 0.016 252.42deg);
+  --popover-foreground: oklch(97.807% 0.029 256.847deg);
+  --primary: oklch(70% 0.18 277.117deg);
+  --primary-foreground: oklch(20% 0.04 277.117deg);
+  --secondary: oklch(23.26% 0.014 253.1deg);
+  --secondary-foreground: oklch(97.807% 0.029 256.847deg);
+  --muted: oklch(23.26% 0.014 253.1deg);
+  --muted-foreground: oklch(76% 0.02 256.847deg);
+  --accent: oklch(30% 0.016 252.42deg);
+  --accent-foreground: oklch(97.807% 0.029 256.847deg);
+  --destructive: oklch(71% 0.194 13.428deg);
+  --destructive-foreground: oklch(27% 0.105 12.094deg);
+  --success: oklch(76% 0.177 163.223deg);
+  --success-foreground: oklch(37% 0.077 168.94deg);
+  --warning: oklch(82% 0.189 84.429deg);
+  --warning-foreground: oklch(41% 0.112 45.904deg);
+  --info: oklch(74% 0.16 232.661deg);
+  --info-foreground: oklch(29% 0.066 243.157deg);
+  --border: oklch(33% 0.014 254.09deg);
+  --input: oklch(33% 0.014 254.09deg);
+  --ring: oklch(70% 0.18 277.117deg);
 }
 
 /*
- * Custom dark theme. Based on DaisyUI's built-in `dark` palette, tuned for AA:
- *   - `primary` lightened (L 58% -> 70%) so `text-primary` clears 4.5:1 on the
- *     dark base; `primary-content` switched to dark so primary buttons stay legible.
- * Hue (violet ~277) and everything else mirror the DaisyUI `dark` defaults.
+ * Radii are the same in both themes on purpose: a control must not change shape
+ * when the theme does. md (0.75rem) is fields and buttons, xl (1rem) is cards —
+ * the rounded-xl / rounded-2xl this UI has always had.
  */
-@plugin "daisyui/theme" {
-  name: "dark";
-  prefersdark: true;
-  color-scheme: dark;
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
 
-  --color-base-100: oklch(25.33% 0.016 252.42deg);
-  --color-base-200: oklch(23.26% 0.014 253.1deg);
-  --color-base-300: oklch(21.15% 0.012 254.09deg);
-  --color-base-content: oklch(97.807% 0.029 256.847deg);
-  --color-primary: oklch(70% 0.18 277.117deg);
-  --color-primary-content: oklch(20% 0.04 277.117deg);
-  --color-secondary: oklch(65% 0.241 354.308deg);
-  --color-secondary-content: oklch(94% 0.028 342.258deg);
-  --color-accent: oklch(77% 0.152 181.912deg);
-  --color-accent-content: oklch(38% 0.063 188.416deg);
-  --color-neutral: oklch(14% 0.005 285.823deg);
-  --color-neutral-content: oklch(92% 0.004 286.32deg);
-  --color-info: oklch(74% 0.16 232.661deg);
-  --color-info-content: oklch(29% 0.066 243.157deg);
-  --color-success: oklch(76% 0.177 163.223deg);
-  --color-success-content: oklch(37% 0.077 168.94deg);
-  --color-warning: oklch(82% 0.189 84.429deg);
-  --color-warning-content: oklch(41% 0.112 45.904deg);
-  --color-error: oklch(71% 0.194 13.428deg);
-  --color-error-content: oklch(27% 0.105 12.094deg);
-  --radius-selector: 0.5rem;
-  --radius-field: 0.75rem;
-  --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-  --border: 1px;
-  --depth: 0;
-  --noise: 0;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /*

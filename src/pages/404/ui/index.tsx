@@ -1,83 +1,63 @@
 import { m } from "@generated/paraglide/messages";
-import { Button, buttonClasses } from "@shared/ui/Button";
+import { Badge } from "@shared/ui/badge";
+import { Button } from "@shared/ui/button";
 import { Link } from "@tanstack/react-router";
+import { AppShell } from "@widgets/AppShell";
 import { Ghost, Home, MoveLeft, Search } from "lucide-react";
-import React from "react";
+import type { FC } from "react";
 
-export const NotFoundPage: React.FC = () => {
-  const handleGoBack = () => {
-    window.history.back();
-  };
-
-  return (
-    <main className="relative min-h-screen w-full bg-base-200 flex items-center justify-center p-6 overflow-hidden font-sans selection:bg-primary/10 selection:text-primary">
-      {/* Background Orbs */}
-      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] bg-info/10 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-2xl text-center">
-        {/* Floating Icon Illustration */}
-        <div className="relative mb-12 flex justify-center">
-          <div className="absolute inset-0 bg-primary/10 rounded-full blur-3xl scale-75 animate-pulse" />
-          <div className="relative bg-base-100 rounded-3xl p-8 shadow-2xl border border-base-300 animate-in zoom-in duration-500">
-            <Ghost
-              className="h-24 w-24 text-primary animate-bounce"
-              strokeWidth={1.2}
-            />
-          </div>
-
-          {/* Decorative particles */}
-          <div className="absolute -top-4 -right-4 h-8 w-8 bg-info rounded-full blur-xl opacity-60 animate-pulse" />
-          <div className="absolute -bottom-2 -left-6 h-12 w-12 bg-purple-400 rounded-full blur-2xl opacity-40 animate-pulse" />
+export const NotFoundPage: FC = () => (
+  <AppShell>
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-6 py-20 text-center">
+      <div aria-hidden="true" className="relative mb-12 flex justify-center">
+        <div className="absolute inset-0 scale-75 animate-pulse rounded-full bg-primary/10 blur-3xl" />
+        <div className="relative rounded-3xl border bg-card p-8 shadow-2xl animate-in zoom-in duration-500">
+          <Ghost
+            className="size-24 animate-bounce text-primary"
+            strokeWidth={1.2}
+          />
         </div>
-
-        {/* Error Text */}
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-content text-xs font-black uppercase tracking-[0.2em] mb-4">
-            <Search className="w-3 h-3" />
-            {m.not_found_code()}
-          </div>
-
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight text-base-content">
-            {m.not_found_title?.() ?? "Lost in the void"}
-          </h1>
-
-          <p className="text-lg sm:text-xl text-base-content/70 max-w-lg mx-auto leading-relaxed">
-            {m.not_found_message()}
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
-          <Button
-            variant="ghost"
-            size="lg"
-            onClick={handleGoBack}
-            className="group w-full shadow-sm sm:w-auto"
-            leftIcon={
-              <MoveLeft className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
-            }
-          >
-            {m.go_back()}
-          </Button>
-
-          <Link
-            to="/"
-            preload="viewport"
-            className={buttonClasses({
-              size: "lg",
-              className:
-                "w-full shadow-xl hover:-translate-y-0.5 hover:shadow-2xl sm:w-auto",
-            })}
-          >
-            <Home className="h-5 w-5" />
-            {m.back_to_home()}
-          </Link>
-        </div>
+        <div className="absolute -top-4 -right-4 size-8 animate-pulse rounded-full bg-info opacity-60 blur-xl" />
+        <div className="absolute -bottom-2 -left-6 size-12 animate-pulse rounded-full bg-primary opacity-40 blur-2xl" />
       </div>
 
-      <div className="absolute top-1/2 left-10 h-1 w-12 bg-primary/10 rounded-full rotate-45 hidden lg:block" />
-      <div className="absolute bottom-1/4 right-20 h-1 w-16 bg-info/10 rounded-full -rotate-12 hidden lg:block" />
-    </main>
-  );
-};
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <Badge className="mb-4 px-4 py-1.5 font-black tracking-[0.2em] uppercase">
+          <Search />
+          {m.not_found_code()}
+        </Badge>
+
+        <h1 className="text-5xl font-black tracking-tight sm:text-7xl">
+          {m.not_found_title()}
+        </h1>
+
+        <p className="mx-auto max-w-lg text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          {m.not_found_message()}
+        </p>
+      </div>
+
+      <div className="mt-12 flex w-full flex-col items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-10 delay-200 duration-700 sm:flex-row">
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => window.history.back()}
+          className="group w-full shadow-sm sm:w-auto"
+        >
+          <MoveLeft className="transition-transform group-hover:-translate-x-1" />
+          {m.go_back()}
+        </Button>
+
+        <Button
+          asChild
+          size="lg"
+          className="w-full shadow-xl hover:-translate-y-0.5 hover:shadow-2xl sm:w-auto"
+        >
+          <Link to="/" preload="viewport">
+            <Home />
+            {m.back_to_home()}
+          </Link>
+        </Button>
+      </div>
+    </div>
+  </AppShell>
+);

@@ -3,14 +3,19 @@ import { ProfileForm } from "@features/profile";
 import { MeDocument } from "@generated/graphql";
 import { m } from "@generated/paraglide/messages";
 import { logError } from "@shared/lib/logger";
-import { Button } from "@shared/ui/Button";
-import { Card } from "@shared/ui/Card";
-import { PageLoader } from "@shared/ui/PageLoader";
-import { Skeleton } from "@shared/ui/Skeleton";
-import { toast } from "@shared/ui/Toaster";
+import { Alert, AlertDescription, AlertTitle } from "@shared/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "@shared/ui/avatar";
+import { Badge } from "@shared/ui/badge";
+import { Button } from "@shared/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
+import { PageLoader } from "@shared/ui/page-loader";
+import { Skeleton } from "@shared/ui/skeleton";
+import { toast } from "@shared/ui/sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@shared/ui/tooltip";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Header } from "@widgets/Header";
+import { AppShell } from "@widgets/AppShell";
 import {
+  AlertCircle,
   ArrowLeft,
   BadgeCheck,
   ChevronRight,
@@ -94,7 +99,7 @@ export const AccountPage: FC<AccountPageProps> = ({ showSuccess }) => {
   }, [auth.isLoading, auth.isAuthenticated, auth.signinRedirect, navigate]);
 
   if (auth.isLoading || !auth.isAuthenticated) {
-    return <PageLoader />;
+    return <PageLoader label={m.common_loading()} />;
   }
 
   return <AccountView />;
@@ -117,34 +122,21 @@ const AccountView: FC = () => {
   const memberSince = formatMemberSince(me?.createdAt);
 
   return (
-    <div className="min-h-screen bg-base-200 font-sans text-base-content pb-20 selection:bg-primary/10 selection:text-primary">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[20%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-info/10 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="sticky top-0 z-50 border-b border-base-300/60 bg-base-100/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center">
-            <Header title={m.profile_settings_title()} />
-          </div>
-        </div>
-      </div>
-
-      <main className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <AppShell>
+      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="mb-8 inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-base-content/70 transition-colors hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="mb-8 inline-flex items-center gap-1.5 rounded-md text-sm font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="size-4" />
           {m.back_to_home()}
         </Link>
 
         <div className="mb-10">
-          <h1 className="text-3xl font-black tracking-tight text-base-content mb-2">
+          <h1 className="mb-2 text-3xl font-black tracking-tight">
             {m.profile_settings_title()}
           </h1>
-          <p className="max-w-xl text-base-content/70">
+          <p className="max-w-xl text-muted-foreground">
             {m.profile_settings_subtitle()}
           </p>
         </div>
@@ -152,108 +144,138 @@ const AccountView: FC = () => {
         <div className="space-y-8">
           {/* Identity */}
           {fetching && !me ? (
-            <Card>
-              <div className="flex items-center gap-4">
-                <Skeleton variant="circle" width={64} height={64} />
+            <Card aria-busy="true">
+              <CardContent className="flex items-center gap-4">
+                <span role="status" className="sr-only">
+                  {m.common_loading()}
+                </span>
+                <Skeleton className="size-16 rounded-full" />
                 <div className="flex-1 space-y-2">
-                  <Skeleton width="40%" />
-                  <Skeleton width="60%" />
+                  <Skeleton className="h-4 w-2/5" />
+                  <Skeleton className="h-4 w-3/5" />
                 </div>
-              </div>
+              </CardContent>
             </Card>
           ) : error ? (
-            <Card>
-              <div className="flex flex-col items-start gap-3">
-                <p className="text-sm text-error">{m.profile_load_error()}</p>
+            <Alert variant="destructive">
+              <AlertCircle />
+              <AlertTitle>{m.profile_load_error()}</AlertTitle>
+              <AlertDescription>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
+                  className="mt-2"
                   onClick={() => refetchMe({ requestPolicy: "network-only" })}
                 >
                   {m.action_retry()}
                 </Button>
-              </div>
-            </Card>
+              </AlertDescription>
+            </Alert>
           ) : (
             <Card>
-              <div className="flex items-start gap-4">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
+              <CardContent className="flex items-start gap-4">
+                <Avatar className="size-16 border">
+                  <AvatarImage
+                    src={avatarUrl ?? undefined}
                     alt={displayName ?? ""}
-                    className="h-16 w-16 shrink-0 rounded-full border border-base-300 object-cover"
                   />
-                ) : (
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-base-300 bg-base-200 text-base-content/70">
-                    <UserIcon className="h-7 w-7" />
-                  </span>
-                )}
+                  <AvatarFallback>
+                    <UserIcon className="size-7 text-muted-foreground" />
+                  </AvatarFallback>
+                </Avatar>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-lg font-bold text-base-content">
+                  <p className="truncate text-lg font-bold">
                     {displayName ?? m.profile_user_id()}
                   </p>
                   {email && (
-                    <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-base-content/70">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-base-content/70" />
-                      {email}
+                    <p className="mt-0.5 flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+                      <Mail className="size-3.5 shrink-0" aria-hidden="true" />
+                      <span className="truncate">{email}</span>
                       {emailVerified && (
-                        <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-success" />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BadgeCheck
+                              className="size-3.5 shrink-0 text-success"
+                              role="img"
+                              aria-label={m.profile_email_verified()}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {m.profile_email_verified()}
+                          </TooltipContent>
+                        </Tooltip>
                       )}
                     </p>
                   )}
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {me?.roles?.map((role) => (
-                      <span
-                        key={role}
-                        className="inline-flex items-center rounded-full bg-base-200 px-2.5 py-0.5 text-xs font-semibold text-base-content/70"
-                      >
+                      <Badge key={role} variant="secondary">
                         {roleLabel(role)}
-                      </span>
+                      </Badge>
                     ))}
                     {memberSince && (
-                      <span className="text-xs text-base-content/70">
-                        {m.profile_member_since()} {memberSince}
+                      <span className="text-xs text-muted-foreground">
+                        {m.profile_member_since({ date: memberSince })}
                       </span>
                     )}
                   </div>
                 </div>
-              </div>
+              </CardContent>
             </Card>
           )}
 
           {/* Edit profile (backend-managed fields) */}
-          {me && (
-            <Card title={m.profile_edit_section()}>
-              <ProfileForm profile={me} accessToken={auth.user?.access_token} />
+          {me ? (
+            <Card>
+              <CardHeader className="border-b">
+                <CardTitle>{m.profile_edit_section()}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProfileForm
+                  profile={me}
+                  accessToken={auth.user?.access_token}
+                />
+              </CardContent>
             </Card>
+          ) : (
+            !fetching &&
+            !error && (
+              <p className="text-sm text-muted-foreground">
+                {m.profile_empty()}
+              </p>
+            )
           )}
 
-          {/* Account & security (Logto-managed) */}
-          <Card title={m.profile_security_section()} bodyClassName="p-0">
-            <ul className="divide-y divide-base-300">
+          {/* Account & security (Logto-managed). Real links: the identity
+              provider is another site, and a link can be opened in a new tab. */}
+          <Card className="gap-0 pb-0">
+            <CardHeader className="border-b">
+              <CardTitle>{m.profile_security_section()}</CardTitle>
+            </CardHeader>
+            <ul className="divide-y">
               {securityActions.map(({ action, title, icon: Icon }) => (
                 <li key={action}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      window.location.assign(buildAccountCenterUrl(action))
-                    }
-                    className="group flex w-full items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-base-200 active:bg-base-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+                  <a
+                    href={buildAccountCenterUrl(action)}
+                    className="group flex w-full items-center gap-4 px-6 py-4 outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:ring-inset"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-base-300 bg-base-200 text-base-content/70">
-                      <Icon className="h-5 w-5" />
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border bg-muted text-muted-foreground">
+                      <Icon className="size-5" aria-hidden="true" />
                     </span>
-                    <span className="flex-1 text-sm font-semibold text-base-content">
+                    <span className="flex-1 text-sm font-semibold">
                       {title}
                     </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-base-content/70 transition-transform group-hover:translate-x-0.5 group-hover:text-base-content/70" />
-                  </button>
+                    <ChevronRight
+                      className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </a>
                 </li>
               ))}
             </ul>
           </Card>
         </div>
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 };

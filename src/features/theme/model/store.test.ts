@@ -1,45 +1,104 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { applyTheme, useThemeStore } from "./store";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  applyTheme,
+  followSystemTheme,
+  resolveTheme,
+  useThemeStore,
+} from "./store";
+
+/** Make the OS report a dark (or light) colour scheme. */
+const osPrefersDark = (dark: boolean) =>
+  vi.mocked(window.matchMedia).mockImplementation(
+    (query: string) =>
+      ({
+        matches: dark,
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }) as unknown as MediaQueryList,
+  );
 
 beforeEach(() => {
-  useThemeStore.setState({ theme: "cmyk" });
+  useThemeStore.setState({ theme: "system" });
   document.documentElement.dataset.theme = undefined;
+  osPrefersDark(false);
 });
 
+afterEach(() => localStorage.clear());
+
 describe("useThemeStore", () => {
-  it("starts on the cmyk theme", () => {
-    expect(useThemeStore.getState().theme).toBe("cmyk");
+  it("starts on the system theme", () => {
+    expect(useThemeStore.getState().theme).toBe("system");
   });
 
-  it("toggle() flips from cmyk to dark", () => {
-    useThemeStore.getState().toggle();
-    expect(useThemeStore.getState().theme).toBe("dark");
-  });
-
-  it("toggle() flips back from dark to cmyk", () => {
-    useThemeStore.setState({ theme: "dark" });
-    useThemeStore.getState().toggle();
-    expect(useThemeStore.getState().theme).toBe("cmyk");
-  });
-
-  it("toggle() writes the next theme to document.documentElement.dataset.theme", () => {
-    useThemeStore.getState().toggle();
-    expect(document.documentElement.dataset.theme).toBe("dark");
-  });
-
-  it("setTheme() sets the given theme in the store", () => {
+  it("setTheme() stores the choice and paints it", () => {
     useThemeStore.getState().setTheme("dark");
     expect(useThemeStore.getState().theme).toBe("dark");
-  });
-
-  it("setTheme() writes the given theme to the document dataset", () => {
-    useThemeStore.getState().setTheme("dark");
     expect(document.documentElement.dataset.theme).toBe("dark");
   });
 
-  it("applyTheme() updates the document dataset without touching the store", () => {
-    applyTheme("dark");
+  it("migrates the pre-shadcn 'cmyk' value to light", async () => {
+    localStorage.setItem(
+      "litefront-theme",
+      JSON.stringify({ state: { theme: "cmyk" }, version: 0 }),
+    );
+    await useThemeStore.persist.rehydrate();
+    expect(useThemeStore.getState().theme).toBe("light");
+    expect(document.documentElement.dataset.theme).toBe("light");
+  });
+
+  it("keeps a persisted dark choice through the migration", async () => {
+    localStorage.setItem(
+      "litefront-theme",
+      JSON.stringify({ state: { theme: "dark" }, version: 0 }),
+    );
+    await useThemeStore.persist.rehydrate();
+    expect(useThemeStore.getState().theme).toBe("dark");
+  });
+});
+
+describe("resolveTheme / applyTheme", () => {
+  it("passes an explicit choice through", () => {
+    osPrefersDark(true);
+    expect(resolveTheme("light")).toBe("light");
+    expect(resolveTheme("dark")).toBe("dark");
+  });
+
+  it("resolves 'system' against the OS setting", () => {
+    expect(resolveTheme("system")).toBe("light");
+    osPrefersDark(true);
+    expect(resolveTheme("system")).toBe("dark");
+  });
+
+  it("paints the resolved theme, never 'system', without touching the store", () => {
+    osPrefersDark(true);
+    applyTheme("system");
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect(useThemeStore.getState().theme).toBe("cmyk");
+    expect(useThemeStore.getState().theme).toBe("system");
+  });
+});
+
+describe("followSystemTheme", () => {
+  it("repaints on an OS change and unsubscribes on cleanup", () => {
+    let listener: (() => void) | undefined;
+    const removeEventListener = vi.fn();
+    vi.mocked(window.matchMedia).mockImplementation(
+      (query: string) =>
+        ({
+          matches: true,
+          media: query,
+          addEventListener: (_: string, fn: () => void) => {
+            listener = fn;
+          },
+          removeEventListener,
+        }) as unknown as MediaQueryList,
+    );
+
+    const stop = followSystemTheme();
+    listener?.();
+    expect(document.documentElement.dataset.theme).toBe("dark");
+
+    stop();
+    expect(removeEventListener).toHaveBeenCalledWith("change", listener);
   });
 });
