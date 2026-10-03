@@ -24,14 +24,15 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      // Floors calibrated from a real `npm run test:cov` run (~84% lines /
-      // 82% branches / 89% funcs at calibration). Ratchet these UP as coverage
-      // grows — never lower one to dodge a finding; add the missing test.
+      // Floors sit just under a real `npm run test:cov` run (2026-10-03:
+      // 90.6% lines and statements / 85.5% branches / 88.0% functions). Raise
+      // them in the same change whenever coverage rises — never lower one to
+      // dodge a finding; add the missing test.
       thresholds: {
-        lines: 82,
-        functions: 85,
-        branches: 78,
-        statements: 82,
+        lines: 90,
+        functions: 87,
+        branches: 85,
+        statements: 90,
       },
       exclude: [
         "node_modules/**",
