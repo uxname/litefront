@@ -1,99 +1,43 @@
 # AGENTS.md — litefront (frontend)
 
 Vite · React 19 · TanStack Start (SSR) · URQL · Zustand · Tailwind v4 + shadcn/ui (Radix) ·
-Paraglide · Feature-Sliced Design.
+Paraglide · Feature-Sliced Design. It also runs standalone; inside the LiteStack meta-repo,
+the root `AGENTS.md` adds what spans both sides.
 
-**This file is the entry point, not the whole manual:** it holds the rules you must not
-break and a map of where everything else lives. Read the file that matches your task —
-don't read them all.
+## Every task
 
-## Quick start
-
-```bash
-npm install                # postinstall installs the git hooks
-cp .env.example .env       # nothing creates it; exported env vars work instead
-npm run start:dev          # Vite dev server with SSR + HMR
-npm run check              # the full quality gate — use this, always
-```
-
-`npm run gen` regenerates the GraphQL types from the **live** schema; it tells you which
-of the two is missing — the variable or the running backend.
-
-Build & run: `npm run build` → `.output/` (Nitro Node server +
-`.output/public`); `npm run start:prod` runs it (`node .output/server/index.mjs`);
-the build runs no checks — the gate is a separate `npm run check`. `docker compose up -d` serves `.output` on port
-3000 — the runtime image contains only `.output` and is self-contained.
-
-**The image carries no environment.** The public values are read from the
-container's environment when the server boots, so the same image runs anywhere and
-a tag names the code only. `src/shared/config/env.ts` holds the one list of them;
-five are required (`VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
-`VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`) and the server
-refuses to boot without one, naming it. Four values belong to the **build**
-instead: `VITE_MOCK_AUTH`, and `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
-`VITE_SENTRY_AUTH_TOKEN` for source-map upload. `.env` is for local runs only — it
-is excluded from the build context, so it can never reach an image.
-`npm run docker:build` / `docker:push` build and push
-`${IMAGE_REGISTRY:-}litefront:${IMAGE_TAG:-latest}`; the cross-project deploy guide
-is the meta repo's `docs/DEPLOY.md`.
-
-Production runs several copies of this server behind one proxy, so keep it that
-way: no per-process state, nothing written to the container's filesystem, and
-nothing that assumes the next request lands on the same copy.
+1. **Route.** Read the guide the table below names for your task before writing code.
+2. **Write to the standard.** Code, tests, styles, UI text and log calls follow
+   [.agents/CODING_STANDARDS.md](./.agents/CODING_STANDARDS.md). Everything committed is
+   English, whatever language the chat is in.
+3. **Done means `npm run check` exits 0** — read the exit status, not the tail of the
+   output. It is the whole static gate (compose, stylelint, tsc, Biome, knip, Steiger,
+   trio); `lint` or `ts:check` alone runs a fraction of it, and the hook fails on the
+   rest. A logic change also needs `npm run test:cov` green.
 
 ## Where to look
 
 | Your task | Read |
 |---|---|
-| Add a page, route, slice, component, store, GraphQL operation | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
-| Touch routing, SSR, entry files or auth wiring | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
-| Write tests or stories, hit a coverage floor | [.agents/TESTING.md](./.agents/TESTING.md) |
-| "See" the running app, debug a symptom, check dark mode | [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md) |
-| How a screen should look: components, layout, states, UI copy | [.agents/DESIGN.md](./.agents/DESIGN.md) |
-| Code style, TypeScript conventions, generated code, locale wiring | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
-| A gate is failing, env setup, dependencies, bundle size | [.agents/QUALITY-GATES.md](./.agents/QUALITY-GATES.md) |
-| How this side pairs with the backend | meta-repo `AGENTS.md` |
-| The architecture diagram (LikeC4) | it lives in the LiteStack meta-repo (`docs/architecture/likec4/`) — update it there, never start a second model here |
+| **Add** a page, route, slice, component, store, GraphQL operation; touch **SSR**, entry files, auth or locale | [.agents/ARCHITECTURE.md](./.agents/ARCHITECTURE.md) |
+| **Tests** or stories to write, a coverage floor blocks you | [.agents/TESTING.md](./.agents/TESTING.md) |
+| **Design** a screen: components, tokens, layout, states, UI copy | [.agents/DESIGN.md](./.agents/DESIGN.md) |
+| **See** the running app, debug a symptom, trace a production error | [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md) |
+| A **gate** is failing; env vars, the Docker image, dependencies, bundle size | [.agents/QUALITY-GATES.md](./.agents/QUALITY-GATES.md) |
+| A **seam** with the backend, deploy, the LikeC4 architecture model | the LiteStack meta-repo's `AGENTS.md` — the model lives there only, and moves in the same change |
 
-## Golden rules
+## Guardrails
 
-1. **`npm run check` is the gate.** Never run `lint` and `ts:check` separately — that
-   skips knip, steiger, the trio check and Biome's fixes, and the hook will fail on
-   what you thought you had run.
-2. **Every `shared/ui` component is a trio**: implementation + Storybook story + test. The
-   build fails without all three.
-3. **New logic is written test-first**, and coverage floors are machine-enforced. Never
-   lower a floor to go green — add the test.
-4. **Respect FSD boundaries.** Imports point downward only, and cross-slice access goes
-   through the slice's `index.ts`. Steiger enforces it, aliases included.
-5. **Style with the shadcn/ui semantic tokens, never hardcoded palette colors** —
-   hardcoded colors ignore `data-theme` and break dark mode. A new primitive comes
-   from `npx shadcn add`, not by hand — and the CLI needs two fixes afterwards
-   (DESIGN.md says which). The rest of the UI rules are in
-   [.agents/DESIGN.md](./.agents/DESIGN.md).
-6. **Never touch `window` during render.** This tree is server-rendered; read it in an
-   effect, an event handler, or behind `typeof window === "undefined"`.
-7. **All user-facing text goes through Paraglide** (`m.<key>()`), added to every message
-   file.
-8. **English-only in the repo** — code, comments, identifiers, commit messages, docs.
-   (Chat with the user in their language.)
-
-## Don'ts
-
-- Don't edit `src/generated/**` (GraphQL, route tree, Paraglide) — regenerate.
-- Don't use `--no-verify`; there is no CI behind these hooks.
-- Don't ship `VITE_MOCK_AUTH=true`, and don't put a secret in a `VITE_*` var — every one
-  of them is public. The list in `src/shared/config/env.ts` is delivered to the browser
-  verbatim; the rest are compiled into the JS bundle, which is just as readable. Adding a
-  key to that list publishes it, and a test asserts the exact set, so it cannot grow by
-  accident.
-- Don't remove a package from `.ncurc.yml` without checking the reason recorded there.
-- Don't remove `baseLocale` from the Paraglide strategy, or move `cookie` off first.
-- Don't delete `src/app/strip-dangling-sourcemaps.plugin.ts` — the dev log fills with
-  false sourcemap errors without it.
-- Don't put page logic in `src/routes/*`; those files are route definitions, and that
-  directory is the one place Steiger cannot check.
-- Don't report an error through `captureException` alone — call `logError` from
-  `@shared/lib/logger`. `VITE_SENTRY_DSN` is optional, and without it
-  `captureException` is a no-op and the failure disappears without a trace. See
-  [.agents/OBSERVABILITY.md](./.agents/OBSERVABILITY.md#production-what-a-running-app-tells-you).
+- **Regenerate `src/generated/**`** (GraphQL via `npm run gen`, the route tree and
+  Paraglide on dev/build); hand edits are lost and no gate notices them.
+- **Keep the server stateless.** Production runs several copies behind one proxy: state
+  lives in the browser, the backend or the request — not in process memory, not on the
+  container's filesystem, not in an assumption that the next request hits the same copy.
+- **Read `window` in an effect, an event handler, or behind
+  `typeof window === "undefined"`** — render runs on the server too.
+- **Treat every `VITE_*` value as public.** Secrets stay out of them, and a shipped
+  build has `VITE_MOCK_AUTH` off. `runtimeShape` in `src/shared/config/env.ts` is
+  delivered to the browser verbatim; the rest are compiled into the bundle. A test pins
+  the exact runtime set, so adding a key is a deliberate act.
+- **The hooks are the whole guarantee.** There is no CI, so every commit and push runs
+  them; `--no-verify` skips all of it.

@@ -25,11 +25,8 @@ For features, stores, hooks, utils, schemas and feature/entity components: write
 failing test that encodes the contract, then implement until green.
 
 Coverage floors live in **`vitest.config.ts`** and gate `npm run test:cov` (pre-push).
-Read them there rather than trusting a number quoted in prose. Ratchet them **up** as
-coverage grows; never lower one to dodge a finding.
-
-There is **no CI** — the trio and coverage gates run only in the git hooks, so
-`--no-verify` bypasses them with nothing behind it. Don't.
+Read them there rather than trusting a number quoted in prose. How they move — only
+up, in the same change: [CODING_STANDARDS.md](./CODING_STANDARDS.md#tests-and-coverage-floors).
 
 ## Vitest (unit / component)
 

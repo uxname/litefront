@@ -165,6 +165,6 @@ committed baselines, because pixel diffs are flaky and need constant
 
 - **Visual regression** — Playwright `toHaveScreenshot` with committed baselines, or a
   hosted service (Chromatic / Percy) for review-time diffs.
-- **Accessibility** — `axe` (e.g. `@axe-core/playwright`) for contrast and ARIA issues
-  the eye misses.
+- **Accessibility** is already built in — `tests/e2e/a11y.spec.ts` runs
+  `@axe-core/playwright`; widen it rather than adding a second tool.
 - **Performance budgets** — Lighthouse on the built preview.

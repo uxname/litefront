@@ -123,9 +123,9 @@ To replace OIDC with your own logic:
 - `npm run build`: Bundles the application for production.
 - `npm run test:prod`: Runs the unit/component tests once (Vitest). End-to-end tests are
   `npm run test:e2e:prod`; `npm run test:all` runs both.
-- `npm run check`: Runs all code quality checks in parallel: `tsc`, `biome` (in **write**
-  mode — it fixes rather than fails), `stylelint`, `knip`, `steiger`, and the component
-  trio check. This is the gate — never substitute `lint` + `ts:check`.
+- `npm run check`: Runs all code quality checks in parallel: `tsc`, `biome` (it fails
+  rather than fixes — `npm run lint:fix` applies the fixes), `stylelint`, `knip`,
+  `steiger`, and the component trio check. This is the gate — never substitute `lint` + `ts:check`.
 - `npm run verify:commit` / `verify:push`: exactly what the git hooks run.
 - `npm run lint:fsd`: Manually runs FSD layer boundary checks with Steiger.
 - `npm run storybook:serve`: Starts the component playground (Storybook) for developing UI components.

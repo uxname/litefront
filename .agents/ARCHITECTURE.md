@@ -1,4 +1,4 @@
-# Architecture — SSR, FSD, conventions, and how to add things
+# Architecture — SSR, FSD, and how to add things
 
 ## SSR (TanStack Start) — read before touching routing, entry or auth
 
@@ -141,32 +141,4 @@ list — add new aliases to both or knip reports phantom dead code.
 - **A new dependency** → check the stdlib and what's already installed first; the
   project is deliberately small.
 
-## Code style
-
-- **English only** for code, comments and identifiers (repo-wide rule).
-- 2-space indent, LF endings, trailing whitespace trimmed (EditorConfig).
-- **Biome is the source of truth for formatting**; it formats JS/TS with **double
-  quotes** and organizes imports (`organizeImports: on`).
-- Unused imports, variables and parameters are **errors** (Biome + TS).
-- Prefer small focused functions and explicit interfaces over clever generics.
-- **Tailwind CSS v4**, utility-first; keep any module styles scoped. There is no Sass
-  preprocessor — add `sass` back if a derived product wants one.
-- Stylelint runs on `**/*.css` and allows Tailwind at-rules.
-
-## TypeScript
-
-- `strict: true` — avoid `any`; prefer typed interfaces and unions.
-- `noUnusedLocals` / `noUnusedParameters` are on.
-- `useUnknownInCatchVariables` is **false**, so a caught error is typed `any`. Narrow
-  it manually — this app's core is error normalization, so don't lean on the default.
-- Use the path aliases (`@shared/*`, `@entities/*`, `@features/*`, `@widgets/*`,
-  `@pages/*`, `@generated/*`, `@public/*`) rather than deep relative paths.
-- `tsc --noEmit` currently checks only the app program: `vite.config.ts`,
-  `vitest.config.ts` and the two Vite plugins live in `tsconfig.node.json`, which
-  nothing typechecks and which has no `strict`. Treat changes there as unchecked and
-  verify by running the build.
-
-## Generated code
-
-`src/generated/**` is generated (GraphQL + route tree + Paraglide). Never edit it by
-hand; regenerate. Biome and knip ignore it.
+Code style and TypeScript conventions: [CODING_STANDARDS.md](./CODING_STANDARDS.md).
