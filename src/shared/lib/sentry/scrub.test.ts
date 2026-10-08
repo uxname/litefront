@@ -31,6 +31,7 @@ describe("scrubEvent", () => {
           span_id: "1",
           trace_id: "t",
           start_timestamp: 0,
+          status: "ok",
           data: {
             "http.url": callback,
             url: callback,
