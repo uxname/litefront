@@ -53,7 +53,7 @@ export const HomePage: FC = () => {
         <section className="mx-auto max-w-4xl text-center">
           <Badge
             variant="outline"
-            className="mb-8 gap-2 border-primary bg-primary/10 px-3 py-1 font-bold tracking-wide text-primary uppercase animate-in fade-in slide-in-from-bottom-4 duration-700"
+            className="mb-8 gap-2 border-primary bg-background px-3 py-1 font-bold tracking-wide text-primary uppercase animate-in fade-in slide-in-from-bottom-4 duration-700"
           >
             <span aria-hidden="true" className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
