@@ -1,8 +1,9 @@
 # Design — the UI: look, layout, states, copy
 
 This is the design half of the manual. It answers "what should this screen look
-like, and what am I allowed to invent?" The code half — formatting, types,
-imports, generated files, how the locale machinery is wired — lives in
+like, and what am I allowed to invent?" The code half lives elsewhere:
+formatting, types and imports in [CODING_STANDARDS.md](./CODING_STANDARDS.md);
+slices, generated files and the locale machinery in
 [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 **The mistake this file exists to prevent is inventing your own thing next to

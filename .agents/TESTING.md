@@ -40,17 +40,16 @@ npx vitest -t "should do X"                      # one test by name
 
 Notes that have bitten before:
 
-- **The suite needs the five required `VITE_*` values to exist.** Nine files import
-  `shared/config`, which validates at import time, so with none of them set the run
-  ends in `Invalid environment variables: VITE_OIDC_AUTHORITY is required, …` and
+- **The suite needs the five required `VITE_*` values to exist.** Any test that
+  reaches `shared/config`, directly or through a slice, validates the env at import
+  time, so with none of them set the run ends in `Invalid environment variables: VITE_OIDC_AUTHORITY is required, …` and
   those files report `(0 test)` — a message that looks like a broken import, not a
   missing variable. Vitest loads `.env` itself, and exported variables work just as
   well (`.env` is optional everywhere — see the meta repo's `docs/ENV-CONTRACT.md`),
   but *something* has to supply them.
-- Tests read the developer's real environment — `tests/setup.ts`'s
-  `vi.stubGlobal("import.meta", …)` does not take effect. Don't write a test whose
-  expected value is computed from the same env var as the code under test: it passes
-  no matter what the code does.
+- Tests read the developer's real environment — nothing in `tests/setup.ts` stubs
+  `import.meta.env`. Take an expected value from a literal: one computed from the same
+  env var as the code under test passes no matter what the code does.
 - `react-oidc-context` is mocked globally in `tests/setup.ts`, so **no unit or
   component test exercises real auth**. Don't assume auth is covered.
 - Assert on the DOM contract you actually care about. `toHaveStyle` compares
@@ -67,7 +66,7 @@ npm run test:e2e:dev        # UI mode
 npm run test:e2e:prod       # headless chromium, list reporter
 npm run test:all            # unit + e2e
 npm run test:e2e:show-trace
-npx playwright test tests/e2e/example.spec.ts   # one file
+npx playwright test tests/e2e/health.spec.ts    # one file
 npx playwright test -g "login works"            # one test by name
 ```
 
