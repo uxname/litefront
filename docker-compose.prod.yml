@@ -32,6 +32,7 @@ services:
       VITE_BASE_URL: ${VITE_BASE_URL:-}
       VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
       VITE_APP_VERSION: ${VITE_APP_VERSION:-}
+      VITE_APP_ENV: ${VITE_APP_ENV:-}
       # The container ALWAYS listens on 3000 (mirrors the backend prod compose).
       PORT: 3000
     # No published host port on purpose: every replica would fight for the same

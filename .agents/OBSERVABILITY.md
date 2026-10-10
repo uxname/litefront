@@ -76,45 +76,20 @@ switch it to a semantic token and re-capture.
 - Stories (human, interactive): `npm run storybook:serve`
 - Full quality gate: `npm run check`
 - Report every error with `logError` (`@shared/lib/logger`), never bare `captureException`.
-- Runtime errors in production go to Sentry (set `VITE_SENTRY_*`). Both sides are
-  wired: the browser through `@sentry/react` (`src/shared/lib/sentry/config.ts`,
+- Runtime errors in production go to the error tracker — GlitchTip on the shared
+  stack, through the Sentry SDK (meta `docs/observability/`, ADR-0009). Both sides
+  are wired: the browser through `@sentry/react` (`src/shared/lib/sentry/config.ts`,
   initialised in `src/client.tsx`) and SSR through `@sentry/node`
   (`src/shared/lib/sentry/server.ts`, initialised on import by `src/server.ts`).
-  With no `VITE_SENTRY_DSN` both are a no-op. The DSN is read from the
-  container's environment when the server **boots**, so a container started
-  without it reports nothing — turning reporting on is a restart with the
+  With no `VITE_SENTRY_DSN` both are a no-op. The DSN and `VITE_APP_ENV` (the
+  environment reports are filed under) are read from the container's environment
+  when the server **boots**, so turning reporting on is a restart with the
   variable set, never a rebuild.
-
-## Session Replay: privacy, and where its code lives
-
-Session Replay records what a visitor saw. Two things about it are settled here,
-and both stay settled unless a derived product decides otherwise in writing.
-
-**Privacy.** Recordings are masked: `maskAllText` and `blockAllMedia` are on
-(`src/shared/lib/sentry/replay.ts`), so text a visitor typed or read — emails,
-tokens, profile data — is replaced by blocks, and images and video never leave
-the browser. This is Sentry's own default and **this template does not turn it
-off**; turning it off records real user input, so it is a product decision with a
-privacy consequence, not a config tweak. How long recordings are kept and who in
-the organisation can open them are **not** settled here either: they follow the
-retention and the member list of whatever Sentry plan the derived product's
-operator signs up for.
-
-**Where the code lives.** The recorder (rrweb, ~120 kB raw) is not in the first
-download. `initSentry` starts it with a dynamic `import("./replay")` right after
-`Sentry.init`, so the bundler gives it a chunk of its own; a sampled session
-still records from its start — the chunk lands in the same tick, with no page
-reload — and if it cannot be fetched at all (Sentry blocked, ad blocker, offline)
-the `.catch` leaves the app running without replays. Check it after a build:
-
-```sh
-npm run build
-grep -rl rrweb .output/public/assets/*.js   # expect exactly one: assets/replay-*.js
-```
-
-Any other file in that list means replay has been pulled back into the entry
-bundle — the usual cause is calling `Sentry.replayIntegration()` from
-`config.ts` again instead of from the lazily-imported module.
+- The SDK sends **errors only**: no tracing and no Session Replay. Traces belong to
+  OpenObserve and session replay to Rybbit, which a derived project wires in by
+  following the meta-repo's `docs/observability/CONNECT.md`.
+- Readable stacks need source maps uploaded at build time — see "Source maps" in
+  the meta-repo's `docs/DEPLOY.md`.
 
 ## Production: what a running app tells you
 

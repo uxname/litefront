@@ -15,6 +15,7 @@ const validConfig = {
   VITE_BASE_URL: "http://localhost:3000",
   VITE_SENTRY_DSN: "",
   VITE_APP_VERSION: "1.2.3",
+  VITE_APP_ENV: "staging",
 };
 
 // The module validates while it is being imported, so every case needs a fresh

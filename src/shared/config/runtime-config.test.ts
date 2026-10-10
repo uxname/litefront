@@ -16,6 +16,7 @@ const RUNTIME_CONFIG_GLOBAL = "__LITEFRONT_RUNTIME_CONFIG__";
 // only for a value that every visitor of the site may read, today and forever;
 // tomorrow's secret does not yet have a name a targeted assertion could match.
 const PUBLISHED_KEYS = [
+  "VITE_APP_ENV",
   "VITE_APP_VERSION",
   "VITE_BASE_URL",
   "VITE_GRAPHQL_API_URL",

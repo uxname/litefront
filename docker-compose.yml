@@ -37,6 +37,7 @@ services:
       VITE_BASE_URL: ${VITE_BASE_URL:-}
       VITE_SENTRY_DSN: ${VITE_SENTRY_DSN:-}
       VITE_APP_VERSION: ${VITE_APP_VERSION:-}
+      VITE_APP_ENV: ${VITE_APP_ENV:-}
       # The container always listens on 3000; PORT only selects the HOST port
       # via the "${PORT:-3000}:3000" mapping below.
       PORT: 3000

@@ -8,9 +8,9 @@ interface LogContext {
 /**
  * The single error sink for browser code.
  *
- * Sentry is opt-in: the DSN is baked in at **build** time, and without one
- * `captureException` is a no-op. An app built without a DSN therefore used to
- * swallow every crash without a trace. The console line is what keeps a failure
+ * Error tracking is opt-in: the DSN is read when the server boots, and without
+ * one `captureException` is a no-op. An app running without a DSN would
+ * therefore swallow every crash without a trace. The console line is what keeps a failure
  * visible regardless — in devtools, in the e2e log harness
  * (`npm run test:e2e:logs`), and in the SSR container log. Sentry is the extra
  * copy, not the only one.

@@ -48,8 +48,8 @@ export const buildCsp = (nonce: string, origins: CspOrigins): string => {
     ["connect-src 'self'", ...api, ...idp, ...sentry].join(" "),
     // oidc-client-ts falls back to a hidden IdP iframe for silent renew.
     ["frame-src", ...(idp.length ? idp : ["'none'"])].join(" "),
-    // Sentry Replay compresses in a blob: worker.
-    "worker-src 'self' blob:",
+    // The PWA service worker. (blob: went with Sentry Replay — meta ADR-0009.)
+    "worker-src 'self'",
     // /callback runs in that same-origin iframe; nobody else may frame us.
     "frame-ancestors 'self'",
     ["form-action 'self'", ...idp].join(" "),

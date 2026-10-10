@@ -52,9 +52,9 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
   a secret in one. The list that reaches the browser is the `runtimeShape` literal in
   `src/shared/config/env.ts` and nothing else; `env.test.ts` asserts its exact contents,
   so adding a key there fails the suite until the test is updated deliberately.
-  `VITE_MOCK_AUTH` and `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
+  `VITE_MOCK_AUTH` and `VITE_SENTRY_URL` / `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
   `VITE_SENTRY_AUTH_TOKEN` are **build-time** instead: mock logins must not be
-  switchable on a running container, and the Sentry token is a real secret that only the
+  switchable on a running container, and the upload token is a real secret that only the
   source-map upload needs.
 - Required for auth and data: `VITE_OIDC_AUTHORITY`, `VITE_OIDC_CLIENT_ID`,
   `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
@@ -90,7 +90,7 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 grew. Usual offenders, in the order they usually pay off:
 
 1. A heavy library pulled into the **root** route's preload — the cost lands on every
-   first visit. Load it lazily (this is the case with Sentry's session replay today).
+   first visit. Load it lazily with a dynamic `import()`.
 2. A route that isn't code-split.
 3. Icons imported wholesale instead of per-icon.
 4. Large assets inlined into JS instead of served from `public/`.

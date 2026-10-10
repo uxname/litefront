@@ -19,6 +19,10 @@ export default defineConfig(async (): Promise<UserConfig> => {
   configDotenv({ quiet: true });
 
   const port = Number(process.env.PORT) || 3000;
+  // A production build emits source maps only to upload them to the error
+  // tracker: "hidden" leaves no sourceMappingURL in the shipped JS, and the
+  // Sentry plugin deletes the .map files once uploaded. No token, no maps.
+  const uploadSourceMaps = Boolean(process.env.VITE_SENTRY_AUTH_TOKEN);
 
   return {
     server: {
@@ -31,7 +35,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
       strictPort: true,
     },
     build: {
-      sourcemap: process.env.NODE_ENV !== "production",
+      sourcemap:
+        process.env.NODE_ENV !== "production" || (uploadSourceMaps && "hidden"),
       target: "esnext",
     },
     resolve: {
@@ -145,6 +150,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         },
       }),
       sentryVitePlugin({
+        // The error tracker's base URL — the shared stack's GlitchTip
+        // (meta docs/observability/). Unset means sentry.io.
+        url: process.env.VITE_SENTRY_URL || undefined,
         org: process.env.VITE_SENTRY_ORG,
         project: process.env.VITE_SENTRY_PROJECT,
         authToken: process.env.VITE_SENTRY_AUTH_TOKEN,

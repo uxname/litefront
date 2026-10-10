@@ -10,7 +10,7 @@ import { type FC, useEffect } from "react";
  * `react-oidc-context` surfaces auth failures through the hook's `error`
  * property and through `events` (silent-renew errors) — NOT by throwing — so the
  * window-level {@link GlobalErrorBoundary} never sees them. This component wires
- * those signals into `logError` (console always, Sentry when a DSN was baked in)
+ * those signals into `logError` (console always, the error tracker when a DSN is set)
  * and keeps the Sentry user identity in sync.
  *
  * Mounted inside `AuthBoundary` (so `useAuth()` is available). On the server the

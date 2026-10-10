@@ -78,9 +78,11 @@ The application requires the following environment variables for the OIDC authen
 | `VITE_GRAPHQL_API_URL`   | URL of your GraphQL API                                      | `http://localhost:4000/graphql`                 |
 | `VITE_BASE_URL`          | Base URL of the application (E2E base URL, and used to build OIDC redirect targets — an empty value breaks sign-out) | `http://localhost:3000`                        |
 | `VITE_MOCK_AUTH`         | **Build-time.** Bypasses real OIDC entirely (dev/E2E only — **never ship it enabled**) | `false`                        |
-| `VITE_APP_VERSION`       | Version string surfaced in the UI and Sentry releases | build metadata                        |
+| `VITE_APP_VERSION`       | Version string surfaced in the UI and error-tracker releases | build metadata                 |
+| `VITE_APP_ENV`           | **Runtime.** Environment error reports are filed under; empty falls back to the build mode | `staging` |
 | `PORT`                   | The port the application will run on                         | `3000`                                          |
-| `VITE_SENTRY_DSN`        | **Runtime.** The DSN key for Sentry error tracking            | `https://xxx@yyy.ingest.sentry.io/zzz`           |
+| `VITE_SENTRY_DSN`        | **Runtime.** DSN of the error tracker (GlitchTip, Sentry-compatible) | `https://key@glitchtip.example/1`         |
+| `VITE_SENTRY_URL`        | **Build-time.** Error tracker base URL for the source-map upload; empty means sentry.io | `https://glitchtip.example` |
 | `VITE_SENTRY_ORG`        | **Build-time.** Sentry organization slug (source maps)        | `your-org`                                      |
 | `VITE_SENTRY_PROJECT`    | **Build-time.** Sentry project name (source maps)             | `your-project`                                  |
 | `VITE_SENTRY_AUTH_TOKEN` | **Build-time.** Token for uploading source maps               | `sntrys_...`                                    |

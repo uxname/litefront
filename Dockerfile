@@ -24,6 +24,19 @@ ENV NODE_ENV=production
 # BOOT (src/shared/config/env.ts), so the bundle holds no authority, client id
 # or API URL. One built image runs in every environment — the tag says which
 # code, never which server.
+#
+# The one optional exception is build TOOLING, not app config: uploading source
+# maps to the error tracker (GlitchTip). Pass nothing and the build is exactly
+# as above — no maps, no upload. To upload, see "Source maps" in the meta-repo's
+# docs/DEPLOY.md. These are args of THIS stage only: the runtime stage below
+# starts from a fresh FROM, so the pushed image carries none of them. The token
+# does stay in the build machine's local cache — build on a machine you trust.
+# (A BuildKit secret would avoid even that, but the classic builder — Docker
+# without buildx — rejects `RUN --mount`, and this image must build there.)
+ARG VITE_SENTRY_URL=""
+ARG VITE_SENTRY_ORG=""
+ARG VITE_SENTRY_PROJECT=""
+ARG VITE_SENTRY_AUTH_TOKEN=""
 RUN npm run build
 
 # Production stage — Node runtime serving the SSR server (replaces the previous

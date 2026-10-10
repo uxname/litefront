@@ -41,6 +41,7 @@ const runtimeShape = {
   VITE_BASE_URL: optionalString,
   VITE_SENTRY_DSN: optionalString,
   VITE_APP_VERSION: optionalString,
+  VITE_APP_ENV: optionalString,
 } satisfies Record<string, z.ZodType>;
 
 const runtimeSchema = z.object(runtimeShape);
