@@ -1,7 +1,7 @@
 # Observability & debugging — you cannot see the browser
 
 An agent has no eyes on a browser console or canvas. Two headless harnesses make the
-running app observable **as files you can read**. Do not try to open a live page.
+running app observable **as files you can read**: run a harness, then read its output.
 
 | Want to know… | Run | Then read |
 |---|---|---|
@@ -30,23 +30,23 @@ fail only on a genuine breakage — a `pageerror` or a same-origin failed reques
 Plain console noise never fails them, so the full record always reaches you.
 
 > Caveat: the interaction steps are individually error-tolerant, so the harness can
-> pass while the controls it drives have disappeared. Read the log — don't infer
-> health from the exit code alone.
+> pass while the controls it drives have disappeared. A harness run is done when you
+> have read its log; the exit code only covers breakage.
 
 **To inspect a specific page, flow, or an off-page component state** (a button mid-load,
 an error fallback), copy `tests/e2e/agent-screens.spec.ts` or add a temporary route,
 capture it the same way, read the PNG, then remove the throwaway.
 
-> Port note: Playwright never reuses a running server (`reuseExistingServer: false`).
-> It builds and starts its own production server on `:3100` (override with `E2E_PORT`),
-> so a capture always comes from the production build — but the run fails if something
-> else already holds that port. A dev server on `:3000` does not interfere.
+> Port and browser setup: a capture always comes from the production build that
+> Playwright starts on its own port — [TESTING.md → Playwright (E2E)](./TESTING.md#playwright-e2e).
+> The run fails if something else already holds that port.
 
 ## The dark-theme check (the bug that keeps coming back)
 
-The whole UI must use the shadcn/ui **semantic tokens**, never hardcoded Tailwind palette
-colors — see [DESIGN.md](./DESIGN.md). Hardcoded colors ignore `data-theme` and stay
-light in dark mode.
+The rule — colour comes from a semantic token — lives in
+[DESIGN.md → Colour and tokens](./DESIGN.md#colour-and-tokens). A palette colour slips
+past the static gate, and axe flags it only when contrast fails — the screenshots are
+the reliable check.
 
 **How to catch it:** open the `*-light-*` and `*-dark-*` screenshots of the same route
 side by side. If a region looks identical (light) in both, it uses hardcoded colors —
@@ -66,7 +66,7 @@ switch it to a semantic token and re-capture.
 | Auth redirect loop, or a protected page never resolves | OIDC env missing, or mock off; or a rejected `signinRedirect` that nothing catches | Set `VITE_OIDC_*`, or build with `VITE_MOCK_AUTH=true`; make sure the redirect's rejection path navigates somewhere |
 | Blank page / nothing renders | Uncaught error at boot | `npm run test:e2e:logs` → read `frontend-logs.log` for the `pageerror` + stack |
 | Browser CORS error, or subscriptions silently dead | SPA origin not in the backend's `CORS_ORIGIN` — it gates **both** CORS and the WebSocket handshake | Add `http://localhost:3000`, exactly, with no stray spaces |
-| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `ssr_render_failed` (with the `method` and `path` that failed), and in Sentry when the container was started with a `VITE_SENTRY_DSN`. Read the value in an effect or behind `typeof window === "undefined"` |
+| SSR returns a bare text/plain 500 | Something touched `window` during render (often inside an error fallback) | The stack is in the server log under `ssr_render_failed` (with the `method` and `path` that failed), and in Sentry when the container was started with a `VITE_SENTRY_DSN`. Move the read as the `window` guardrail in [AGENTS.md](../AGENTS.md#guardrails) says |
 | A user reports an error you cannot reproduce | — | Ask for the **Request** id under Details in the error screen, then filter the backend log by it (see below) |
 
 ## Quick reference
@@ -75,7 +75,6 @@ switch it to a semantic token and re-capture.
 - Screenshots: `npm run test:e2e:screens` → `test-results/screenshots/*.png`
 - Stories (human, interactive): `npm run storybook:serve`
 - Full quality gate: `npm run check`
-- Report every error with `logError` (`@shared/lib/logger`), never bare `captureException`.
 - Runtime errors in production go to the error tracker — GlitchTip on the shared
   stack, through the Sentry SDK (meta `docs/observability/`, ADR-0009). Both sides
   are wired: the browser through `@sentry/react` (`src/shared/lib/sentry/config.ts`,
@@ -99,8 +98,7 @@ without Sentry):
 
 **1. The console / container log.** Every error path goes through `logError` in
 `@shared/lib/logger`, which always writes a console line **and** forwards to
-Sentry. `captureException` alone is a no-op when the container was started
-without a DSN, so calling it directly is how a crash ends up reported nowhere.
+Sentry ([CODING_STANDARDS.md → Logs](./CODING_STANDARDS.md#logs) has the rule).
 Grep by the event slug, the way you would grep the backend's `msg` field:
 
 | Slug | When |

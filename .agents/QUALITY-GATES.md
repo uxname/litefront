@@ -1,22 +1,20 @@
 # Quality gates — running them, and fixing what they find
 
-## The one rule
+## Running the gate
 
-**Always use `npm run check` for the full gate. Never run `npm run lint && npm run
-ts:check` separately** — that skips knip, steiger and the trio check, and the
-pre-commit hook will then fail on things you thought you had run. `check` fixes
-nothing on its own: when it goes red on formatting, run `npm run lint:fix` and
-commit the result.
+The gate is three npm scripts, each a superset of the one before. The hooks only call
+them, so your terminal runs exactly what a commit or a push runs. When done counts:
+[AGENTS.md → Every task](../AGENTS.md#every-task), step 3.
 
 ```bash
-npm run check          # stylelint + tsc + biome (check) + knip + steiger + trio
-npm run verify:commit  # check + gitleaks           (what pre-commit runs)
-npm run verify:push    # verify:commit + test:cov + E2E + Storybook build + story render check (pre-push)
+npm run check          # the static gate
+npm run verify:commit  # what pre-commit runs
+npm run verify:push    # what pre-push runs
 ```
 
-Hooks are thin — all logic is in npm scripts, so the hook and your terminal run
-exactly the same thing. There is **no CI**: these hooks are the whole guarantee, and
-`--no-verify` has nothing behind it.
+Each one expands in `package.json`; read the script there for what it covers today.
+`check` only reports: when it goes red on formatting, run `npm run lint:fix` and
+commit the result.
 
 > One honest caveat: `secrets` silently succeeds when gitleaks is not installed, so
 > a green run on a machine without it proves nothing.
@@ -34,8 +32,8 @@ most common wasted loop.
 | "Type X is not assignable to Y" | TypeScript | Fix the types by hand; don't cast it away |
 | Formatting, quotes, import order, simple unused vars | Biome | `npm run lint:fix` (`lint:fix:unsafe` for the rest, reviewed) |
 | CSS/SCSS complaints | Stylelint | `npm run lint:style:fix` |
-| "component missing story or test" | trio check | Add the missing file — see [TESTING.md](./TESTING.md) |
-| Coverage below floor | Vitest | Add the test. Never lower the floor |
+| "component missing story or test" | trio check | Add the missing file to complete the [*trio*](./TESTING.md#the-trio-rule) |
+| Coverage below floor | Vitest | Add the test — [a floor only goes up](./CODING_STANDARDS.md#tests-and-coverage-floors) |
 
 Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 `lint:style`, `ts:check`, `knip`, `lint:fsd`, `trio`.
@@ -47,12 +45,10 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
   (`configDotenv`) **without overriding** anything already exported, and the config module
   reads `process.env`, so both routes end in the same place. A container has no `.env` and
   supplies the variables itself.
-- The public `VITE_*` values are read from the environment when the **server boots** and
-  are shipped to the browser in the SSR HTML, so every one of them is public — never put
-  a secret in one. The list that reaches the browser is the `runtimeShape` literal in
-  `src/shared/config/env.ts` and nothing else; `env.test.ts` asserts its exact contents,
-  so adding a key there fails the suite until the test is updated deliberately.
-  `VITE_MOCK_AUTH` and `VITE_SENTRY_URL` / `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
+- Every `VITE_*` value is public ([AGENTS.md → Guardrails](../AGENTS.md#guardrails)); what
+  matters here is **when** each is read. The `runtimeShape` set is read from the
+  environment when the **server boots** and shipped to the browser in the SSR HTML, so
+  changing one is a restart, not a rebuild. `VITE_MOCK_AUTH` and `VITE_SENTRY_URL` / `VITE_SENTRY_ORG` / `VITE_SENTRY_PROJECT` /
   `VITE_SENTRY_AUTH_TOKEN` are **build-time** instead: mock logins must not be
   switchable on a running container, and the upload token is a real secret that only the
   source-map upload needs.
@@ -60,18 +56,18 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
   `VITE_OIDC_REDIRECT_URI`, `VITE_OIDC_SCOPE`, `VITE_GRAPHQL_API_URL`.
   `VITE_BASE_URL` builds the OIDC redirect targets, so an empty value breaks sign-out
   and Account Center links. (E2E sets its own, matching the port it serves on.)
-  `VITE_MOCK_AUTH=true` disables real authentication — never ship it enabled.
+  `VITE_MOCK_AUTH=true` replaces real authentication with mock logins.
 - Cross-project pairs that must match the backend (audience, CORS origin, GraphQL URL)
   are documented in the meta-repo's `docs/ENV-CONTRACT.md` and checked by
   `scripts/doctor.sh`.
-- Run `npx playwright install chromium` once after cloning, and again after a
-  Playwright version bump.
+- Before the first E2E run or push, install the browser:
+  [TESTING.md → Playwright (E2E)](./TESTING.md#playwright-e2e).
 
 ## Dependencies
 
-- `npm run update` bumps everything via `ncu -u`, reinstalls, then runs `lint:fix` and
-  `check`. Prefer updating a few packages at a time (`npx ncu -u <pkg>`) — a full sweep
-  makes a breakage hard to attribute.
+- `npm run update` bumps everything via `ncu -u` and reinstalls from scratch. Prefer
+  updating a few packages at a time (`npx ncu -u <pkg>`) — a full sweep makes a
+  breakage hard to attribute.
 - **`.ncurc.yml` holds packages back deliberately**, each with the third-party reason
   and the condition that unblocks it. Read it before "fixing" an outdated dependency;
   removing an entry without checking the cause will break `check` or `gen`.

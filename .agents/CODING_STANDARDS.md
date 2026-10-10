@@ -5,10 +5,9 @@ Holds for everything in this repo. Inside the LiteStack meta-repo it refines the
 
 ## Tests and coverage floors
 
-- **New logic is written test-first** — the failing test that encodes the contract,
-  then the code. Tests check behaviour through roles and ARIA, not class names or lines.
-- **Every `shared/ui` component is a trio**: implementation + story + test
-  ([TESTING.md → The trio rule](./TESTING.md#the-trio-rule)).
+- **New logic is written test-first** ([TESTING.md → TDD](./TESTING.md#tdd)). Tests
+  check behaviour through roles and ARIA, not class names or lines.
+- **Every `shared/ui` component is a [*trio*](./TESTING.md#the-trio-rule).**
 - **Run `npm run test:cov` before you finish.** When the measured coverage rose, raise
   the floors in `vitest.config.ts` to just under the new numbers in the same change — a
   point or two of headroom, no more. A floor left below the real number is a hole new
@@ -17,8 +16,7 @@ Holds for everything in this repo. Inside the LiteStack meta-repo it refines the
 
 ## Styling
 
-- **Style with the shadcn/ui semantic tokens** — a hardcoded palette colour ignores
-  `data-theme` and breaks dark mode ([DESIGN.md → Colour and tokens](./DESIGN.md#colour-and-tokens)).
+- **Colour comes from a semantic token** ([DESIGN.md → Colour and tokens](./DESIGN.md#colour-and-tokens)).
 - **A new primitive comes from `npx shadcn add`**, followed by the two fixes the CLI
   always needs ([DESIGN.md → The shared components](./DESIGN.md#the-shared-components)).
 - Tailwind CSS v4, utility-first; keep any module styles scoped. There is no Sass
@@ -27,28 +25,24 @@ Holds for everything in this repo. Inside the LiteStack meta-repo it refines the
 
 ## UI text
 
-All user-facing text — `aria-label` included — goes through Paraglide (`m.<key>()`),
-with the key added to every file in `messages/`. How copy reads:
-[DESIGN.md → Copy](./DESIGN.md#copy).
+All user-facing text, `aria-label` included, goes through Paraglide: the key, the
+files it lands in and how copy reads are in [DESIGN.md → Copy](./DESIGN.md#copy).
 
 ## Logs
 
-Report every error with `logError` from `@shared/lib/logger`. `captureException` alone
-is a no-op without `VITE_SENTRY_DSN`, and the failure disappears without a trace
-([OBSERVABILITY.md](./OBSERVABILITY.md#production-what-a-running-app-tells-you)).
+Every failure path leaves exactly one line: one `logError` call — not zero, and not
+one per layer it passes through. `logError` comes from `@shared/lib/logger`;
+`captureException` alone is a no-op without `VITE_SENTRY_DSN`, and the failure
+disappears without a trace ([OBSERVABILITY.md](./OBSERVABILITY.md#production-what-a-running-app-tells-you)).
 
-## Code style
+## Code style and TypeScript
 
-- 2-space indent, LF endings, trailing whitespace trimmed (EditorConfig).
-- **Biome is the source of truth for formatting**; it formats JS/TS with **double
-  quotes** and organizes imports (`organizeImports: on`).
-- Unused imports, variables and parameters are **errors** (Biome + TS).
-- Prefer small focused functions and explicit interfaces over clever generics.
+`npm run check` enforces the formatting and compiler rules in `.editorconfig`,
+`biome.json` and `tsconfig.json`; read them there. What the configs do not say:
 
-## TypeScript
-
-- `strict: true` — avoid `any`; prefer typed interfaces and unions.
-- `noUnusedLocals` / `noUnusedParameters` are on.
+- **Biome is the formatter**, with **double quotes**. The IntelliJ-only
+  `ij_*_use_double_quotes = false` lines in `.editorconfig` say otherwise; Biome wins
+  on `npm run lint:fix`.
 - `useUnknownInCatchVariables` is **false**, so a caught error is typed `any`. Narrow
   it manually — this app's core is error normalization, so don't lean on the default.
 - Use the path aliases from `tsconfig.json` rather than deep relative paths

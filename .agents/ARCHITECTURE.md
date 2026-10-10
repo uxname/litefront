@@ -16,9 +16,9 @@ This app runs **server-side rendered** via TanStack Start (Vite plugin + Nitro
   `NeutralAuthProvider` (always logged-out, SSR-safe); the client mounts the real
   `react-oidc-context` `AuthProvider`, or `MockAuthProvider` when `VITE_MOCK_AUTH`.
   OIDC is browser-only, so `getOidcConfig()` is lazy.
-- **Anything rendered on both sides must not touch `window` during render.** Read it
-  in an effect, in an event handler, or behind `typeof window === "undefined"`. This
-  bit twice: the error boundary's own fallback crashed the server render.
+- **The `window` guardrail in [AGENTS.md](../AGENTS.md#guardrails) covers error
+  fallbacks too.** It bit twice: the error boundary's own fallback crashed the server
+  render.
 - **Hydration safety**: auth-dependent UI must render its logged-out markup while
   `isLoading` (see `HeaderControls`) so the first client paint matches the server's
   neutral render. `MockAuthProvider` defers its `localStorage` read to an effect for
@@ -122,10 +122,8 @@ list — add new aliases to both or knip reports phantom dead code.
   the router; `beforeLoad` + `context.auth` was removed. Remember the return
   location as `pathname + search` (an absolute URL breaks `history.replace`).
 - **A shared UI component** → `npx shadcn add <name>` writes `src/shared/ui/<name>.tsx`;
-  add `<name>.stories.tsx` + `<name>.test.tsx` next to it (the **trio**, see
-  [TESTING.md](./TESTING.md)). A component of our own with helper files gets a
-  directory, `src/shared/ui/<Name>/<Name>.tsx`, like `ErrorFallback`. Tokens and
-  the CLI's quirks: [DESIGN.md](./DESIGN.md).
+  finish it as a [*trio*](./TESTING.md#the-trio-rule), which also gives the directory
+  shape for a component of our own. Tokens and the CLI's quirks: [DESIGN.md](./DESIGN.md).
 - **The page frame** → every page renders inside `AppShell` (`src/widgets/AppShell`:
   skip link, header, `<main>`, footer); a page supplies only its own content.
 - **A store** → Zustand in `src/<layer>/<slice>/model/store.ts`, exported from the
@@ -138,7 +136,5 @@ list — add new aliases to both or knip reports phantom dead code.
   to urql's own `useQuery({ query: MeDocument })` / `useMutation(UpdateProfileDocument)`
   and data and variables are inferred from it. Do that from the slice's `api/` or
   `lib/` segment, never directly in `ui/`.
-- **A new dependency** → check the stdlib and what's already installed first; the
-  project is deliberately small.
 
 Code style and TypeScript conventions: [CODING_STANDARDS.md](./CODING_STANDARDS.md).

@@ -1,8 +1,5 @@
 # Testing — the trio rule, TDD, Vitest, Playwright
 
-Tests are **non-optional** here and the rules are machine-enforced, so they cannot
-drift.
-
 ## The trio rule
 
 **Every `shared/ui` component is a trio**: implementation + story + test, side by

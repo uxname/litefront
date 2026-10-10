@@ -9,8 +9,8 @@ slices, generated files and the locale machinery in
 **The mistake this file exists to prevent is inventing your own thing next to
 one that already exists.** A second button, a second card, a second way of
 showing an empty list. Two of anything means they drift apart, and the drift is
-what users see. So the two longest sections here are *Sources of truth* and
-*Guardrails*: read them before you write a single class name.
+what users see. So read *Sources of truth* and *Guardrails* before you write a
+single class name.
 
 ## What this UI is today
 
@@ -54,7 +54,8 @@ This border also decides **local composition versus a new shared component**:
   `src/shared/ui`; it would arrive there as a component with one caller and a
   name nobody can reuse.
 - A control that an applied screen needs — anything that takes input, shows
-  state, or repeats across screens — belongs in `src/shared/ui` as a trio, and
+  state, or repeats across screens — belongs in `src/shared/ui` as a
+  [*trio*](./TESTING.md#the-trio-rule), and
   the marketing pages then use it too, with `className` for the flourish. The
   landing page's call-to-action buttons are exactly this: shared `Button`,
   marketing skin.
@@ -82,9 +83,8 @@ and these are the places to look before you write anything:
 The primitives are **shadcn/ui** — source copied into the repo, built on Radix,
 styled with Tailwind and the tokens below. They are ours to read, and we leave
 them as the registry wrote them: every local change is a commented exception, so
-the next `npx shadcn add` or update stays a clean diff. Every file is a trio —
-implementation, story, test; see [TESTING.md](./TESTING.md). Use them; do not
-re-create them.
+the next `npx shadcn add` or update stays a clean diff. Every file is a
+[*trio*](./TESTING.md#the-trio-rule). Use them; do not re-create them.
 
 | Component | What it is for |
 |---|---|
@@ -123,8 +123,8 @@ project's aliases, and both are easy to miss:
    non-ASCII characters in the `gen` script. Restore the file from git and add
    the dependencies the component really needs by hand, then `npm install`.
 
-Then write its story and test (the trio check fails until you do), and run
-`npm run check` — Biome reformats the generated code.
+Then complete the [*trio*](./TESTING.md#the-trio-rule) and run `npm run check` —
+Biome reformats the generated code.
 
 ## Colour and tokens
 
@@ -142,10 +142,10 @@ The **radii are identical in both themes** on purpose: `--radius` (0.75rem) is
 fields and buttons (`rounded-md`), cards are `rounded-xl` (1rem). A control must
 not change shape when the theme does.
 
-**Use the semantic tokens, never hardcoded palette colors.** Never `bg-white`,
-`text-slate-900`, `text-indigo-600`, `bg-red-50` — those ignore `data-theme` and
-stay light in dark mode. This exact mistake is why the theme once looked broken.
-Decorative gradients and orbs are the only allowed exception.
+**Colour comes from a semantic token in the table below; decorative gradients and
+orbs are the one exception.** A palette class (`bg-white`, `text-slate-900`,
+`bg-red-50`) ignores `data-theme` and stays light in dark mode — this exact mistake
+once made the theme look broken.
 
 Which token for what:
 
@@ -179,7 +179,9 @@ the mechanics are described in [ARCHITECTURE.md](./ARCHITECTURE.md).
 The breakpoints in use are the framework defaults, and in practice only three
 appear: `sm`, `md`, `lg`. Do not add custom ones.
 
-The shell numbers are fixed — reuse them rather than picking new ones:
+Spacing and radius use the framework's steps — a one-off `p-[13px]` is how a UI
+stops looking made by one person. The shell numbers are fixed — reuse them rather
+than picking new ones:
 
 - page container: `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`;
 - sticky header bar: `sticky top-0 z-50` with an `h-16` row inside the container;
@@ -226,8 +228,8 @@ come up every time:
   in flight;
 - a toast reports the outcome; the typed values are never thrown away on
   failure, because the form owns them;
-- the whole trio of schema, messages and tests moves together — see the warning
-  in *Copy* below.
+- a validation limit changes in the schema, the messages and the tests together —
+  see the warning in *Copy* below.
 
 Interaction feedback is uniform: `transition-colors` (or `transition-all` where
 more than colour moves), `active:scale-95` on pressable things, and hover states
@@ -252,8 +254,8 @@ Not optional, and cheap if you do it as you go:
   three.
 - Meaning never rides on colour or an icon alone: the "email verified" mark has
   a label (and a tooltip saying it).
-- Every icon-only control gets an `aria-label`; that label is UI text, so it
-  goes through the message files like any other string.
+- Every icon-only control gets an `aria-label` — UI text like any other, see
+  *Copy*.
 - Decorative marks are hidden from assistive tech (`aria-hidden`), and
   decorative images get an empty `alt`.
 - Contrast is already handled by the tokens — as long as you use the pairs
@@ -266,8 +268,8 @@ Not optional, and cheap if you do it as you go:
 ## Copy
 
 All user-facing text goes through the message files: add the key to **both**
-`messages/en.json` and `messages/ru.json`, then call it as `m.<key>()`. Never
-hardcode user-facing text in a component. This includes the text nobody sees —
+`messages/en.json` and `messages/ru.json`, then call it as `m.<key>()`. This
+includes the text nobody sees —
 an `aria-label` is read aloud, so it is user-facing too.
 
 Key naming: `snake_case`, prefixed with the screen area or domain it belongs to.
@@ -281,17 +283,13 @@ never a stack trace or an error code the reader cannot use.
 
 > Numbers inside message text (e.g. "must be 1–100 characters") duplicate a validation
 > limit. When you change a limit, update the schema, the messages, and the tests
-> together — this trio has drifted before.
+> together — these three have drifted apart before.
 
 ## Guardrails
 
 The short list of things that go wrong here, in the order they go wrong:
 
-1. **A new component that already exists.** Check `src/shared/ui` and its
-   stories first, then the shadcn/ui registry.
-2. **A hardcoded colour.** It looks right in light mode and breaks dark mode.
-   Tokens only.
-3. **Assuming `className` wins.** On a primitive it usually does: `cn` runs
+1. **Assuming `className` wins.** On a primitive it usually does: `cn` runs
    `tailwind-merge`, which drops the component's own utility when yours sets
    the same property — `className="h-auto px-8"` on a `Button` replaces its
    height and padding. It only knows Tailwind's own scales, though: two
@@ -299,25 +297,18 @@ The short list of things that go wrong here, in the order they go wrong:
    winner is whichever the stylesheet lists later — not the order you wrote.
    A caller that "overrides" a class and sees no change is looking at this,
    not at a typo.
-4. **A new spacing or radius scale.** Use the framework's steps and the shell
-   numbers above; a one-off `p-[13px]` is how a UI stops looking made by one
-   person.
-5. **A one-off button.** If you are writing an accent fill (`bg-primary`,
+2. **A one-off button.** If you are writing an accent fill (`bg-primary`,
    `bg-destructive`) and a corner radius on a clickable thing, you are
    re-implementing `Button`. There is no button left
    in this tree that does that, and the next one should not be the first: use
    the component, pick the variant, and pass `className` only for what the page
    legitimately varies — a width, a shadow, a hover flourish.
-6. **A removed focus ring.** See *Accessibility*.
-7. **Hardcoded English in the markup.** See *Copy*.
-8. **A control changed without its story and test.** All three move together —
-   see [TESTING.md](./TESTING.md).
-9. **A hand-rolled overlay.** Menus, tooltips and anything that floats above
+3. **A hand-rolled overlay.** Menus, tooltips and anything that floats above
    the page come from shadcn/ui (Radix underneath): focus management, Escape,
    outside clicks and the ARIA roles are already right there, and a
    `<details>` or a `useState` popover gets every one of them wrong. Need a
    dialog or a sheet? `npx shadcn add dialog` — there is none yet.
-10. **A rule invented for a pattern this app does not have.** There is no rule
+4. **A rule invented for a pattern this app does not have.** There is no rule
    for a data grid, a paged list or a side navigation, because none of those
    exist in this code. Write the rule when you write the pattern, not before.
 
@@ -341,8 +332,8 @@ explains how to read them and how to capture a state that no route shows.
 
 Before you call a UI change done:
 
-- [ ] both themes: open the light and dark shot of the same route side by side.
-      A region that looks identical in both is using hardcoded colours.
+- [ ] both themes: the light and dark shots pass the
+      [dark-theme check](./OBSERVABILITY.md#the-dark-theme-check-the-bug-that-keeps-coming-back).
 - [ ] both widths: nothing overflows sideways, nothing is clipped, tap targets
       on the phone shot are comfortable.
 - [ ] the states you added: loading, empty, error — each one actually reachable
