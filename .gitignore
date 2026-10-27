@@ -1,10 +1,12 @@
+# Root-only outputs start with "/": a bare name would also match a folder of that
+# name under src/, and Tailwind silently skips classes in files git ignores.
 node_modules/
-dist/
+/dist/
 # TanStack Start / Nitro SSR build output and caches
 .output/
 .nitro/
 .tanstack/
-storybook-build/
+/storybook-build/
 .idea
 .vscode
 .env
@@ -14,12 +16,12 @@ storybook-build/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-dev-dist/
-coverage
+/dev-dist/
+/coverage/
 # The Storybook config in .storybook/ is hand-written source and IS tracked.
 # Its build output goes to storybook-build/ (ignored above) and its cache to
 # node_modules/.cache, so nothing under .storybook/ needs ignoring.
-tmp/
+/tmp/
 
 # jscpd duplication-report output (audit tooling)
 .jscpd/

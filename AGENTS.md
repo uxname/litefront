@@ -12,8 +12,8 @@ the root `AGENTS.md` adds what spans both sides.
    English, whatever language the chat is in.
 3. **Done means `npm run check` exits 0** — read the exit status, not the tail of the
    output. It is the whole static gate (compose, stylelint, tsc, Biome, knip, Steiger,
-   trio); `lint` or `ts:check` alone runs a fraction of it, and the hook fails on the
-   rest. A logic change also needs `npm run test:cov` green.
+   trio, sources); `lint` or `ts:check` alone runs a fraction of it, and the hook fails
+   on the rest. A logic change also needs `npm run test:cov` green.
 
 ## Where to look
 

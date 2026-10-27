@@ -33,10 +33,11 @@ most common wasted loop.
 | Formatting, quotes, import order, simple unused vars | Biome | `npm run lint:fix` (`lint:fix:unsafe` for the rest, reviewed) |
 | CSS/SCSS complaints | Stylelint | `npm run lint:style:fix` |
 | "component missing story or test" | trio check | Add the missing file to complete the [*trio*](./TESTING.md#the-trio-rule) |
+| "git ignores these files" | source check | A `.gitignore` line hides a file in `src/`. Run the `git check-ignore -v` it prints and anchor that line to the root (`/coverage/`, not `coverage`) |
 | Coverage below floor | Vitest | Add the test — [a floor only goes up](./CODING_STANDARDS.md#tests-and-coverage-floors) |
 
 Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
-`lint:style`, `ts:check`, `knip`, `lint:fsd`, `trio`.
+`lint:style`, `ts:check`, `knip`, `lint:fsd`, `trio`, `sources`.
 
 ## Environment
 
