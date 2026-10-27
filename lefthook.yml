@@ -4,6 +4,11 @@
 #
 # There is no CI here — the whole quality guarantee rests on these hooks, so
 # pre-push is a superset: it repeats the fast checks and adds the slow ones.
+#
+# Every hook check lives in this file. `npm install` runs `lefthook install`
+# (postinstall), which renames a hook another tool wrote to `<hook>.old` and never
+# runs it — so a check added straight to .git/hooks silently stops after the next
+# install. Add it as a command here instead (e.g. `run: docc check`).
 pre-commit:
   commands:
     verify:
