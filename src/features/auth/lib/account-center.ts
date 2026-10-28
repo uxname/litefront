@@ -39,7 +39,7 @@ export const buildAccountCenterUrl = (
   action: AccountAction,
   opts?: AccountCenterUrlOptions,
 ): string => {
-  // docc:begin account#^sbve@vvhc, language#^q6qj@u4rw ~78px
+  // docc:begin account#^ACC-3@vvhc, language#^LAN-3@u4rw ~78px
   const origin = new URL(env.VITE_OIDC_AUTHORITY).origin;
   const url = new URL(`/account/${action}`, origin);
 

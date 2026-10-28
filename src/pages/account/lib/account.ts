@@ -28,7 +28,7 @@ export const buildSecurityActions = (): SecurityAction[] => [
   { action: "passkey/add", title: m.manage_passkey(), icon: KeyRound },
 ];
 
-// docc:begin account#^sbve@vvhc ~k8fx
+// docc:begin account#^ACC-3@vvhc ~k8fx
 /** The message for each action, by the name Logto or our return address gives it. */
 const CHANGE_MESSAGES: Record<string, () => string> = {
   email: m.account_changed_email,

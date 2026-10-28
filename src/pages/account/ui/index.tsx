@@ -54,7 +54,7 @@ export const AccountPage: FC<AccountPageProps> = ({ showSuccess, changed }) => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  // docc:begin account#^sbve@vvhc ~hay3
+  // docc:begin account#^ACC-3@vvhc ~hay3
   useEffect(() => {
     const message = accountChangeMessage(showSuccess, changed);
     if (message) {
@@ -68,7 +68,7 @@ export const AccountPage: FC<AccountPageProps> = ({ showSuccess, changed }) => {
   // Client-side auth gate. The route is `ssr: false`, so the guard runs only in
   // the browser where the real OIDC context is live. (Previously this lived in
   // `beforeLoad` via router context; the router no longer carries auth.)
-  // docc:begin account#^h7jn@stgb ~bkqw
+  // docc:begin account#^ACC-1@stgb ~bkqw
   useEffect(() => {
     if (auth.isLoading || auth.isAuthenticated) return;
     let cancelled = false;
@@ -123,7 +123,7 @@ const AccountView: FC = () => {
 
   const securityActions = buildSecurityActions();
 
-  // docc:begin account#^e4kk@bc4x ~mdkj
+  // docc:begin account#^ACC-2@bc4x ~mdkj
   const avatarUrl = resolveAvatarUrl(me, claims);
   const displayName = resolveDisplayName(me, claims);
   const email = resolveEmail(claims);

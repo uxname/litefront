@@ -5,7 +5,7 @@
  * characters are refused too: the URL parser drops tabs and newlines, which
  * turns "/\t/evil.example" into "//evil.example".
  */
-// docc:begin auth#^sgpk@d74a ~dvhy
+// docc:begin auth#^AUT-2@d74a ~dvhy
 export const safeReturnTo = (value: unknown): string =>
   typeof value === "string" &&
   /^\/(?![/\\])/.test(value) &&

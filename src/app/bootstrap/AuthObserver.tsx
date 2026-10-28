@@ -44,7 +44,7 @@ export const AuthObserver: FC = () => {
   // The user and its tokens live in localStorage, shared by every tab. When
   // another tab signs out it removes them; drop this tab's in-memory copy too,
   // instead of calling the API with it until it expires.
-  // docc:begin auth#^mpv2@nmae ~eajq
+  // docc:begin auth#^AUT-5@nmae ~eajq
   useEffect(() => {
     if (!auth.user) return;
     const onStorage = (e: StorageEvent) => {

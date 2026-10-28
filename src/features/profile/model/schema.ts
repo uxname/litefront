@@ -12,7 +12,7 @@ import { z } from "zod";
  * server stores it as NULL ("not set"), so the account page falls back to the
  * name and picture from the sign-in provider.
  */
-// docc:begin profile#^bzhw@g4uw ~7z9z
+// docc:begin profile#^PRO-1@g4uw ~7z9z
 export const profileFormSchema = z.object({
   displayName: z
     .string()

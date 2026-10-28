@@ -18,7 +18,7 @@ type SignOutAuth = Pick<
  * aborted the whole sign-out and left the tokens in localStorage. A hung
  * revocation request is not waited on past {@link REVOKE_TIMEOUT_MS} either.
  */
-// docc:begin auth#^mpv2@nmae ~ssyj
+// docc:begin auth#^AUT-5@nmae ~ssyj
 export const signOut = async (auth: SignOutAuth): Promise<void> => {
   const idTokenHint = auth.user?.id_token;
   try {
