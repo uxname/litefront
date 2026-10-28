@@ -34,7 +34,10 @@ describe("buildAccountCenterUrl", () => {
   it("sets redirect, show_success and ui_locales by default", () => {
     const url = new URL(buildAccountCenterUrl("password"));
 
-    expect(url.searchParams.get("redirect")).toBe("http://app.test/account");
+    // The return address names the action, so the account page can say what changed.
+    expect(url.searchParams.get("redirect")).toBe(
+      "http://app.test/account?changed=password",
+    );
     expect(url.searchParams.get("show_success")).toBe("true");
     expect(url.searchParams.get("ui_locales")).toBe("ru");
   });
@@ -43,6 +46,9 @@ describe("buildAccountCenterUrl", () => {
     const url = new URL(buildAccountCenterUrl("passkey/add"));
 
     expect(url.pathname).toBe("/account/passkey/add");
+    expect(url.searchParams.get("redirect")).toBe(
+      "http://app.test/account?changed=passkey%2Fadd",
+    );
   });
 
   it("honors a custom returnTo", () => {

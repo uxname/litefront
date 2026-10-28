@@ -3,18 +3,27 @@ import { AccountPage } from "@pages/account";
 import { createFileRoute } from "@tanstack/react-router";
 
 interface AccountSearch {
-  /** Set by Logto Account Center on a successful action (via `show_success`). */
-  show_success?: boolean;
+  /** Set by Logto Account Center on a successful action: the action's name or "true". */
+  show_success?: string;
+  /** The action our own return address names (buildAccountCenterUrl). */
+  changed?: string;
 }
+
+const text = (v: unknown): string | undefined =>
+  typeof v === "string" && v !== "" ? v : v === true ? "true" : undefined;
 
 export const Route = createFileRoute("/account")({
   // Auth is browser-only (OIDC + window); never render this on the server.
   ssr: false,
-  validateSearch: (search: Record<string, unknown>): AccountSearch =>
-    // Only carry the flag when truthy so the URL stays clean otherwise.
-    search.show_success === true || search.show_success === "true"
-      ? { show_success: true }
-      : {},
+  validateSearch: (search: Record<string, unknown>): AccountSearch => {
+    // Only carry what is there, so the URL stays clean otherwise.
+    const out: AccountSearch = {};
+    const showSuccess = text(search.show_success);
+    const changed = text(search.changed);
+    if (showSuccess) out.show_success = showSuccess;
+    if (changed) out.changed = changed;
+    return out;
+  },
   head: () => ({
     meta: [
       { title: m.meta_account_title() },
@@ -25,5 +34,8 @@ export const Route = createFileRoute("/account")({
       },
     ],
   }),
-  component: () => <AccountPage showSuccess={Route.useSearch().show_success} />,
+  component: () => {
+    const { show_success, changed } = Route.useSearch();
+    return <AccountPage showSuccess={show_success} changed={changed} />;
+  },
 });

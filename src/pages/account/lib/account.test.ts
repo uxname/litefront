@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  accountChangeMessage,
   buildSecurityActions,
   formatMemberSince,
   resolveAvatarUrl,
@@ -8,6 +9,32 @@ import {
   resolveEmailVerified,
   roleLabel,
 } from "./account";
+
+// The global setup mocks m.* to return the literal message key.
+describe("accountChangeMessage", () => {
+  it("says nothing without Logto's success mark", () => {
+    expect(accountChangeMessage(undefined, "email")).toBeNull();
+  });
+
+  it("names the action Logto reports", () => {
+    expect(accountChangeMessage("email")).toBe("account_changed_email");
+    expect(accountChangeMessage("password")).toBe("account_changed_password");
+  });
+
+  it("falls back to the action our return address names", () => {
+    expect(accountChangeMessage("true", "authenticator-app")).toBe(
+      "account_changed_mfa",
+    );
+    expect(accountChangeMessage("true", "passkey/add")).toBe(
+      "account_changed_passkey",
+    );
+  });
+
+  it("gives the general message for an action it cannot name", () => {
+    expect(accountChangeMessage("true")).toBe("account_changed");
+    expect(accountChangeMessage("phone", "phone")).toBe("account_changed");
+  });
+});
 
 describe("buildSecurityActions", () => {
   it("lists the four self-service actions in order", () => {

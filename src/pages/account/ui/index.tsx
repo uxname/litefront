@@ -25,6 +25,7 @@ import {
 import { type FC, useEffect } from "react";
 import { useQuery } from "urql";
 import {
+  accountChangeMessage,
   buildSecurityActions,
   formatMemberSince,
   resolveAvatarUrl,
@@ -35,8 +36,10 @@ import {
 } from "../lib/account";
 
 interface AccountPageProps {
-  /** Set by Logto Account Center on a successful action (via `show_success`). */
-  showSuccess?: boolean;
+  /** Set by Logto Account Center on a successful action: the action's name or "true". */
+  showSuccess?: string;
+  /** The action our own return address names. */
+  changed?: string;
 }
 
 /**
@@ -47,18 +50,19 @@ interface AccountPageProps {
  * The gate wraps rather than merges: AccountView must not mount — and must not
  * fire its `me` query — until the user is actually authenticated.
  */
-export const AccountPage: FC<AccountPageProps> = ({ showSuccess }) => {
+export const AccountPage: FC<AccountPageProps> = ({ showSuccess, changed }) => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  // docc:begin account#^sbve@c952 ~pbyr
+  // docc:begin account#^sbve@vvhc ~hay3
   useEffect(() => {
-    if (showSuccess) {
-      toast.success(m.change_password_success());
+    const message = accountChangeMessage(showSuccess, changed);
+    if (message) {
+      toast.success(message);
       // Drop the one-shot flag so a refresh doesn't re-trigger the toast.
       void navigate({ to: "/account", search: {}, replace: true });
     }
-  }, [showSuccess, navigate]);
+  }, [showSuccess, changed, navigate]);
   // docc:end
 
   // Client-side auth gate. The route is `ssr: false`, so the guard runs only in

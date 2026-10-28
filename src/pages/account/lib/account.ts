@@ -28,6 +28,34 @@ export const buildSecurityActions = (): SecurityAction[] => [
   { action: "passkey/add", title: m.manage_passkey(), icon: KeyRound },
 ];
 
+// docc:begin account#^sbve@vvhc ~37zd
+/** The message for each action, by the name Logto or our return address gives it. */
+const CHANGE_MESSAGES: Record<string, () => string> = {
+  email: m.account_changed_email,
+  password: m.account_changed_password,
+  "authenticator-app": m.account_changed_mfa,
+  passkey: m.account_changed_passkey,
+  "passkey/add": m.account_changed_passkey,
+};
+
+/**
+ * What to tell a person back from the Logto Account Center, or null when nothing
+ * changed. Logto marks a success with `show_success`, whose value names the action
+ * ("email", "password") or is just "true"; `changed` is the action our own return
+ * address carries. An action neither names gets the general message.
+ */
+export const accountChangeMessage = (
+  showSuccess?: string,
+  changed?: string,
+): string | null => {
+  if (!showSuccess) return null;
+  const message =
+    CHANGE_MESSAGES[showSuccess] ??
+    (changed ? CHANGE_MESSAGES[changed] : undefined);
+  return (message ?? m.account_changed)();
+};
+// docc:end
+
 /** The backend `me` record, when loaded. */
 type Me = MeQuery["me"];
 

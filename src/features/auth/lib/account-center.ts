@@ -14,7 +14,10 @@ export type AccountAction =
   | "passkey/add";
 
 interface AccountCenterUrlOptions {
-  /** Absolute URL Logto redirects back to after the action completes. */
+  /**
+   * Absolute URL Logto redirects back to after the action completes. Default: the
+   * account page, with `changed=<action>` so it can say what changed.
+   */
   returnTo?: string;
   /** Append `show_success` to the redirect URL on success (default: true). */
   showSuccess?: boolean;
@@ -36,13 +39,14 @@ export const buildAccountCenterUrl = (
   action: AccountAction,
   opts?: AccountCenterUrlOptions,
 ): string => {
-  // docc:begin account#^sbve@c952, language#^q6qj@u4rw ~pnz5
+  // docc:begin account#^sbve@vvhc, language#^q6qj@u4rw ~78px
   const origin = new URL(env.VITE_OIDC_AUTHORITY).origin;
   const url = new URL(`/account/${action}`, origin);
 
   url.searchParams.set(
     "redirect",
-    opts?.returnTo ?? `${env.VITE_BASE_URL}/account`,
+    opts?.returnTo ??
+      `${env.VITE_BASE_URL}/account?changed=${encodeURIComponent(action)}`,
   );
   if (opts?.showSuccess ?? true) {
     url.searchParams.set("show_success", "true");
