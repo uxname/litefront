@@ -13,6 +13,16 @@ pre-commit:
   commands:
     verify:
       run: npm run verify:commit # fast static checks + secrets scan
+    docs:
+      # meta ADR-0011: inside the LiteStack meta-repo a docc: tag here must agree with
+      # the paragraph it names, and an edited paragraph must be re-checked here. docc
+      # runs from the meta root, where docc.json is; this repo used on its own has no
+      # ../docc.json and skips the check.
+      run: |
+        if [ -f ../docc.json ]; then
+          command -v docc >/dev/null 2>&1 || { echo "docc is not installed: curl -fsSL https://raw.githubusercontent.com/uxname/docc/main/install.sh | sh" >&2; exit 1; }
+          cd .. && docc check --max-warnings 0
+        fi
 
 pre-push:
   commands:

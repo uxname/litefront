@@ -17,6 +17,7 @@ import type { ProfileFormProps } from "../ui/ProfileForm";
 // Client-side guards mirroring the backend upload allowlist (image/* up to 5 MB).
 // They give immediate feedback and avoid a pointless round-trip; the server
 // remains the trust boundary.
+// docc:begin avatar#^b6nc@7wyq ~z57n
 const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
 const ALLOWED_AVATAR_TYPES = [
   "image/png",
@@ -24,6 +25,7 @@ const ALLOWED_AVATAR_TYPES = [
   "image/gif",
   "image/webp",
 ];
+// docc:end
 
 /**
  * Form logic for {@link ProfileForm}: react-hook-form setup, the avatar
@@ -65,6 +67,7 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
 
     // A rejected file is the user's to fix, so the reason sits under the
     // control instead of in a toast that disappears.
+    // docc:begin avatar#^b6nc@7wyq ~fen4
     if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
       setAvatarError(m.profile_avatar_invalid_type());
       return;
@@ -73,6 +76,7 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
       setAvatarError(m.profile_avatar_too_large());
       return;
     }
+    // docc:end
 
     setAvatarError(undefined);
     setUploading(true);
@@ -89,6 +93,7 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     }
   };
 
+  // docc:begin profile#^vnzw@r8ga, avatar#^35w7@jw6q ~x8tk
   const onSubmit = handleSubmit(async (values) => {
     // Only changed fields go out (omitted = unchanged on the backend). A field
     // the user emptied goes out as "" — that is how it gets cleared.
@@ -121,6 +126,7 @@ export const useProfileForm = ({ profile, accessToken }: ProfileFormProps) => {
     enableBeforeUnload: isDirty,
     disabled: !isDirty,
   });
+  // docc:end
 
   return {
     register,

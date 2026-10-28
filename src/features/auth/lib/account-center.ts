@@ -36,6 +36,7 @@ export const buildAccountCenterUrl = (
   action: AccountAction,
   opts?: AccountCenterUrlOptions,
 ): string => {
+  // docc:begin account#^sbve@c952, language#^q6qj@u4rw ~pnz5
   const origin = new URL(env.VITE_OIDC_AUTHORITY).origin;
   const url = new URL(`/account/${action}`, origin);
 
@@ -47,6 +48,7 @@ export const buildAccountCenterUrl = (
     url.searchParams.set("show_success", "true");
   }
   url.searchParams.set("ui_locales", getLocale());
+  // docc:end
 
   return url.toString();
 };

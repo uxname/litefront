@@ -37,9 +37,11 @@ const localeName = (loc: string): string => {
 export const LocaleSwitcher: FC = () => {
   const current = getLocale();
 
+  // docc:begin language#^q6qj@u4rw ~tq9p
   const select = (target: string) => {
     if (target !== current) setLocale(target as Locale);
   };
+  // docc:end
 
   return (
     <DropdownMenu>

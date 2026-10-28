@@ -115,7 +115,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         // (no hydration mismatch); `localStorage` keeps the pre-SSR behavior on
         // the client; `preferredLanguage` is the first-visit default; `baseLocale`
         // ("en") is the final fallback.
+        // docc:begin language#^84vy@xufn, language#^x5ny@3b9x ~bgpj
         strategy: ["cookie", "localStorage", "preferredLanguage", "baseLocale"],
+        // docc:end
       }),
       ViteImageOptimizer(),
       react({

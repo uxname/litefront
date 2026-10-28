@@ -12,6 +12,7 @@ export interface ThemeStore {
 }
 
 /** The theme actually painted: "system" resolved against the OS setting. */
+// docc:begin theme#^fr7c@rcyr ~2z5a
 export const resolveTheme = (theme: Theme): "light" | "dark" => {
   if (theme !== "system") return theme;
   return typeof window !== "undefined" && window.matchMedia(DARK_QUERY).matches
@@ -36,11 +37,14 @@ export const followSystemTheme = (): (() => void) => {
   query.addEventListener("change", onChange);
   return () => query.removeEventListener("change", onChange);
 };
+// docc:end
 
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
+      // docc:begin theme#^fr7c@rcyr ~nauk
       theme: "system",
+      // docc:end
       setTheme: (theme) => {
         applyTheme(theme);
         set({ theme });
@@ -49,6 +53,7 @@ export const useThemeStore = create<ThemeStore>()(
     {
       name: "litefront-theme",
       // v0 stored daisyUI theme names; "cmyk" was the light one.
+      // docc:begin theme#^2dhs@xp8c ~226r
       version: 1,
       migrate: (persisted) => {
         const state = persisted as { theme?: string };
@@ -66,6 +71,7 @@ export const useThemeStore = create<ThemeStore>()(
       onRehydrateStorage: () => (state) => {
         if (state) applyTheme(state.theme);
       },
+      // docc:end
     },
   ),
 );

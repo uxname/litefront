@@ -11,6 +11,7 @@ import { z } from "zod";
  * Empty strings are allowed in the form (they mean "leave unchanged" and are
  * dropped on submit).
  */
+// docc:begin profile#^bzhw@g4uw ~7z9z
 export const profileFormSchema = z.object({
   displayName: z
     .string()
@@ -29,5 +30,6 @@ export const profileFormSchema = z.object({
     ])
     .optional(),
 });
+// docc:end
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;

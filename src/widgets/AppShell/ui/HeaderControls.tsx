@@ -32,17 +32,21 @@ export const HeaderControls: FC = () => {
   // Plain functions on purpose: `auth` is a new object on every context change,
   // so useCallback(…, [auth]) never reused anything — and the React Compiler
   // (vite.config.ts) memoizes handlers on its own.
+  // docc:begin auth#^p3xm@mvg9 ~bgmx
   const handleSignIn = () => {
     // Remember the current location so the post-login callback returns here.
     void auth.signinRedirect({
       state: { returnTo: window.location.pathname + window.location.search },
     });
   };
+  // docc:end
 
+  // docc:begin auth#^mpv2@nmae ~ycpm
   const handleSignOut = () => {
     captureMessage("Auth: sign-out initiated", { level: "info" });
     void signOut(auth);
   };
+  // docc:end
 
   const email = auth.user?.profile.email;
 

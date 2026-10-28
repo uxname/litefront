@@ -8,7 +8,9 @@ import { type FC, useEffect, useState } from "react";
 import { useAuth } from "../api/oidc-client";
 
 /** How long the code exchange may take before the user is offered a way out. */
+// docc:begin auth#^68hs@gjwr ~68f6
 export const CALLBACK_TIMEOUT_MS = 15_000;
+// docc:end
 
 /**
  * The screen the OIDC provider redirects back to. The library finishes the code
@@ -21,6 +23,7 @@ export const CallbackHandler: FC = () => {
   const auth = useAuth();
   const [timedOut, setTimedOut] = useState(false);
 
+  // docc:begin auth#^68hs@gjwr ~9734
   useEffect(() => {
     captureMessage("Auth callback received", { level: "info" });
     const id = setTimeout(() => setTimedOut(true), CALLBACK_TIMEOUT_MS);
@@ -49,4 +52,5 @@ export const CallbackHandler: FC = () => {
       </div>
     </main>
   );
+  // docc:end
 };
