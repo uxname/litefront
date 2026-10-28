@@ -8,8 +8,9 @@ import { z } from "zod";
  * `backend/internal/config/constants.go` (Go constants — the backend has no zod).
  * Keep the numbers here, the ones in `validation_*` messages, and those constants
  * in step; they had already drifted to 80/500 against the backend's 100/1000.
- * Empty strings are allowed in the form (they mean "leave unchanged" and are
- * dropped on submit).
+ * Empty strings are allowed in the form: an emptied field is sent as "" and the
+ * server stores it as NULL ("not set"), so the account page falls back to the
+ * name and picture from the sign-in provider.
  */
 // docc:begin profile#^bzhw@g4uw ~7z9z
 export const profileFormSchema = z.object({

@@ -34,6 +34,17 @@ describe("accountChangeMessage", () => {
     expect(accountChangeMessage("true")).toBe("account_changed");
     expect(accountChangeMessage("phone", "phone")).toBe("account_changed");
   });
+
+  it("reads no inherited object key from the URL as an action", () => {
+    for (const key of ["__proto__", "constructor", "toString", "valueOf"]) {
+      expect(accountChangeMessage(key)).toBe("account_changed");
+      expect(accountChangeMessage("true", key)).toBe("account_changed");
+    }
+  });
+
+  it('takes show_success="false" as no success', () => {
+    expect(accountChangeMessage("false", "email")).toBeNull();
+  });
 });
 
 describe("buildSecurityActions", () => {
