@@ -58,12 +58,7 @@ export const HeaderControls: FC = () => {
       {auth.isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-full pl-1"
-              aria-label={m.profile_settings_title()}
-            >
+            <Button variant="outline" size="sm" className="rounded-full pl-1">
               <Avatar className="size-6">
                 <AvatarImage src={auth.user?.profile.picture} alt="" />
                 <AvatarFallback>
@@ -73,6 +68,8 @@ export const HeaderControls: FC = () => {
               <span className="max-w-30 truncate text-xs font-semibold">
                 {email || m.profile_fallback_name()}
               </span>
+              {/* Not aria-label: the visible email must stay in the name (WCAG 2.5.3). */}
+              <span className="sr-only">{m.profile_settings_title()}</span>
               <ChevronDown className="size-3 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>

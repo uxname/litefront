@@ -54,7 +54,6 @@
   "validation_invalid_url": "Must be a valid URL",
   "validation_display_name_length": "Display name must not exceed 100 characters",
   "validation_bio_length": "Bio must not exceed 1000 characters",
-  "header_home_aria": "LiteFront — home",
   "theme_toggle": "Theme",
   "locale_label": "Language",
   "auth_verifying": "Verifying…",

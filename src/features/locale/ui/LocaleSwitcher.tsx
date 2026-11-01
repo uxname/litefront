@@ -46,9 +46,13 @@ export const LocaleSwitcher: FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" aria-label={m.locale_label()}>
+        {/* The visible code stays in the accessible name (WCAG 2.5.3, axe
+            label-content-name-mismatch); the word "Language" is added for
+            screen readers only. */}
+        <Button variant="ghost" size="sm">
           <Languages />
           <span className="text-xs font-bold uppercase">{current}</span>
+          <span className="sr-only">{m.locale_label()}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">

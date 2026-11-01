@@ -130,7 +130,7 @@ test("agent log harness: capture frontend console + errors + network", async ({
   await page.waitForTimeout(200);
   // Open the locale dropdown, then pick the first language entry.
   await page
-    .getByLabel(/language|язык/i)
+    .getByRole("button", { name: /language|язык/i })
     .click()
     .catch(() => {});
   await page.waitForTimeout(200);

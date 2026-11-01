@@ -54,7 +54,6 @@
   "validation_invalid_url": "Введите корректный URL",
   "validation_display_name_length": "Имя не должно быть длиннее 100 символов",
   "validation_bio_length": "О себе — не более 1000 символов",
-  "header_home_aria": "LiteFront — на главную",
   "theme_toggle": "Тема",
   "locale_label": "Язык",
   "auth_verifying": "Проверка…",

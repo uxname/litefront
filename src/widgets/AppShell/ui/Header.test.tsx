@@ -55,7 +55,7 @@ const renderHeader = () => {
 /** The profile menu renders its items only once opened. */
 const openProfileMenu = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(
-    await screen.findByRole("button", { name: "profile_settings_title" }),
+    await screen.findByRole("button", { name: /profile_settings_title/ }),
   );
 
 afterEach(cleanup);
@@ -69,7 +69,7 @@ beforeEach(() => {
 describe("Header", () => {
   it("renders the brand link to home", async () => {
     renderHeader();
-    const home = await screen.findByRole("link", { name: "header_home_aria" });
+    const home = await screen.findByRole("link", { name: "app_name" });
     expect(home).toHaveAttribute("href", "/");
   });
 

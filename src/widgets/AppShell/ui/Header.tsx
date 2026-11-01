@@ -7,7 +7,6 @@ export const Header: FC = () => (
   <nav className="flex w-full items-center justify-between gap-4">
     <Link
       to="/"
-      aria-label={m.header_home_aria()}
       className="flex shrink-0 items-center gap-2 rounded-lg outline-none transition-opacity hover:opacity-80 focus-visible:ring-[3px] focus-visible:ring-ring/50"
     >
       <span
@@ -16,7 +15,9 @@ export const Header: FC = () => (
       >
         L
       </span>
-      <span className="hidden text-lg font-bold tracking-tight sm:block">
+      {/* The link's name is the app name (no aria-label: it must contain the
+          visible text, WCAG 2.5.3); on phones it is hidden visually only. */}
+      <span className="sr-only text-lg font-bold tracking-tight sm:not-sr-only">
         {m.app_name()}
       </span>
     </Link>

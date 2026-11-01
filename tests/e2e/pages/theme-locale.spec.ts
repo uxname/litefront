@@ -45,7 +45,7 @@ test.describe("Locale switcher", () => {
     await page.goto("/");
 
     // Playwright's default browser language resolves to English first visit.
-    const trigger = page.getByLabel(/language|язык/i);
+    const trigger = page.getByRole("button", { name: /language|язык/i });
     await expect(trigger).toContainText(/en/i);
 
     // Open the dropdown and pick Russian.
@@ -60,6 +60,8 @@ test.describe("Locale switcher", () => {
     );
     expect(stored).toBe("ru");
 
-    await expect(page.getByLabel(/language|язык/i)).toContainText(/ru/i);
+    await expect(
+      page.getByRole("button", { name: /language|язык/i }),
+    ).toContainText(/ru/i);
   });
 });

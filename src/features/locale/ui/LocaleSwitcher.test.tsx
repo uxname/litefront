@@ -16,7 +16,7 @@ describe("LocaleSwitcher", () => {
   it("lists every locale by its own name and marks the current one", async () => {
     const user = userEvent.setup();
     render(<LocaleSwitcher />);
-    await user.click(screen.getByRole("button", { name: "locale_label" }));
+    await user.click(screen.getByRole("button", { name: /locale_label/ }));
 
     expect(
       screen.getByRole("menuitemradio", { name: /English/ }),
@@ -29,11 +29,11 @@ describe("LocaleSwitcher", () => {
   it("switches to a different locale, and ignores the current one", async () => {
     const user = userEvent.setup();
     render(<LocaleSwitcher />);
-    await user.click(screen.getByRole("button", { name: "locale_label" }));
+    await user.click(screen.getByRole("button", { name: /locale_label/ }));
     await user.click(screen.getByRole("menuitemradio", { name: /English/ }));
     expect(setLocale).not.toHaveBeenCalled();
 
-    await user.click(screen.getByRole("button", { name: "locale_label" }));
+    await user.click(screen.getByRole("button", { name: /locale_label/ }));
     await user.click(screen.getByRole("menuitemradio", { name: /Русский/ }));
     expect(setLocale).toHaveBeenCalledWith("ru");
   });
