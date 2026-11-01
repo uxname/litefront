@@ -21,6 +21,16 @@
     "indentStyle": "space",
     "lineEnding": "lf"
   },
+  "markdown": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "enabled": false
+    }
+  },
   "assist": {
     "actions": {
       "source": {

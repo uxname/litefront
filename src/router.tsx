@@ -4,6 +4,7 @@ import { PageLoader } from "@shared/ui/page-loader";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
+import type { ReactNode } from "react";
 import { AppProviders } from "./app/bootstrap/AppProviders";
 import { setAppRouter } from "./app/bootstrap/router-instance";
 import { routeTree } from "./generated/routeTree.gen";
@@ -15,7 +16,7 @@ import { routeTree } from "./generated/routeTree.gen";
  * - SSR is on by default (set via `defaultSsr` in src/start.ts); auth-only
  *   routes opt out per-route with `ssr: false` (see routes/account.tsx,
  *   routes/callback.tsx).
- * - `Wrap: AppProviders` injects the isomorphic auth + GraphQL providers above
+ * - `Wrap` (RouterWrap → AppProviders) injects the isomorphic auth + GraphQL providers above
  *   RouterProvider, since Start owns RouterProvider and we can't wrap it in the
  *   entry files.
  */
@@ -27,6 +28,12 @@ const requestNonce = createIsomorphicFn()
   .server(() => getRequestHeader(CSP_NONCE_HEADER))
   .client(() => undefined);
 
+// Module level, not inline: a component created inside getRouter() would get a new
+// identity per call and remount the whole tree under it.
+const RouterWrap = ({ children }: { children: ReactNode }) => (
+  <AppProviders>{children}</AppProviders>
+);
+
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
@@ -34,7 +41,7 @@ export function getRouter() {
     defaultNotFoundComponent: NotFoundPage,
     defaultPendingComponent: PageLoader,
     scrollRestoration: true,
-    Wrap: ({ children }) => <AppProviders>{children}</AppProviders>,
+    Wrap: RouterWrap,
   });
 
   // Client-only: expose the instance for config-level callbacks (OIDC

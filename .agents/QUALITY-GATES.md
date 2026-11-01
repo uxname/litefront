@@ -66,6 +66,10 @@ Individual commands, when you need to narrow things down: `lint`, `lint:fix`,
 
 ## Dependencies
 
+- No bot bumps anything (meta ADR-0012): updates are a deliberate sweep, GitHub
+  Dependabot alerts say when one is urgent. `devEngines` refuses a Node older than
+  the floor on every `npm` command — raise it with `engines`, the Dockerfile and the
+  meta's `scripts/setup.sh` together.
 - `npm run update` bumps everything via `ncu -u` and reinstalls from scratch. Prefer
   updating a few packages at a time (`npx ncu -u <pkg>`) — a full sweep makes a
   breakage hard to attribute.

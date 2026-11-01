@@ -18,6 +18,7 @@ export const createGraphQLClient = (accessToken?: string): Client => {
       // updated Profile patches every query holding it (e.g. `me`) automatically.
       cacheExchange({
         keys: {
+          // biome-ignore lint/correctness/noComponentHookFactories: a GraphQL typename key, not a component
           Profile: (data) => (data.id != null ? String(data.id) : null),
         },
       }),

@@ -42,6 +42,13 @@ export default defineConfig(async (): Promise<UserConfig> => {
     resolve: {
       tsconfigPaths: true,
     },
+    ssr: {
+      // lucide-react 1.62+ maps the `node` export condition to its CJS build,
+      // which Nitro's file trace does not copy into .output: kept external, the
+      // built server dies with ERR_MODULE_NOT_FOUND on the first render.
+      // Bundled, only the icons we import ship and nothing is resolved at runtime.
+      noExternal: ["lucide-react"],
+    },
     plugins: [
       // Dev-only: silence ENOENT "Failed to load source map" noise from
       // @tanstack/*-start* packages that ship dangling sourcemap comments.

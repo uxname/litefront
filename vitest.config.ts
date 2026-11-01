@@ -15,6 +15,9 @@ export default defineConfig({
     testTimeout: 30_000,
     hookTimeout: 30_000,
     environment: "jsdom",
+    // Node 25+ ships its own global localStorage, which is undefined without
+    // --localstorage-file and shadows jsdom's — every storage test then fails.
+    execArgv: ["--no-experimental-webstorage"],
     globals: true,
     // Clear mock call history between tests for isolation. (restoreMocks is
     // intentionally NOT enabled: it would wipe the implementations of the global

@@ -7,13 +7,7 @@
 reject:
   # vitest 5 (and its coverage-v8 twin) break `npm run check`:
   # @testing-library/jest-dom@7.0.1 still augments the vitest 4 `Assertion<T>`
-  # shape, so every jest-dom matcher fails to type-check. Unblocked when jest-dom
-  # ships the vitest 5 signature.
+  # shape, so every jest-dom matcher fails to type-check. Unblocked when a
+  # jest-dom release ships testing-library/jest-dom#742 (open, re-checked 2026-11-01).
   - vitest
   - '@vitest/coverage-v8'
-  # vite 8.2.2 emits an SSR chunk that references `toast` without importing it —
-  # the sonner -> shared/ui/sonner.tsx re-export chain loses the binding
-  # and the built server dies on boot with `ReferenceError: toast is not defined`.
-  # package.json pins ~8.1.5; this keeps `ncu -u` from undoing that pin.
-  # Unblocked when a vite 8.2.x build survives `npm run test:e2e:prod`.
-  - vite

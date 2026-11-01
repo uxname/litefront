@@ -22,7 +22,7 @@ pre-commit:
       # whole project. This repo used on its own has no ../docc.json and skips it.
       run: |
         if [ -f ../docc.json ]; then
-          command -v docc >/dev/null 2>&1 || { echo "docc is not installed (0.7.0+): curl -fsSL https://raw.githubusercontent.com/uxname/docc/main/install.sh | sh" >&2; exit 1; }
+          command -v docc >/dev/null 2>&1 || { echo "docc is not installed (0.9.0+): curl -fsSL https://raw.githubusercontent.com/uxname/docc/main/install.sh | sh" >&2; exit 1; }
           repo=${PWD##*/}
           cd .. && docc check "$repo" --max-warnings 0
         fi
